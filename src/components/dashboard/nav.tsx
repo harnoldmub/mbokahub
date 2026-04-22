@@ -1,0 +1,68 @@
+"use client";
+
+import { motion } from "framer-motion";
+import type { LucideIcon } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+
+type NavItem = {
+  href: string;
+  label: string;
+  icon: LucideIcon;
+};
+
+type DashboardNavProps = {
+  items: readonly NavItem[];
+};
+
+export function DashboardNav({ items }: DashboardNavProps) {
+  const pathname = usePathname();
+
+  return (
+    <nav className="mt-6 grid gap-2" aria-label="Navigation dashboard">
+      {items.map((item) => {
+        const Icon = item.icon;
+        const isActive = pathname === item.href;
+
+        return (
+          <Link
+            className={cn(
+              "group flex items-center gap-3 rounded-2xl px-4 py-3 text-sm transition-all duration-300",
+              isActive
+                ? "bg-blood/10 text-paper border border-blood/20 shadow-[0_0_15px_-5px_theme(colors.blood.DEFAULT)]"
+                : "text-paper-dim hover:bg-smoke hover:text-paper border border-transparent",
+            )}
+            href={item.href}
+            key={item.href}
+          >
+            <Icon
+              aria-hidden
+              className={cn(
+                "size-4 transition-colors",
+                isActive
+                  ? "text-blood"
+                  : "text-paper-mute group-hover:text-blood",
+              )}
+            />
+            <span
+              className={cn(
+                isActive ? "font-display tracking-tight" : "font-body",
+              )}
+            >
+              {item.label}
+            </span>
+
+            {isActive && (
+              <motion.div
+                layoutId="nav-active"
+                className="ml-auto size-1.5 rounded-full bg-blood shadow-glow-blood"
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              />
+            )}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}

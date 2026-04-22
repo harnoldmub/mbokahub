@@ -1,0 +1,40 @@
+import { SectionHeading } from "@/components/marketing/section-heading";
+import { ProCard } from "@/components/pros/pro-card";
+import { demoPros } from "@/lib/demo-data";
+import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
+
+export default function PhotographesPage() {
+  const pros = demoPros.filter((pro) => pro.category === "PHOTOGRAPHE");
+
+  return (
+    <main className="relative min-h-screen">
+       {/* Background decoration */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <span className="absolute left-[-10vw] top-[20vh] font-display text-[25vw] text-paper opacity-[0.03] select-none leading-none uppercase">
+          CAPTURE
+        </span>
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <Link 
+          href="/beaute" 
+          className="inline-flex items-center gap-2 font-mono text-[10px] text-paper-mute uppercase tracking-[0.2em] mb-12 hover:text-blood transition-colors"
+        >
+          <ChevronLeft className="size-3" /> Retour aux prestations
+        </Link>
+        <SectionHeading
+          number="04"
+          description="Capture tes meilleurs moments. Photographes certifiés pour vos événements."
+          eyebrow="Photographes"
+          title="Capturez l'Instant"
+        />
+        <div className="mt-14 grid gap-6 lg:grid-cols-3">
+          {pros.map((pro) => (
+            <ProCard key={pro.id} pro={pro} />
+          ))}
+        </div>
+      </div>
+    </main>
+  );
+}
