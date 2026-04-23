@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { TrajetsListClient } from "@/components/trajets/trajets-list-client";
 import { Button } from "@/components/ui/button";
-import { demoTrajets } from "@/lib/demo-data";
+import type { TrajetDemo } from "@/lib/demo-data";
 
 export const dynamic = "force-static";
 
@@ -36,7 +36,7 @@ export default function TrajetsPage() {
         </Button>
       </div>
 
-      <TrajetsListClient trajets={demoTrajets} />
+      <TrajetsListClient trajets={[] as TrajetDemo[]} />
     </main>
   );
 }
