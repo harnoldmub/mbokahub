@@ -42,7 +42,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
                     {copy.email}
                   </p>
                   <p className="font-display text-xl text-paper">
-                    hello@mbokahub.fr
+                    contact@mbokahub.com
                   </p>
                 </div>
               </div>

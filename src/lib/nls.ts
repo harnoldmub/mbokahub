@@ -205,6 +205,11 @@ export const nls = {
           description:
             "Portraits, groupes, événements et souvenirs du week-end.",
         },
+        {
+          title: "Babysitting",
+          description:
+            "Garde d'enfants pendant le concert — 10 €/h, profils vérifiés.",
+        },
       ],
     },
     quiz: {
@@ -446,6 +451,11 @@ export const nls = {
           title: "Photographers",
           description: "Portraits, groups, events and weekend memories.",
         },
+        {
+          title: "Babysitting",
+          description:
+            "Childcare during the concert — €10/hr, vetted profiles.",
+        },
       ],
     },
     quiz: {
@@ -685,6 +695,11 @@ export const nls = {
         {
           title: "Fotografen",
           description: "Porträts, Gruppen, Events und Erinnerungen.",
+        },
+        {
+          title: "Babysitting",
+          description:
+            "Kinderbetreuung während des Konzerts — 10 €/Std., geprüfte Profile.",
         },
       ],
     },
@@ -926,6 +941,11 @@ export const nls = {
         {
           title: "Fotografen",
           description: "Portretten, groepen, events en weekendherinneringen.",
+        },
+        {
+          title: "Babysitting",
+          description:
+            "Kinderopvang tijdens het concert — €10/u, gecontroleerde profielen.",
         },
       ],
     },

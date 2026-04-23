@@ -10,21 +10,21 @@ const PARTNERSHIPS = [
     title: "Marques & sponsors",
     description:
       "Activation produit auprès de la diaspora. Du rhum à la cosmétique afro, on connecte ta marque à 9 000 fans en route pour le Stade de France.",
-    contact: "partenariats@mbokahub.fr",
+    contact: "contact@mbokahub.com",
   },
   {
     icon: Users,
     title: "Médias & créateurs",
     description:
       "Échange de visibilité, contenu co-produit, accès presse aux afters partenaires, interviews backstage avec les pros référencés.",
-    contact: "media@mbokahub.fr",
+    contact: "contact@mbokahub.com",
   },
   {
     icon: Sparkles,
     title: "Lieux & organisateurs",
     description:
       "Tu organises un after, un brunch, une expo ? Mets ton événement en avant et capte une audience ultra ciblée pour le 28 mai 2026.",
-    contact: "afters@mbokahub.fr",
+    contact: "contact@mbokahub.com",
   },
 ];
 

@@ -1,4 +1,4 @@
-import { ArrowRight, Camera, Scissors, Sparkles } from "lucide-react";
+import { ArrowRight, Baby, Camera, Scissors, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 import { SectionHeading } from "@/components/marketing/section-heading";
@@ -33,6 +33,12 @@ const categoryMeta = [
     icon: Camera,
     color: "text-paper",
     count: 12,
+  },
+  {
+    href: "/beaute/babysitting",
+    icon: Baby,
+    color: "text-violet-300",
+    count: 8,
   },
 ] as const;
 

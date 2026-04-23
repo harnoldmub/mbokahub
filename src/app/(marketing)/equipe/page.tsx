@@ -103,11 +103,11 @@ export default function EquipePage() {
 
         <div className="grid gap-6 sm:grid-cols-3">
           <a
-            href="mailto:hello@mbokahub.fr"
+            href="mailto:contact@mbokahub.com"
             className="flex items-center gap-3 rounded-2xl border border-white/5 bg-coal p-5 hover:border-blood/30"
           >
             <Mail className="size-5 text-blood" />
-            <span className="text-sm text-paper">hello@mbokahub.fr</span>
+            <span className="text-sm text-paper">contact@mbokahub.com</span>
           </a>
           <a
             href="https://www.instagram.com"
