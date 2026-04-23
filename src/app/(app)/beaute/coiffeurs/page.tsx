@@ -5,9 +5,7 @@ import { ProsListClient } from "@/components/pros/pros-list-client";
 import { demoPros } from "@/lib/demo-data";
 
 export default function CoiffeursPage() {
-  const pros = demoPros.filter(
-    (pro) => pro.category === "COIFFEUR" || pro.category === "BARBIER",
-  );
+  const pros: typeof demoPros = [];
 
   return (
     <main className="relative min-h-screen">

@@ -7,7 +7,7 @@ import { demoPros } from "@/lib/demo-data";
 export const dynamic = "force-static";
 
 export default function MaquilleusesPage() {
-  const pros = demoPros.filter((pro) => pro.category === "MAQUILLEUSE");
+  const pros: typeof demoPros = [];
 
   return (
     <main className="relative min-h-screen">

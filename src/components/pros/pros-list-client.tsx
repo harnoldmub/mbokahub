@@ -115,7 +115,24 @@ export function ProsListClient({ pros, categoryTitle }: Props) {
       </div>
 
       {/* Grid */}
-      {filtered.length === 0 ? (
+      {pros.length === 0 ? (
+        <div className="relative overflow-hidden flex flex-col items-center justify-center rounded-[3rem] border border-white/5 bg-coal/20 py-40 text-center">
+          <div className="absolute inset-0 bg-gradient-to-b from-gold/5 to-transparent pointer-events-none" />
+          <p className="font-display text-4xl uppercase text-paper tracking-tighter mb-4">
+            Bientôt disponible
+          </p>
+          <p className="max-w-sm mx-auto text-paper-dim font-body italic">
+            Les prestataires s&apos;inscrivent en ce moment. Reviens très vite
+            ou contacte-nous à contact@mbokahub.com.
+          </p>
+          <a
+            href="mailto:contact@mbokahub.com"
+            className="mt-10 px-8 py-3 rounded-xl bg-smoke border border-white/10 font-mono text-[10px] uppercase tracking-[0.3em] hover:bg-smoke/60 transition-colors"
+          >
+            Nous contacter
+          </a>
+        </div>
+      ) : filtered.length === 0 ? (
         <div className="relative overflow-hidden flex flex-col items-center justify-center rounded-[3rem] border border-white/5 bg-coal/20 py-40 text-center">
           <div className="absolute inset-0 bg-gradient-to-b from-gold/5 to-transparent pointer-events-none" />
           <p className="font-display text-4xl uppercase text-paper tracking-tighter mb-4">

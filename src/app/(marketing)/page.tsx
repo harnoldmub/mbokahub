@@ -182,15 +182,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 ))}
               </div>
 
-              <div className="mx-auto flex max-w-xs justify-center opacity-70">
-                <Image
-                  alt="Mboka Hub"
-                  className="h-auto w-28"
-                  height={112}
-                  src="/logo.svg"
-                  width={112}
-                />
-              </div>
             </div>
           </div>
         </div>

@@ -5,7 +5,7 @@ import { ProsListClient } from "@/components/pros/pros-list-client";
 import { demoPros } from "@/lib/demo-data";
 
 export default function PhotographesPage() {
-  const pros = demoPros.filter((pro) => pro.category === "PHOTOGRAPHE");
+  const pros: typeof demoPros = [];
 
   return (
     <main className="relative min-h-screen">

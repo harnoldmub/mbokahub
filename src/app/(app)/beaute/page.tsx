@@ -20,25 +20,25 @@ const categoryMeta = [
     href: "/beaute/maquilleuses",
     icon: Sparkles,
     color: "text-blood",
-    count: 24,
+    count: 0,
   },
   {
     href: "/beaute/coiffeurs",
     icon: Scissors,
     color: "text-gold",
-    count: 18,
+    count: 0,
   },
   {
     href: "/beaute/photographes",
     icon: Camera,
     color: "text-paper",
-    count: 12,
+    count: 0,
   },
   {
     href: "/beaute/babysitting",
     icon: Baby,
     color: "text-violet-300",
-    count: 8,
+    count: 0,
   },
 ] as const;
 
