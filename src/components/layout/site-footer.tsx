@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 
 import { LEGAL_DISCLAIMER, PHOTO_CREDITS } from "@/lib/constants";
 import { getLocale, localizedHref, nls } from "@/lib/nls";
+import { NewsletterForm } from "@/components/shared/newsletter-form";
 
 const footerLinks = [
   { href: "/cgv", label: "CGV" },
@@ -133,6 +134,21 @@ export function SiteFooter() {
                 </Link>
               ))}
             </nav>
+          </div>
+        </div>
+
+        <div className="mb-12 rounded-2xl border border-blood/30 bg-blood/5 p-6 sm:p-8">
+          <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-blood">
+            Newsletter
+          </p>
+          <h3 className="mt-2 font-display text-2xl text-paper sm:text-3xl">
+            Reçois les bons plans avant tout le monde
+          </h3>
+          <p className="mt-2 text-paper-dim text-sm">
+            Trajets dispo, codes promo, afters secrets : un email court, jamais de spam.
+          </p>
+          <div className="mt-5 max-w-xl">
+            <NewsletterForm source="footer" />
           </div>
         </div>
 

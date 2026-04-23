@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { AppProviders } from "@/components/providers/app-providers";
+import { CookieConsent } from "@/components/shared/cookie-consent";
 import { EVENT_CONTEXT } from "@/lib/constants";
 import { fontBody, fontDisplay, fontMono, fontSerif } from "./fonts";
 
@@ -102,6 +103,7 @@ export default function RootLayout({
                 <SiteFooter />
               </Suspense>
             </div>
+            <CookieConsent />
           </AppProviders>
         </body>
       </html>

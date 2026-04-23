@@ -1,17 +1,21 @@
-"use client";
-
 import { ArrowRight, Info } from "lucide-react";
 
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
-import { PhotoUpload } from "@/components/ui/photo-upload";
+import { createTrajetAction } from "@/lib/actions/public";
 
-export default function PublishTrajetPage() {
+export default async function PublishTrajetPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ error?: string }>;
+}) {
+  const sp = await searchParams;
+  const error = sp?.error;
+
   return (
     <main className="relative min-h-screen bg-ink">
-      {/* Background watermark */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <span className="absolute right-[-5vw] top-[10vh] font-display text-[25vw] text-blood opacity-[0.03] select-none leading-none uppercase">
           DRIVER
@@ -19,7 +23,6 @@ export default function PublishTrajetPage() {
       </div>
 
       <div className="mx-auto grid max-w-7xl px-6 py-20 lg:grid-cols-[1fr_1.2fr] gap-16 relative z-10">
-        {/* LEFT: Branding & Context */}
         <div className="space-y-12">
           <SectionHeading
             number="01"
@@ -53,122 +56,89 @@ export default function PublishTrajetPage() {
           </div>
         </div>
 
-        {/* RIGHT: THE FORM */}
         <div className="relative">
           <div className="absolute -top-10 -right-10 size-40 bg-blood/10 blur-[80px] rounded-full hidden lg:block" />
 
-          <form className="relative bg-coal border border-white/10 p-8 sm:p-12 rounded-3xl shadow-2xl space-y-10">
+          <form
+            action={createTrajetAction}
+            className="relative bg-coal border border-white/10 p-8 sm:p-12 rounded-3xl shadow-2xl space-y-10"
+          >
+            {error === "missing" && (
+              <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-3 text-red-300 text-sm">
+                Merci de remplir tous les champs obligatoires.
+              </div>
+            )}
+
             <div className="space-y-8">
-              {/* SECTION: ITINÉRAIRE */}
               <div className="space-y-6">
                 <h3 className="font-display text-xl uppercase text-paper/80 tracking-tight flex items-center gap-3">
-                  <span className="size-8 rounded-lg bg-smoke flex items-center justify-center text-blood text-sm">
-                    01
-                  </span>
+                  <span className="size-8 rounded-lg bg-smoke flex items-center justify-center text-blood text-sm">01</span>
                   L'itinéraire
                 </h3>
 
                 <div className="grid sm:grid-cols-2 gap-6">
-                  <FormField
-                    label="Ville de départ"
-                    helperText="D'où pars-tu ?"
-                  >
-                    <Input
-                      placeholder="Bruxelles, Mons, Charleroi..."
-                      className="h-12 bg-smoke border-none"
-                    />
+                  <FormField label="Ville de départ" helperText="D'où pars-tu ?">
+                    <Input name="villeDepart" required placeholder="Bruxelles, Mons..." className="h-12 bg-smoke border-none" />
                   </FormField>
-                  <FormField
-                    label="Heure de départ"
-                    helperText="Précise l'heure"
-                  >
-                    <Input
-                      type="time"
-                      className="h-12 bg-smoke border-none text-paper-dim"
-                    />
+                  <FormField label="Pays" helperText="Pays de départ">
+                    <Input name="paysDepart" defaultValue="Belgique" required className="h-12 bg-smoke border-none" />
+                  </FormField>
+                  <FormField label="Date" helperText="Jour du trajet">
+                    <Input name="date" type="date" required className="h-12 bg-smoke border-none text-paper-dim" />
+                  </FormField>
+                  <FormField label="Heure de départ" helperText="Précise l'heure">
+                    <Input name="heureDepart" type="time" required className="h-12 bg-smoke border-none text-paper-dim" />
                   </FormField>
                 </div>
               </div>
 
-              {/* SECTION: VÉHICULE & PHOTOS */}
               <div className="space-y-6">
                 <h3 className="font-display text-xl uppercase text-paper/80 tracking-tight flex items-center gap-3">
-                  <span className="size-8 rounded-lg bg-smoke flex items-center justify-center text-blood text-sm">
-                    02
-                  </span>
+                  <span className="size-8 rounded-lg bg-smoke flex items-center justify-center text-blood text-sm">02</span>
                   Le véhicule
                 </h3>
 
                 <div className="grid sm:grid-cols-2 gap-6">
-                  <FormField
-                    label="Modèle de voiture"
-                    error=""
-                    helperText="Ex: Audi A3, Peugeot 3008"
-                  >
-                    <Input
-                      placeholder="Audi A3"
-                      className="h-12 bg-smoke border-none"
-                    />
+                  <FormField label="Modèle de voiture" helperText="Ex: Audi A3, Peugeot 3008">
+                    <Input name="vehiculeModel" placeholder="Audi A3" className="h-12 bg-smoke border-none" />
                   </FormField>
-                  <FormField
-                    label="Couleur"
-                    helperText="Pour te repérer plus facilement"
-                  >
-                    <Input
-                      placeholder="Noir, Blanc, Gris..."
-                      className="h-12 bg-smoke border-none"
-                    />
+                  <FormField label="Couleur" helperText="Pour te repérer plus facilement">
+                    <Input name="vehiculeColor" placeholder="Noir, Blanc, Gris..." className="h-12 bg-smoke border-none" />
                   </FormField>
                 </div>
-
-                <PhotoUpload
-                  label="Photo de ta voiture"
-                  description="Montre ton véhicule pour rassurer les passagers (Max 5MB)"
-                />
               </div>
 
-              {/* SECTION: INFOS PRATIQUES */}
               <div className="space-y-6">
                 <h3 className="font-display text-xl uppercase text-paper/80 tracking-tight flex items-center gap-3">
-                  <span className="size-8 rounded-lg bg-smoke flex items-center justify-center text-blood text-sm">
-                    03
-                  </span>
+                  <span className="size-8 rounded-lg bg-smoke flex items-center justify-center text-blood text-sm">03</span>
                   Détails du voyage
                 </h3>
 
                 <div className="grid sm:grid-cols-3 gap-6">
-                  <FormField label="Places" helperText="Places libres">
-                    <Input
-                      type="number"
-                      min="1"
-                      max="8"
-                      placeholder="4"
-                      className="h-12 bg-smoke border-none"
-                    />
+                  <FormField label="Places" helperText="Total dispo">
+                    <Input name="placesTotal" type="number" min="1" max="8" required placeholder="4" className="h-12 bg-smoke border-none" />
                   </FormField>
                   <FormField label="Prix / place" helperText="En Euros (€)">
-                    <Input
-                      type="number"
-                      placeholder="25"
-                      className="h-12 bg-smoke border-none"
-                    />
+                    <Input name="prix" type="number" min="0" step="0.5" required placeholder="25" className="h-12 bg-smoke border-none" />
                   </FormField>
                   <FormField label="WhatsApp" helperText="Contact direct">
-                    <Input
-                      placeholder="+32 ..."
-                      className="h-12 bg-smoke border-none"
-                    />
+                    <Input name="whatsapp" required placeholder="+32 ..." className="h-12 bg-smoke border-none" />
                   </FormField>
                 </div>
+
+                <FormField label="Note (optionnel)" helperText="Détails utiles : départ d'une gare précise, bagages, etc.">
+                  <textarea
+                    name="note"
+                    rows={3}
+                    className="w-full rounded-md bg-smoke px-4 py-3 text-paper text-sm placeholder:text-paper-dim focus:outline-none"
+                    placeholder="Je peux récupérer en gare de Bruxelles-Midi..."
+                  />
+                </FormField>
               </div>
             </div>
 
-            <Button
-              className="w-full h-16 text-lg shadow-glow-blood group"
-              size="lg"
-            >
-              Publier mon annonce{" "}
-              <ArrowRight className="ml-2 size-5 transition-transform group-hover:translate-x-2" />
+            <Button type="submit" className="w-full h-16 text-lg shadow-glow-blood group" size="lg">
+              Publier mon annonce <ArrowRight className="ml-2 size-5 transition-transform group-hover:translate-x-2" />
             </Button>
           </form>
         </div>
