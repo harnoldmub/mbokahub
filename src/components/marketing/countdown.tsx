@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 type CountdownProps = {
   targetDate: string;
@@ -15,6 +15,13 @@ const SECOND = 1000;
 const MINUTE = 60 * SECOND;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
+
+const PLACEHOLDER_UNITS: TimeUnit[] = [
+  { label: "Jours", value: "00" },
+  { label: "Heures", value: "00" },
+  { label: "Min", value: "00" },
+  { label: "Sec", value: "00" },
+];
 
 function getRemainingUnits(targetDate: string): TimeUnit[] {
   const diff = Math.max(new Date(targetDate).getTime() - Date.now(), 0);
@@ -32,18 +39,15 @@ function getRemainingUnits(targetDate: string): TimeUnit[] {
 }
 
 export function Countdown({ targetDate }: CountdownProps) {
-  const initialUnits = useMemo(
-    () => getRemainingUnits(targetDate),
-    [targetDate],
-  );
-  const [units, setUnits] = useState<TimeUnit[]>(initialUnits);
+  const [units, setUnits] = useState<TimeUnit[]>(PLACEHOLDER_UNITS);
 
   useEffect(() => {
-    const interval = window.setInterval(() => {
+    setUnits(getRemainingUnits(targetDate));
+    const interval = setInterval(() => {
       setUnits(getRemainingUnits(targetDate));
     }, SECOND);
 
-    return () => window.clearInterval(interval);
+    return () => clearInterval(interval);
   }, [targetDate]);
 
   return (

@@ -1,5 +1,13 @@
 import type { NextConfig } from "next";
-import path from "path";
+
+const replitDevDomain = process.env.REPLIT_DEV_DOMAIN;
+
+const allowedDevOrigins = [
+  "*.replit.dev",
+  "*.replit.app",
+  "*.picard.replit.dev",
+  ...(replitDevDomain ? [replitDevDomain] : []),
+];
 
 const nextConfig: NextConfig = {
   images: {
@@ -19,7 +27,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  allowedDevOrigins: ["*.replit.dev", "*.replit.app"],
+  allowedDevOrigins,
   webpack(config) {
     config.resolve = config.resolve ?? {};
     config.resolve.symlinks = false;
