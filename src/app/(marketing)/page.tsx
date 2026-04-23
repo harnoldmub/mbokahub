@@ -193,6 +193,81 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         </div>
       </section>
 
+      <section className="relative overflow-hidden px-6 py-20 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-blood">
+                Pendant que tu attends le concert
+              </p>
+              <h2 className="mt-2 font-display text-3xl uppercase text-paper sm:text-4xl">
+                Joue. Teste tes connaissances. Hype-toi.
+              </h2>
+            </div>
+          </div>
+
+          <div className="grid gap-6 lg:grid-cols-2">
+            <Link
+              href={localizedHref("/jeu", locale)}
+              className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-blood/20 via-coal to-coal p-8 transition-all hover:-translate-y-1 hover:border-blood/40 hover:shadow-[0_30px_60px_-20px_rgba(230,57,70,0.3)] sm:p-10"
+            >
+              <div className="pointer-events-none absolute -right-8 -top-8 text-[12rem] opacity-[0.06] transition-all duration-500 group-hover:opacity-[0.12] group-hover:rotate-12">
+                🎮
+              </div>
+              <div className="relative z-10 flex flex-col gap-5">
+                <div className="flex items-center gap-3">
+                  <span className="rounded-full bg-blood/20 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.25em] text-blood">
+                    Mini-jeu
+                  </span>
+                  <span className="font-mono text-[10px] text-paper-mute">
+                    2 min · gratuit
+                  </span>
+                </div>
+                <h3 className="font-display text-4xl uppercase leading-none text-paper sm:text-5xl">
+                  Sape Run
+                </h3>
+                <p className="max-w-md text-sm text-paper-dim leading-relaxed">
+                  Cours dans les rues de Kinshasa, esquive les obstacles, ramasse les
+                  sapes les plus drippées. Bat ton record et grimpe au classement.
+                </p>
+                <span className="mt-2 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-blood transition-transform group-hover:translate-x-2">
+                  Lancer le jeu <ArrowRight className="size-4" />
+                </span>
+              </div>
+            </Link>
+
+            <Link
+              href={localizedHref("/quiz", locale)}
+              className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-gold/15 via-coal to-coal p-8 transition-all hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_30px_60px_-20px_rgba(242,183,5,0.25)] sm:p-10"
+            >
+              <div className="pointer-events-none absolute -right-8 -top-8 text-[12rem] opacity-[0.06] transition-all duration-500 group-hover:opacity-[0.12] group-hover:rotate-12">
+                🧠
+              </div>
+              <div className="relative z-10 flex flex-col gap-5">
+                <div className="flex items-center gap-3">
+                  <span className="rounded-full bg-gold/20 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.25em] text-gold">
+                    Quiz
+                  </span>
+                  <span className="font-mono text-[10px] text-paper-mute">
+                    10 questions · 3 min
+                  </span>
+                </div>
+                <h3 className="font-display text-4xl uppercase leading-none text-paper sm:text-5xl">
+                  Quel fan de Fally ?
+                </h3>
+                <p className="max-w-md text-sm text-paper-dim leading-relaxed">
+                  De Droit Chemin à Tokooos II, prouve que tu connais ton classique.
+                  Score, badge et code promo à la clé.
+                </p>
+                <span className="mt-2 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-gold transition-transform group-hover:translate-x-2">
+                  Démarrer le quiz <ArrowRight className="size-4" />
+                </span>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <section
         className="relative overflow-hidden bg-ink/50 px-6 py-24 lg:px-8 lg:py-32"
         id="prestations"
