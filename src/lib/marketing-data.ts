@@ -13,9 +13,9 @@ import {
 } from "lucide-react";
 
 export const landingStats = [
-  { label: "soirs au stade", value: "2" },
-  { label: "spectateurs sur 2 soirs", value: "160k+" },
-  { label: "dates clés", value: "02-03.05" },
+  { label: "spectateurs cumulés", value: "160k+" },
+  { label: "ans de carrière", value: "20+" },
+  { label: "albums studio", value: "10+" },
 ] as const;
 
 export const fanModules = [

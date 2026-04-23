@@ -99,9 +99,9 @@ export const nls = {
       proButton: "Devenir partenaire",
       quickLinks: "Accès rapide",
       stats: {
-        audience: "dates officielles",
-        city: "prix public dès",
-        dates: "week-end clé",
+        audience: "spectateurs cumulés",
+        city: "ans de carrière",
+        dates: "albums studio",
       },
       modules: [
         {
@@ -307,9 +307,9 @@ export const nls = {
       proButton: "Become a partner",
       quickLinks: "Quick access",
       stats: {
-        audience: "official dates",
-        city: "public price from",
-        dates: "key weekend",
+        audience: "total spectators",
+        city: "years of career",
+        dates: "studio albums",
       },
       modules: [
         {
@@ -513,9 +513,9 @@ export const nls = {
       proButton: "Partner werden",
       quickLinks: "Schnellzugriff",
       stats: {
-        audience: "offizielle Termine",
-        city: "öffentlicher Preis ab",
-        dates: "wichtiges Wochenende",
+        audience: "Zuschauer insgesamt",
+        city: "Karrierejahre",
+        dates: "Studioalben",
       },
       modules: [
         {
@@ -720,9 +720,9 @@ export const nls = {
       proButton: "Partner worden",
       quickLinks: "Snelle toegang",
       stats: {
-        audience: "officiële data",
-        city: "publieke prijs vanaf",
-        dates: "belangrijk weekend",
+        audience: "totaal toeschouwers",
+        city: "jaar carrière",
+        dates: "studioalbums",
       },
       modules: [
         {
