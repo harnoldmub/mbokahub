@@ -42,4 +42,4 @@ build = ["pnpm", "run", "build"]
 [userenv]
 
 [userenv.shared]
-ADMIN_EMAILS = "admin@mbokahub.fr"
+ADMIN_EMAILS = "admin@mbokahub.com"
