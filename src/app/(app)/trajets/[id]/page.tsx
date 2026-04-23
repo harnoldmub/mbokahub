@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ContactLock } from "@/components/shared/contact-lock";
+import { ReportButton } from "@/components/shared/report-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { demoTrajets } from "@/lib/demo-data";
@@ -70,6 +71,9 @@ export default async function TrajetDetailsPage({
           <Button asChild variant="outline">
             <Link href="/cgu">Voir les règles de mise en relation</Link>
           </Button>
+        </div>
+        <div className="mt-6 flex justify-end">
+          <ReportButton targetType="TRAJET" targetId={trajet.id} variant="button" />
         </div>
       </section>
     </main>

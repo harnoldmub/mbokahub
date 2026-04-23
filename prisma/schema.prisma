@@ -260,6 +260,49 @@ enum PromoCodeCategory {
   PRO_ORGANISATEUR_AFTER
 }
 
+model Report {
+  id           String         @id @default(cuid())
+  targetType   ReportTargetType
+  targetId     String
+  reason       ReportReason
+  description  String?        @db.Text
+  reporterEmail String?
+  reporterId   String?
+  status       ReportStatus   @default(PENDING)
+  adminNotes   String?        @db.Text
+  resolvedAt   DateTime?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@index([status, createdAt])
+  @@index([targetType, targetId])
+}
+
+enum ReportTargetType {
+  TRAJET
+  PRO_PROFILE
+  AFTER
+  USER
+  MERCH_PRODUCT
+}
+
+enum ReportReason {
+  ARNAQUE
+  FAUX_PROFIL
+  SPAM
+  CONTENU_INAPPROPRIE
+  PRIX_ABUSIF
+  CONTACT_NON_REPONSE
+  AUTRE
+}
+
+enum ReportStatus {
+  PENDING
+  REVIEWING
+  RESOLVED
+  DISMISSED
+}
+
 model Payment {
   id              String        @id @default(cuid())
   userId          String

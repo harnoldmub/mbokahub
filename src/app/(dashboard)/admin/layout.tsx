@@ -6,6 +6,7 @@ const NAV = [
   { href: "/admin/users", label: "Utilisateurs" },
   { href: "/admin/pros", label: "Pros" },
   { href: "/admin/trajets", label: "Trajets" },
+  { href: "/admin/signalements", label: "🚨 Signalements" },
   { href: "/admin/promo-codes", label: "Codes promo" },
   { href: "/admin/newsletter", label: "Newsletter" },
   { href: "/admin/payments", label: "Paiements" },

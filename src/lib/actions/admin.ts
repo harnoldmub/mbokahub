@@ -145,6 +145,61 @@ export async function deleteNewsletterSubscriber(id: string) {
   revalidatePath("/admin/newsletter");
 }
 
+export async function updateReportStatus(
+  reportId: string,
+  status: "PENDING" | "REVIEWING" | "RESOLVED" | "DISMISSED",
+  adminNotes?: string,
+) {
+  await requireAdmin();
+  await prisma.report.update({
+    where: { id: reportId },
+    data: {
+      status,
+      adminNotes: adminNotes ?? undefined,
+      resolvedAt: status === "RESOLVED" || status === "DISMISSED" ? new Date() : null,
+    },
+  });
+  revalidatePath("/admin/signalements");
+}
+
+export async function deleteReport(reportId: string) {
+  await requireAdmin();
+  await prisma.report.delete({ where: { id: reportId } });
+  revalidatePath("/admin/signalements");
+}
+
+export async function deleteReportedTarget(
+  reportId: string,
+  targetType: "TRAJET" | "PRO_PROFILE" | "AFTER" | "USER" | "MERCH_PRODUCT",
+  targetId: string,
+) {
+  await requireAdmin();
+
+  switch (targetType) {
+    case "TRAJET":
+      await prisma.trajet.delete({ where: { id: targetId } }).catch(() => null);
+      break;
+    case "PRO_PROFILE":
+      await prisma.proProfile.delete({ where: { id: targetId } }).catch(() => null);
+      break;
+    case "AFTER":
+      await prisma.after.delete({ where: { id: targetId } }).catch(() => null);
+      break;
+    case "USER":
+      await prisma.user.delete({ where: { id: targetId } }).catch(() => null);
+      break;
+    case "MERCH_PRODUCT":
+      await prisma.merchProduct.delete({ where: { id: targetId } }).catch(() => null);
+      break;
+  }
+
+  await prisma.report.update({
+    where: { id: reportId },
+    data: { status: "RESOLVED", resolvedAt: new Date() },
+  });
+  revalidatePath("/admin/signalements");
+}
+
 export async function deleteAllTestData() {
   await requireAdmin();
   await prisma.$transaction([
