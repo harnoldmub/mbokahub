@@ -1,5 +1,5 @@
 /* MBOKA HUB - NIGHT POSTER SYSTEM */
-@import "tailwindcss";
+@import "tailwindcss/index.css";
 
 @theme {
   /* BACKGROUNDS — profondeur noire stratifiée */
