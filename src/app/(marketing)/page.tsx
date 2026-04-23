@@ -119,7 +119,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                   className="h-16 px-10 text-lg shadow-glow-blood"
                   size="lg"
                 >
-                  <Link href={localizedHref("/trajets", locale)}>
+                  <Link href="#prestations">
                     {copy.primaryCta}
                     <ArrowRight className="ml-2 size-5" />
                   </Link>

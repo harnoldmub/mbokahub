@@ -36,6 +36,13 @@ export default function QuizStartPage() {
           </p>
         </div>
 
+        <div className="mb-6 flex items-start gap-3 rounded-2xl border border-white/10 bg-smoke/30 px-5 py-4">
+          <span className="mt-0.5 shrink-0 font-mono text-[10px] text-paper-mute">ℹ</span>
+          <p className="font-mono text-[9px] uppercase leading-relaxed tracking-wider text-paper-mute">
+            Informations non contractuelles — certaines réponses sont basées sur des sources publiques qui peuvent évoluer. Vérifiez sur les sites officiels du Stade de France et de la billetterie avant le concert.
+          </p>
+        </div>
+
         <QuizClient />
       </div>
     </main>

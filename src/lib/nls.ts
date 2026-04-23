@@ -82,7 +82,7 @@ export const nls = {
       heroTitle: "Mboka Hub",
       heroSubtitle:
         "Prépare le week-end du concert de Fally Ipupa au Stade de France : trajets, prestataires, afters, merch, jeu et bons plans vérifiés.",
-      primaryCta: "Voir les trajets",
+      primaryCta: "Préparer mon week-end",
       proCta: "Je suis pro",
       prestationsLabel: "Prestations",
       modulesTitleLine1: "Tout est au",
@@ -224,7 +224,7 @@ export const nls = {
       titleLine1: "Sape",
       titleLine2: "Run.",
       description:
-        "Saute, collecte les bonus de style et évite les obstacles pour atteindre le Stade de France au sommet de ton art.",
+        "Incarne l'Aigle et fonce vers le Stade de France ! Évite les Combattants et les obstacles, récupère les Micros d'Or et prouve que tu es le plus grand Warrior.",
       play: "Jouer maintenant",
       leaderboard: "Classement",
       weeklyLeaderboard: "Leaderboard hebdo",

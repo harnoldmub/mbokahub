@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
-import { LEGAL_DISCLAIMER } from "@/lib/constants";
+import { LEGAL_DISCLAIMER, PHOTO_CREDITS } from "@/lib/constants";
 import { getLocale, localizedHref, nls } from "@/lib/nls";
 
 const footerLinks = [
-  { href: "/cgu", label: "CGU" },
+  { href: "/cgv", label: "CGV" },
   { href: "/confidentialite", label: "Confidentialité" },
   { href: "/mentions-legales", label: "Mentions légales" },
   { href: "/disclaimer", label: "Disclaimer" },
@@ -136,11 +136,38 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="border-t border-white/5 pt-10">
-          <p className="font-mono text-[10px] text-paper-mute leading-relaxed uppercase tracking-widest">
-            {LEGAL_DISCLAIMER}
-          </p>
-          <p className="mt-4 font-mono text-[10px] text-paper-mute uppercase">
+        <div className="border-t border-white/5 pt-10 space-y-6">
+          {/* Disclaimer */}
+          <div className="rounded-2xl border border-white/5 bg-smoke/20 px-6 py-5">
+            <p className="mb-1 font-mono text-[9px] uppercase tracking-[0.3em] text-blood">
+              Site indépendant — Non officiel
+            </p>
+            <p className="font-mono text-[10px] text-paper-mute leading-relaxed">
+              {LEGAL_DISCLAIMER}
+            </p>
+          </div>
+
+          {/* Photo credits */}
+          <div>
+            <p className="mb-3 font-mono text-[9px] uppercase tracking-[0.3em] text-paper-mute">
+              Crédits photographiques (Wikimedia Commons)
+            </p>
+            <div className="flex flex-wrap gap-x-6 gap-y-1">
+              {PHOTO_CREDITS.map((credit) => (
+                <a
+                  key={credit.file}
+                  href={credit.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-mono text-[9px] text-paper-mute hover:text-paper transition-colors"
+                >
+                  © {credit.author} — {credit.license}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <p className="font-mono text-[10px] text-paper-mute uppercase">
             © 2026 MBOKA HUB — {copy.rights}
           </p>
         </div>

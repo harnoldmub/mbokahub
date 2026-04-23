@@ -22,6 +22,12 @@ export function SiteHeader() {
 
   return (
     <header className="glass-header">
+      {/* Non-official disclaimer bar */}
+      <div className="border-b border-white/5 bg-smoke/60 py-1.5 backdrop-blur-sm">
+        <p className="text-center font-mono text-[9px] uppercase tracking-[0.2em] text-paper-mute">
+          Site indépendant · Non affilié à Fally Ipupa ou aux organisateurs · À titre informatif uniquement
+        </p>
+      </div>
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-6 lg:px-8">
         {/* Logo */}
         <Link

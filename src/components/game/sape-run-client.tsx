@@ -24,7 +24,7 @@ interface Rect {
 }
 
 interface Obstacle extends Rect {
-  type: "suitcase" | "barrier" | "cone";
+  type: "suitcase" | "combattant" | "barrier";
   color: string;
 }
 
@@ -99,184 +99,163 @@ function drawSapeur(
   ctx.fill();
   ctx.restore();
 
-  // Legs
+  // Wings (The Eagle / L'Aigle spirit)
   ctx.save();
-  ctx.strokeStyle = "#1a1a2e";
-  ctx.lineWidth = 7;
+  ctx.globalAlpha = 0.15 + Math.sin(tick * 0.1) * 0.05;
+  ctx.fillStyle = "#fff";
+  ctx.beginPath();
+  // Left wing
+  ctx.moveTo(x + w * 0.4, y + h * 0.4);
+  ctx.quadraticCurveTo(x - 10, y - 5, x - 15, y + h * 0.3);
+  ctx.lineTo(x + w * 0.4, y + h * 0.5);
+  ctx.fill();
+  // Right wing
+  ctx.moveTo(x + w * 0.6, y + h * 0.4);
+  ctx.quadraticCurveTo(x + w + 10, y - 5, x + w + 15, y + h * 0.3);
+  ctx.lineTo(x + w * 0.6, y + h * 0.5);
+  ctx.fill();
+  ctx.restore();
+
+  // Legs (Silver pants)
+  ctx.save();
+  ctx.strokeStyle = "#e5e7eb";
+  ctx.lineWidth = 8;
   ctx.lineCap = "round";
   // Left leg
   ctx.save();
   ctx.translate(x + w * 0.35, y + h * 0.7);
   ctx.rotate((legSwing * Math.PI) / 180);
-  ctx.beginPath();
-  ctx.moveTo(0, 0);
-  ctx.lineTo(0, h * 0.3);
-  ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, h * 0.3); ctx.stroke();
   ctx.restore();
   // Right leg
   ctx.save();
   ctx.translate(x + w * 0.65, y + h * 0.7);
   ctx.rotate((-legSwing * Math.PI) / 180);
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, h * 0.3); ctx.stroke();
+  ctx.restore();
+  ctx.restore();
+
+  // Body (Silver Tokooos suit)
+  const suitGrad = ctx.createLinearGradient(x, y, x + w, y + h);
+  suitGrad.addColorStop(0, "#f3f4f6");
+  suitGrad.addColorStop(0.5, "#d1d5db");
+  suitGrad.addColorStop(1, "#9ca3af");
+  ctx.fillStyle = suitGrad;
+  drawRoundRect(ctx, x + w * 0.2, y + h * 0.32, w * 0.6, h * 0.4, 6);
+  ctx.fill();
+  
+  // Jewelry (Gold chains)
+  ctx.strokeStyle = "#fbbf24";
+  ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.moveTo(0, 0);
-  ctx.lineTo(0, h * 0.3);
+  ctx.arc(x + w * 0.5, y + h * 0.38, 8, 0, Math.PI);
   ctx.stroke();
-  ctx.restore();
-  ctx.restore();
-
-  // Body (suit jacket — blood red)
-  ctx.fillStyle = "#dc2626";
-  drawRoundRect(ctx, x + w * 0.2, y + h * 0.35, w * 0.6, h * 0.38, 5);
-  ctx.fill();
-
-  // Suit lapels
-  ctx.fillStyle = "#b91c1c";
-  ctx.beginPath();
-  ctx.moveTo(x + w * 0.5, y + h * 0.35);
-  ctx.lineTo(x + w * 0.35, y + h * 0.55);
-  ctx.lineTo(x + w * 0.5, y + h * 0.5);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.moveTo(x + w * 0.5, y + h * 0.35);
-  ctx.lineTo(x + w * 0.65, y + h * 0.55);
-  ctx.lineTo(x + w * 0.5, y + h * 0.5);
-  ctx.fill();
-
-  // Bow tie
-  ctx.fillStyle = "#fbbf24";
-  ctx.beginPath();
-  ctx.moveTo(x + w * 0.5 - 6, y + h * 0.38);
-  ctx.lineTo(x + w * 0.5 - 1, y + h * 0.41);
-  ctx.lineTo(x + w * 0.5 - 6, y + h * 0.44);
-  ctx.closePath();
-  ctx.fill();
-  ctx.beginPath();
-  ctx.moveTo(x + w * 0.5 + 6, y + h * 0.38);
-  ctx.lineTo(x + w * 0.5 + 1, y + h * 0.41);
-  ctx.lineTo(x + w * 0.5 + 6, y + h * 0.44);
-  ctx.closePath();
-  ctx.fill();
-  ctx.fillStyle = "#fbbf24";
-  ctx.beginPath();
-  ctx.arc(x + w * 0.5, y + h * 0.41, 2, 0, Math.PI * 2);
-  ctx.fill();
 
   // Arms
-  ctx.strokeStyle = "#dc2626";
+  ctx.strokeStyle = "#f3f4f6";
   ctx.lineWidth = 7;
   ctx.lineCap = "round";
   // Left arm
   ctx.save();
   ctx.translate(x + w * 0.2, y + h * 0.4);
   ctx.rotate((armSwing * Math.PI) / 180);
-  ctx.beginPath();
-  ctx.moveTo(0, 0);
-  ctx.lineTo(-8, h * 0.28);
-  ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-8, h * 0.28); ctx.stroke();
   ctx.restore();
   // Right arm
   ctx.save();
   ctx.translate(x + w * 0.8, y + h * 0.4);
   ctx.rotate((-armSwing * Math.PI) / 180);
-  ctx.beginPath();
-  ctx.moveTo(0, 0);
-  ctx.lineTo(8, h * 0.28);
-  ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(8, h * 0.28); ctx.stroke();
   ctx.restore();
 
   // Head
-  ctx.fillStyle = "#d4956a";
+  ctx.fillStyle = "#5c4033"; // Darker skin tone
   ctx.beginPath();
-  ctx.arc(x + w / 2, y + h * 0.22, w * 0.22, 0, Math.PI * 2);
+  ctx.arc(x + w / 2, y + h * 0.2, w * 0.22, 0, Math.PI * 2);
   ctx.fill();
 
-  // Eyes
-  ctx.fillStyle = "#1a1a2e";
+  // Sunglasses (The Fally look)
+  ctx.fillStyle = "#000";
+  ctx.fillRect(x + w * 0.35, y + h * 0.16, w * 0.3, h * 0.08); // Sunglasses bar
   ctx.beginPath();
-  ctx.arc(x + w * 0.38, y + h * 0.2, 2.5, 0, Math.PI * 2);
-  ctx.arc(x + w * 0.62, y + h * 0.2, 2.5, 0, Math.PI * 2);
+  ctx.arc(x + w * 0.4, y + h * 0.22, 5, 0, Math.PI * 2);
+  ctx.arc(x + w * 0.6, y + h * 0.22, 5, 0, Math.PI * 2);
   ctx.fill();
 
-  // Smile
-  ctx.strokeStyle = "#1a1a2e";
-  ctx.lineWidth = 2;
+  // Hairstyle (Fade/Short hair)
+  ctx.fillStyle = "#111";
   ctx.beginPath();
-  ctx.arc(x + w / 2, y + h * 0.24, 5, 0, Math.PI);
-  ctx.stroke();
-
-  // Top hat
-  ctx.fillStyle = "#1a1a2e";
-  ctx.fillRect(x + w * 0.3, y + h * 0.02, w * 0.4, h * 0.12);
-  ctx.fillRect(x + w * 0.22, y + h * 0.13, w * 0.56, h * 0.04);
-  // Hat band
-  ctx.fillStyle = "#dc2626";
-  ctx.fillRect(x + w * 0.3, y + h * 0.1, w * 0.4, h * 0.035);
+  ctx.arc(x + w / 2, y + h * 0.15, w * 0.23, Math.PI, 0);
+  ctx.fill();
 }
 
-function drawObstacle(ctx: CanvasRenderingContext2D, obs: Obstacle) {
+function drawObstacle(ctx: CanvasRenderingContext2D, obs: Obstacle, tick: number) {
   ctx.save();
 
   if (obs.type === "suitcase") {
-    // Body
+    // Suitcase (The luggage)
     ctx.fillStyle = obs.color;
     drawRoundRect(ctx, obs.x, obs.y, obs.w, obs.h, 8);
     ctx.fill();
-    // Handle
     ctx.strokeStyle = "#fff3";
     ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.roundRect(obs.x + obs.w * 0.3, obs.y - 10, obs.w * 0.4, 12, 4);
     ctx.stroke();
-    // Latches
-    ctx.fillStyle = "#fbbf2440";
-    ctx.fillRect(obs.x + obs.w * 0.2, obs.y + obs.h / 2 - 4, 8, 8);
-    ctx.fillRect(obs.x + obs.w * 0.75, obs.y + obs.h / 2 - 4, 8, 8);
-    // Line
-    ctx.strokeStyle = "#fff1";
-    ctx.lineWidth = 1;
+  }
+
+  if (obs.type === "combattant") {
+    // The "Combattant" Character
+    const bounce = Math.sin(tick * 0.2) * 5;
+    const signOsc = Math.sin(tick * 0.1) * 0.1;
+    
+    // Legs
+    ctx.fillStyle = "#000";
+    ctx.fillRect(obs.x + 10, obs.y + obs.h - 15, 8, 15);
+    ctx.fillRect(obs.x + obs.w - 18, obs.y + obs.h - 15, 8, 15);
+    // Body (Black hoodie)
+    ctx.fillStyle = "#111";
+    drawRoundRect(ctx, obs.x + 5, obs.y + 20 + bounce, obs.w - 10, obs.h - 35, 10);
+    ctx.fill();
+    // Head
+    ctx.fillStyle = "#3d1f00";
     ctx.beginPath();
-    ctx.moveTo(obs.x + 4, obs.y + obs.h / 2);
-    ctx.lineTo(obs.x + obs.w - 4, obs.y + obs.h / 2);
-    ctx.stroke();
+    ctx.arc(obs.x + obs.w / 2, obs.y + 15 + bounce, 12, 0, Math.PI * 2);
+    ctx.fill();
+    // Angry eyes
+    ctx.strokeStyle = "#e63946";
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(obs.x + obs.w/2 - 6, obs.y + 12 + bounce); ctx.lineTo(obs.x + obs.w/2 - 2, obs.y + 15 + bounce); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(obs.x + obs.w/2 + 6, obs.y + 12 + bounce); ctx.lineTo(obs.x + obs.w/2 + 2, obs.y + 15 + bounce); ctx.stroke();
+
+    // Protest Sign
+    ctx.save();
+    ctx.translate(obs.x + obs.w / 2, obs.y - 10 + bounce);
+    ctx.rotate(signOsc);
+    ctx.fillStyle = "#78350f"; // Wood stick
+    ctx.fillRect(-2, 0, 4, 30);
+    ctx.fillStyle = "#fff"; // Paper
+    ctx.fillRect(-25, -25, 50, 30);
+    ctx.strokeStyle = "#000";
+    ctx.strokeRect(-25, -25, 50, 30);
+    ctx.fillStyle = "#e63946";
+    ctx.font = "bold 10px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("NO!", 0, -6);
+    ctx.restore();
   }
 
   if (obs.type === "barrier") {
-    // Post left
+    // Police Barrier
     ctx.fillStyle = "#ef4444";
     ctx.fillRect(obs.x, obs.y, 8, obs.h);
-    // Post right
     ctx.fillRect(obs.x + obs.w - 8, obs.y, 8, obs.h);
-    // Barrier stripe 1
     ctx.fillStyle = "#fbbf24";
-    ctx.save();
-    ctx.translate(obs.x + 4, obs.y + obs.h * 0.25);
-    ctx.fillRect(0, 0, obs.w - 8, obs.h * 0.2);
-    ctx.restore();
-    // Barrier stripe 2
-    ctx.fillStyle = "#dc2626";
-    ctx.save();
-    ctx.translate(obs.x + 4, obs.y + obs.h * 0.55);
-    ctx.fillRect(0, 0, obs.w - 8, obs.h * 0.2);
-    ctx.restore();
-  }
-
-  if (obs.type === "cone") {
-    ctx.fillStyle = obs.color;
-    ctx.beginPath();
-    ctx.moveTo(obs.x + obs.w / 2, obs.y);
-    ctx.lineTo(obs.x + obs.w, obs.y + obs.h);
-    ctx.lineTo(obs.x, obs.y + obs.h);
-    ctx.closePath();
-    ctx.fill();
-    // Stripe
-    ctx.fillStyle = "#fff2";
-    ctx.beginPath();
-    ctx.moveTo(obs.x + obs.w * 0.3, obs.y + obs.h * 0.5);
-    ctx.lineTo(obs.x + obs.w * 0.7, obs.y + obs.h * 0.5);
-    ctx.lineTo(obs.x + obs.w * 0.8, obs.y + obs.h * 0.7);
-    ctx.lineTo(obs.x + obs.w * 0.2, obs.y + obs.h * 0.7);
-    ctx.closePath();
-    ctx.fill();
+    ctx.fillRect(obs.x + 4, obs.y + obs.h * 0.25, obs.w - 8, obs.h * 0.2);
+    ctx.fillStyle = "#000";
+    ctx.font = "bold 9px monospace";
+    ctx.textAlign = "center";
+    ctx.fillText("POLICE", obs.x + obs.w / 2, obs.y + obs.h * 0.4);
   }
 
   ctx.restore();
@@ -382,19 +361,19 @@ function drawParticles(ctx: CanvasRenderingContext2D, particles: Particle[]) {
 }
 
 function spawnObstacle(_speed: number): Obstacle {
-  const types: Obstacle["type"][] = ["suitcase", "barrier", "cone"];
+  const types: Obstacle["type"][] = ["suitcase", "combattant", "barrier"];
   const type = types[Math.floor(Math.random() * types.length)];
   const colors: Record<string, string> = {
     suitcase: ["#1e3a5f", "#4a1942", "#1a3a1a", "#3d1f00"][
       Math.floor(Math.random() * 4)
     ],
+    combattant: "#000",
     barrier: "#ef4444",
-    cone: "#f97316",
   };
   const sizes: Record<string, { w: number; h: number }> = {
-    suitcase: { w: 50 + Math.random() * 20, h: 45 + Math.random() * 15 },
+    suitcase: { w: 50, h: 40 },
+    combattant: { w: 40, h: 65 },
     barrier: { w: 60, h: 70 },
-    cone: { w: 35, h: 50 },
   };
   const s = sizes[type];
   return {
@@ -579,6 +558,26 @@ export function SapeRunClient() {
       }
       ctx.globalAlpha = 1;
 
+      // Stade de France (parallax layer 0 — deep background)
+      ctx.save();
+      const stX = ((-bgOffsetRef.current * 0.05) % (W * 2)) + W;
+      ctx.fillStyle = "#1e1e3a";
+      ctx.globalAlpha = 0.6;
+      // The iconic elliptical roof
+      ctx.beginPath();
+      ctx.ellipse(stX, GROUND - 40, 180, 60, 0, 0, Math.PI * 2);
+      ctx.fill();
+      // Pillars
+      for (let i = -160; i <= 160; i += 40) {
+        ctx.fillRect(stX + i - 2, GROUND - 40, 4, 40);
+      }
+      // Glowing text
+      ctx.fillStyle = "#fff";
+      ctx.font = "bold 12px font-mono";
+      ctx.textAlign = "center";
+      ctx.fillText("STADE DE FRANCE", stX, GROUND - 60);
+      ctx.restore();
+
       // Buildings silhouette (parallax layer 1)
       ctx.fillStyle = "#0d0d1a";
       const buildings = [
@@ -729,7 +728,7 @@ export function SapeRunClient() {
       }
 
       // ── Draw objects ─────────────────────────────────────────────────────────
-      for (const obs of obstaclesRef.current) drawObstacle(ctx, obs);
+      for (const obs of obstaclesRef.current) drawObstacle(ctx, obs, tick);
       for (const col of collectiblesRef.current)
         drawCollectible(ctx, col, tick);
       drawParticles(ctx, particlesRef.current);

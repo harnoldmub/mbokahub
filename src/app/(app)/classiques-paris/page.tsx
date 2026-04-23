@@ -87,6 +87,14 @@ export default function ParisClassicsPage() {
         </p>
       </div>
 
+      {/* Non-contractual notice */}
+      <div className="mb-6 mt-6 flex items-start gap-3 rounded-2xl border border-white/10 bg-smoke/30 px-5 py-4">
+        <Info className="mt-0.5 size-4 shrink-0 text-paper-mute" />
+        <p className="font-mono text-[9px] uppercase leading-relaxed tracking-wider text-paper-mute">
+          Informations non contractuelles · Données indicatives compilées de sources publiques · Prix et horaires susceptibles d&apos;évoluer · Vérifier sur les sites officiels avant de vous déplacer.
+        </p>
+      </div>
+
       {/* Urgency banner */}
       <div className="mb-10 mt-8 flex flex-col gap-3 rounded-2xl border border-blood/20 bg-blood/5 p-5 sm:flex-row sm:items-center sm:gap-6">
         <AlertTriangle className="size-6 shrink-0 text-blood" />
