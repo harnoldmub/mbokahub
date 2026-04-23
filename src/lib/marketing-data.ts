@@ -13,8 +13,8 @@ import {
 } from "lucide-react";
 
 export const landingStats = [
-  { label: "dates officielles", value: "2" },
-  { label: "prix public dès", value: "63€" },
+  { label: "soirs au stade", value: "2" },
+  { label: "fans attendus", value: "9k+" },
   { label: "dates clés", value: "02-03.05" },
 ] as const;
 

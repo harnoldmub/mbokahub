@@ -153,7 +153,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                     Stade de France
                   </span>
                   <span className="font-display text-xs uppercase text-paper">
-                    28.05.2026
+                    02 & 03.05.2026
                   </span>
                 </div>
               </div>
@@ -193,7 +193,54 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         </div>
       </section>
 
-      <section className="relative overflow-hidden px-6 py-20 lg:px-8">
+      <section className="relative overflow-hidden px-6 py-16 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-coal via-coal to-blood/5 p-8 sm:p-10">
+            <div className="flex flex-col items-start gap-6 lg:flex-row lg:items-center lg:justify-between">
+              <div className="space-y-3">
+                <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-blood">
+                  Le concert
+                </p>
+                <h2 className="font-display text-3xl uppercase text-paper sm:text-4xl">
+                  Fally Ipupa · Stade de France
+                </h2>
+                <div className="flex flex-wrap gap-x-8 gap-y-2 text-sm text-paper-dim">
+                  <span className="flex items-center gap-2">
+                    <span className="size-1.5 rounded-full bg-blood" />
+                    Sam. 02 & dim. 03 mai 2026
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <span className="size-1.5 rounded-full bg-blood" />
+                    Ouverture 18h · début 20h
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <span className="size-1.5 rounded-full bg-blood" />
+                    Saint-Denis (93)
+                  </span>
+                </div>
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Button asChild size="lg" className="shadow-glow-blood">
+                  <Link href={localizedHref("/concert", locale)}>
+                    Infos & billetterie <ArrowRight className="ml-2 size-5" />
+                  </Link>
+                </Button>
+                <Button asChild size="lg" variant="outline">
+                  <a
+                    href="https://www.stadefrance.com/fr/calendrier/fally-ipupa"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Site officiel
+                  </a>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="relative overflow-hidden px-6 py-12 lg:px-8 lg:py-20">
         <div className="mx-auto max-w-7xl">
           <div className="mb-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
