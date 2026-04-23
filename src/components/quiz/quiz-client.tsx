@@ -1161,39 +1161,10 @@ export function QuizClient() {
           <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/80 to-ink/40" />
         </div>
 
-        <div className="relative z-10 grid gap-7 p-5 sm:grid-cols-[170px_1fr] sm:p-8">
-          <div className="relative mx-auto w-full max-w-[180px] sm:mx-0">
-            <div className="absolute left-8 top-1/2 hidden size-32 -translate-y-1/2 rounded-full border border-white/10 bg-[radial-gradient(circle,transparent_0_15%,rgba(245,239,228,0.18)_16%_17%,rgba(8,8,8,0.92)_18%_100%)] shadow-[0_16px_60px_rgba(0,0,0,0.55)] sm:block" />
-            <div
-              className={cn(
-                "relative aspect-square overflow-hidden rounded-2xl border border-white/15 bg-smoke shadow-[0_24px_70px_rgba(0,0,0,0.55)] transition-all duration-500",
-                phase === "feedback"
-                  ? "rotate-0 scale-100"
-                  : "-rotate-3 hover:rotate-0 hover:scale-[1.02]",
-              )}
-            >
-              <Image
-                alt={`Pochette ${q.album.title}`}
-                className="object-cover"
-                fill
-                priority
-                sizes="180px"
-                src={q.album.cover}
-              />
-              <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/0 opacity-70" />
-            </div>
-            <div className="mt-3 flex items-center justify-between rounded-xl border border-white/10 bg-ink/70 px-3 py-2 backdrop-blur">
-              <span className="truncate font-mono text-[9px] uppercase tracking-wider text-paper-dim">
-                {q.album.title}
-              </span>
-              <span className="font-display text-lg leading-none text-blood">
-                {q.album.year}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex min-w-0 flex-col justify-center">
-            <div className="mb-6 flex flex-wrap items-center gap-3">
+        <div className="relative z-10 flex gap-6 p-5 sm:p-7">
+          {/* LEFT — Question + options (always full-width on mobile, flex-1 on desktop) */}
+          <div className="flex min-w-0 flex-1 flex-col justify-center">
+            <div className="mb-5 flex flex-wrap items-center gap-3">
               <span
                 className={cn(
                   "rounded-lg border px-3 py-1 font-mono text-[9px] uppercase tracking-widest",
@@ -1225,7 +1196,7 @@ export function QuizClient() {
               )}
             </div>
 
-            <h2 className="mb-8 font-display text-2xl text-paper uppercase leading-tight sm:text-3xl">
+            <h2 className="mb-7 font-display text-2xl text-paper uppercase leading-tight sm:text-3xl">
               {q.question}
             </h2>
 
@@ -1239,9 +1210,7 @@ export function QuizClient() {
                   <button
                     key={option}
                     onClick={() =>
-                      phase === "question"
-                        ? handleSelect(idx)
-                        : undefined
+                      phase === "question" ? handleSelect(idx) : undefined
                     }
                     type="button"
                     className={cn(
@@ -1272,6 +1241,36 @@ export function QuizClient() {
                   </button>
                 );
               })}
+            </div>
+          </div>
+
+          {/* RIGHT — Album cover, appears only when answer is revealed */}
+          <div
+            className={cn(
+              "hidden sm:flex flex-col flex-shrink-0 w-[160px] transition-all duration-500",
+              phase === "feedback"
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 translate-x-4 pointer-events-none",
+            )}
+          >
+            <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/15 bg-smoke shadow-[0_24px_70px_rgba(0,0,0,0.55)]">
+              <Image
+                alt={`Pochette ${q.album.title}`}
+                className="object-cover"
+                fill
+                priority
+                sizes="160px"
+                src={q.album.cover}
+              />
+              <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/0 opacity-70" />
+            </div>
+            <div className="mt-2 flex items-center justify-between rounded-xl border border-white/10 bg-ink/70 px-3 py-2 backdrop-blur">
+              <span className="truncate font-mono text-[9px] uppercase tracking-wider text-paper-dim">
+                {q.album.title}
+              </span>
+              <span className="font-display text-base leading-none text-blood">
+                {q.album.year}
+              </span>
             </div>
           </div>
         </div>
