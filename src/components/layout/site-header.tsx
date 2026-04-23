@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -12,6 +13,15 @@ import { getLocale, localizedHref, nls } from "@/lib/nls";
 export function SiteHeader() {
   const locale = getLocale(useSearchParams().get("lang"));
   const copy = nls[locale].common;
+  const { isSignedIn } = useUser();
+  const dashboardLabel =
+    locale === "en"
+      ? "Dashboard"
+      : locale === "de"
+        ? "Dashboard"
+        : locale === "nl"
+          ? "Dashboard"
+          : "Tableau de bord";
   const navItems = [
     { href: "/", label: copy.nav.home },
     { href: "/concert", label: copy.nav.concert },
@@ -82,8 +92,13 @@ export function SiteHeader() {
             size="sm"
             variant="vip"
           >
-            <Link href={localizedHref("/dashboard", locale)}>
-              {copy.vipCta}
+            <Link
+              href={localizedHref(
+                isSignedIn ? "/dashboard" : "/sign-in",
+                locale,
+              )}
+            >
+              {isSignedIn ? dashboardLabel : copy.vipCta}
             </Link>
           </Button>
           <MobileMenu locale={locale} />

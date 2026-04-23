@@ -98,7 +98,7 @@ export default async function PrestationsPage({
                       </span>
                       <div className="size-1 rounded-full bg-blood" />
                     </div>
-                    <h3 className="font-display text-5xl text-paper uppercase tracking-normal">
+                    <h3 className="font-display text-3xl sm:text-4xl xl:text-5xl text-paper uppercase tracking-normal break-words leading-[0.95]">
                       {category.title}
                     </h3>
                   </div>

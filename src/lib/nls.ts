@@ -208,7 +208,7 @@ export const nls = {
         {
           title: "Babysitting",
           description:
-            "Garde d'enfants pendant le concert — 10 €/h, profils vérifiés.",
+            "Garde d'enfants pendant le concert, profils vérifiés par l'équipe.",
         },
       ],
     },
@@ -454,7 +454,7 @@ export const nls = {
         {
           title: "Babysitting",
           description:
-            "Childcare during the concert — €10/hr, vetted profiles.",
+            "Childcare during the concert, profiles vetted by our team.",
         },
       ],
     },
@@ -699,7 +699,7 @@ export const nls = {
         {
           title: "Babysitting",
           description:
-            "Kinderbetreuung während des Konzerts — 10 €/Std., geprüfte Profile.",
+            "Kinderbetreuung während des Konzerts, vom Team geprüfte Profile.",
         },
       ],
     },
@@ -945,7 +945,7 @@ export const nls = {
         {
           title: "Babysitting",
           description:
-            "Kinderopvang tijdens het concert — €10/u, gecontroleerde profielen.",
+            "Kinderopvang tijdens het concert, profielen door het team gecontroleerd.",
         },
       ],
     },
