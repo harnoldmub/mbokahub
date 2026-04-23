@@ -408,8 +408,47 @@ const COLLECTIBLE_SCORES: Record<string, number> = {
   microphone: 150,
 };
 
+// ── Localized copy ────────────────────────────────────────────────────────────
+export interface SapeRunCopy {
+  idleEyebrow: string;
+  idleTitle: string;
+  idleTagline: string;
+  start: string;
+  controlsHint: string;
+  gameOver: string;
+  fallen: string;
+  score: string;
+  record: string;
+  newRecord: string;
+  retry: string;
+  jumpHint: string;
+  recordLabel: string;
+  speed: string;
+  goal: string;
+}
+
+const DEFAULT_COPY: SapeRunCopy = {
+  idleEyebrow: "Mboka Hub Game",
+  idleTitle: "Sape Run",
+  idleTagline:
+    "Aide le Sapeur à traverser Paris jusqu'au Stade de France. Ramasse chapeaux, diamants et micros !",
+  start: "Commencer",
+  controlsHint: "Espace / Clic / Tap pour sauter",
+  gameOver: "Game Over",
+  fallen: "Le Sapeur est tombé !",
+  score: "Score",
+  record: "Record",
+  newRecord: "Nouveau Record !",
+  retry: "Rejouer",
+  jumpHint: "Sauter (Espace / Clic)",
+  recordLabel: "Record",
+  speed: "VITESSE",
+  goal: "STADE DE FRANCE",
+};
+
 // ── Main Component ─────────────────────────────────────────────────────────────
-export function SapeRunClient() {
+export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = {}) {
+  const c = copy;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const stateRef = useRef<GameState>("idle");
   const rafRef = useRef<number>(0);
@@ -558,24 +597,186 @@ export function SapeRunClient() {
       }
       ctx.globalAlpha = 1;
 
-      // Stade de France (parallax layer 0 — deep background)
+      // ── Concert spotlight beams (sweep from horizon) ────────────────────────
       ctx.save();
-      const stX = ((-bgOffsetRef.current * 0.05) % (W * 2)) + W;
-      ctx.fillStyle = "#1e1e3a";
-      ctx.globalAlpha = 0.6;
-      // The iconic elliptical roof
-      ctx.beginPath();
-      ctx.ellipse(stX, GROUND - 40, 180, 60, 0, 0, Math.PI * 2);
-      ctx.fill();
-      // Pillars
-      for (let i = -160; i <= 160; i += 40) {
-        ctx.fillRect(stX + i - 2, GROUND - 40, 4, 40);
+      const sweep = Math.sin(tick * 0.012);
+      const sweep2 = Math.sin(tick * 0.012 + Math.PI / 1.5);
+      const beamOriginX = W * 0.55;
+      const beamOriginY = GROUND - 30;
+      for (const [angleBase, hue] of [
+        [-Math.PI / 2 + sweep * 0.5, "#e63946"],
+        [-Math.PI / 2 + sweep2 * 0.6, "#fbbf24"],
+        [-Math.PI / 2 - sweep * 0.7, "#a855f7"],
+      ] as const) {
+        const grad = ctx.createLinearGradient(
+          beamOriginX,
+          beamOriginY,
+          beamOriginX + Math.cos(angleBase as number) * 400,
+          beamOriginY + Math.sin(angleBase as number) * 400,
+        );
+        grad.addColorStop(0, `${hue}55`);
+        grad.addColorStop(1, `${hue}00`);
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.moveTo(beamOriginX, beamOriginY);
+        ctx.lineTo(
+          beamOriginX + Math.cos((angleBase as number) - 0.06) * 500,
+          beamOriginY + Math.sin((angleBase as number) - 0.06) * 500,
+        );
+        ctx.lineTo(
+          beamOriginX + Math.cos((angleBase as number) + 0.06) * 500,
+          beamOriginY + Math.sin((angleBase as number) + 0.06) * 500,
+        );
+        ctx.closePath();
+        ctx.fill();
       }
-      // Glowing text
+      ctx.restore();
+
+      // ── Eiffel Tower silhouette (parallax layer 0.5) ────────────────────────
+      ctx.save();
+      const eiffelCycleW = W * 1.6;
+      const eiffelX =
+        ((((W * 0.18 - bgOffsetRef.current * 0.08) % eiffelCycleW) +
+          eiffelCycleW) %
+          eiffelCycleW) -
+        80;
+      const eBaseY = GROUND;
+      const eTopY = GROUND - 200;
+      const eHalfBaseW = 38;
+      const eHalfTopW = 4;
+      ctx.fillStyle = "#0f1024";
+      ctx.globalAlpha = 0.85;
+      // Tower silhouette (4-segment trapezoid)
+      ctx.beginPath();
+      ctx.moveTo(eiffelX - eHalfBaseW, eBaseY);
+      ctx.lineTo(eiffelX - 22, eBaseY - 60);
+      ctx.lineTo(eiffelX - 12, eBaseY - 130);
+      ctx.lineTo(eiffelX - eHalfTopW, eTopY);
+      ctx.lineTo(eiffelX + eHalfTopW, eTopY);
+      ctx.lineTo(eiffelX + 12, eBaseY - 130);
+      ctx.lineTo(eiffelX + 22, eBaseY - 60);
+      ctx.lineTo(eiffelX + eHalfBaseW, eBaseY);
+      ctx.closePath();
+      ctx.fill();
+      // Cross beams
+      ctx.strokeStyle = "#0f1024";
+      ctx.lineWidth = 2;
+      for (let yy = eBaseY - 10; yy > eTopY + 10; yy -= 18) {
+        const t = (yy - eTopY) / (eBaseY - eTopY);
+        const halfW = eHalfTopW + t * (eHalfBaseW - eHalfTopW);
+        ctx.beginPath();
+        ctx.moveTo(eiffelX - halfW, yy);
+        ctx.lineTo(eiffelX + halfW, yy - 8);
+        ctx.moveTo(eiffelX + halfW, yy);
+        ctx.lineTo(eiffelX - halfW, yy - 8);
+        ctx.stroke();
+      }
+      // Blinking gold beacon at the tip
+      const blink = (Math.sin(tick * 0.15) + 1) / 2;
+      ctx.globalAlpha = 0.5 + blink * 0.5;
+      ctx.fillStyle = "#fbbf24";
+      ctx.beginPath();
+      ctx.arc(eiffelX, eTopY - 4, 3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // ── Stade de France (parallax layer 0 — the GOAL) ───────────────────────
+      ctx.save();
+      const stadiumCycleW = W * 1.8;
+      const stX =
+        ((((W * 0.7 - bgOffsetRef.current * 0.05) % stadiumCycleW) +
+          stadiumCycleW) %
+          stadiumCycleW) -
+        100;
+      const stY = GROUND - 50;
+
+      // Glow halo behind stadium
+      const stadiumGlow = ctx.createRadialGradient(stX, stY, 20, stX, stY, 220);
+      stadiumGlow.addColorStop(0, "rgba(230, 57, 70, 0.35)");
+      stadiumGlow.addColorStop(0.5, "rgba(251, 191, 36, 0.12)");
+      stadiumGlow.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = stadiumGlow;
+      ctx.beginPath();
+      ctx.arc(stX, stY, 220, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Iconic elliptical roof
+      ctx.fillStyle = "#26264a";
+      ctx.beginPath();
+      ctx.ellipse(stX, stY, 200, 70, 0, 0, Math.PI * 2);
+      ctx.fill();
+      // Inner darker ellipse (opening)
+      ctx.fillStyle = "#0a0a18";
+      ctx.beginPath();
+      ctx.ellipse(stX, stY + 5, 160, 40, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Pillars
+      ctx.fillStyle = "#1a1a35";
+      for (let i = -180; i <= 180; i += 30) {
+        const ph = 50 - Math.abs(i) * 0.06;
+        ctx.fillRect(stX + i - 3, stY + 10, 6, ph);
+      }
+
+      // Floodlights (4 pulsing lamps on top of roof)
+      const flood = 0.5 + Math.sin(tick * 0.08) * 0.4;
+      for (const fx of [-150, -50, 50, 150]) {
+        ctx.fillStyle = `rgba(255, 240, 180, ${flood})`;
+        ctx.beginPath();
+        ctx.arc(stX + fx, stY - 65, 5, 0, Math.PI * 2);
+        ctx.fill();
+        // Light beam upward
+        ctx.fillStyle = `rgba(255, 240, 180, ${flood * 0.15})`;
+        ctx.beginPath();
+        ctx.moveTo(stX + fx, stY - 65);
+        ctx.lineTo(stX + fx - 12, stY - 130);
+        ctx.lineTo(stX + fx + 12, stY - 130);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      // Marquee banner: FALLY 2026
+      const bannerY = stY - 38;
+      ctx.fillStyle = "#e63946";
+      drawRoundRect(ctx, stX - 70, bannerY - 12, 140, 22, 4);
+      ctx.fill();
       ctx.fillStyle = "#fff";
-      ctx.font = "bold 12px font-mono";
+      ctx.font = "bold 11px monospace";
       ctx.textAlign = "center";
-      ctx.fillText("STADE DE FRANCE", stX, GROUND - 60);
+      ctx.fillText("FALLY 2026", stX, bannerY + 3);
+
+      // Stadium label
+      ctx.fillStyle = "rgba(255,255,255,0.85)";
+      ctx.font = "bold 10px monospace";
+      ctx.fillText(c.goal, stX, stY + 70);
+      ctx.restore();
+
+      // ── Crowd silhouettes near the stadium ──────────────────────────────────
+      ctx.save();
+      ctx.fillStyle = "#000";
+      ctx.globalAlpha = 0.55;
+      const crowdCycle = W;
+      const crowdShift =
+        ((((-bgOffsetRef.current * 0.25) % crowdCycle) + crowdCycle) %
+          crowdCycle) -
+        crowdCycle / 2;
+      for (let cx = -50; cx < W + 50; cx += 6) {
+        const seed = Math.sin((cx + crowdShift) * 0.5) * 0.5 + 0.5;
+        const headH = 8 + seed * 4;
+        const bodyH = 14 + seed * 6;
+        const bob = Math.sin(tick * 0.1 + cx * 0.1) * 1.2;
+        // Body
+        ctx.fillRect(cx, GROUND - bodyH + bob, 4, bodyH);
+        // Head
+        ctx.beginPath();
+        ctx.arc(cx + 2, GROUND - bodyH - headH / 2 + bob, headH / 2.5, 0, Math.PI * 2);
+        ctx.fill();
+        // Random raised arms (like at a concert)
+        if (seed > 0.7) {
+          ctx.fillRect(cx + 1, GROUND - bodyH - headH - 8 + bob, 1.5, 8);
+          ctx.fillRect(cx + 2.5, GROUND - bodyH - headH - 8 + bob, 1.5, 8);
+        }
+      }
       ctx.restore();
 
       // Buildings silhouette (parallax layer 1)
@@ -776,7 +977,7 @@ export function SapeRunClient() {
         ctx.fillStyle = "#ffffff50";
         ctx.font = "9px monospace";
         ctx.textAlign = "right";
-        ctx.fillText("VITESSE", W - 20, 62);
+        ctx.fillText(c.speed, W - 20, 62);
         ctx.textAlign = "left";
       }
 
@@ -833,14 +1034,13 @@ export function SapeRunClient() {
           <div className="absolute inset-0 flex flex-col items-center justify-center rounded-[2rem] bg-ink/70 backdrop-blur-sm">
             <div className="text-center px-6">
               <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.4em] text-blood">
-                Mboka Hub Game
+                {c.idleEyebrow}
               </p>
               <h2 className="mb-4 font-display text-5xl uppercase text-paper leading-tight">
-                Sape Run
+                {c.idleTitle}
               </h2>
               <p className="mb-8 max-w-xs mx-auto font-body text-paper-dim text-sm italic leading-relaxed">
-                Aide le Sapeur à traverser Paris sans s'arrêter. Collecte des
-                chapeaux, diamants et micros !
+                {c.idleTagline}
               </p>
               <button
                 type="button"
@@ -848,10 +1048,10 @@ export function SapeRunClient() {
                 className="flex items-center gap-3 mx-auto rounded-2xl bg-blood px-10 py-4 font-mono text-sm uppercase tracking-wider text-white shadow-glow-blood hover:bg-blood/90 transition-all"
               >
                 <Play className="size-5 fill-current" />
-                Commencer
+                {c.start}
               </button>
               <p className="mt-6 font-mono text-[9px] uppercase tracking-widest text-paper-mute">
-                Espace / Clic / Tap pour sauter
+                {c.controlsHint}
               </p>
             </div>
           </div>
@@ -862,16 +1062,16 @@ export function SapeRunClient() {
           <div className="absolute inset-0 flex flex-col items-center justify-center rounded-[2rem] bg-ink/80 backdrop-blur-sm">
             <div className="text-center px-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.4em] text-blood">
-                Game Over
+                {c.gameOver}
               </p>
               <h2 className="mb-6 font-display text-4xl uppercase text-paper">
-                Le Sapeur est tombé !
+                {c.fallen}
               </h2>
 
               <div className="mb-6 grid grid-cols-2 gap-4 max-w-xs mx-auto">
                 <div className="rounded-2xl border border-white/10 bg-smoke/50 p-4">
                   <p className="font-mono text-[9px] uppercase tracking-widest text-paper-mute mb-1">
-                    Score
+                    {c.score}
                   </p>
                   <p className="font-display text-3xl text-paper">
                     {displayScore}
@@ -886,7 +1086,7 @@ export function SapeRunClient() {
                   )}
                 >
                   <p className="font-mono text-[9px] uppercase tracking-widest text-paper-mute mb-1">
-                    {displayScore >= highScore ? "Nouveau Record !" : "Record"}
+                    {displayScore >= highScore ? c.newRecord : c.record}
                   </p>
                   <p
                     className={cn(
@@ -905,7 +1105,7 @@ export function SapeRunClient() {
                 className="flex items-center gap-3 mx-auto rounded-2xl bg-blood px-10 py-4 font-mono text-sm uppercase tracking-wider text-white shadow-glow-blood hover:bg-blood/90 transition-all"
               >
                 <RotateCcw className="size-4" />
-                Rejouer
+                {c.retry}
               </button>
             </div>
           </div>
@@ -930,7 +1130,7 @@ export function SapeRunClient() {
           className="flex items-center gap-2 rounded-xl border border-white/10 bg-smoke/50 px-6 py-3 font-mono text-[10px] uppercase tracking-wider text-paper-mute hover:border-blood/30 hover:text-paper transition-all"
         >
           <ChevronUp className="size-4 text-blood" />
-          Sauter (Espace / Clic)
+          {c.jumpHint}
         </button>
         <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-wider text-paper-mute">
           <span className="text-gold">🎩 +50</span>
@@ -941,7 +1141,7 @@ export function SapeRunClient() {
           <div className="flex items-center gap-2">
             <Trophy className="size-3 text-gold" />
             <span className="font-mono text-[10px] uppercase tracking-wider text-paper-mute">
-              Record : <span className="text-gold">{highScore}</span>
+              {c.recordLabel} : <span className="text-gold">{highScore}</span>
             </span>
           </div>
         )}

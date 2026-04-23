@@ -2,10 +2,23 @@ import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 
 import { SapeRunClient } from "@/components/game/sape-run-client";
+import {
+  getLocaleFromSearchParams,
+  localizedHref,
+  nls,
+  type SearchParams,
+} from "@/lib/nls";
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
-export default function JeuPlayPage() {
+type JeuPlayPageProps = {
+  searchParams?: Promise<SearchParams>;
+};
+
+export default async function JeuPlayPage({ searchParams }: JeuPlayPageProps) {
+  const locale = getLocaleFromSearchParams(await searchParams);
+  const copy = nls[locale].game;
+
   return (
     <main className="relative min-h-screen bg-ink overflow-hidden">
       <div className="pointer-events-none absolute inset-0 z-0">
@@ -17,26 +30,44 @@ export default function JeuPlayPage() {
 
       <div className="relative z-10 mx-auto max-w-4xl px-4 py-10">
         <Link
-          href="/jeu"
+          href={localizedHref("/jeu", locale)}
           className="mb-10 inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-paper-mute transition-colors hover:text-blood"
         >
           <ChevronLeft className="size-3" />
-          Retour au jeu
+          {copy.back}
         </Link>
 
         <div className="mb-8 text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-blood">
-            Mboka Hub × Stade de France 2026
+            {copy.eyebrow}
           </p>
           <h1 className="mt-3 font-display text-5xl uppercase text-paper leading-tight sm:text-6xl">
-            Sape Run
+            {copy.titleLine1} {copy.titleLine2}
           </h1>
           <p className="mt-3 font-serif italic text-paper-dim">
-            Le Sapeur doit traverser Paris — aide-le !
+            {copy.tagline}
           </p>
         </div>
 
-        <SapeRunClient />
+        <SapeRunClient
+          copy={{
+            idleEyebrow: copy.idleEyebrow,
+            idleTitle: `${copy.titleLine1} ${copy.titleLine2}`,
+            idleTagline: copy.idleTagline,
+            start: copy.start,
+            controlsHint: copy.controlsHint,
+            gameOver: copy.gameOver,
+            fallen: copy.fallen,
+            score: copy.score,
+            record: copy.record,
+            newRecord: copy.newRecord,
+            retry: copy.retry,
+            jumpHint: copy.jumpHint,
+            recordLabel: copy.recordLabel,
+            speed: copy.speed,
+            goal: copy.goal,
+          }}
+        />
       </div>
     </main>
   );

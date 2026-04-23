@@ -57,6 +57,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const locale = getLocaleFromSearchParams(await searchParams);
   const copy = nls[locale].home;
   const common = nls[locale].common;
+  const qg = nls[locale].quizGame;
   const modulePreviews = moduleMeta.map((meta, index) => ({
     ...meta,
     ...copy.modules[index],
@@ -247,10 +248,10 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <div className="mb-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-blood">
-                Pendant que tu attends le concert
+                {qg.eyebrow}
               </p>
               <h2 className="mt-2 font-display text-3xl uppercase text-paper sm:text-4xl">
-                Joue. Teste tes connaissances. Hype-toi.
+                {qg.title}
               </h2>
             </div>
           </div>
@@ -266,21 +267,20 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               <div className="relative z-10 flex flex-col gap-5">
                 <div className="flex items-center gap-3">
                   <span className="rounded-full bg-blood/20 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.25em] text-blood">
-                    Mini-jeu
+                    {qg.gameBadge}
                   </span>
                   <span className="font-mono text-[10px] text-paper-mute">
-                    2 min · gratuit
+                    {qg.gameMeta}
                   </span>
                 </div>
                 <h3 className="font-display text-4xl uppercase leading-none text-paper sm:text-5xl">
-                  Sape Run
+                  {qg.gameTitle}
                 </h3>
                 <p className="max-w-md text-sm text-paper-dim leading-relaxed">
-                  Cours dans les rues de Kinshasa, esquive les obstacles, ramasse les
-                  sapes les plus drippées. Bat ton record et grimpe au classement.
+                  {qg.gameDescription}
                 </p>
                 <span className="mt-2 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-blood transition-transform group-hover:translate-x-2">
-                  Lancer le jeu <ArrowRight className="size-4" />
+                  {qg.gameCta} <ArrowRight className="size-4" />
                 </span>
               </div>
             </Link>
@@ -295,21 +295,20 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               <div className="relative z-10 flex flex-col gap-5">
                 <div className="flex items-center gap-3">
                   <span className="rounded-full bg-gold/20 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.25em] text-gold">
-                    Quiz
+                    {qg.quizBadge}
                   </span>
                   <span className="font-mono text-[10px] text-paper-mute">
-                    10 questions · 3 min
+                    {qg.quizMeta}
                   </span>
                 </div>
                 <h3 className="font-display text-4xl uppercase leading-none text-paper sm:text-5xl">
-                  Quel fan de Fally ?
+                  {qg.quizTitle}
                 </h3>
                 <p className="max-w-md text-sm text-paper-dim leading-relaxed">
-                  De Droit Chemin à Tokooos II, prouve que tu connais ton classique.
-                  Score, badge et code promo à la clé.
+                  {qg.quizDescription}
                 </p>
                 <span className="mt-2 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-gold transition-transform group-hover:translate-x-2">
-                  Démarrer le quiz <ArrowRight className="size-4" />
+                  {qg.quizCta} <ArrowRight className="size-4" />
                 </span>
               </div>
             </Link>
