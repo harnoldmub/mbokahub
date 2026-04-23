@@ -83,7 +83,7 @@ const ALL_QUESTIONS = [
     options: ["Mutuani", "Diamond Gode", "Nsimba", "Ngimbi"],
     correct: 2,
     anecdote:
-      "Son vrai nom est Fally Ipupa Nsimba. Il a grandi dans la commune de Bandalingwa, à Kinshasa, avant de conquérir le monde.",
+      "Son vrai nom est Fally Ipupa Nsimba. Il a grandi dans la commune de Bandalungwa, à Kinshasa, avant de conquérir le monde.",
     category: "Identité",
     album: ALBUMS.droit,
     image: "/images/fally/fally-paris.jpg",
@@ -139,10 +139,10 @@ const ALL_QUESTIONS = [
   {
     id: 5,
     question: "Dans quelle commune de Kinshasa Fally Ipupa a-t-il grandi ?",
-    options: ["Gombe", "Bandalingwa", "Limete", "Ndjili"],
+    options: ["Gombe", "Bandalungwa", "Limete", "Ndjili"],
     correct: 1,
     anecdote:
-      "Fally Ipupa Nsimba passe son enfance dans la commune de Bandalingwa, intégrée à Kinshasa, capitale de la RD Congo.",
+      "Fally Ipupa Nsimba passe son enfance dans la commune de Bandalungwa, intégrée à Kinshasa, capitale de la RD Congo.",
     category: "Biographie",
     album: ALBUMS.arsenal,
     image: "/images/fally/fally-cameroun-2021.jpg",
@@ -894,6 +894,7 @@ export function QuizClient() {
   }
 
   function handleConfirm(forcedIdx?: number) {
+    if (phase === "feedback") return;
     clearTimer();
     const choice = forcedIdx !== undefined ? forcedIdx : selected;
     if (choice === null) return;
@@ -987,9 +988,9 @@ export function QuizClient() {
 
         {/* Answer trail */}
         <div className="mb-10 flex justify-center gap-1.5">
-          {answers.map((answer) => (
+          {answers.map((answer, idx) => (
             <div
-              key={answer.id}
+              key={idx}
               className={cn(
                 "h-2 w-6 rounded-full transition-all",
                 answer.correct ? "bg-blood" : "bg-white/15",
@@ -1078,9 +1079,9 @@ export function QuizClient() {
 
         {/* Answer trail dots */}
         <div className="flex gap-1">
-          {answers.map((answer) => (
+          {answers.map((answer, idx) => (
             <div
-              key={answer.id}
+              key={idx}
               className={cn(
                 "h-1 flex-1 rounded-full",
                 answer.correct ? "bg-blood" : "bg-white/20",
