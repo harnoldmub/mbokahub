@@ -17,7 +17,9 @@ export function MobileMenu({ locale }: MobileMenuProps) {
   const copy = nls[locale].common;
   const navItems = [
     { href: "/", label: copy.nav.home },
+    { href: "/concert", label: copy.nav.concert },
     { href: "/#prestations", label: copy.nav.services },
+    { href: "/playlists", label: copy.nav.playlists },
     { href: "/quiz", label: copy.nav.quiz },
     { href: "/jeu", label: copy.nav.game },
     { href: "/contact", label: copy.nav.contact },

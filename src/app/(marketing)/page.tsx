@@ -77,6 +77,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       title: copy.modules[5].title,
       icon: Camera,
     },
+    { href: "/concert", title: "Concert SDF", icon: Sparkles },
+    { href: "/playlists", title: "Playlists", icon: Sparkles },
     { href: "/quiz", title: common.nav.quiz, icon: Sparkles },
     { href: "/jeu", title: "Sape Run", icon: Gamepad2 },
   ] as const;

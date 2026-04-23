@@ -68,7 +68,9 @@ export const nls = {
     common: {
       nav: {
         home: "Accueil",
+        concert: "Concert",
         services: "Prestations",
+        playlists: "Playlists",
         quiz: "Quiz",
         game: "Jeux",
         contact: "Contact",
@@ -274,7 +276,9 @@ export const nls = {
     common: {
       nav: {
         home: "Home",
+        concert: "Concert",
         services: "Services",
+        playlists: "Playlists",
         quiz: "Quiz",
         game: "Games",
         contact: "Contact",
@@ -478,7 +482,9 @@ export const nls = {
     common: {
       nav: {
         home: "Start",
+        concert: "Konzert",
         services: "Services",
+        playlists: "Playlists",
         quiz: "Quiz",
         game: "Spiele",
         contact: "Kontakt",
@@ -683,7 +689,9 @@ export const nls = {
     common: {
       nav: {
         home: "Home",
+        concert: "Concert",
         services: "Diensten",
+        playlists: "Playlists",
         quiz: "Quiz",
         game: "Games",
         contact: "Contact",
