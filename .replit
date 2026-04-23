@@ -38,3 +38,8 @@ externalPort = 80
 deploymentTarget = "autoscale"
 run = ["pnpm", "run", "start"]
 build = ["pnpm", "run", "build"]
+
+[userenv]
+
+[userenv.shared]
+ADMIN_EMAILS = "admin@mbokahub.fr"
