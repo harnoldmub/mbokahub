@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ExternalLink, Music, Quote } from "lucide-react";
+import { ArrowRight, ExternalLink, Music } from "lucide-react";
 
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { Button } from "@/components/ui/button";
@@ -8,11 +8,10 @@ type Track = {
   title: string;
   album: string;
   year: string;
-  hook: string;
   vibe: string;
-  spotify?: string;
-  youtube?: string;
-  geniusSearch: string;
+  spotify: string;
+  youtube: string;
+  genius: string;
 };
 
 type Playlist = {
@@ -26,8 +25,8 @@ type Playlist = {
 
 const PLAYLISTS: Playlist[] = [
   {
-    slug: "ambiance-stade",
-    name: "Ambiance Stade",
+    slug: "hits-stade",
+    name: "Hits Stade",
     tagline: "Pour chauffer la voiture jusqu'à Saint-Denis",
     vibe: "Energy · sebene · BPM élevé",
     color: "from-blood/20",
@@ -36,51 +35,37 @@ const PLAYLISTS: Playlist[] = [
         title: "Eloko Oyo",
         album: "Tokooos",
         year: "2017",
-        hook: "« Eloko oyo nazo loba na yo... »",
-        vibe: "Le hit qui ouvre tous les concerts depuis 2017",
+        vibe: "Le hit afro-pop qui ouvre les concerts depuis 2017",
         spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Eloko%20Oyo",
         youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Eloko+Oyo",
-        geniusSearch: "https://genius.com/search?q=Fally%20Ipupa%20Eloko%20Oyo",
+        genius: "https://genius.com/Fally-ipupa-eloko-oyo-lyrics",
       },
       {
         title: "Original",
         album: "Control",
         year: "2018",
-        hook: "« Original... yebisa ye »",
-        vibe: "Featuring Aya Nakamura · pont francophone parfait",
-        spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Original%20Aya",
-        youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Original+Aya+Nakamura",
-        geniusSearch: "https://genius.com/search?q=Fally%20Ipupa%20Original",
+        vibe: "Refrain mantra, gimmick instantanément reconnaissable",
+        spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Original",
+        youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Original",
+        genius: "https://genius.com/Fally-ipupa-original-lyrics",
       },
       {
         title: "Mayday",
         album: "Formule 7",
         year: "2022",
-        hook: "« Mayday, mayday... »",
         vibe: "Hymne CAN 2024 — chant d'union diaspora",
         spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Mayday",
         youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Mayday",
-        geniusSearch: "https://genius.com/search?q=Fally%20Ipupa%20Mayday",
+        genius: "https://genius.com/Fally-ipupa-mayday-lyrics",
       },
       {
         title: "Bloqué",
         album: "Control",
         year: "2018",
-        hook: "« Bloqué dans tes pensées... »",
-        vibe: "Refrain en boucle dans les voitures de Bandal à Bruxelles",
+        vibe: "Refrain en boucle dans toute la diaspora francophone",
         spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Bloque",
         youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Bloque",
-        geniusSearch: "https://genius.com/search?q=Fally%20Ipupa%20Bloqu%C3%A9",
-      },
-      {
-        title: "Money Time",
-        album: "Control",
-        year: "2018",
-        hook: "« C'est money time... »",
-        vibe: "Featuring Booba — rumba x rap français",
-        spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Money%20Time%20Booba",
-        youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Money+Time+Booba",
-        geniusSearch: "https://genius.com/search?q=Fally%20Ipupa%20Money%20Time",
+        genius: "https://genius.com/Fally-ipupa-bloque-lyrics",
       },
     ],
   },
@@ -92,93 +77,67 @@ const PLAYLISTS: Playlist[] = [
     color: "from-gold/15",
     tracks: [
       {
-        title: "Droit chemin",
-        album: "Droit chemin",
-        year: "2006",
-        hook: "« Droit chemin oh... »",
-        vibe: "Le titre qui a tout lancé",
-        spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Droit%20Chemin",
-        youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Droit+Chemin",
-        geniusSearch: "https://genius.com/search?q=Fally%20Ipupa%20Droit%20chemin",
-      },
-      {
         title: "Sexy Dance",
         album: "Arsenal de belles mélodies",
         year: "2009",
-        hook: "« Sexy dance, sexy dance... »",
         vibe: "L'hymne panafricain de la fin des années 2000",
         spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Sexy%20Dance",
         youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Sexy+Dance",
-        geniusSearch: "https://genius.com/search?q=Fally%20Ipupa%20Sexy%20Dance",
+        genius: "https://genius.com/Fally-ipupa-sexy-dance-annotated",
       },
       {
         title: "Associé",
         album: "Power Kosa Leka",
         year: "2013",
-        hook: "« Associé na ngai... »",
         vibe: "Sebene final qui dévaste tous les sound-systems",
         spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Associe",
         youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Associe",
-        geniusSearch: "https://genius.com/search?q=Fally%20Ipupa%20Associ%C3%A9",
+        genius: "https://genius.com/Fally-ipupa-associe-lyrics",
       },
       {
         title: "Service",
         album: "Arsenal de belles mélodies",
         year: "2009",
-        hook: "« Service, service... »",
         vibe: "Pour les vrais — ambiance veillée Bandal",
         spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Service",
         youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Service",
-        geniusSearch: "https://genius.com/search?q=Fally%20Ipupa%20Service",
+        genius: "https://genius.com/Fally-ipupa-service-lyrics",
       },
     ],
   },
   {
-    slug: "love-songs",
-    name: "Love Songs",
+    slug: "love-vibes",
+    name: "Love & Vibes",
     tagline: "Pour le retour de soirée à 4h du mat",
     vibe: "Slow · R&B · ballades",
     color: "from-rose-500/15",
     tracks: [
       {
-        title: "Sweet Life",
+        title: "Sweet Life (La vie est belle)",
         album: "Power Kosa Leka",
         year: "2013",
-        hook: "« Sweet life, sweet life with you... »",
-        vibe: "Featuring R. Kelly — le pont rumba/R&B américain",
-        spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Sweet%20Life%20R%20Kelly",
-        youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Sweet+Life+R+Kelly",
-        geniusSearch: "https://genius.com/search?q=Fally%20Ipupa%20Sweet%20Life",
-      },
-      {
-        title: "Reine",
-        album: "Formule 7",
-        year: "2022",
-        hook: "« Tu es ma reine... »",
-        vibe: "Featuring Dadju — ballade afro-pop ultime",
-        spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Reine%20Dadju",
-        youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Reine+Dadju",
-        geniusSearch: "https://genius.com/search?q=Fally%20Ipupa%20Reine",
+        vibe: "Le pont rumba/R&B international",
+        spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Sweet%20Life",
+        youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Sweet+Life",
+        genius: "https://genius.com/Fally-ipupa-sweet-life-la-vie-est-belle-lyrics",
       },
       {
         title: "Bad Boy",
         album: "Control",
         year: "2018",
-        hook: "« Bad boy, bad boy... »",
-        vibe: "Featuring Aya Nakamura — le crossover gold",
-        spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Bad%20Boy%20Aya",
-        youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Bad+Boy+Aya+Nakamura",
-        geniusSearch: "https://genius.com/search?q=Fally%20Ipupa%20Bad%20Boy",
+        vibe: "Crossover afro-pop francophone",
+        spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Bad%20Boy",
+        youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Bad+Boy",
+        genius: "https://genius.com/Fally-ipupa-bad-boy-lyrics",
       },
       {
         title: "Likolo",
         album: "Formule 7",
         year: "2022",
-        hook: "« Likolo na yo... »",
-        vibe: "Featuring Ya Levis — la nouvelle génération honore le maître",
+        vibe: "Vibe afro moderne, signature Tokooos era",
         spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Likolo",
         youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Likolo",
-        geniusSearch: "https://genius.com/search?q=Fally%20Ipupa%20Likolo",
+        genius: "https://genius.com/Fally-ipupa-likolo-lyrics",
       },
     ],
   },
@@ -190,7 +149,7 @@ const YOUTUBE_CHANNEL = "https://www.youtube.com/@FallyIpupaOfficiel";
 export const metadata = {
   title: "Playlists Fally Ipupa — Les meilleurs sons & paroles | Mboka Hub",
   description:
-    "3 playlists curated des hits de Fally Ipupa, avec extraits de paroles et liens directs vers Spotify, YouTube et Genius pour les lyrics complètes.",
+    "3 playlists curated des hits de Fally Ipupa, avec liens directs vers Spotify, YouTube et Genius pour les paroles complètes.",
 };
 
 export default function PlaylistsPage() {
@@ -207,7 +166,7 @@ export default function PlaylistsPage() {
           number="05"
           eyebrow="Playlists"
           title="*Hype* ta route vers le stade."
-          description="Trois playlists curated, des extraits de paroles cultes, et des liens directs vers Spotify, YouTube et Genius pour les lyrics complètes."
+          description="Trois playlists curated avec liens directs vers Spotify, YouTube et Genius pour les paroles complètes."
         />
 
         <div className="flex flex-wrap gap-4">
@@ -224,8 +183,8 @@ export default function PlaylistsPage() {
         </div>
 
         <div className="rounded-2xl border border-yellow-500/30 bg-yellow-500/5 p-5 text-sm text-yellow-200">
-          ⚠️ Mboka Hub n'héberge aucune chanson ni paroles complètes. On te donne les extraits
-          signature et on t'envoie écouter sur les plateformes officielles.
+          ⚠️ Mboka Hub n'héberge ni les chansons ni les paroles. On te renvoie vers Spotify,
+          YouTube et Genius — les sources officielles.
         </div>
       </section>
 
@@ -272,44 +231,34 @@ export default function PlaylistsPage() {
                             {t.album} · {t.year}
                           </span>
                         </div>
-                        <div className="flex items-start gap-2 max-w-xl">
-                          <Quote className="mt-1 size-3.5 shrink-0 text-blood/60" />
-                          <p className="font-serif italic text-paper-dim text-sm">
-                            {t.hook}
-                          </p>
-                        </div>
                         <p className="text-xs text-paper-mute">{t.vibe}</p>
                       </div>
                     </div>
 
                     <div className="flex flex-wrap gap-2 shrink-0 lg:flex-nowrap">
-                      {t.spotify && (
-                        <a
-                          href={t.spotify}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="rounded-full bg-emerald-500/15 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-emerald-300 transition-colors hover:bg-emerald-500/25"
-                        >
-                          Spotify
-                        </a>
-                      )}
-                      {t.youtube && (
-                        <a
-                          href={t.youtube}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="rounded-full bg-red-500/15 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-red-300 transition-colors hover:bg-red-500/25"
-                        >
-                          YouTube
-                        </a>
-                      )}
                       <a
-                        href={t.geniusSearch}
+                        href={t.spotify}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="rounded-full bg-emerald-500/15 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-emerald-300 transition-colors hover:bg-emerald-500/25"
+                      >
+                        Spotify
+                      </a>
+                      <a
+                        href={t.youtube}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="rounded-full bg-red-500/15 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-red-300 transition-colors hover:bg-red-500/25"
+                      >
+                        YouTube
+                      </a>
+                      <a
+                        href={t.genius}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="rounded-full bg-yellow-500/15 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-yellow-300 transition-colors hover:bg-yellow-500/25"
                       >
-                        Lyrics ↗
+                        Paroles ↗
                       </a>
                     </div>
                   </div>
