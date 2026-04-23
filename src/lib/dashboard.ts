@@ -21,19 +21,30 @@ export async function getDashboardUser() {
     redirect("/sign-in");
   }
 
-  return prisma.user.upsert({
-    create: {
-      clerkId: userId,
-      email,
-      name: getDisplayName(clerkUser.firstName, clerkUser.lastName),
-    },
-    update: {
-      email,
-      name: getDisplayName(clerkUser.firstName, clerkUser.lastName),
-    },
-    where: {
-      clerkId: userId,
-    },
+  const name = getDisplayName(clerkUser.firstName, clerkUser.lastName);
+
+  const existingByClerkId = await prisma.user.findUnique({
+    where: { clerkId: userId },
+  });
+  if (existingByClerkId) {
+    return prisma.user.update({
+      where: { clerkId: userId },
+      data: { email, name },
+    });
+  }
+
+  const existingByEmail = await prisma.user.findUnique({
+    where: { email },
+  });
+  if (existingByEmail) {
+    return prisma.user.update({
+      where: { id: existingByEmail.id },
+      data: { clerkId: userId, name },
+    });
+  }
+
+  return prisma.user.create({
+    data: { clerkId: userId, email, name },
   });
 }
 
