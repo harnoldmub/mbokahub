@@ -1,22 +1,26 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { LucideIcon } from "lucide-react";
+import {
+  BarChart3,
+  Contact,
+  LayoutDashboard,
+  Megaphone,
+  Settings,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
-type NavItem = {
-  href: string;
-  label: string;
-  icon: LucideIcon;
-};
+const items = [
+  { href: "/dashboard", label: "Vue d'ensemble", icon: LayoutDashboard },
+  { href: "/dashboard/contacts", label: "Contacts", icon: Contact },
+  { href: "/dashboard/annonces", label: "Annonces", icon: Megaphone },
+  { href: "/dashboard/stats", label: "Stats", icon: BarChart3 },
+  { href: "/dashboard/parametres", label: "Paramètres", icon: Settings },
+] as const;
 
-type DashboardNavProps = {
-  items: readonly NavItem[];
-};
-
-export function DashboardNav({ items }: DashboardNavProps) {
+export function DashboardNav() {
   const pathname = usePathname();
 
   return (

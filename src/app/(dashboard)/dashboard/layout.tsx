@@ -1,23 +1,8 @@
 import { UserButton } from "@clerk/nextjs";
-import {
-  BarChart3,
-  Bell,
-  Contact,
-  LayoutDashboard,
-  Megaphone,
-  Settings,
-} from "lucide-react";
+import { Bell } from "lucide-react";
 import { DashboardNav } from "@/components/dashboard/nav";
 import { Badge } from "@/components/ui/badge";
 import { getDashboardUser } from "@/lib/dashboard";
-
-const dashboardNav = [
-  { href: "/dashboard", label: "Vue d'ensemble", icon: LayoutDashboard },
-  { href: "/dashboard/contacts", label: "Contacts", icon: Contact },
-  { href: "/dashboard/annonces", label: "Annonces", icon: Megaphone },
-  { href: "/dashboard/stats", label: "Stats", icon: BarChart3 },
-  { href: "/dashboard/parametres", label: "Paramètres", icon: Settings },
-] as const;
 
 export default async function DashboardLayout({
   children,
@@ -47,7 +32,7 @@ export default async function DashboardLayout({
             <Badge variant="outline">{user.role}</Badge>
           </div>
 
-          <DashboardNav items={dashboardNav} />
+          <DashboardNav />
         </div>
 
         <div className="mt-4 rounded-3xl border border-blood/20 bg-blood/5 p-5">
