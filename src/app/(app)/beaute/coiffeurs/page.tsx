@@ -1,8 +1,8 @@
-import { SectionHeading } from "@/components/marketing/section-heading";
-import { ProCard } from "@/components/pros/pro-card";
-import { demoPros } from "@/lib/demo-data";
+import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import { ChevronLeft, Scissors } from "lucide-react";
+import { SectionHeading } from "@/components/marketing/section-heading";
+import { ProsListClient } from "@/components/pros/pros-list-client";
+import { demoPros } from "@/lib/demo-data";
 
 export default function CoiffeursPage() {
   const pros = demoPros.filter(
@@ -11,7 +11,7 @@ export default function CoiffeursPage() {
 
   return (
     <main className="relative min-h-screen">
-       {/* Background decoration */}
+      {/* Background decoration */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <span className="absolute left-[-10vw] top-[20vh] font-display text-[25vw] text-gold opacity-[0.03] select-none leading-none uppercase">
           STYLE
@@ -19,8 +19,8 @@ export default function CoiffeursPage() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <Link 
-          href="/beaute" 
+        <Link
+          href="/beaute"
           className="inline-flex items-center gap-2 font-mono text-[10px] text-paper-mute uppercase tracking-[0.2em] mb-12 hover:text-blood transition-colors"
         >
           <ChevronLeft className="size-3" /> Retour aux prestations
@@ -31,10 +31,9 @@ export default function CoiffeursPage() {
           eyebrow="Coiffeurs"
           title="Beauté & Style"
         />
-        <div className="mt-14 grid gap-6 lg:grid-cols-3">
-          {pros.map((pro) => (
-            <ProCard key={pro.id} pro={pro} />
-          ))}
+
+        <div className="mt-14">
+          <ProsListClient pros={pros} categoryTitle="Coiffeurs" />
         </div>
       </div>
     </main>

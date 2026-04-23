@@ -13,8 +13,8 @@ import {
 } from "lucide-react";
 
 export const landingStats = [
-  { label: "personnes attendues", value: "100K+" },
-  { label: "ville cible", value: "Paris" },
+  { label: "dates officielles", value: "2" },
+  { label: "prix public dès", value: "63€" },
   { label: "dates clés", value: "02-03.05" },
 ] as const;
 

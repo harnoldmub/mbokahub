@@ -82,9 +82,8 @@ export default function ParisClassicsPage() {
           Paris <span className="font-serif italic text-blood">pratique</span>
         </h1>
         <p className="mt-4 max-w-xl font-body text-lg leading-relaxed text-paper-dim">
-          Toutes les infos utiles pour arriver, manger, dormir et rentrer
-          sereinement pour les concerts du{" "}
-          <span className="text-paper">2 et 3 mai au Stade de France.</span>
+          Toutes les infos utiles pour les Warriors : arriver, manger, dormir et rentrer
+          sereinement pour le concert de <span className="text-paper">Fally au Stade de France.</span>
         </p>
       </div>
 
@@ -143,7 +142,9 @@ export default function ParisClassicsPage() {
                 <div
                   className={`flex size-10 items-center justify-center rounded-xl border ${meta?.accent ?? "border-white/10 bg-white/5"}`}
                 >
-                  <Icon className={`size-5 ${meta?.color ?? "text-paper-mute"}`} />
+                  <Icon
+                    className={`size-5 ${meta?.color ?? "text-paper-mute"}`}
+                  />
                 </div>
                 <h2 className="font-display text-4xl uppercase leading-none text-paper">
                   {cat}

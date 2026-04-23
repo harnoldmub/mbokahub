@@ -25,6 +25,7 @@ export type ProDemo = {
   reviewsCount: number;
   whatsappMasked: string;
   isPremium?: boolean;
+  isVerified?: boolean;
 };
 
 export type AfterDemo = {
@@ -64,7 +65,7 @@ export const demoTrajets: TrajetDemo[] = [
     placesTotal: 8,
     prix: 39,
     vehicule: "Van 9 places",
-    note: "Départ Matonge Bruxelles, arrivée Saint-Denis avant midi.",
+    note: "Départ Bruxelles, trajet direct jusqu'au Stade de France.",
     whatsappMasked: "+32 4•• •• •• ••",
     isBoosted: true,
   },
@@ -94,6 +95,20 @@ export const demoTrajets: TrajetDemo[] = [
     note: "Deux arrêts possibles sur l'A6, bagages cabine uniquement.",
     whatsappMasked: "+33 6•• •• •• ••",
   },
+  {
+    id: "lille-van-01",
+    villeDepart: "Lille",
+    paysDepart: "France",
+    dateLabel: "Dimanche 3 mai",
+    heureDepart: "09:00",
+    placesDispo: 6,
+    placesTotal: 8,
+    prix: 25,
+    vehicule: "Mercedes Vito",
+    note: "Direct Stade de France pour le deuxième soir. Ambiance assurée !",
+    whatsappMasked: "+33 7•• •• •• ••",
+    isBoosted: true,
+  },
 ];
 
 export const demoPros: ProDemo[] = [
@@ -103,7 +118,7 @@ export const demoPros: ProDemo[] = [
     displayName: "Studio Liputa",
     city: "Saint-Denis",
     country: "France",
-    specialities: ["glow peau noire", "pose cils", "shoot express"],
+    specialities: ["glow peau noire", "look soirée", "shoot express"],
     priceRange: "45-90 EUR",
     rating: 4.8,
     reviewsCount: 31,
@@ -136,9 +151,9 @@ export const demoPros: ProDemo[] = [
     isPremium: true,
   },
   {
-    id: "fally-vision",
+    id: "mboka-vision",
     category: "PHOTOGRAPHE",
-    displayName: "Fally Vision",
+    displayName: "Mboka Vision",
     city: "Paris",
     country: "France",
     specialities: ["portrait", "event", "retouche"],
@@ -155,20 +170,30 @@ export const demoAfters: AfterDemo[] = [
     slug: "nuit-afro-saint-denis",
     name: "Nuit afro Saint-Denis",
     dateLabel: "Samedi 2 mai, 23:30",
-    venue: "Lieu communique par l'organisateur",
+    venue: "Secret Palace (Proche Stade)",
     city: "Saint-Denis",
-    priceFrom: 20,
+    priceFrom: 25,
     ticketUrl: "https://www.eventbrite.com/",
     isBoosted: true,
   },
   {
-    slug: "paris-rumba-club",
-    name: "Paris Rumba Club",
+    slug: "rumba-club-paris",
+    name: "Rumba Club Paris",
     dateLabel: "Vendredi 1 mai, 22:00",
     venue: "Paris Est",
     city: "Paris",
     priceFrom: 15,
     ticketUrl: "https://shotgun.live/",
+  },
+  {
+    slug: "cloture-stade-denis",
+    name: "Clôture Royale",
+    dateLabel: "Dimanche 3 mai, 23:30",
+    venue: "Secret Location Saint-Denis",
+    city: "Saint-Denis",
+    priceFrom: 25,
+    ticketUrl: "https://www.eventbrite.com/",
+    isBoosted: true,
   },
 ];
 

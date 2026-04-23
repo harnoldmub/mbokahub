@@ -6,12 +6,14 @@ interface FormFieldProps extends React.ComponentProps<"div"> {
   label: string;
   error?: string;
   helperText?: string;
+  icon?: React.ReactNode;
 }
 
 export function FormField({
   label,
   error,
   helperText,
+  icon,
   children,
   className,
   ...props
@@ -19,8 +21,9 @@ export function FormField({
   return (
     <div className={cn("group flex flex-col gap-2", className)} {...props}>
       <div className="flex items-center justify-between px-1">
-        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper-mute group-focus-within:text-blood transition-colors">
-          {label}
+        <span className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-paper-mute group-focus-within:text-blood transition-colors">
+          {icon}
+          <span>{label}</span>
         </span>
         {error && (
           <span className="font-mono text-[10px] uppercase text-blood animate-pulse">

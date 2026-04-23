@@ -5,28 +5,29 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { type Locale, localizedHref, nls } from "@/lib/nls";
 
-const navItems = [
-  { href: "/", label: "Accueil" },
-  { href: "/#prestations", label: "Prestations" },
-  { href: "/quiz", label: "Quiz" },
-  { href: "/jeu", label: "Jeux" },
-  { href: "/contact", label: "Contact" },
-] as const;
+type MobileMenuProps = {
+  locale: Locale;
+};
 
-export function MobileMenu() {
+export function MobileMenu({ locale }: MobileMenuProps) {
   const [open, setOpen] = useState(false);
+  const copy = nls[locale].common;
+  const navItems = [
+    { href: "/", label: copy.nav.home },
+    { href: "/#prestations", label: copy.nav.services },
+    { href: "/quiz", label: copy.nav.quiz },
+    { href: "/jeu", label: copy.nav.game },
+    { href: "/contact", label: copy.nav.contact },
+  ] as const;
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button
-          aria-label="Ouvrir le menu"
+          aria-label={copy.openMenu}
           className="md:hidden"
           size="icon"
           variant="ghost"
@@ -40,14 +41,14 @@ export function MobileMenu() {
         side="right"
       >
         <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-blood">
-          Navigation
+          {copy.menu}
         </p>
 
         <nav className="mt-8 flex flex-col gap-1">
           {navItems.map((item) => (
             <Link
               className="group flex items-center justify-between rounded-2xl border border-transparent p-4 transition-all hover:border-blood/20 hover:bg-blood/5"
-              href={item.href}
+              href={localizedHref(item.href, locale)}
               key={item.href}
               onClick={() => setOpen(false)}
             >
@@ -67,8 +68,11 @@ export function MobileMenu() {
             size="lg"
             variant="vip"
           >
-            <Link href="/dashboard" onClick={() => setOpen(false)}>
-              Devenir VIP
+            <Link
+              href={localizedHref("/dashboard", locale)}
+              onClick={() => setOpen(false)}
+            >
+              {copy.vipCta}
             </Link>
           </Button>
         </div>

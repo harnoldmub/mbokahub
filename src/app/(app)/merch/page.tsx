@@ -26,7 +26,7 @@ export default function MerchPage() {
     <main className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
       <SectionHeading
         number="05"
-        description="Drops exclusifs et merch officiel des artistes du grand soir. Stocks limités."
+        description="Mode, accessoires et créations diaspora via boutiques externes. Stocks limités."
         eyebrow="Merch"
         title="La Boutique"
       />

@@ -1,8 +1,29 @@
-import { type Locale, locales } from "@/lib/nls";
+"use client";
+
+import { usePathname, useSearchParams } from "next/navigation";
+
+import { getLocale, type Locale, locales } from "@/lib/nls";
 
 const localeOrder: Locale[] = ["fr", "en", "de", "nl"];
 
 export function LanguageSwitcher() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currentLocale = getLocale(searchParams.get("lang"));
+
+  function getLanguageHref(locale: Locale) {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (locale === "fr") {
+      params.delete("lang");
+    } else {
+      params.set("lang", locale);
+    }
+
+    const query = params.toString();
+    return query ? `${pathname}?${query}` : pathname;
+  }
+
   return (
     <nav aria-label="Langues" className="hidden items-center gap-1 lg:flex">
       {localeOrder.map((locale) => {
@@ -11,8 +32,9 @@ export function LanguageSwitcher() {
         return (
           <a
             aria-label={item.label}
-            className="flex h-8 items-center gap-1 rounded-full border border-white/10 px-2 font-mono text-[10px] text-paper-dim transition hover:border-blood/40 hover:text-paper"
-            href={`/?lang=${locale}`}
+            aria-current={currentLocale === locale ? "true" : undefined}
+            className="flex h-8 items-center gap-1 rounded-full border border-white/10 px-2 font-mono text-[10px] text-paper-dim transition hover:border-blood/40 hover:text-paper aria-current:border-blood/50 aria-current:text-paper"
+            href={getLanguageHref(locale)}
             hrefLang={locale}
             key={locale}
           >

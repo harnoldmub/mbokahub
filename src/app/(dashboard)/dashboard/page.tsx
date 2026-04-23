@@ -41,10 +41,10 @@ export default async function DashboardPage() {
           Dashboard
         </p>
         <h1 className="mt-3 font-heading text-4xl text-paper">
-          Bonjour {user.name ?? "la famille"}
+          Salut la Famille des Warriors, {user.name?.split(" ")[0] ?? ""}
         </h1>
         <p className="mt-3 max-w-2xl text-paper-dim leading-7">
-          Ici tu suis ton accès VIP, tes contacts débloqués et tes annonces.
+          Ici tu gères ton profil de fan, tes accès Tokooos et tes annonces pour le concert de l&apos;Aigle.
         </p>
       </div>
 
@@ -96,6 +96,9 @@ export default async function DashboardPage() {
             </Button>
             <Button asChild variant="outline">
               <Link href="/pro/inscrire">Inscrire mon service</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/afters/organiser">Organiser un After</Link>
             </Button>
           </CardContent>
         </Card>

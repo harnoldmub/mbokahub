@@ -1,59 +1,41 @@
-import { ArrowRight, ExternalLink, Star } from "lucide-react";
+import { Plus } from "lucide-react";
 import Link from "next/link";
 
-import { SectionHeading } from "@/components/marketing/section-heading";
-import { Badge } from "@/components/ui/badge";
+import { AftersListClient } from "@/components/afters/afters-list-client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { demoAfters } from "@/lib/demo-data";
+
+export const dynamic = "force-static";
 
 export default function AftersPage() {
   return (
     <main className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <SectionHeading
-        number="03"
-        description="Mboka Hub ne revend aucun billet. Chaque soirée renvoie vers une billetterie ou une page externe."
-        eyebrow="Afters"
-        title="Sorties autour du week-end"
-      />
-      <div className="mt-10 grid gap-4 lg:grid-cols-2">
-        {demoAfters.map((after) => (
-          <Card className="rounded-lg border-white/10" key={after.slug}>
-            <CardHeader>
-              <div className="flex flex-wrap gap-2">
-                {after.isBoosted ? (
-                  <Badge className="bg-accent text-accent-foreground">
-                    <Star aria-hidden /> Vedette
-                  </Badge>
-                ) : null}
-                <Badge variant="outline">{after.city}</Badge>
-              </div>
-              <CardTitle className="font-heading text-2xl">
-                {after.name}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-5">
-              <div className="grid gap-2 text-muted-foreground">
-                <p>{after.dateLabel}</p>
-                <p>{after.venue}</p>
-                <p>A partir de {after.priceFrom} EUR</p>
-              </div>
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <Button asChild>
-                  <Link href={`/afters/${after.slug}`}>
-                    Details <ArrowRight aria-hidden />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline">
-                  <a href={after.ticketUrl} rel="noreferrer" target="_blank">
-                    Billetterie externe <ExternalLink aria-hidden />
-                  </a>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+      <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.3em] text-ember">
+            Soirées post-concert
+          </p>
+          <h1 className="font-display text-6xl uppercase leading-[0.9] text-paper sm:text-7xl">
+            Les <span className="font-serif italic text-ember">Afters</span>
+          </h1>
+          <p className="mt-4 max-w-md font-body text-paper-dim">
+             Toutes les soirées validées par le Hub pour fêter l&apos;Aigle après le concert.
+          </p>
+        </div>
+        <Button
+          asChild
+          className="h-14 px-8 border-ember/40 text-ember hover:bg-ember hover:text-paper"
+          size="lg"
+          variant="outline"
+        >
+          <Link href="/afters/organiser">
+            <Plus aria-hidden className="mr-2 size-4" />
+            Proposer un after
+          </Link>
+        </Button>
       </div>
+
+      <AftersListClient afters={demoAfters} />
     </main>
   );
 }

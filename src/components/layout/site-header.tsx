@@ -1,27 +1,33 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { MobileMenu } from "@/components/layout/mobile-menu";
 import { Button } from "@/components/ui/button";
-
-const navItems = [
-  { href: "/", label: "Accueil" },
-  { href: "/#prestations", label: "Prestations" },
-  { href: "/quiz", label: "Quiz" },
-  { href: "/jeu", label: "Jeux" },
-  { href: "/contact", label: "Contact" },
-] as const;
+import { getLocale, localizedHref, nls } from "@/lib/nls";
 
 export function SiteHeader() {
+  const locale = getLocale(useSearchParams().get("lang"));
+  const copy = nls[locale].common;
+  const navItems = [
+    { href: "/", label: copy.nav.home },
+    { href: "/#prestations", label: copy.nav.services },
+    { href: "/quiz", label: copy.nav.quiz },
+    { href: "/jeu", label: copy.nav.game },
+    { href: "/contact", label: copy.nav.contact },
+  ] as const;
+
   return (
     <header className="glass-header">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-6 lg:px-8">
         {/* Logo */}
         <Link
-          aria-label="Mboka Hub accueil"
+          aria-label="Mboka Hub"
           className="group flex items-center gap-3"
-          href="/"
+          href={localizedHref("/", locale)}
         >
           <Image
             alt=""
@@ -50,7 +56,7 @@ export function SiteHeader() {
           {navItems.map((item) => (
             <Link
               className="group/link relative font-body text-sm uppercase tracking-widest text-paper-dim transition-colors hover:text-blood"
-              href={item.href}
+              href={localizedHref(item.href, locale)}
               key={item.href}
             >
               {item.label}
@@ -62,10 +68,17 @@ export function SiteHeader() {
         {/* Right actions */}
         <div className="flex items-center gap-3">
           <LanguageSwitcher />
-          <Button asChild className="hidden sm:inline-flex" size="sm" variant="vip">
-            <Link href="/dashboard">Devenir VIP</Link>
+          <Button
+            asChild
+            className="hidden sm:inline-flex"
+            size="sm"
+            variant="vip"
+          >
+            <Link href={localizedHref("/dashboard", locale)}>
+              {copy.vipCta}
+            </Link>
           </Button>
-          <MobileMenu />
+          <MobileMenu locale={locale} />
         </div>
       </div>
     </header>

@@ -24,10 +24,10 @@ function getRemainingUnits(targetDate: string): TimeUnit[] {
   const seconds = Math.floor((diff % MINUTE) / SECOND);
 
   return [
-    { label: "jours", value: String(days).padStart(2, "0") },
-    { label: "heures", value: String(hours).padStart(2, "0") },
-    { label: "min", value: String(minutes).padStart(2, "0") },
-    { label: "sec", value: String(seconds).padStart(2, "0") },
+    { label: "Jours", value: String(days).padStart(2, "0") },
+    { label: "Heures", value: String(hours).padStart(2, "0") },
+    { label: "Min", value: String(minutes).padStart(2, "0") },
+    { label: "Sec", value: String(seconds).padStart(2, "0") },
   ];
 }
 
@@ -47,22 +47,24 @@ export function Countdown({ targetDate }: CountdownProps) {
   }, [targetDate]);
 
   return (
-    <div className="grid grid-cols-4 gap-4 w-full">
+    <div className="grid grid-cols-4 gap-2 sm:gap-4 w-full p-2 sm:p-4">
       {units.map((unit, index) => (
         <div
-          className="relative flex flex-col items-center justify-center bg-coal border border-white/5 py-8 rounded-2xl"
+          className="relative flex flex-col items-center justify-center bg-smoke/40 backdrop-blur-md border border-white/5 py-6 sm:py-10 rounded-[2rem] group hover:bg-smoke/60 transition-colors"
           key={unit.label}
         >
-          <span className="font-display text-5xl sm:text-7xl lg:text-8xl text-paper leading-none tracking-tighter">
+          <div className="absolute inset-0 bg-gradient-to-br from-blood/10 to-transparent opacity-30 rounded-[2rem] pointer-events-none" />
+
+          <span className="relative z-10 font-display text-4xl sm:text-6xl lg:text-7xl text-paper leading-none tracking-tighter group-hover:scale-105 transition-transform duration-500">
             {unit.value}
           </span>
-          <span className="mt-4 font-mono text-[10px] uppercase tracking-[0.2em] text-paper-mute">
+          <span className="relative z-10 mt-3 font-mono text-[8px] sm:text-[10px] uppercase tracking-[0.3em] text-paper-mute group-hover:text-blood transition-colors">
             {unit.label}
           </span>
 
           {index < units.length - 1 && (
-            <span className="absolute -right-3 top-1/2 -translate-y-1/2 font-display text-4xl text-blood opacity-20 hidden sm:block animate-pulse">
-              :
+            <span className="absolute -right-1 sm:-right-2 top-1/2 -translate-y-1/2 font-display text-xl sm:text-3xl text-blood opacity-30 hidden sm:block animate-pulse">
+              .
             </span>
           )}
         </div>

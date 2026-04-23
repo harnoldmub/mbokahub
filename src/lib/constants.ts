@@ -6,4 +6,4 @@ export const EVENT_CONTEXT = {
 } as const;
 
 export const LEGAL_DISCLAIMER =
-  "Mboka Hub est une plateforme indépendante de mise en relation. Non affiliée à aucun artiste, label ou organisateur officiel.";
+  "Mboka Hub est une plateforme communautaire indépendante. Non affiliée à Fally Ipupa, F'Victeam ou aux organisateurs officiels du concert.";

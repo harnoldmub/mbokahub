@@ -1,6 +1,10 @@
+"use client";
+
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 import { LEGAL_DISCLAIMER } from "@/lib/constants";
+import { getLocale, localizedHref, nls } from "@/lib/nls";
 
 const footerLinks = [
   { href: "/cgu", label: "CGU" },
@@ -10,76 +14,80 @@ const footerLinks = [
 ] as const;
 
 export function SiteFooter() {
+  const locale = getLocale(useSearchParams().get("lang"));
+  const copy = nls[locale].footer;
+
   return (
     <footer className="bg-ink border-t border-white/5 pt-20 pb-10">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         {/* EDITORIAL PHRASE */}
         <div className="mb-20">
           <h2 className="font-display text-5xl sm:text-7xl lg:text-8xl text-paper uppercase leading-[0.9] text-tight">
-            Rejoins{" "}
+            {copy.headlineStart}{" "}
             <span className="text-blood font-serif italic font-black">
               9 000
             </span>{" "}
-            fans <br />
-            de la diaspora. <span className="text-gold">Sans détour.</span>
+            <br />
+            {copy.headlineMiddle}{" "}
+            <span className="text-gold">{copy.headlineEnd}</span>
           </h2>
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
           <div className="space-y-6">
             <h3 className="font-display text-sm uppercase tracking-[0.2em] text-blood">
-              Navigation
+              {copy.navigation}
             </h3>
             <nav className="flex flex-col gap-3">
               <Link
-                href="/trajets"
+                href={localizedHref("/trajets", locale)}
                 className="text-paper-dim hover:text-paper transition-colors"
               >
-                Trajets
+                {copy.links.rides}
               </Link>
               <Link
-                href="/afters"
+                href={localizedHref("/afters", locale)}
                 className="text-paper-dim hover:text-paper transition-colors"
               >
-                Afters
+                {copy.links.afters}
               </Link>
               <Link
-                href="/beaute"
+                href={localizedHref("/beaute", locale)}
                 className="text-paper-dim hover:text-paper transition-colors"
               >
-                Beauté
+                {copy.links.services}
               </Link>
               <Link
-                href="/beaute/photographes"
+                href={localizedHref("/beaute/photographes", locale)}
                 className="text-paper-dim hover:text-paper transition-colors"
               >
-                Photographes
+                {copy.links.photographers}
               </Link>
             </nav>
           </div>
 
           <div className="space-y-6">
             <h3 className="font-display text-sm uppercase tracking-[0.2em] text-blood">
-              Professionnels
+              {copy.professionals}
             </h3>
             <nav className="flex flex-col gap-3">
               <Link
-                href="/pro"
+                href={localizedHref("/pro", locale)}
                 className="text-paper-dim hover:text-paper transition-colors"
               >
-                Espace Pro
+                {copy.links.proSpace}
               </Link>
               <Link
-                href="/partenariat"
+                href={localizedHref("/partenariat", locale)}
                 className="text-paper-dim hover:text-paper transition-colors"
               >
-                Partenariats
+                {copy.links.partnerships}
               </Link>
               <Link
-                href="/ads"
+                href={localizedHref("/ads", locale)}
                 className="text-paper-dim hover:text-paper transition-colors"
               >
-                Publicité
+                {copy.links.ads}
               </Link>
             </nav>
           </div>
@@ -90,35 +98,35 @@ export function SiteFooter() {
             </h3>
             <nav className="flex flex-col gap-3">
               <Link
-                href="/equipe"
+                href={localizedHref("/equipe", locale)}
                 className="text-paper-dim hover:text-paper transition-colors"
               >
-                L'équipe
+                {copy.links.team}
               </Link>
               <Link
-                href="/contact"
+                href={localizedHref("/contact", locale)}
                 className="text-paper-dim hover:text-paper transition-colors"
               >
-                Contact
+                {copy.links.contact}
               </Link>
               <Link
-                href="/faq"
+                href={localizedHref("/faq", locale)}
                 className="text-paper-dim hover:text-paper transition-colors"
               >
-                FAQ
+                {copy.links.faq}
               </Link>
             </nav>
           </div>
 
           <div className="space-y-6">
             <h3 className="font-display text-sm uppercase tracking-[0.2em] text-blood">
-              Légal
+              {copy.legal}
             </h3>
             <nav className="flex flex-col gap-3">
               {footerLinks.map((link) => (
                 <Link
                   className="text-paper-dim hover:text-paper transition-colors"
-                  href={link.href}
+                  href={localizedHref(link.href, locale)}
                   key={link.href}
                 >
                   {link.label}
@@ -133,7 +141,7 @@ export function SiteFooter() {
             {LEGAL_DISCLAIMER}
           </p>
           <p className="mt-4 font-mono text-[10px] text-paper-mute uppercase">
-            © 2026 MBOKA HUB — TOUS DROITS RÉSERVÉS.
+            © 2026 MBOKA HUB — {copy.rights}
           </p>
         </div>
       </div>
