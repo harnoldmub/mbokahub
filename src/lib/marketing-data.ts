@@ -14,7 +14,7 @@ import {
 
 export const landingStats = [
   { label: "soirs au stade", value: "2" },
-  { label: "prix public dès", value: "59€" },
+  { label: "spectateurs sur 2 soirs", value: "160k+" },
   { label: "dates clés", value: "02-03.05" },
 ] as const;
 
