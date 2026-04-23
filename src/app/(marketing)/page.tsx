@@ -138,6 +138,26 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             </div>
 
             <div className="relative space-y-10 lg:translate-x-4">
+              <div className="group relative -rotate-1 overflow-hidden rounded-[2rem] border border-white/10 bg-coal shadow-2xl">
+                <Image
+                  src="/images/fally/affiche-concert.webp"
+                  alt="Affiche du concert de Fally Ipupa au Stade de France — 28 mai 2026"
+                  width={900}
+                  height={1200}
+                  priority
+                  className="h-auto w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between rounded-xl bg-ink/70 px-4 py-2 backdrop-blur">
+                  <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-blood">
+                    Stade de France
+                  </span>
+                  <span className="font-display text-xs uppercase text-paper">
+                    28.05.2026
+                  </span>
+                </div>
+              </div>
+
               <div className="relative rotate-1 overflow-hidden rounded-[2.5rem] border border-white/10 bg-coal p-2 shadow-2xl">
                 <div className="absolute inset-0 bg-gradient-to-br from-blood/20 via-transparent to-gold/10" />
                 <Countdown targetDate={EVENT_CONTEXT.date} />
