@@ -69,9 +69,9 @@ export default function ProPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             number="PRO"
-            description="Tarifs one-shot pour une fenêtre événementielle claire. Pas d'abonnement caché pour le MVP."
+            description="Tarif unique 20 € pour tout le week-end. Aucune commission, aucun abonnement, aucun frais caché."
             eyebrow="Pricing"
-            title="Offres premium pros"
+            title="Inscription pro à 20 €"
           />
           <div className="mt-10 grid gap-4 lg:grid-cols-3">
             {proOffers.map((offer) => (

@@ -84,10 +84,14 @@ export const trustItems = [
   },
 ] as const;
 
+export const PRICE_VIP_EUR = 10;
+export const PRICE_PRO_EUR = 20;
+export const PRICE_BOOST_EUR = 9;
+
 export const proOffers = [
   {
-    title: "Beauté premium",
-    price: "15 EUR",
+    title: "Beauté",
+    price: "20 EUR",
     audience: "maquilleuses, coiffeurs, barbiers",
     benefits: [
       "profil vérifié",
@@ -96,14 +100,14 @@ export const proOffers = [
     ],
   },
   {
-    title: "Merch premium",
+    title: "Merch",
     price: "20 EUR",
     audience: "vendeurs mode, accessoires, pagne",
     benefits: ["vitrine dédiée", "clics trackés", "badge premium"],
   },
   {
-    title: "After premium",
-    price: "30 EUR",
+    title: "After",
+    price: "20 EUR",
     audience: "organisateurs de soirées",
     benefits: [
       "fiche événement",
