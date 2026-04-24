@@ -15,10 +15,11 @@ type ProCardData = ProDemo & {
 };
 
 type ProCardProps = {
-  pro: ProCardData;
+  pro: ProCardData & { whatsappRaw?: string | null };
+  unlocked?: boolean;
 };
 
-export function ProCard({ pro }: ProCardProps) {
+export function ProCard({ pro, unlocked }: ProCardProps) {
   const photo = pro.photos?.[0];
 
   return (
@@ -117,7 +118,11 @@ export function ProCard({ pro }: ProCardProps) {
         </div>
 
         <div className="space-y-3">
-          <ContactLock value={pro.whatsappMasked} />
+          <ContactLock
+            value={pro.whatsappMasked}
+            unlocked={unlocked}
+            rawValue={pro.whatsappRaw ?? undefined}
+          />
           <Button
             asChild
             className="w-full h-12 bg-smoke border-white/5 hover:bg-gold hover:text-ink group/btn transition-all duration-500 rounded-xl"

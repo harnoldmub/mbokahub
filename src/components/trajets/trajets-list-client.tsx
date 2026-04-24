@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import type { TrajetDemo } from "@/lib/demo-data";
 import { cn } from "@/lib/utils";
 
-type Props = { trajets: TrajetDemo[] };
+type Props = { trajets: TrajetDemo[]; unlocked?: boolean };
 
 type DateFilter = "all" | "may2" | "may3";
 
@@ -19,7 +19,7 @@ const dateFilters: { id: DateFilter; label: string }[] = [
   { id: "may3", label: "Dim. 3 mai" },
 ];
 
-export function TrajetsListClient({ trajets }: Props) {
+export function TrajetsListClient({ trajets, unlocked }: Props) {
   const villes = useMemo(
     () => Array.from(new Set(trajets.map((t) => t.villeDepart))).sort(),
     [trajets],
@@ -225,7 +225,7 @@ export function TrajetsListClient({ trajets }: Props) {
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 pb-20">
           {filtered.map((trajet) => (
-            <TrajetCard key={trajet.id} trajet={trajet} />
+            <TrajetCard key={trajet.id} trajet={trajet} unlocked={unlocked} />
           ))}
         </div>
       )}

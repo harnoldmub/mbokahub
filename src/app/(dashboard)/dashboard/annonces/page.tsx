@@ -2,7 +2,9 @@ import { Megaphone, Plus } from "lucide-react";
 import Link from "next/link";
 
 import { AnnonceActions } from "@/components/dashboard/annonce-actions";
+import { BoostButton } from "@/components/dashboard/boost-button";
 import { EmptyState } from "@/components/dashboard/empty-state";
+import { PremiumActivateButton } from "@/components/dashboard/premium-activate-button";
 import { ProActions } from "@/components/dashboard/pro-actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -66,7 +68,7 @@ export default async function AnnoncesPage() {
                     {proProfile.city} · {proProfile.category}
                   </p>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col items-end gap-3">
                   <div className="flex flex-wrap gap-2">
                     <Badge
                       variant={proProfile.isVerified ? "default" : "outline"}
@@ -79,7 +81,18 @@ export default async function AnnoncesPage() {
                       {proProfile.isPremium ? "Premium" : "Gratuit"}
                     </Badge>
                   </div>
-                  <ProActions />
+                  <div className="flex flex-wrap items-center gap-2">
+                    <PremiumActivateButton
+                      category={proProfile.category}
+                      alreadyActive={proProfile.isPremium}
+                    />
+                    <BoostButton
+                      targetType="PRO_PROFILE"
+                      targetId={proProfile.id}
+                      alreadyBoosted={proProfile.isBoosted}
+                    />
+                    <ProActions />
+                  </div>
                 </div>
               </div>
             </article>
@@ -108,7 +121,14 @@ export default async function AnnoncesPage() {
                     {formatMoney(trajet.prix)}
                   </p>
                 </div>
-                <AnnonceActions id={trajet.id} isActive={trajet.isActive} />
+                <div className="flex flex-col items-end gap-2">
+                  <BoostButton
+                    targetType="TRAJET"
+                    targetId={trajet.id}
+                    alreadyBoosted={trajet.isBoosted}
+                  />
+                  <AnnonceActions id={trajet.id} isActive={trajet.isActive} />
+                </div>
               </div>
             </article>
           ))}

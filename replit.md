@@ -33,28 +33,50 @@ prisma/
 
 ## Environment Variables Required
 
-See `.env.example` for all required variables:
+Required:
+- `DATABASE_URL` - PostgreSQL connection string
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` / `CLERK_SECRET_KEY` - Clerk auth
+- `STRIPE_VIP_PRICE_ID` / `STRIPE_PRO_PRICE_ID` / `STRIPE_BOOST_PRICE_ID` - Stripe price IDs
 
-- `NEXT_PUBLIC_APP_URL` - App URL
-- `DATABASE_URL` / `DIRECT_URL` - PostgreSQL connection strings
-- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` / `CLERK_SECRET_KEY` / `CLERK_WEBHOOK_SECRET` - Clerk auth
-- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` / `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` - Stripe payments
-- `STRIPE_VIP_PRICE_ID` (10 €) / `STRIPE_VIP_EARLY_BIRD_PRICE_ID` (7 € until 2026-04-30, optional) / `STRIPE_PRO_PRICE_ID` (20 €) / `STRIPE_BOOST_PRICE_ID` (9 €) - Stripe price IDs
+Optional (recommended):
+- `NEXT_PUBLIC_APP_URL` - canonical URL (auto-derived from request `Origin` if absent)
+- `STRIPE_VIP_EARLY_BIRD_PRICE_ID` - 7 € price (active until 2026-04-30)
+- `STRIPE_SECRET_KEY` / `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` - explicit LIVE keys for production (overrides connector)
+- `STRIPE_WEBHOOK_SECRET` - required for the webhook to verify events
+- `CLERK_WEBHOOK_SECRET`, Resend, Supabase, Plausible — only when those features are needed
 
 ## Pricing & Stripe
 
 - **VIP Warrior**: 10 € flat, Early Bird 7 € until 2026-04-30 (toggle in `src/lib/stripe-config.ts`)
 - **Pro**: 20 € flat for all categories (Beauté, Merch, After...)
-- **Boost**: 9 €
-- VIP grants `User.isVipActive=true` and `vipUntil=2026-05-31` via Stripe webhook
-- Pro purchase grants `User.role=PRO`
-- Checkout API routes: `/api/checkout/vip|pro|boost` (POST, requires Clerk auth)
-- Webhook: `/api/webhooks/stripe` (signature-verified, handles `checkout.session.completed` + async variants)
-- Landing pages: `/vip` (with Early Bird countdown banner), `/pro`, success at `/checkout/success?type=vip|pro|boost`
-- Stripe MCP is connected in **test mode** (acct_1P092OHgqcjJnzrU). Live keys (`STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET`) must be added by the user in env vars to enable real checkout.
-- `RESEND_API_KEY` / `RESEND_FROM_EMAIL` - Email via Resend
-- `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` / `SUPABASE_SERVICE_ROLE_KEY` - Supabase storage
-- `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` - Analytics
+- **Boost**: 9 € — applied to a TRAJET or PRO_PROFILE via metadata `targetType` + `targetId`
+- VIP payment → `User.isVipActive=true`, `vipUntil=2026-05-31`, ContactLock unlocks
+- Pro payment → `User.role=PRO` + `ProProfile.isPremium=true`, `premiumUntil=2026-05-31`
+- Boost payment → target `isBoosted=true`, `boostUntil=2026-05-31`
+
+### Stripe credentials resolution
+`src/lib/stripe.ts` resolves credentials in this order:
+1. `STRIPE_SECRET_KEY` + `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` env vars (for LIVE prod)
+2. Replit Stripe connector (sandbox in dev, deployment env in prod)
+
+### Production launch
+Run `STRIPE_SECRET_KEY=sk_live_xxx APP_URL=https://mbokahub.com node scripts/setup-stripe-prod.mjs` to bootstrap LIVE products, prices, and webhook endpoint. The script prints all env vars to set in the deployment.
+
+## Checkout endpoints
+- `POST /api/checkout/vip` — creates VIP checkout (uses Early Bird price if active)
+- `POST /api/checkout/pro` — body `{ category }` (MAQUILLEUSE, COIFFEUR, etc.)
+- `POST /api/checkout/boost` — body `{ targetType: "TRAJET" | "PRO_PROFILE", targetId }`
+- `POST /api/webhooks/stripe` — Stripe webhook (signature verified)
+
+All checkout endpoints derive `success_url`/`cancel_url` from the request `Origin`, so they work in dev preview, production, and any custom domain without env tweaking.
+
+## Dashboard actions
+- `/dashboard/annonces` shows each owned trajet/pro profile with a "Booster 9 €" button (`BoostButton` → `/api/checkout/boost`).
+- For pros without `isPremium=true`, an "Activer ma fiche pro 20 €" CTA appears (`PremiumActivateButton` → `/api/checkout/pro`).
+
+## Helpers
+- `src/lib/app-url.ts` → `getAppUrl(req?)` — resolves base URL from request origin → env → REPLIT_DOMAINS → localhost.
+- `src/lib/auth-helpers.ts` → `getOptionalDbUser()`, `isCurrentUserVip()` — used by detail pages and `ContactLock` for unlock state.
 
 ## Replit-Specific Configuration
 

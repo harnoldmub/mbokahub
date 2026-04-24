@@ -2,6 +2,7 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
+import { getAppUrl } from "@/lib/app-url";
 import { prisma } from "@/lib/db/prisma";
 import { getEnv } from "@/lib/env";
 import { getStripe } from "@/lib/stripe";
@@ -36,6 +37,7 @@ export async function POST(req: Request) {
 
     const env = getEnv();
     const stripe = await getStripe();
+    const appUrl = getAppUrl(req);
 
     let category: string | undefined;
     try {
@@ -78,8 +80,8 @@ export async function POST(req: Request) {
       mode: "payment",
       customer: stripeCustomerId,
       line_items: [{ price: env.STRIPE_PRO_PRICE_ID, quantity: 1 }],
-      success_url: `${env.NEXT_PUBLIC_APP_URL}/checkout/success?type=pro&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${env.NEXT_PUBLIC_APP_URL}/pro?canceled=1`,
+      success_url: `${appUrl}/checkout/success?type=pro&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${appUrl}/pro?canceled=1`,
       locale: "fr",
       payment_method_types: ["card"],
       metadata: {

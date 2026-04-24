@@ -6,6 +6,7 @@ import { ContactLock } from "@/components/shared/contact-lock";
 import { ReportButton } from "@/components/shared/report-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { isCurrentUserVip } from "@/lib/auth-helpers";
 import { demoTrajets } from "@/lib/demo-data";
 
 type TrajetDetailsPageProps = {
@@ -21,6 +22,8 @@ export default async function TrajetDetailsPage({
   if (!trajet) {
     notFound();
   }
+
+  const isVip = await isCurrentUserVip();
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
@@ -60,14 +63,18 @@ export default async function TrajetDetailsPage({
           <div className="border border-white/10 bg-background/70 p-4">
             <dt className="text-muted-foreground text-sm">Contact</dt>
             <dd className="mt-1">
-              <ContactLock value={trajet.whatsappMasked} />
+              <ContactLock value={trajet.whatsappMasked} unlocked={isVip} />
             </dd>
           </div>
         </dl>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Button className="shadow-[var(--glow-red)]">
-            <LockKeyhole aria-hidden /> Débloquer avec VIP
-          </Button>
+          {isVip ? null : (
+            <Button asChild className="shadow-[var(--glow-red)]">
+              <Link href="/vip">
+                <LockKeyhole aria-hidden /> Débloquer avec VIP
+              </Link>
+            </Button>
+          )}
           <Button asChild variant="outline">
             <Link href="/cgu">Voir les règles de mise en relation</Link>
           </Button>

@@ -13,10 +13,12 @@ type TrajetCardProps = {
     carPhoto?: string | null;
     vehiculeColor?: string | null;
     vehiculeModel?: string | null;
+    whatsappRaw?: string | null;
   };
+  unlocked?: boolean;
 };
 
-export function TrajetCard({ trajet }: TrajetCardProps) {
+export function TrajetCard({ trajet, unlocked }: TrajetCardProps) {
   const carPhoto = trajet.carPhoto;
 
   return (
@@ -106,7 +108,11 @@ export function TrajetCard({ trajet }: TrajetCardProps) {
               <span className="text-sm ml-1 text-paper-mute">EUR</span>
             </span>
           </div>
-          <ContactLock value={trajet.whatsappMasked} />
+          <ContactLock
+            value={trajet.whatsappMasked}
+            unlocked={unlocked}
+            rawValue={trajet.whatsappRaw ?? undefined}
+          />
         </div>
 
         <Button

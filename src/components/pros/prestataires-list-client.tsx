@@ -27,7 +27,6 @@ type ProListItem = {
   isVerified: boolean;
   rating: number;
   reviewsCount: number;
-  whatsapp: string;
   instagramHandle: string | null;
   tiktokHandle: string | null;
 };

@@ -1,11 +1,21 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { z } from "zod";
 
+import { getAppUrl } from "@/lib/app-url";
 import { prisma } from "@/lib/db/prisma";
 import { getEnv } from "@/lib/env";
 import { getStripe } from "@/lib/stripe";
 
-export async function POST() {
+const bodySchema = z
+  .object({
+    targetType: z.enum(["TRAJET", "PRO_PROFILE"]).optional(),
+    targetId: z.string().min(1).optional(),
+  })
+  .optional();
+
+export async function POST(req: Request) {
+  const appUrl = getAppUrl(req);
   try {
     const { userId } = await auth();
     if (!userId) {
@@ -16,6 +26,17 @@ export async function POST() {
     const email = clerkUser?.emailAddresses[0]?.emailAddress;
     if (!email) {
       return NextResponse.json({ error: "Email manquant" }, { status: 400 });
+    }
+
+    let targetType: "TRAJET" | "PRO_PROFILE" | undefined;
+    let targetId: string | undefined;
+    try {
+      const json = (await req.json()) as unknown;
+      const parsed = bodySchema.parse(json);
+      targetType = parsed?.targetType;
+      targetId = parsed?.targetId;
+    } catch {
+      // empty body — boost without target (legacy)
     }
 
     const env = getEnv();
@@ -32,6 +53,24 @@ export async function POST() {
           : null,
       },
     });
+
+    if (targetType === "TRAJET" && targetId) {
+      const trajet = await prisma.trajet.findUnique({ where: { id: targetId } });
+      if (!trajet || trajet.userId !== dbUser.id) {
+        return NextResponse.json(
+          { error: "Trajet introuvable ou non autorisé" },
+          { status: 403 },
+        );
+      }
+    } else if (targetType === "PRO_PROFILE" && targetId) {
+      const pro = await prisma.proProfile.findUnique({ where: { id: targetId } });
+      if (!pro || pro.userId !== dbUser.id) {
+        return NextResponse.json(
+          { error: "Profil introuvable ou non autorisé" },
+          { status: 403 },
+        );
+      }
+    }
 
     let stripeCustomerId = dbUser.stripeCustomerId;
     if (!stripeCustomerId) {
@@ -50,14 +89,16 @@ export async function POST() {
       mode: "payment",
       customer: stripeCustomerId,
       line_items: [{ price: env.STRIPE_BOOST_PRICE_ID, quantity: 1 }],
-      success_url: `${env.NEXT_PUBLIC_APP_URL}/checkout/success?type=boost&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${env.NEXT_PUBLIC_APP_URL}/dashboard?canceled=1`,
+      success_url: `${appUrl}/checkout/success?type=boost&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${appUrl}/dashboard?canceled=1`,
       locale: "fr",
       payment_method_types: ["card"],
       metadata: {
         userId: dbUser.id,
         clerkId: userId,
         type: "BOOST",
+        targetType: targetType ?? "",
+        targetId: targetId ?? "",
       },
     });
 

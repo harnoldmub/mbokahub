@@ -10,9 +10,10 @@ import { cn } from "@/lib/utils";
 type Props = {
   pros: ProDemo[];
   categoryTitle?: string;
+  unlocked?: boolean;
 };
 
-export function ProsListClient({ pros, categoryTitle }: Props) {
+export function ProsListClient({ pros, categoryTitle, unlocked }: Props) {
   const [search, setSearch] = useState("");
   const [verifiedOnly, setVerifiedOnly] = useState(false);
   const [premiumOnly, setPremiumOnly] = useState(false);
@@ -156,7 +157,7 @@ export function ProsListClient({ pros, categoryTitle }: Props) {
       ) : (
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((pro) => (
-            <ProCard key={pro.id} pro={pro} />
+            <ProCard key={pro.id} pro={pro} unlocked={unlocked} />
           ))}
         </div>
       )}

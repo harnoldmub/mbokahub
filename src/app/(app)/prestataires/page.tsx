@@ -44,7 +44,6 @@ export default async function PrestatairesPage({ searchParams }: Props) {
       isVerified: true,
       rating: true,
       reviewsCount: true,
-      whatsapp: true,
       instagramHandle: true,
       tiktokHandle: true,
     },

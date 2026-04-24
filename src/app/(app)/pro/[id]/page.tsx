@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { ContactLock } from "@/components/shared/contact-lock";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { isCurrentUserVip } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/db/prisma";
 import { PRO_CATEGORY_BY_ID } from "@/lib/pro-categories";
 
@@ -24,6 +25,8 @@ export default async function ProDetailsPage({ params }: ProDetailsPageProps) {
 
   const meta = PRO_CATEGORY_BY_ID[pro.category];
   const cover = pro.photos?.[0];
+  const isVip = await isCurrentUserVip();
+  const maskedWa = pro.whatsapp.replace(/(\+?\d{2,3})\d+(\d{2})/, "$1******$2");
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
@@ -124,7 +127,11 @@ export default async function ProDetailsPage({ params }: ProDetailsPageProps) {
               Contact WhatsApp
             </p>
             <div className="mt-2">
-              <ContactLock value={pro.whatsapp} />
+              <ContactLock
+                value={maskedWa}
+                rawValue={pro.whatsapp}
+                unlocked={isVip}
+              />
             </div>
             <p className="mt-3 text-xs text-paper-mute">
               Connecte-toi pour révéler le numéro et contacter ce prestataire.

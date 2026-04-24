@@ -1,12 +1,14 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
+import { getAppUrl } from "@/lib/app-url";
 import { prisma } from "@/lib/db/prisma";
 import { getEnv } from "@/lib/env";
 import { getStripe } from "@/lib/stripe";
 import { isEarlyBirdActive } from "@/lib/stripe-config";
 
-export async function POST() {
+export async function POST(req: Request) {
+  const appUrl = getAppUrl(req);
   try {
     const { userId } = await auth();
     if (!userId) {
@@ -64,8 +66,8 @@ export async function POST() {
       mode: "payment",
       customer: stripeCustomerId,
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${env.NEXT_PUBLIC_APP_URL}/checkout/success?type=vip&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${env.NEXT_PUBLIC_APP_URL}/vip?canceled=1`,
+      success_url: `${appUrl}/checkout/success?type=vip&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${appUrl}/vip?canceled=1`,
       locale: "fr",
       payment_method_types: ["card"],
       metadata: {
