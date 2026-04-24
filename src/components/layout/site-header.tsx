@@ -23,13 +23,10 @@ export function SiteHeader() {
           ? "Dashboard"
           : "Tableau de bord";
   const navItems = [
-    { href: "/", label: copy.nav.home },
     { href: "/concert", label: copy.nav.concert },
     { href: "/prestataires", label: copy.nav.services },
     { href: "/communaute", label: copy.nav.community },
     { href: "/playlists", label: copy.nav.playlists },
-    { href: "/quiz", label: copy.nav.quiz },
-    { href: "/contact", label: copy.nav.contact },
   ] as const;
 
   return (
