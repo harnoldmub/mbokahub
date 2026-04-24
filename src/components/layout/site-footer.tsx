@@ -7,16 +7,16 @@ import { LEGAL_DISCLAIMER, PHOTO_CREDITS } from "@/lib/constants";
 import { getLocale, localizedHref, nls } from "@/lib/nls";
 import { NewsletterForm } from "@/components/shared/newsletter-form";
 
-const footerLinks = [
-  { href: "/cgv", label: "CGV" },
-  { href: "/confidentialite", label: "Confidentialité" },
-  { href: "/mentions-legales", label: "Mentions légales" },
-  { href: "/disclaimer", label: "Disclaimer" },
-] as const;
-
 export function SiteFooter() {
   const locale = getLocale(useSearchParams().get("lang"));
   const copy = nls[locale].footer;
+  const legalLinks = [
+    { href: "/cgu", label: copy.links.terms },
+    { href: "/cgv", label: copy.links.sales },
+    { href: "/confidentialite", label: copy.links.privacy },
+    { href: "/mentions-legales", label: copy.links.legalNotice },
+    { href: "/disclaimer", label: copy.links.disclaimer },
+  ] as const;
 
   return (
     <footer className="bg-ink border-t border-white/5 pt-20 pb-10">
@@ -53,7 +53,7 @@ export function SiteFooter() {
                 {copy.links.afters}
               </Link>
               <Link
-                href={localizedHref("/beaute", locale)}
+                href={localizedHref("/prestataires", locale)}
                 className="text-paper-dim hover:text-paper transition-colors"
               >
                 {copy.links.services}
@@ -124,7 +124,7 @@ export function SiteFooter() {
               {copy.legal}
             </h3>
             <nav className="flex flex-col gap-3">
-              {footerLinks.map((link) => (
+              {legalLinks.map((link) => (
                 <Link
                   className="text-paper-dim hover:text-paper transition-colors"
                   href={localizedHref(link.href, locale)}
