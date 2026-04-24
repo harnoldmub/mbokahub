@@ -121,6 +121,11 @@ export default async function VipPage() {
             <p className="mt-1 text-muted-foreground text-sm">
               Paiement unique &middot; valide jusqu'au 31 mai 2026
             </p>
+            {earlyBird ? (
+              <p className="mt-1 font-mono text-amber-200 text-xs uppercase tracking-[0.2em]">
+                Early &middot; valide jusqu'au {deadline}
+              </p>
+            ) : null}
           </CardHeader>
           <CardContent className="grid gap-5">
             <ul className="grid gap-3">
@@ -138,12 +143,20 @@ export default async function VipPage() {
             {userId ? (
               <VipCheckoutButton priceLabel={`${currentPrice} €`} />
             ) : (
-              <Link
-                className="inline-flex w-full items-center justify-center rounded-full bg-primary px-6 py-4 font-mono text-ink text-sm uppercase tracking-[0.2em] transition hover:bg-primary/90"
-                href={`/sign-in?redirect_url=/vip`}
-              >
-                Se connecter pour devenir VIP
-              </Link>
+              <div className="grid gap-3">
+                <Link
+                  className="inline-flex w-full items-center justify-center rounded-full bg-primary px-6 py-4 font-mono text-ink text-sm uppercase tracking-[0.2em] transition hover:bg-primary/90"
+                  href={`/sign-up?redirect_url=/vip`}
+                >
+                  Devenir VIP — {currentPrice} €
+                </Link>
+                <Link
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3 font-mono text-paper text-xs uppercase tracking-[0.2em] transition hover:border-white/30 hover:bg-white/10"
+                  href={`/sign-in?redirect_url=/dashboard`}
+                >
+                  Déjà VIP&nbsp;? Se connecter
+                </Link>
+              </div>
             )}
 
             <p className="text-center text-muted-foreground text-xs">
