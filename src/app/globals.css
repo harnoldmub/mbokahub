@@ -9,8 +9,8 @@
   --color-ash: #26201d;
 
   /* ACCENTS — le feu */
-  --color-blood: #e63946;
-  --color-blood-deep: #b8222b;
+  --color-blood: #E50914;
+  --color-blood-deep: #B00610;
   --color-ember: #ff6b35;
   --color-flame: #ff9142;
 
@@ -26,7 +26,7 @@
   /* UTILITAIRES */
   --color-success: #00c896;
   --color-warning: #f2b705;
-  --color-error: #e63946;
+  --color-error: #E50914;
 
   /* TYPOGRAPHY */
   --font-display: var(--font-anton);

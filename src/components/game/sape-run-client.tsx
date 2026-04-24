@@ -223,7 +223,7 @@ function drawObstacle(ctx: CanvasRenderingContext2D, obs: Obstacle, tick: number
     ctx.arc(obs.x + obs.w / 2, obs.y + 15 + bounce, 12, 0, Math.PI * 2);
     ctx.fill();
     // Angry eyes
-    ctx.strokeStyle = "#e63946";
+    ctx.strokeStyle = "#E50914";
     ctx.lineWidth = 2;
     ctx.beginPath(); ctx.moveTo(obs.x + obs.w/2 - 6, obs.y + 12 + bounce); ctx.lineTo(obs.x + obs.w/2 - 2, obs.y + 15 + bounce); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(obs.x + obs.w/2 + 6, obs.y + 12 + bounce); ctx.lineTo(obs.x + obs.w/2 + 2, obs.y + 15 + bounce); ctx.stroke();
@@ -238,7 +238,7 @@ function drawObstacle(ctx: CanvasRenderingContext2D, obs: Obstacle, tick: number
     ctx.fillRect(-25, -25, 50, 30);
     ctx.strokeStyle = "#000";
     ctx.strokeRect(-25, -25, 50, 30);
-    ctx.fillStyle = "#e63946";
+    ctx.fillStyle = "#E50914";
     ctx.font = "bold 10px sans-serif";
     ctx.textAlign = "center";
     ctx.fillText("NO!", 0, -6);
@@ -604,7 +604,7 @@ export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = 
       const beamOriginX = W * 0.55;
       const beamOriginY = GROUND - 30;
       for (const [angleBase, hue] of [
-        [-Math.PI / 2 + sweep * 0.5, "#e63946"],
+        [-Math.PI / 2 + sweep * 0.5, "#E50914"],
         [-Math.PI / 2 + sweep2 * 0.6, "#fbbf24"],
         [-Math.PI / 2 - sweep * 0.7, "#a855f7"],
       ] as const) {
@@ -737,7 +737,7 @@ export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = 
 
       // Marquee banner: FALLY 2026
       const bannerY = stY - 38;
-      ctx.fillStyle = "#e63946";
+      ctx.fillStyle = "#E50914";
       drawRoundRect(ctx, stX - 70, bannerY - 12, 140, 22, 4);
       ctx.fill();
       ctx.fillStyle = "#fff";

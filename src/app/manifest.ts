@@ -16,6 +16,6 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Mboka Hub",
     short_name: "Mboka",
     start_url: "/",
-    theme_color: "#E63946",
+    theme_color: "#E50914",
   };
 }

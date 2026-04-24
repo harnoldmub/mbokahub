@@ -6,7 +6,7 @@ export const colors = {
     elevated: "#262626",
   },
   accent: {
-    red: "#e63946",
+    red: "#E50914",
     orange: "#ff6b35",
     ember: "#ff9142",
     gold: "#f2b705",
