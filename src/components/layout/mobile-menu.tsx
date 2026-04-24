@@ -77,7 +77,7 @@ export function MobileMenu({ locale }: MobileMenuProps) {
             variant="vip"
           >
             <Link
-              href={localizedHref("/dashboard", locale)}
+              href={localizedHref("/vip", locale)}
               onClick={() => setOpen(false)}
             >
               {copy.vipCta}

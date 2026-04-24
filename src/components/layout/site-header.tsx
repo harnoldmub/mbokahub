@@ -129,10 +129,7 @@ export function SiteHeader() {
             variant="vip"
           >
             <Link
-              href={localizedHref(
-                isSignedIn ? "/dashboard" : "/sign-in",
-                locale,
-              )}
+              href={localizedHref(isSignedIn ? "/dashboard" : "/vip", locale)}
             >
               {isSignedIn ? dashboardLabel : copy.vipCta}
             </Link>

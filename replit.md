@@ -39,7 +39,19 @@ See `.env.example` for all required variables:
 - `DATABASE_URL` / `DIRECT_URL` - PostgreSQL connection strings
 - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` / `CLERK_SECRET_KEY` / `CLERK_WEBHOOK_SECRET` - Clerk auth
 - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` / `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` - Stripe payments
-- `STRIPE_VIP_PRICE_ID` / `STRIPE_PRO_PRICE_ID` / `STRIPE_BOOST_PRICE_ID` - Stripe product IDs
+- `STRIPE_VIP_PRICE_ID` (10 €) / `STRIPE_VIP_EARLY_BIRD_PRICE_ID` (7 € until 2026-04-30, optional) / `STRIPE_PRO_PRICE_ID` (20 €) / `STRIPE_BOOST_PRICE_ID` (9 €) - Stripe price IDs
+
+## Pricing & Stripe
+
+- **VIP Warrior**: 10 € flat, Early Bird 7 € until 2026-04-30 (toggle in `src/lib/stripe-config.ts`)
+- **Pro**: 20 € flat for all categories (Beauté, Merch, After...)
+- **Boost**: 9 €
+- VIP grants `User.isVipActive=true` and `vipUntil=2026-05-31` via Stripe webhook
+- Pro purchase grants `User.role=PRO`
+- Checkout API routes: `/api/checkout/vip|pro|boost` (POST, requires Clerk auth)
+- Webhook: `/api/webhooks/stripe` (signature-verified, handles `checkout.session.completed` + async variants)
+- Landing pages: `/vip` (with Early Bird countdown banner), `/pro`, success at `/checkout/success?type=vip|pro|boost`
+- Stripe MCP is connected in **test mode** (acct_1P092OHgqcjJnzrU). Live keys (`STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET`) must be added by the user in env vars to enable real checkout.
 - `RESEND_API_KEY` / `RESEND_FROM_EMAIL` - Email via Resend
 - `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` / `SUPABASE_SERVICE_ROLE_KEY` - Supabase storage
 - `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` - Analytics
