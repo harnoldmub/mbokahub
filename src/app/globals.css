@@ -28,6 +28,21 @@
   --color-warning: #f2b705;
   --color-error: #E50914;
 
+  /* ALIAS shadcn-style — pour que bg-primary / text-foreground / etc. fonctionnent */
+  --color-primary: #E50914;
+  --color-primary-foreground: #f5efe4;
+  --color-foreground: #f5efe4;
+  --color-background: #0a0808;
+  --color-muted: #1c1816;
+  --color-muted-foreground: #b8b0a3;
+  --color-accent: #f2b705;
+  --color-accent-foreground: #0a0808;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-card: #13100f;
+  --color-card-foreground: #f5efe4;
+  --color-destructive: #E50914;
+  --color-destructive-foreground: #f5efe4;
+
   /* TYPOGRAPHY */
   --font-display: var(--font-anton);
   --font-serif: var(--font-fraunces);
