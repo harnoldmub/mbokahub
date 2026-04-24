@@ -90,7 +90,14 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
 export async function POST(req: Request) {
   const env = getEnv();
-  const stripe = getStripe();
+  if (!env.STRIPE_WEBHOOK_SECRET) {
+    console.error("[stripe webhook] STRIPE_WEBHOOK_SECRET not configured");
+    return NextResponse.json(
+      { error: "Webhook secret not configured" },
+      { status: 503 },
+    );
+  }
+  const stripe = await getStripe();
 
   const body = await req.text();
   const sig = (await headers()).get("stripe-signature");

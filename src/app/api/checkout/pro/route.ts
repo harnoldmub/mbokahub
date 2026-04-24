@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     }
 
     const env = getEnv();
-    const stripe = getStripe();
+    const stripe = await getStripe();
 
     let category: string | undefined;
     try {

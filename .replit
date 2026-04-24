@@ -1,7 +1,8 @@
-modules = ["nodejs-20", "web", "postgresql-16"]
+modules = ["nodejs-20", "web", "postgresql-16", "python-3.11"]
 [agent]
 expertMode = true
 stack = "BEST_EFFORT_FALLBACK"
+integrations = ["stripe:1.0.0"]
 
 [nix]
 channel = "stable-25_05"
@@ -47,3 +48,4 @@ STRIPE_VIP_PRICE_ID = "price_1TPgsLHgqcjJnzrUNSogQ4Gc"
 STRIPE_PRO_PRICE_ID = "price_1TPgsLHgqcjJnzrUDjpsT3d1"
 STRIPE_BOOST_PRICE_ID = "price_1TPgXQHgqcjJnzrUt7YQbNHV"
 STRIPE_VIP_EARLY_BIRD_PRICE_ID = "price_1TPh0wHgqcjJnzrUagmTAupZ"
+STRIPE_WEBHOOK_SECRET = "whsec_9yfO1TqFc4cqL0E3DwVWSmMgV1aVJFqy"

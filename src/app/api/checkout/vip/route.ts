@@ -20,7 +20,7 @@ export async function POST() {
     }
 
     const env = getEnv();
-    const stripe = getStripe();
+    const stripe = await getStripe();
 
     const dbUser = await prisma.user.upsert({
       where: { clerkId: userId },
