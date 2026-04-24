@@ -6,14 +6,9 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db/prisma";
 import type { ProCategory } from "@prisma/client";
 
-const VALID_PRO_CATEGORIES: ProCategory[] = [
-  "MAQUILLEUSE",
-  "COIFFEUR",
-  "BARBIER",
-  "PHOTOGRAPHE",
-  "VENDEUR_MERCH",
-  "ORGANISATEUR_AFTER",
-];
+import { PRO_CATEGORY_IDS } from "@/lib/pro-categories";
+
+const VALID_PRO_CATEGORIES: ProCategory[] = PRO_CATEGORY_IDS;
 
 async function ensureUser(redirectAfterSignIn: string) {
   const { userId } = await auth();
@@ -160,4 +155,52 @@ export async function createProProfileAction(form: FormData) {
   revalidatePath("/pro");
   revalidatePath("/dashboard/annonces");
   redirect("/dashboard/annonces?published=pro");
+}
+
+export async function applyAsModeratorAction(form: FormData) {
+  const user = await ensureUser("/communaute/devenir-moderateur");
+
+  const region = String(form.get("region") || "").trim();
+  const country = String(form.get("country") || "France").trim();
+  const motivation = String(form.get("motivation") || "").trim() || null;
+  const bio = String(form.get("bio") || "").trim() || null;
+  const whatsappLink = String(form.get("whatsappLink") || "").trim() || null;
+
+  if (!region) {
+    redirect("/communaute/devenir-moderateur?error=missing");
+  }
+
+  if (
+    whatsappLink &&
+    !/^https?:\/\/(chat\.whatsapp\.com|wa\.me)\//i.test(whatsappLink)
+  ) {
+    redirect("/communaute/devenir-moderateur?error=whatsapp");
+  }
+
+  const existing = await prisma.moderator.findUnique({
+    where: { userId: user.id },
+  });
+
+  if (existing) {
+    await prisma.moderator.update({
+      where: { id: existing.id },
+      data: { region, country, motivation, bio, whatsappLink },
+    });
+  } else {
+    await prisma.moderator.create({
+      data: {
+        userId: user.id,
+        region,
+        country,
+        motivation,
+        bio,
+        whatsappLink,
+        status: "PENDING",
+      },
+    });
+  }
+
+  revalidatePath("/communaute/devenir-moderateur");
+  revalidatePath("/dashboard");
+  redirect("/communaute/devenir-moderateur?success=1");
 }

@@ -223,3 +223,134 @@ export async function deleteAllTestData() {
   ]);
   revalidatePath("/admin");
 }
+
+// ============================================================================
+// MODERATORS & WHATSAPP COMMUNITIES
+// ============================================================================
+
+export async function approveModerator(moderatorId: string) {
+  await requireAdmin();
+  await prisma.moderator.update({
+    where: { id: moderatorId },
+    data: { status: "APPROVED", approvedAt: new Date() },
+  });
+  revalidatePath("/admin/moderateurs");
+}
+
+export async function suspendModerator(moderatorId: string) {
+  await requireAdmin();
+  await prisma.moderator.update({
+    where: { id: moderatorId },
+    data: { status: "SUSPENDED" },
+  });
+  revalidatePath("/admin/moderateurs");
+}
+
+export async function deleteModerator(moderatorId: string) {
+  await requireAdmin();
+  await prisma.moderator.delete({ where: { id: moderatorId } });
+  revalidatePath("/admin/moderateurs");
+}
+
+export async function createCommunityAction(form: FormData) {
+  await requireAdmin();
+  const name = String(form.get("name") || "").trim();
+  const region = String(form.get("region") || "").trim();
+  const country = String(form.get("country") || "France").trim();
+  const inviteLink = String(form.get("inviteLink") || "").trim();
+  const description = String(form.get("description") || "").trim() || null;
+  const rules = String(form.get("rules") || "").trim() || null;
+  const moderatorId = String(form.get("moderatorId") || "").trim() || null;
+  const isFeatured = form.get("isFeatured") === "on";
+
+  if (!name || !region || !inviteLink) {
+    throw new Error("Nom, région et lien WhatsApp obligatoires");
+  }
+  if (!/^https?:\/\/(chat\.whatsapp\.com|wa\.me)\//i.test(inviteLink)) {
+    throw new Error("Lien WhatsApp invalide");
+  }
+
+  await prisma.whatsAppCommunity.create({
+    data: {
+      name,
+      region,
+      country,
+      inviteLink,
+      description,
+      rules,
+      isFeatured,
+      moderatorId: moderatorId ?? undefined,
+    },
+  });
+  revalidatePath("/admin/communautes");
+  revalidatePath("/communaute");
+}
+
+export async function updateCommunityAction(id: string, form: FormData) {
+  await requireAdmin();
+  const name = String(form.get("name") || "").trim();
+  const region = String(form.get("region") || "").trim();
+  const country = String(form.get("country") || "France").trim();
+  const inviteLink = String(form.get("inviteLink") || "").trim();
+  const description = String(form.get("description") || "").trim() || null;
+  const rules = String(form.get("rules") || "").trim() || null;
+  const moderatorId = String(form.get("moderatorId") || "").trim() || null;
+
+  if (!name || !region || !inviteLink) {
+    throw new Error("Nom, région et lien WhatsApp obligatoires");
+  }
+  if (!/^https?:\/\/(chat\.whatsapp\.com|wa\.me)\//i.test(inviteLink)) {
+    throw new Error("Lien WhatsApp invalide");
+  }
+
+  await prisma.whatsAppCommunity.update({
+    where: { id },
+    data: {
+      name,
+      region,
+      country,
+      inviteLink,
+      description,
+      rules,
+      moderatorId: moderatorId,
+    },
+  });
+  revalidatePath("/admin/communautes");
+  revalidatePath("/communaute");
+}
+
+export async function toggleCommunityActive(id: string, isActive: boolean) {
+  await requireAdmin();
+  await prisma.whatsAppCommunity.update({
+    where: { id },
+    data: { isActive },
+  });
+  revalidatePath("/admin/communautes");
+  revalidatePath("/communaute");
+}
+
+export async function toggleCommunityFeatured(id: string, isFeatured: boolean) {
+  await requireAdmin();
+  await prisma.whatsAppCommunity.update({
+    where: { id },
+    data: { isFeatured },
+  });
+  revalidatePath("/admin/communautes");
+  revalidatePath("/communaute");
+}
+
+export async function deleteCommunity(id: string) {
+  await requireAdmin();
+  await prisma.whatsAppCommunity.delete({ where: { id } });
+  revalidatePath("/admin/communautes");
+  revalidatePath("/communaute");
+}
+
+export async function certifyProProfile(profileId: string, certified: boolean) {
+  await requireAdmin();
+  await prisma.proProfile.update({
+    where: { id: profileId },
+    data: { isPremium: certified },
+  });
+  revalidatePath("/admin/pros");
+}

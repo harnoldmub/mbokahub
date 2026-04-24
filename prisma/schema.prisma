@@ -29,6 +29,7 @@ model User {
   gameScores       GameScore[]
   afterOwnerships  After[]           @relation("AfterOrganizer")
   payments         Payment[]
+  moderator        Moderator?
 
   @@index([email])
   @@index([clerkId])
@@ -108,8 +109,20 @@ enum ProCategory {
   COIFFEUR
   BARBIER
   PHOTOGRAPHE
+  VIDEASTE
   VENDEUR_MERCH
   ORGANISATEUR_AFTER
+  SECURITE
+  CHAUFFEUR_VTC
+  DJ
+  ANIMATEUR
+  CUISINIER
+  TRAITEUR
+  DECORATEUR
+  COUTURIER
+  BIJOUTIER
+  BABYSITTER
+  AUTRE
 }
 
 model UnlockedContact {
@@ -337,4 +350,49 @@ enum PaymentStatus {
   COMPLETED
   FAILED
   REFUNDED
+}
+
+model Moderator {
+  id           String           @id @default(cuid())
+  userId       String           @unique
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  region       String
+  country      String           @default("France")
+  whatsappLink String?
+  bio          String?          @db.Text
+  motivation   String?          @db.Text
+  status       ModeratorStatus  @default(PENDING)
+  approvedAt   DateTime?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  community    WhatsAppCommunity?
+
+  @@index([status, region])
+}
+
+enum ModeratorStatus {
+  PENDING
+  APPROVED
+  SUSPENDED
+}
+
+model WhatsAppCommunity {
+  id           String     @id @default(cuid())
+  name         String
+  region       String
+  country      String     @default("France")
+  inviteLink   String
+  description  String?    @db.Text
+  rules        String?    @db.Text
+  memberCount  Int        @default(0)
+  isActive     Boolean    @default(true)
+  isFeatured   Boolean    @default(false)
+  moderatorId  String?    @unique
+  moderator    Moderator? @relation(fields: [moderatorId], references: [id], onDelete: SetNull)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([region, isActive])
+  @@index([country, isActive])
 }

@@ -9,19 +9,20 @@ import { Input } from "@/components/ui/input";
 import { PhotoUpload } from "@/components/ui/photo-upload";
 import { cn } from "@/lib/utils";
 import { createProProfileAction } from "@/lib/actions/public";
-
-const PRO_CATEGORIES = [
-  { id: "MAQUILLEUSE", label: "Maquilleuse", icon: "✨" },
-  { id: "COIFFEUR", label: "Coiffeur", icon: "✂️" },
-  { id: "BARBIER", label: "Barbier", icon: "🪒" },
-  { id: "PHOTOGRAPHE", label: "Photographe", icon: "📸" },
-  { id: "VENDEUR_MERCH", label: "Vendeur Merch", icon: "👕" },
-  { id: "ORGANISATEUR_AFTER", label: "Organisateur After", icon: "🎧" },
-];
+import {
+  PRO_CATEGORIES,
+  PRO_CATEGORY_GROUPS,
+} from "@/lib/pro-categories";
 
 export function ProRegistrationForm() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [activeGroup, setActiveGroup] = useState<string>("all");
   const [isRequestingCert, setIsRequestingCert] = useState(false);
+
+  const visibleCategories =
+    activeGroup === "all"
+      ? PRO_CATEGORIES
+      : PRO_CATEGORIES.filter((c) => c.group === activeGroup);
 
   return (
     <div className="space-y-12">
@@ -30,31 +31,60 @@ export function ProRegistrationForm() {
         <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-blood">
           Étape 01 — Choisir ta catégorie
         </p>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          {PRO_CATEGORIES.map((cat) => (
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => setActiveGroup("all")}
+            className={cn(
+              "rounded-full border px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest transition",
+              activeGroup === "all"
+                ? "border-blood bg-blood text-paper"
+                : "border-white/10 bg-white/5 text-paper-dim hover:border-white/30",
+            )}
+          >
+            Toutes
+          </button>
+          {PRO_CATEGORY_GROUPS.map((g) => (
+            <button
+              key={g.id}
+              type="button"
+              onClick={() => setActiveGroup(g.id)}
+              className={cn(
+                "rounded-full border px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest transition",
+                activeGroup === g.id
+                  ? "border-blood bg-blood text-paper"
+                  : "border-white/10 bg-white/5 text-paper-dim hover:border-white/30",
+              )}
+            >
+              {g.label}
+            </button>
+          ))}
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+          {visibleCategories.map((cat) => (
             <button
               key={cat.id}
               type="button"
               onClick={() => setSelectedCategory(cat.id)}
               className={cn(
-                "group relative flex flex-col items-center justify-center gap-4 p-8 rounded-2xl border transition-all duration-500",
+                "group relative flex flex-col items-center justify-center gap-2 p-5 rounded-2xl border transition-all duration-500 text-center",
                 selectedCategory === cat.id
-                  ? "bg-blood/10 border-blood shadow-glow-blood sm:scale-105"
+                  ? "bg-blood/10 border-blood shadow-glow-blood scale-105"
                   : "bg-coal/50 border-white/5 hover:border-paper/20",
               )}
             >
-              <span className="text-4xl group-hover:scale-125 transition-transform duration-500">
+              <span className="text-3xl transition-transform duration-500 group-hover:scale-110">
                 {cat.icon}
               </span>
               <span
                 className={cn(
-                  "font-display text-xs uppercase tracking-widest",
+                  "font-display text-[11px] uppercase tracking-widest leading-tight",
                   selectedCategory === cat.id
                     ? "text-paper"
                     : "text-paper-mute",
                 )}
               >
-                {cat.label}
+                {cat.shortLabel}
               </span>
             </button>
           ))}

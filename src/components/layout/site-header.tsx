@@ -25,10 +25,10 @@ export function SiteHeader() {
   const navItems = [
     { href: "/", label: copy.nav.home },
     { href: "/concert", label: copy.nav.concert },
-    { href: "/#prestations", label: copy.nav.services },
+    { href: "/prestataires", label: copy.nav.services },
+    { href: "/communaute", label: copy.nav.community },
     { href: "/playlists", label: copy.nav.playlists },
     { href: "/quiz", label: copy.nav.quiz },
-    { href: "/jeu", label: copy.nav.game },
     { href: "/contact", label: copy.nav.contact },
   ] as const;
 
