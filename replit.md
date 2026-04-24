@@ -40,16 +40,16 @@ Required:
 
 Optional (recommended):
 - `NEXT_PUBLIC_APP_URL` - canonical URL (auto-derived from request `Origin` if absent)
-- `STRIPE_VIP_EARLY_BIRD_PRICE_ID` - 7 € price (active until 2026-04-30)
+- `STRIPE_VIP_EARLY_BIRD_PRICE_ID` - 6,99 € price (active until 2026-04-30)
 - `STRIPE_SECRET_KEY` / `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` - explicit LIVE keys for production (overrides connector)
 - `STRIPE_WEBHOOK_SECRET` - required for the webhook to verify events
 - `CLERK_WEBHOOK_SECRET`, Resend, Supabase, Plausible — only when those features are needed
 
 ## Pricing & Stripe
 
-- **VIP Famille**: 10 € flat, Early Bird 7 € until 2026-04-30 (toggle in `src/lib/stripe-config.ts`)
-- **Pro**: 20 € flat for all categories (Beauté, Merch, After...)
-- **Boost**: 9 € — applied to a TRAJET or PRO_PROFILE via metadata `targetType` + `targetId`
+- **VIP Famille**: 9,99 € flat, Early Bird 6,99 € until 2026-04-30 (toggle in `src/lib/stripe-config.ts`)
+- **Pro**: 19,99 € flat for all categories (Beauté, Merch, After...)
+- **Boost**: 8,99 € — applied to a TRAJET or PRO_PROFILE via metadata `targetType` + `targetId`
 - VIP payment → `User.isVipActive=true`, `vipUntil=2026-05-31`, ContactLock unlocks
 - Pro payment → `User.role=PRO` + `ProProfile.isPremium=true`, `premiumUntil=2026-05-31`
 - Boost payment → target `isBoosted=true`, `boostUntil=2026-05-31`
@@ -71,8 +71,8 @@ Run `STRIPE_SECRET_KEY=sk_live_xxx APP_URL=https://mbokahub.com node scripts/set
 All checkout endpoints derive `success_url`/`cancel_url` from the request `Origin`, so they work in dev preview, production, and any custom domain without env tweaking.
 
 ## Dashboard actions
-- `/dashboard/annonces` shows each owned trajet/pro profile with a "Booster 9 €" button (`BoostButton` → `/api/checkout/boost`).
-- For pros without `isPremium=true`, an "Activer ma fiche pro 20 €" CTA appears (`PremiumActivateButton` → `/api/checkout/pro`).
+- `/dashboard/annonces` shows each owned trajet/pro profile with a "Booster 8,99 €" button (`BoostButton` → `/api/checkout/boost`).
+- For pros without `isPremium=true`, an "Activer ma fiche pro 19,99 €" CTA appears (`PremiumActivateButton` → `/api/checkout/pro`).
 
 ## Helpers
 - `src/lib/app-url.ts` → `getAppUrl(req?)` — resolves base URL from request origin → env → REPLIT_DOMAINS → localhost.

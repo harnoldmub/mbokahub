@@ -23,7 +23,7 @@ export default async function CheckoutSuccessPage({
     },
     pro: {
       title: "Inscription pro confirmée",
-      body: "Ton paiement de 20 € est validé. Tu peux compléter ton profil pro et il sera publié après validation par l'équipe.",
+      body: "Ton paiement de 19,99 € est validé. Tu peux compléter ton profil pro et il sera publié après validation par l'équipe.",
       cta: "Compléter mon profil pro",
       href: "/dashboard/profil-pro",
     },

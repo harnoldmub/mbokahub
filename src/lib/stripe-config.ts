@@ -1,6 +1,11 @@
-import { PRICE_BOOST_EUR, PRICE_PRO_EUR, PRICE_VIP_EUR } from "@/lib/marketing-data";
+import {
+  PRICE_BOOST_EUR,
+  PRICE_PRO_EUR,
+  PRICE_VIP_EUR,
+  formatEuro,
+} from "@/lib/marketing-data";
 
-export const PRICE_VIP_EARLY_BIRD_EUR = 7;
+export const PRICE_VIP_EARLY_BIRD_EUR = 6.99;
 
 export const EARLY_BIRD_DEADLINE = new Date("2026-04-30T23:59:59+02:00");
 
@@ -15,12 +20,12 @@ export function vipDisplayPrice(now: Date = new Date()): number {
 }
 
 export function vipPriceLabel(now: Date = new Date()): string {
-  return `${vipDisplayPrice(now)} €`;
+  return formatEuro(vipDisplayPrice(now));
 }
 
 export const PRICE_LABELS = {
-  vip: `${PRICE_VIP_EUR} €`,
-  vipEarlyBird: `${PRICE_VIP_EARLY_BIRD_EUR} €`,
-  pro: `${PRICE_PRO_EUR} €`,
-  boost: `${PRICE_BOOST_EUR} €`,
+  vip: formatEuro(PRICE_VIP_EUR),
+  vipEarlyBird: formatEuro(PRICE_VIP_EARLY_BIRD_EUR),
+  pro: formatEuro(PRICE_PRO_EUR),
+  boost: formatEuro(PRICE_BOOST_EUR),
 };

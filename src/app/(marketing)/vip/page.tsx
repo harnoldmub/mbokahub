@@ -5,7 +5,11 @@ import Link from "next/link";
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PRICE_VIP_EUR } from "@/lib/marketing-data";
+import {
+  PRICE_VIP_EUR,
+  formatEuro,
+  formatEuroAmount,
+} from "@/lib/marketing-data";
 import {
   EARLY_BIRD_DEADLINE,
   PRICE_VIP_EARLY_BIRD_EUR,
@@ -17,7 +21,7 @@ import { VipCheckoutButton } from "./vip-checkout-button";
 export const metadata = {
   title: "Devenir VIP Famille · Mboka Hub",
   description:
-    "Accède à toute la Famille Mboka, débloque les contacts pros et participe au tirage backstage. Early Bird 7 € jusqu'au 30 avril.",
+    "Accède à toute la Famille Mboka, débloque les contacts pros et participe au tirage backstage. Early Bird 6,99 € jusqu'au 30 avril.",
 };
 
 const benefits = [
@@ -46,8 +50,8 @@ export default async function VipPage() {
           <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-3 px-4 py-3 text-center sm:px-6 lg:px-8">
             <Timer aria-hidden className="size-5 text-amber-300" />
             <p className="font-mono text-amber-100 text-xs uppercase tracking-[0.2em] sm:text-sm">
-              Early Bird actif &middot; {PRICE_VIP_EARLY_BIRD_EUR} €
-              au lieu de {PRICE_VIP_EUR} € jusqu'au {deadline}
+              Early Bird actif &middot; {formatEuro(PRICE_VIP_EARLY_BIRD_EUR)}{" "}
+              au lieu de {formatEuro(PRICE_VIP_EUR)} jusqu'au {deadline}
             </p>
           </div>
         </div>
@@ -110,11 +114,11 @@ export default async function VipPage() {
               {earlyBird ? "Early Bird" : "Tarif standard"}
             </p>
             <CardTitle className="mt-2 flex items-baseline gap-3 font-display text-foreground">
-              <span className="text-7xl">{currentPrice}</span>
+              <span className="text-7xl">{formatEuroAmount(currentPrice)}</span>
               <span className="text-3xl text-muted-foreground">€</span>
               {earlyBird ? (
                 <span className="ml-2 font-mono text-muted-foreground text-base line-through">
-                  {PRICE_VIP_EUR} €
+                  {formatEuro(PRICE_VIP_EUR)}
                 </span>
               ) : null}
             </CardTitle>
@@ -141,14 +145,14 @@ export default async function VipPage() {
             </ul>
 
             {userId ? (
-              <VipCheckoutButton priceLabel={`${currentPrice} €`} />
+              <VipCheckoutButton priceLabel={formatEuro(currentPrice)} />
             ) : (
               <div className="grid gap-3">
                 <Link
                   className="inline-flex w-full items-center justify-center rounded-full bg-primary px-6 py-4 font-mono text-ink text-sm uppercase tracking-[0.2em] transition hover:bg-primary/90"
                   href={`/sign-up?redirect_url=/vip`}
                 >
-                  Devenir VIP — {currentPrice} €
+                  Devenir VIP — {formatEuro(currentPrice)}
                 </Link>
                 <Link
                   className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3 font-mono text-paper text-xs uppercase tracking-[0.2em] transition hover:border-white/30 hover:bg-white/10"

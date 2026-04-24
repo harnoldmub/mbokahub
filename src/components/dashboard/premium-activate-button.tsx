@@ -4,6 +4,7 @@ import { Sparkles } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { PRICE_PRO_EUR, formatEuro } from "@/lib/marketing-data";
 
 type PremiumActivateButtonProps = {
   category: string;
@@ -54,7 +55,7 @@ export function PremiumActivateButton({
         className="shadow-glow-blood"
       >
         <Sparkles aria-hidden className="size-4" />
-        {loading ? "Redirection..." : "Activer ma fiche pro 20 €"}
+        {loading ? "Redirection..." : `Activer ma fiche pro ${formatEuro(PRICE_PRO_EUR)}`}
       </Button>
       {error ? <p className="text-xs text-destructive">{error}</p> : null}
     </div>

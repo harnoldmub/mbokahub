@@ -69,9 +69,9 @@ export default function ProPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             number="PRO"
-            description="Tarif unique 20 € pour tout le week-end. Aucune commission, aucun abonnement, aucun frais caché."
+            description="Tarif unique 19,99 € pour tout le week-end. Aucune commission, aucun abonnement, aucun frais caché."
             eyebrow="Pricing"
-            title="Inscription pro à 20 €"
+            title="Inscription pro à 19,99 €"
           />
           <div className="mt-10 grid gap-4 lg:grid-cols-3">
             {proOffers.map((offer) => (

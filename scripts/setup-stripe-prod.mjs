@@ -124,19 +124,19 @@ async function ensureWebhook(url) {
 (async () => {
   console.log("--- Products & Prices ---");
   const vipProduct = await ensureProduct(PRODUCTS.vip);
-  const vipPrice = await ensurePrice(vipProduct.id, "mbokahub_vip_10", 1000, "Pass VIP Famille");
+  const vipPrice = await ensurePrice(vipProduct.id, "mbokahub_vip_999", 999, "Pass VIP Famille");
   const vipEarlyPrice = await ensurePrice(
     vipProduct.id,
-    "mbokahub_vip_early_7",
-    700,
+    "mbokahub_vip_early_699",
+    699,
     "Pass VIP Famille — Early Bird (jusqu'au 30 avril)",
   );
 
   const proProduct = await ensureProduct(PRODUCTS.pro);
-  const proPrice = await ensurePrice(proProduct.id, "mbokahub_pro_20", 2000, "Fiche Pro Premium");
+  const proPrice = await ensurePrice(proProduct.id, "mbokahub_pro_1999", 1999, "Fiche Pro Premium");
 
   const boostProduct = await ensureProduct(PRODUCTS.boost);
-  const boostPrice = await ensurePrice(boostProduct.id, "mbokahub_boost_9", 900, "Boost Vedette");
+  const boostPrice = await ensurePrice(boostProduct.id, "mbokahub_boost_899", 899, "Boost Vedette");
 
   console.log("\n--- Webhook ---");
   const webhookUrl = `${APP_URL}/api/webhooks/stripe`;

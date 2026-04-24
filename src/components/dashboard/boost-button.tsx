@@ -4,6 +4,7 @@ import { Star } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { PRICE_BOOST_EUR, formatEuro } from "@/lib/marketing-data";
 
 type BoostButtonProps = {
   targetType: "TRAJET" | "PRO_PROFILE";
@@ -61,7 +62,7 @@ export function BoostButton({
         variant={variant}
       >
         <Star aria-hidden className="size-4" />
-        {loading ? "Redirection..." : "Booster 9 €"}
+        {loading ? "Redirection..." : `Booster ${formatEuro(PRICE_BOOST_EUR)}`}
       </Button>
       {error ? <p className="text-xs text-destructive">{error}</p> : null}
     </div>

@@ -84,14 +84,27 @@ export const trustItems = [
   },
 ] as const;
 
-export const PRICE_VIP_EUR = 10;
-export const PRICE_PRO_EUR = 20;
-export const PRICE_BOOST_EUR = 9;
+export const PRICE_VIP_EUR = 9.99;
+export const PRICE_PRO_EUR = 19.99;
+export const PRICE_BOOST_EUR = 8.99;
+
+const euroFormatter = new Intl.NumberFormat("fr-FR", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+export function formatEuro(amount: number): string {
+  return `${euroFormatter.format(amount)} €`;
+}
+
+export function formatEuroAmount(amount: number): string {
+  return euroFormatter.format(amount);
+}
 
 export const proOffers = [
   {
     title: "Beauté",
-    price: "20 EUR",
+    price: "19,99 EUR",
     audience: "maquilleuses, coiffeurs, barbiers",
     benefits: [
       "profil vérifié",
@@ -101,13 +114,13 @@ export const proOffers = [
   },
   {
     title: "Merch",
-    price: "20 EUR",
+    price: "19,99 EUR",
     audience: "vendeurs mode, accessoires, pagne",
     benefits: ["vitrine dédiée", "clics trackés", "badge premium"],
   },
   {
     title: "After",
-    price: "20 EUR",
+    price: "19,99 EUR",
     audience: "organisateurs de soirées",
     benefits: [
       "fiche événement",
