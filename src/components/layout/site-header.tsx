@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
+import { MegaMenu } from "@/components/layout/mega-menu";
 import { MobileMenu } from "@/components/layout/mobile-menu";
 import { Button } from "@/components/ui/button";
 import { getLocale, localizedHref, nls } from "@/lib/nls";
@@ -22,9 +23,37 @@ export function SiteHeader() {
         : locale === "nl"
           ? "Dashboard"
           : "Tableau de bord";
-  const navItems = [
+  const m = copy.megaServices;
+  const megaSections = [
+    {
+      title: m.sections.annuaire,
+      links: [
+        { href: "/prestataires", label: m.links.all, description: m.links.allDesc },
+      ],
+    },
+    {
+      title: m.sections.beaute,
+      links: [
+        { href: "/beaute/maquilleuses", label: m.links.maquilleuses },
+        { href: "/beaute/coiffeurs", label: m.links.coiffeurs },
+        { href: "/beaute/photographes", label: m.links.photographes },
+        { href: "/beaute/babysitting", label: m.links.babysitting },
+      ],
+    },
+    {
+      title: m.sections.shopping,
+      links: [
+        { href: "/merch", label: m.links.merch },
+        { href: "/afters", label: m.links.afters },
+      ],
+    },
+    {
+      title: m.sections.devenirPro,
+      links: [{ href: "/pro/inscrire", label: m.links.becomePro }],
+    },
+  ];
+  const simpleNavItems = [
     { href: "/concert", label: copy.nav.concert },
-    { href: "/prestataires", label: copy.nav.services },
     { href: "/communaute", label: copy.nav.community },
     { href: "/playlists", label: copy.nav.playlists },
   ] as const;
@@ -68,16 +97,26 @@ export function SiteHeader() {
           aria-label="Navigation principale"
           className="hidden items-center gap-8 md:flex"
         >
-          {navItems.map((item) => (
-            <Link
-              className="group/link relative font-body text-sm uppercase tracking-widest text-paper-dim transition-colors hover:text-blood"
-              href={localizedHref(item.href, locale)}
-              key={item.href}
-            >
-              {item.label}
-              <span className="absolute -bottom-1 left-0 h-px w-0 bg-blood transition-all group-hover/link:w-full" />
-            </Link>
-          ))}
+          <Link
+            className="group/link relative font-body text-sm uppercase tracking-widest text-paper-dim transition-colors hover:text-blood"
+            href={localizedHref("/concert", locale)}
+          >
+            {copy.nav.concert}
+            <span className="absolute -bottom-1 left-0 h-px w-0 bg-blood transition-all group-hover/link:w-full" />
+          </Link>
+          <MegaMenu label={m.trigger} locale={locale} sections={megaSections} />
+          {simpleNavItems
+            .filter((it) => it.href !== "/concert")
+            .map((item) => (
+              <Link
+                className="group/link relative font-body text-sm uppercase tracking-widest text-paper-dim transition-colors hover:text-blood"
+                href={localizedHref(item.href, locale)}
+                key={item.href}
+              >
+                {item.label}
+                <span className="absolute -bottom-1 left-0 h-px w-0 bg-blood transition-all group-hover/link:w-full" />
+              </Link>
+            ))}
         </nav>
 
         {/* Right actions */}

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Menu } from "lucide-react";
+import { ArrowRight, Home, Menu } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -16,10 +16,18 @@ export function MobileMenu({ locale }: MobileMenuProps) {
   const [open, setOpen] = useState(false);
   const copy = nls[locale].common;
   const navItems = [
+    { href: "/", label: copy.quickNav.home },
     { href: "/concert", label: copy.nav.concert },
     { href: "/prestataires", label: copy.nav.services },
+    { href: "/trajets", label: copy.quickNav.trajets },
+    { href: "/afters", label: copy.quickNav.afters },
+    { href: "/merch", label: copy.quickNav.merch },
+    { href: "/beaute", label: copy.quickNav.beaute },
+    { href: "/classiques-paris", label: copy.quickNav.paris },
     { href: "/communaute", label: copy.nav.community },
     { href: "/playlists", label: copy.nav.playlists },
+    { href: "/quiz", label: copy.quickNav.quiz },
+    { href: "/jeu", label: copy.quickNav.game },
   ] as const;
 
   return (
@@ -43,18 +51,19 @@ export function MobileMenu({ locale }: MobileMenuProps) {
           {copy.menu}
         </p>
 
-        <nav className="mt-8 flex flex-col gap-1">
+        <nav className="mt-6 flex flex-col gap-1 overflow-y-auto">
           {navItems.map((item) => (
             <Link
-              className="group flex items-center justify-between rounded-2xl border border-transparent p-4 transition-all hover:border-blood/20 hover:bg-blood/5"
+              className="group flex items-center justify-between rounded-xl border border-transparent px-4 py-3 transition-all hover:border-blood/20 hover:bg-blood/5"
               href={localizedHref(item.href, locale)}
               key={item.href}
               onClick={() => setOpen(false)}
             >
-              <span className="font-display text-3xl uppercase text-paper transition-colors group-hover:text-blood">
+              <span className="flex items-center gap-2 font-display text-xl uppercase text-paper transition-colors group-hover:text-blood">
+                {item.href === "/" && <Home aria-hidden className="size-5 text-blood" />}
                 {item.label}
               </span>
-              <ArrowRight className="size-5 text-blood opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
+              <ArrowRight className="size-4 text-blood opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
             </Link>
           ))}
         </nav>

@@ -2,6 +2,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
+import { QuickNav } from "@/components/layout/quick-nav";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { AppProviders } from "@/components/providers/app-providers";
@@ -97,6 +98,9 @@ export default function RootLayout({
             <div className="relative flex min-h-screen flex-col">
               <Suspense fallback={null}>
                 <SiteHeader />
+              </Suspense>
+              <Suspense fallback={null}>
+                <QuickNav />
               </Suspense>
               <main className="flex-1">{children}</main>
               <Suspense fallback={null}>
