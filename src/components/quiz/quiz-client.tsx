@@ -863,10 +863,10 @@ const ALL_QUESTIONS = [
   },
   {
     id: 61,
-    question: "Quel surnom donne-t-on aux fans hardcore de Fally ?",
-    options: ["Les Pélicans", "Les Diamants", "Les Power", "La Famille FIF"],
+    question: "Comment appelle-t-on les fans hardcore de Fally Ipupa ?",
+    options: ["Les Pélicans", "Les Diamants", "Les Power", "Les Warriors"],
     correct: 3,
-    anecdote: "« La Famille FIF » est la communauté de fans, omniprésente à chaque concert mondial.",
+    anecdote: "« Les Warriors » est la communauté de fans de l'Aigle, omniprésente à chaque concert mondial — du Zénith au Stade de France.",
     category: "Culture",
     album: ALBUMS.formule,
     image: "/images/fally/fally-paris.jpg",
@@ -974,7 +974,7 @@ const ALL_QUESTIONS = [
   {
     id: 72,
     question: "Quel pays voisin de la RDC a inspiré le titre « Service » ?",
-    options: ["Angola", "Congo-Brazzaville", "Rwanda", "Centrafrique"],
+    options: ["Angola", "Congo-Brazzaville", "Cameroun", "Centrafrique"],
     correct: 1,
     anecdote: "« Service » fait écho à la culture nyokas des deux Congos, frères de rumba.",
     category: "Culture",
