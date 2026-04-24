@@ -43,3 +43,6 @@ build = ["pnpm", "run", "build"]
 
 [userenv.shared]
 ADMIN_EMAILS = "admin@mbokahub.com"
+STRIPE_VIP_PRICE_ID = "price_1TPgXRHgqcjJnzrULo1utjmt"
+STRIPE_PRO_PRICE_ID = "price_1TPgXQHgqcjJnzrUeLGCsIip"
+STRIPE_BOOST_PRICE_ID = "price_1TPgXQHgqcjJnzrUt7YQbNHV"
