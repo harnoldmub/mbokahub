@@ -2,6 +2,11 @@ import { Suspense } from "react";
 
 import { prisma } from "@/lib/db/prisma";
 import { PrestatairesListClient } from "@/components/pros/prestataires-list-client";
+import {
+  getLocaleFromSearchParams,
+  nls,
+  type SearchParams,
+} from "@/lib/nls";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -10,7 +15,12 @@ export const metadata = {
     "Trouve un prestataire de confiance pour ton week-end Stade de France : beauté, événementiel, sécurité, transport, garde d'enfants…",
 };
 
-export default async function PrestatairesPage() {
+type Props = { searchParams?: Promise<SearchParams> };
+
+export default async function PrestatairesPage({ searchParams }: Props) {
+  const locale = getLocaleFromSearchParams(await searchParams);
+  const copy = nls[locale].prestatairesPage;
+
   const pros = await prisma.proProfile.findMany({
     where: { isVerified: true },
     orderBy: [
@@ -47,21 +57,20 @@ export default async function PrestatairesPage() {
 
       <section className="relative z-10 mx-auto max-w-7xl px-6 pt-24 pb-12 lg:px-8">
         <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-blood">
-          Annuaire vérifié · Mboka Hub
+          {copy.eyebrow}
         </p>
         <h1 className="mt-4 font-display text-5xl uppercase tracking-tight text-paper sm:text-6xl lg:text-7xl">
-          Prestataires
+          {copy.title}
         </h1>
         <p className="mt-6 max-w-2xl text-lg text-paper-dim">
-          Tous les pros disponibles pour ton week-end Fally Ipupa au Stade de
-          France. Profils vérifiés, contacts WhatsApp, paiement direct.
+          {copy.subtitle}
         </p>
       </section>
 
       <Suspense
         fallback={
           <div className="mx-auto max-w-7xl px-6 py-12 text-paper-mute">
-            Chargement…
+            {copy.loading}
           </div>
         }
       >

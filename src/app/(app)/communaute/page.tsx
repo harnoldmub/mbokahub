@@ -2,6 +2,11 @@ import { ArrowRight, ShieldCheck, Users } from "lucide-react";
 import Link from "next/link";
 
 import { prisma } from "@/lib/db/prisma";
+import {
+  getLocaleFromSearchParams,
+  nls,
+  type SearchParams,
+} from "@/lib/nls";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -10,7 +15,12 @@ export const metadata = {
     "Rejoins la communauté Mboka Hub de ta région : entraide, infos concert, bons plans, covoiturage.",
 };
 
-export default async function CommunautePage() {
+type Props = { searchParams?: Promise<SearchParams> };
+
+export default async function CommunautePage({ searchParams }: Props) {
+  const locale = getLocaleFromSearchParams(await searchParams);
+  const copy = nls[locale].communityPage;
+
   const communities = await prisma.whatsAppCommunity.findMany({
     where: { isActive: true },
     orderBy: [
@@ -25,14 +35,15 @@ export default async function CommunautePage() {
     },
   });
 
-  const grouped = communities.reduce<
-    Record<string, typeof communities>
-  >((acc, c) => {
-    const key = c.country;
-    acc[key] = acc[key] ?? [];
-    acc[key].push(c);
-    return acc;
-  }, {});
+  const grouped = communities.reduce<Record<string, typeof communities>>(
+    (acc, c) => {
+      const key = c.country;
+      acc[key] = acc[key] ?? [];
+      acc[key].push(c);
+      return acc;
+    },
+    {},
+  );
 
   const countries = Object.keys(grouped).sort();
 
@@ -42,15 +53,12 @@ export default async function CommunautePage() {
 
       <section className="relative z-10 mx-auto max-w-7xl px-6 pt-24 pb-16 lg:px-8">
         <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-blood">
-          Communauté
+          {copy.eyebrow}
         </p>
         <h1 className="mt-4 font-display text-5xl uppercase tracking-tight text-paper sm:text-6xl lg:text-7xl">
-          Rejoins ta communauté WhatsApp
+          {copy.title}
         </h1>
-        <p className="mt-6 max-w-2xl text-lg text-paper-dim">
-          Une communauté par région, animée par des modérateurs Mboka Hub.
-          Entraide, infos concert, covoiturage, bons plans — tout est là.
-        </p>
+        <p className="mt-6 max-w-2xl text-lg text-paper-dim">{copy.subtitle}</p>
 
         <div className="mt-10 flex flex-wrap gap-4">
           <Link
@@ -58,7 +66,7 @@ export default async function CommunautePage() {
             className="group inline-flex items-center gap-2 rounded-full border border-blood/40 bg-blood/10 px-6 py-3 font-mono text-xs uppercase tracking-widest text-blood transition hover:bg-blood/20"
           >
             <ShieldCheck className="size-4" />
-            Devenir modérateur de ta région
+            {copy.cta}
             <ArrowRight className="size-3 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>
@@ -69,12 +77,9 @@ export default async function CommunautePage() {
           <div className="rounded-[3rem] border border-blood/20 bg-blood/5 p-12 text-center">
             <span className="inline-flex h-3 w-3 animate-pulse rounded-full bg-blood" />
             <h2 className="mt-6 font-display text-3xl uppercase text-paper">
-              Bientôt disponible
+              {copy.emptyTitle}
             </h2>
-            <p className="mt-4 text-paper-dim">
-              Les premières communautés régionales arrivent. Postule comme
-              modérateur pour lancer celle de ta ville.
-            </p>
+            <p className="mt-4 text-paper-dim">{copy.emptyText}</p>
           </div>
         </section>
       ) : (
@@ -86,10 +91,7 @@ export default async function CommunautePage() {
                   {country}
                 </h2>
                 <span className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
-                  {grouped[country].length}{" "}
-                  {grouped[country].length > 1
-                    ? "communautés"
-                    : "communauté"}
+                  {grouped[country].length} {copy.membersLabel}
                 </span>
               </div>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -100,7 +102,7 @@ export default async function CommunautePage() {
                   >
                     {c.isFeatured && (
                       <span className="absolute right-4 top-4 rounded-full bg-vip px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-coal">
-                        ★ Officielle
+                        ★
                       </span>
                     )}
                     <div className="flex items-center gap-3">
@@ -121,16 +123,8 @@ export default async function CommunautePage() {
                     )}
                     {c.moderator?.user?.name && (
                       <p className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
-                        Modérateur : {c.moderator.user.name}
+                        {copy.moderatedBy} : {c.moderator.user.name}
                       </p>
-                    )}
-                    {c.rules && (
-                      <details className="rounded-xl border border-white/5 bg-smoke/40 p-3 text-xs text-paper-mute">
-                        <summary className="cursor-pointer font-mono uppercase tracking-widest">
-                          Règles
-                        </summary>
-                        <p className="mt-2 whitespace-pre-line">{c.rules}</p>
-                      </details>
                     )}
                     <a
                       href={c.inviteLink}
@@ -138,7 +132,7 @@ export default async function CommunautePage() {
                       rel="noopener noreferrer"
                       className="mt-auto inline-flex items-center justify-center gap-2 rounded-full bg-emerald-500 px-4 py-3 font-mono text-xs uppercase tracking-widest text-paper transition hover:bg-emerald-400"
                     >
-                      Rejoindre WhatsApp
+                      {copy.joinButton}
                       <ArrowRight className="size-3" />
                     </a>
                   </article>

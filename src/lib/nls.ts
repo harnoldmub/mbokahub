@@ -311,6 +311,57 @@ export const nls = {
         faq: "FAQ",
       },
     },
+    appHome: {
+      hero: {
+        eyebrow: "Stade de France · 02 & 03 mai 2026",
+        title: "Mboka Hub",
+        subtitle: "Tout pour vivre le week-end Fally Ipupa sans stress.",
+        primaryCta: "Préparer mon week-end",
+        proCta: "Je suis prestataire",
+        countdown: "Compte à rebours",
+      },
+      tilesEyebrow: "Tout est là",
+      tilesTitle: "Ton week-end. En un coup d'œil.",
+      tilesDescription:
+        "Trajets, prestataires, afters, communauté — comme une app dans ta poche.",
+      tiles: {
+        trajets: { label: "Trajets", hint: "Covoiturage" },
+        prestataires: { label: "Prestataires", hint: "Annuaire vérifié" },
+        communaute: { label: "Communauté", hint: "WhatsApp régional" },
+        afters: { label: "Afters", hint: "Soirées concert" },
+        concert: { label: "Concert", hint: "Stade de France" },
+        paris: { label: "Paris", hint: "Guide pratique" },
+        playlists: { label: "Playlists", hint: "Mood Fally" },
+        jeu: { label: "Sape Run", hint: "Mini-jeu" },
+      },
+      proSection: {
+        eyebrow: "Section pros",
+        title: "Tu proposes un service ?",
+        subtitle:
+          "Maquillage, coiffure, photo, transport, sécurité, traiteur… sois visible auprès des fans qui préparent leur week-end.",
+        cta: "Devenir partenaire",
+      },
+    },
+    prestatairesPage: {
+      eyebrow: "Annuaire vérifié · Mboka Hub",
+      title: "Prestataires",
+      subtitle:
+        "Tous les pros disponibles pour ton week-end Fally Ipupa au Stade de France. Profils vérifiés, contacts WhatsApp, paiement direct.",
+      loading: "Chargement…",
+    },
+    communityPage: {
+      eyebrow: "Communauté",
+      title: "Rejoins ta communauté WhatsApp",
+      subtitle:
+        "Une communauté par région, animée par des modérateurs Mboka Hub. Entraide, infos concert, covoiturage, bons plans — tout est là.",
+      cta: "Devenir modérateur de ta région",
+      emptyTitle: "Bientôt disponible",
+      emptyText:
+        "Les premières communautés régionales arrivent. Postule comme modérateur pour lancer celle de ta ville.",
+      membersLabel: "membres",
+      joinButton: "Rejoindre",
+      moderatedBy: "Animée par",
+    },
   },
   en: {
     common: {
@@ -556,6 +607,57 @@ export const nls = {
         contact: "Contact",
         faq: "FAQ",
       },
+    },
+    appHome: {
+      hero: {
+        eyebrow: "Stade de France · 02 & 03 May 2026",
+        title: "Mboka Hub",
+        subtitle: "Everything to enjoy the Fally Ipupa weekend stress-free.",
+        primaryCta: "Plan my weekend",
+        proCta: "I'm a service provider",
+        countdown: "Countdown",
+      },
+      tilesEyebrow: "All in one place",
+      tilesTitle: "Your weekend. At a glance.",
+      tilesDescription:
+        "Rides, providers, afterparties, community — like an app in your pocket.",
+      tiles: {
+        trajets: { label: "Rides", hint: "Carpool" },
+        prestataires: { label: "Providers", hint: "Verified directory" },
+        communaute: { label: "Community", hint: "Regional WhatsApp" },
+        afters: { label: "Afterparties", hint: "Post-concert nights" },
+        concert: { label: "Concert", hint: "Stade de France" },
+        paris: { label: "Paris", hint: "Practical guide" },
+        playlists: { label: "Playlists", hint: "Fally mood" },
+        jeu: { label: "Sape Run", hint: "Mini-game" },
+      },
+      proSection: {
+        eyebrow: "For pros",
+        title: "Got a service to offer?",
+        subtitle:
+          "Makeup, hair, photo, transport, security, catering… get seen by fans preparing for the weekend.",
+        cta: "Become a partner",
+      },
+    },
+    prestatairesPage: {
+      eyebrow: "Verified directory · Mboka Hub",
+      title: "Providers",
+      subtitle:
+        "All the pros available for your Fally Ipupa weekend at Stade de France. Verified profiles, WhatsApp contact, direct payment.",
+      loading: "Loading…",
+    },
+    communityPage: {
+      eyebrow: "Community",
+      title: "Join your WhatsApp community",
+      subtitle:
+        "One community per region, run by Mboka Hub moderators. Help, concert tips, carpooling, good deals — it's all here.",
+      cta: "Become moderator of your region",
+      emptyTitle: "Coming soon",
+      emptyText:
+        "The first regional communities are landing. Apply as moderator to launch yours.",
+      membersLabel: "members",
+      joinButton: "Join",
+      moderatedBy: "Run by",
     },
   },
   de: {
@@ -804,6 +906,57 @@ export const nls = {
         faq: "FAQ",
       },
     },
+    appHome: {
+      hero: {
+        eyebrow: "Stade de France · 02. & 03. Mai 2026",
+        title: "Mboka Hub",
+        subtitle: "Alles für ein entspanntes Fally-Ipupa-Wochenende.",
+        primaryCta: "Wochenende planen",
+        proCta: "Ich bin Anbieter",
+        countdown: "Countdown",
+      },
+      tilesEyebrow: "Alles auf einen Blick",
+      tilesTitle: "Dein Wochenende. Auf einen Blick.",
+      tilesDescription:
+        "Fahrten, Anbieter, Afterpartys, Community — wie eine App in der Tasche.",
+      tiles: {
+        trajets: { label: "Fahrten", hint: "Mitfahren" },
+        prestataires: { label: "Anbieter", hint: "Geprüftes Verzeichnis" },
+        communaute: { label: "Community", hint: "WhatsApp regional" },
+        afters: { label: "Afterpartys", hint: "Nach dem Konzert" },
+        concert: { label: "Konzert", hint: "Stade de France" },
+        paris: { label: "Paris", hint: "Praxisführer" },
+        playlists: { label: "Playlists", hint: "Fally Mood" },
+        jeu: { label: "Sape Run", hint: "Minispiel" },
+      },
+      proSection: {
+        eyebrow: "Für Anbieter",
+        title: "Du bietest einen Service an?",
+        subtitle:
+          "Make-up, Haare, Foto, Transport, Security, Catering… sei sichtbar für die Fans, die ihr Wochenende planen.",
+        cta: "Partner werden",
+      },
+    },
+    prestatairesPage: {
+      eyebrow: "Geprüftes Verzeichnis · Mboka Hub",
+      title: "Anbieter",
+      subtitle:
+        "Alle Profis für dein Fally-Ipupa-Wochenende im Stade de France. Geprüfte Profile, WhatsApp-Kontakt, direkte Zahlung.",
+      loading: "Lädt…",
+    },
+    communityPage: {
+      eyebrow: "Community",
+      title: "Tritt deiner WhatsApp-Community bei",
+      subtitle:
+        "Eine Community pro Region, betreut von Mboka-Hub-Moderatoren. Hilfe, Konzertinfos, Mitfahrgelegenheiten, gute Tipps — alles da.",
+      cta: "Werde Moderator deiner Region",
+      emptyTitle: "Bald verfügbar",
+      emptyText:
+        "Die ersten regionalen Communities starten. Bewirb dich als Moderator, um deine zu eröffnen.",
+      membersLabel: "Mitglieder",
+      joinButton: "Beitreten",
+      moderatedBy: "Geleitet von",
+    },
   },
   nl: {
     common: {
@@ -1050,6 +1203,57 @@ export const nls = {
         contact: "Contact",
         faq: "FAQ",
       },
+    },
+    appHome: {
+      hero: {
+        eyebrow: "Stade de France · 02 & 03 mei 2026",
+        title: "Mboka Hub",
+        subtitle: "Alles voor een zorgeloos Fally Ipupa-weekend.",
+        primaryCta: "Mijn weekend plannen",
+        proCta: "Ik ben dienstverlener",
+        countdown: "Countdown",
+      },
+      tilesEyebrow: "Alles op één plek",
+      tilesTitle: "Jouw weekend. In één oogopslag.",
+      tilesDescription:
+        "Ritten, dienstverleners, afterparty's, community — als een app in je zak.",
+      tiles: {
+        trajets: { label: "Ritten", hint: "Carpoolen" },
+        prestataires: { label: "Dienstverleners", hint: "Geverifieerde gids" },
+        communaute: { label: "Community", hint: "Regionale WhatsApp" },
+        afters: { label: "Afterparty's", hint: "Na het concert" },
+        concert: { label: "Concert", hint: "Stade de France" },
+        paris: { label: "Parijs", hint: "Praktische gids" },
+        playlists: { label: "Playlists", hint: "Fally mood" },
+        jeu: { label: "Sape Run", hint: "Mini-game" },
+      },
+      proSection: {
+        eyebrow: "Voor pro's",
+        title: "Bied jij een dienst aan?",
+        subtitle:
+          "Make-up, kapsel, foto, vervoer, security, catering… word zichtbaar voor fans die hun weekend voorbereiden.",
+        cta: "Partner worden",
+      },
+    },
+    prestatairesPage: {
+      eyebrow: "Geverifieerde gids · Mboka Hub",
+      title: "Dienstverleners",
+      subtitle:
+        "Alle pro's voor je Fally Ipupa-weekend in het Stade de France. Geverifieerde profielen, WhatsApp-contact, directe betaling.",
+      loading: "Laden…",
+    },
+    communityPage: {
+      eyebrow: "Community",
+      title: "Sluit je aan bij je WhatsApp-community",
+      subtitle:
+        "Eén community per regio, geleid door Mboka Hub-moderators. Hulp, concertinfo, carpoolen, goede tips — alles is hier.",
+      cta: "Word moderator van je regio",
+      emptyTitle: "Binnenkort beschikbaar",
+      emptyText:
+        "De eerste regionale communities komen eraan. Solliciteer als moderator om die van jouw stad te starten.",
+      membersLabel: "leden",
+      joinButton: "Deelnemen",
+      moderatedBy: "Geleid door",
     },
   },
 } as const;
