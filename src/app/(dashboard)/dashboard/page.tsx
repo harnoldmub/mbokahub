@@ -41,7 +41,7 @@ export default async function DashboardPage() {
           Dashboard
         </p>
         <h1 className="mt-3 font-heading text-4xl text-paper">
-          Salut la Famille des Warriors, {user.name?.split(" ")[0] ?? ""}
+          Salut la Famille Mboka, {user.name?.split(" ")[0] ?? ""}
         </h1>
         <p className="mt-3 max-w-2xl text-paper-dim leading-7">
           Ici tu gères ton profil de fan, tes accès Tokooos et tes annonces pour le concert de l&apos;Aigle.

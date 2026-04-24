@@ -83,7 +83,7 @@ export function TrajetsListClient({ trajets, unlocked }: Props) {
           </h2>
           <p className="font-body text-paper-dim leading-relaxed">
             Aucun trajet pour le moment. Lance le mouvement et propose une
-            place vers le Stade de France — d&apos;autres Warriors te
+            place vers le Stade de France — d&apos;autres membres de la Famille te
             rejoindront.
           </p>
           <Link

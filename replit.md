@@ -47,7 +47,7 @@ Optional (recommended):
 
 ## Pricing & Stripe
 
-- **VIP Warrior**: 10 € flat, Early Bird 7 € until 2026-04-30 (toggle in `src/lib/stripe-config.ts`)
+- **VIP Famille**: 10 € flat, Early Bird 7 € until 2026-04-30 (toggle in `src/lib/stripe-config.ts`)
 - **Pro**: 20 € flat for all categories (Beauté, Merch, After...)
 - **Boost**: 9 € — applied to a TRAJET or PRO_PROFILE via metadata `targetType` + `targetId`
 - VIP payment → `User.isVipActive=true`, `vipUntil=2026-05-31`, ContactLock unlocks

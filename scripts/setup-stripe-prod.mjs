@@ -33,9 +33,9 @@ console.log(`\n>>> Configuring Stripe (${mode}) for ${APP_URL}\n`);
 
 const PRODUCTS = {
   vip: {
-    name: "Mboka Hub — Pass VIP Warrior",
+    name: "Mboka Hub — Pass VIP Famille",
     description:
-      "Accès VIP fan diaspora pour Fally Ipupa au Stade de France (2-3 mai 2026). Déblocage des contacts covoiturage & prestataires, badge Warrior et avantages communauté Mboka Hub.",
+      "Accès VIP fan diaspora pour Fally Ipupa au Stade de France (2-3 mai 2026). Déblocage des contacts covoiturage & prestataires, badge VIP et avantages de la Famille Mboka.",
     statement_descriptor: "MBOKAHUB VIP",
     metadata: { type: "vip", brand: "Mboka Hub" },
   },
@@ -124,12 +124,12 @@ async function ensureWebhook(url) {
 (async () => {
   console.log("--- Products & Prices ---");
   const vipProduct = await ensureProduct(PRODUCTS.vip);
-  const vipPrice = await ensurePrice(vipProduct.id, "mbokahub_vip_10", 1000, "Pass VIP Warrior");
+  const vipPrice = await ensurePrice(vipProduct.id, "mbokahub_vip_10", 1000, "Pass VIP Famille");
   const vipEarlyPrice = await ensurePrice(
     vipProduct.id,
     "mbokahub_vip_early_7",
     700,
-    "Pass VIP Warrior — Early Bird (jusqu'au 30 avril)",
+    "Pass VIP Famille — Early Bird (jusqu'au 30 avril)",
   );
 
   const proProduct = await ensureProduct(PRODUCTS.pro);

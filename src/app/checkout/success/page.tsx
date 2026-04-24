@@ -16,8 +16,8 @@ export default async function CheckoutSuccessPage({
 
   const messages: Record<string, { title: string; body: string; cta: string; href: string }> = {
     vip: {
-      title: "Bienvenue chez les VIP Warriors",
-      body: "Ton statut VIP est en cours d'activation. Tu peux dès maintenant accéder à la communauté privée et débloquer les contacts pros.",
+      title: "Bienvenue dans la Famille Mboka VIP",
+      body: "Ton statut VIP est en cours d'activation. Tu peux dès maintenant accéder à la Famille Mboka privée et débloquer les contacts pros.",
       cta: "Aller au tableau de bord",
       href: "/dashboard",
     },
@@ -37,7 +37,7 @@ export default async function CheckoutSuccessPage({
 
   const m = messages[type ?? ""] ?? {
     title: "Paiement reçu",
-    body: "Merci pour ton soutien à la communauté Warriors.",
+    body: "Merci pour ton soutien à la Famille Mboka.",
     cta: "Retour à l'accueil",
     href: "/",
   };

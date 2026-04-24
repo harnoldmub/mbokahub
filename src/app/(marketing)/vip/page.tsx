@@ -15,13 +15,13 @@ import {
 import { VipCheckoutButton } from "./vip-checkout-button";
 
 export const metadata = {
-  title: "Devenir VIP Warrior · Mboka Hub",
+  title: "Devenir VIP Famille · Mboka Hub",
   description:
-    "Accède à toute la communauté Warriors, débloque les contacts pros et participe au tirage backstage. Early Bird 7 € jusqu'au 30 avril.",
+    "Accède à toute la Famille Mboka, débloque les contacts pros et participe au tirage backstage. Early Bird 7 € jusqu'au 30 avril.",
 };
 
 const benefits = [
-  "Accès illimité à la communauté Warriors privée",
+  "Accès illimité à la Famille Mboka privée",
   "Déblocage de tous les contacts WhatsApp pros",
   "Annonces de covoiturage prioritaires",
   "Tirage au sort meet & greet & cadeaux exclusifs",
@@ -59,18 +59,18 @@ export default async function VipPage() {
             className="border-primary/40 bg-primary/15 text-white"
             variant="outline"
           >
-            Pass communauté Warriors
+            Pass Famille Mboka
           </Badge>
           <h1 className="mt-6 font-display text-5xl text-foreground leading-tight md:text-7xl">
             DEVIENS{" "}
-            <span className="text-primary">VIP WARRIOR</span>
+            <span className="text-primary">VIP FAMILLE</span>
             {", "}
             VIS LE STADE EN VRAI.
           </h1>
           <p className="mt-6 max-w-xl text-muted-foreground text-lg leading-8">
-            Un seul paiement, une seule promesse&nbsp;: tu fais partie de la
-            communauté diaspora qui prépare le Stade de France les 2 et 3 mai
-            2026. Pas d'abonnement, pas de reconduction, pas de spam.
+            Un seul paiement, une seule promesse&nbsp;: tu rejoins la Famille
+            Mboka qui prépare le Stade de France les 2 et 3 mai 2026. Pas
+            d'abonnement, pas de reconduction, pas de spam.
           </p>
 
           <div className="mt-10 grid gap-4 sm:grid-cols-3">
@@ -80,7 +80,7 @@ export default async function VipPage() {
                 Statut
               </p>
               <p className="mt-1 font-heading text-foreground text-lg">
-                Warrior VIP
+                VIP Famille
               </p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
@@ -158,7 +158,7 @@ export default async function VipPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             number="VIP"
-            description="Le pass VIP Warrior c'est un accès tout-en-un à la communauté de fans, pas un abonnement déguisé. Tu paies une fois, tu profites jusqu'au 31 mai."
+            description="Le pass VIP Famille, c'est un accès tout-en-un à la Famille Mboka, pas un abonnement déguisé. Tu paies une fois, tu profites jusqu'au 31 mai."
             eyebrow="Promesse"
             title="Tout est inclus, sans surprise"
           />

@@ -82,7 +82,7 @@ export default function ParisClassicsPage() {
           Paris <span className="font-serif italic text-blood">pratique</span>
         </h1>
         <p className="mt-4 max-w-xl font-body text-lg leading-relaxed text-paper-dim">
-          Toutes les infos utiles pour les Warriors : arriver, manger, dormir et rentrer
+          Toutes les infos utiles pour la Famille Mboka : arriver, manger, dormir et rentrer
           sereinement pour le concert de <span className="text-paper">Fally au Stade de France.</span>
         </p>
       </div>
