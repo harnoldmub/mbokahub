@@ -101,34 +101,34 @@ export function formatEuroAmount(amount: number): string {
   return euroFormatter.format(amount);
 }
 
-export const proOffers = [
-  {
-    title: "Beauté",
-    price: "19,99 EUR",
-    audience: "maquilleuses, coiffeurs, barbiers",
-    benefits: [
-      "profil vérifié",
-      "contact mis en avant",
-      "statistiques de vues",
-    ],
-  },
-  {
-    title: "Merch",
-    price: "19,99 EUR",
-    audience: "vendeurs mode, accessoires, pagne",
-    benefits: ["vitrine dédiée", "clics trackés", "badge premium"],
-  },
-  {
-    title: "After",
-    price: "19,99 EUR",
-    audience: "organisateurs de soirées",
-    benefits: [
-      "fiche événement",
-      "lien billetterie externe",
-      "validation admin",
-    ],
-  },
-] as const;
+export const proOffer = {
+  title: "Inscription pro",
+  price: "19,99 EUR",
+  description:
+    "Tarif unique pour tous les pros — beauté, merch ou afters. Aucune commission, aucun abonnement, aucun frais caché.",
+  audiences: [
+    {
+      label: "Beauté",
+      detail: "maquilleuses, coiffeurs, barbiers, photographes",
+    },
+    {
+      label: "Merch",
+      detail: "vendeurs mode, accessoires, pagne",
+    },
+    {
+      label: "After",
+      detail: "organisateurs de soirées",
+    },
+  ],
+  benefits: [
+    "profil ou fiche vérifié",
+    "contact mis en avant",
+    "vitrine ou billetterie externe",
+    "statistiques de vues & clics",
+    "badge premium",
+    "validation admin",
+  ],
+} as const;
 
 export const proProofPoints = [
   {

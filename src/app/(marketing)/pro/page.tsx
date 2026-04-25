@@ -5,7 +5,7 @@ import { SectionHeading } from "@/components/marketing/section-heading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { proOffers, proProofPoints } from "@/lib/marketing-data";
+import { proOffer, proProofPoints } from "@/lib/marketing-data";
 
 export default function ProPage() {
   return (
@@ -69,37 +69,75 @@ export default function ProPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             number="PRO"
-            description="Tarif unique 19,99 € pour tout le week-end. Aucune commission, aucun abonnement, aucun frais caché."
+            description={proOffer.description}
             eyebrow="Pricing"
-            title="Inscription pro à 19,99 €"
+            title="Une seule inscription — tous les pros"
           />
-          <div className="mt-10 grid gap-4 lg:grid-cols-3">
-            {proOffers.map((offer) => (
-              <Card
-                className="rounded-lg border-white/10 transition duration-200 hover:-translate-y-1 hover:border-primary/40"
-                key={offer.title}
-              >
-                <CardHeader>
-                  <CardTitle className="font-heading text-2xl">
-                    {offer.title}
-                  </CardTitle>
-                  <p className="text-muted-foreground">{offer.audience}</p>
-                </CardHeader>
-                <CardContent className="grid gap-6">
-                  <p className="font-display text-5xl text-foreground">
-                    {offer.price}
+          <div className="mt-10 mx-auto max-w-3xl">
+            <Card className="rounded-2xl border-primary/30 bg-gradient-to-br from-primary/10 to-transparent shadow-[var(--glow-red)]">
+              <CardHeader className="border-white/10 border-b pb-6">
+                <div className="flex flex-wrap items-end justify-between gap-4">
+                  <div>
+                    <CardTitle className="font-heading text-3xl">
+                      {proOffer.title}
+                    </CardTitle>
+                    <p className="mt-2 text-muted-foreground">
+                      Beauté · Merch · Afters — même tarif pour tout le monde
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-display text-5xl text-foreground sm:text-6xl">
+                      {proOffer.price}
+                    </p>
+                    <p className="text-muted-foreground text-xs uppercase tracking-widest">
+                      forfait week-end
+                    </p>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="grid gap-8 pt-6">
+                <div>
+                  <p className="mb-3 font-mono text-muted-foreground text-xs uppercase tracking-widest">
+                    Pour qui
                   </p>
-                  <ul className="grid gap-3">
-                    {offer.benefits.map((benefit) => (
+                  <div className="grid gap-3 sm:grid-cols-3">
+                    {proOffer.audiences.map((a) => (
+                      <div
+                        className="rounded-xl border border-white/10 bg-card/50 p-4"
+                        key={a.label}
+                      >
+                        <p className="font-heading text-foreground text-lg">
+                          {a.label}
+                        </p>
+                        <p className="mt-1 text-muted-foreground text-sm">
+                          {a.detail}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <p className="mb-3 font-mono text-muted-foreground text-xs uppercase tracking-widest">
+                    Inclus
+                  </p>
+                  <ul className="grid gap-3 sm:grid-cols-2">
+                    {proOffer.benefits.map((benefit) => (
                       <li className="flex items-center gap-3" key={benefit}>
                         <Check aria-hidden className="size-4 text-primary" />
                         <span className="text-muted-foreground">{benefit}</span>
                       </li>
                     ))}
                   </ul>
-                </CardContent>
-              </Card>
-            ))}
+                </div>
+
+                <Button asChild size="lg" className="w-full">
+                  <Link href="/sign-up?redirect_url=/pro/inscrire">
+                    M'inscrire pour 19,99 € <ArrowRight aria-hidden />
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
