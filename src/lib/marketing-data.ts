@@ -105,20 +105,14 @@ export const proOffer = {
   title: "Inscription pro",
   price: "19,99 EUR",
   description:
-    "Tarif unique pour tous les pros — beauté, merch ou afters. Aucune commission, aucun abonnement, aucun frais caché.",
+    "Tarif unique pour tous les pros — quel que soit ton service. Aucune commission, aucun abonnement, aucun frais caché.",
   audiences: [
-    {
-      label: "Beauté",
-      detail: "maquilleuses, coiffeurs, barbiers, photographes",
-    },
-    {
-      label: "Merch",
-      detail: "vendeurs mode, accessoires, pagne",
-    },
-    {
-      label: "After",
-      detail: "organisateurs de soirées",
-    },
+    { label: "Beauté", detail: "maquilleuses, coiffeurs, barbiers, photographes, vidéastes" },
+    { label: "Merch & mode", detail: "vendeurs mode, accessoires, pagne, bijoux, couture" },
+    { label: "Afters & soirées", detail: "organisateurs, DJ, animateurs, décorateurs" },
+    { label: "Restauration", detail: "cuisiniers, traiteurs congolais, food trucks" },
+    { label: "Mobilité & sécurité", detail: "chauffeurs VTC, agents de sécurité" },
+    { label: "Autres services", detail: "babysitters et tout autre métier utile au week-end" },
   ],
   benefits: [
     "profil ou fiche vérifié",

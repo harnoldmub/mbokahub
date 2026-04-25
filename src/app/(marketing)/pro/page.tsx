@@ -100,7 +100,7 @@ export default function ProPage() {
                   <p className="mb-3 font-mono text-muted-foreground text-xs uppercase tracking-widest">
                     Pour qui
                   </p>
-                  <div className="grid gap-3 sm:grid-cols-3">
+                  <div className="grid gap-3 sm:grid-cols-2">
                     {proOffer.audiences.map((a) => (
                       <div
                         className="rounded-xl border border-white/10 bg-card/50 p-4"
@@ -133,9 +133,12 @@ export default function ProPage() {
 
                 <Button asChild size="lg" className="w-full">
                   <Link href="/sign-up?redirect_url=/pro/inscrire">
-                    M'inscrire pour 19,99 € <ArrowRight aria-hidden />
+                    Devenir prestataire Mboka Hub <ArrowRight aria-hidden />
                   </Link>
                 </Button>
+                <p className="text-center text-muted-foreground text-xs">
+                  Une seule inscription, valable pour n'importe quel service.
+                </p>
               </CardContent>
             </Card>
           </div>
