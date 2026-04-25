@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -154,6 +154,16 @@ export function SiteHeader() {
               {isSignedIn ? dashboardLabel : copy.vipCta}
             </Link>
           </Button>
+          {isSignedIn ? (
+            <UserButton
+              afterSignOutUrl={localizedHref("/", locale)}
+              appearance={{
+                elements: {
+                  avatarBox: "h-8 w-8 ring-1 ring-blood/40",
+                },
+              }}
+            />
+          ) : null}
           <MobileMenu locale={locale} />
         </div>
       </div>
