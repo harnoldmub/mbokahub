@@ -1,7 +1,7 @@
 "use client";
 
 import { UserButton, useUser } from "@clerk/nextjs";
-import { Crown, ShieldCheck } from "lucide-react";
+import { Crown } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -18,26 +18,19 @@ export function SiteHeader() {
   const copy = nls[locale].common;
   const { isSignedIn } = useUser();
   const [isVip, setIsVip] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
   useEffect(() => {
     if (!isSignedIn) {
       setIsVip(false);
-      setIsAdmin(false);
       return;
     }
     let cancelled = false;
     fetch("/api/me/vip", { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
-        if (cancelled) return;
-        setIsVip(Boolean(d?.isVip));
-        setIsAdmin(Boolean(d?.isAdmin));
+        if (!cancelled) setIsVip(Boolean(d?.isVip));
       })
       .catch(() => {
-        if (!cancelled) {
-          setIsVip(false);
-          setIsAdmin(false);
-        }
+        if (!cancelled) setIsVip(false);
       });
     return () => {
       cancelled = true;
@@ -184,17 +177,6 @@ export function SiteHeader() {
           </Button>
           {isSignedIn ? (
             <div className="flex items-center gap-2">
-              {isAdmin ? (
-                <Link
-                  aria-label="Backoffice administrateur"
-                  className="hidden items-center gap-1 rounded-full border border-emerald-400/50 bg-emerald-400/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-200 transition hover:border-emerald-400/70 hover:bg-emerald-400/20 sm:inline-flex"
-                  href="/admin"
-                  title="Accéder au backoffice"
-                >
-                  <ShieldCheck aria-hidden className="size-3" />
-                  Admin
-                </Link>
-              ) : null}
               {isVip ? (
                 <span
                   aria-label="Membre VIP Famille"

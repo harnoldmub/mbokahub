@@ -1,7 +1,10 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
+import { ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import { LEGAL_DISCLAIMER, PHOTO_CREDITS } from "@/lib/constants";
 import { getLocale, localizedHref, nls } from "@/lib/nls";
@@ -10,6 +13,26 @@ import { NewsletterForm } from "@/components/shared/newsletter-form";
 export function SiteFooter() {
   const locale = getLocale(useSearchParams().get("lang"));
   const copy = nls[locale].footer;
+  const { isSignedIn } = useUser();
+  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(() => {
+    if (!isSignedIn) {
+      setIsAdmin(false);
+      return;
+    }
+    let cancelled = false;
+    fetch("/api/me/vip", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!cancelled) setIsAdmin(Boolean(d?.isAdmin));
+      })
+      .catch(() => {
+        if (!cancelled) setIsAdmin(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [isSignedIn]);
   const legalLinks = [
     { href: "/cgu", label: copy.links.terms },
     { href: "/cgv", label: copy.links.sales },
@@ -183,9 +206,20 @@ export function SiteFooter() {
             </div>
           </div>
 
-          <p className="font-mono text-[10px] text-paper-mute uppercase">
-            © 2026 MBOKA HUB — {copy.rights}
-          </p>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="font-mono text-[10px] text-paper-mute uppercase">
+              © 2026 MBOKA HUB — {copy.rights}
+            </p>
+            {isAdmin ? (
+              <Link
+                className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-400/5 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-200/80 transition hover:border-emerald-400/70 hover:bg-emerald-400/10 hover:text-emerald-100"
+                href="/admin"
+              >
+                <ShieldCheck aria-hidden className="size-3" />
+                Admin · Backoffice
+              </Link>
+            ) : null}
+          </div>
         </div>
       </div>
     </footer>
