@@ -137,9 +137,9 @@ export default async function AdminStatsPage() {
           <StatBox icon={Crown} label="Pros total" value={prosTotal} hint={`${prosVerified} validés · ${prosPremium} premium`} tone="gold" />
           <StatBox
             icon={BadgeEuro}
-            label="Revenus encaissés"
-            value={`${((paymentsAgg._sum.amount ?? 0) / 1).toFixed(2)} €`}
-            hint={`${paymentsAgg._count._all} paiements`}
+            label="Recettes Mboka Hub"
+            value={`${(paymentsAgg._sum.amount ?? 0).toFixed(2)} €`}
+            hint={`${paymentsAgg._count._all} paiements (VIP, badges pros, boost, déblocages)`}
             tone="green"
           />
           <StatBox
@@ -150,6 +150,11 @@ export default async function AdminStatsPage() {
             tone="red"
           />
         </div>
+        <p className="mt-3 text-muted-foreground text-xs">
+          ℹ️ Mboka Hub n'encaisse pas pour le compte des prestataires. Les fans paient
+          directement les pros (cash, virement, leur propre lien). Les recettes ci-dessus sont
+          uniquement les abonnements et services payés <em>à</em> Mboka Hub.
+        </p>
       </section>
 
       {/* PRESTATAIRES — DETAIL */}
