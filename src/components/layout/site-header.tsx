@@ -188,7 +188,6 @@ export function SiteHeader() {
                 </span>
               ) : null}
               <UserButton
-                afterSignOutUrl={localizedHref("/", locale)}
                 appearance={{
                   elements: {
                     avatarBox: isVip
