@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowRight, Home, Menu } from "lucide-react";
+import { SignOutButton, useUser } from "@clerk/nextjs";
+import { ArrowRight, Home, LayoutDashboard, LogIn, LogOut, Menu, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -22,6 +23,15 @@ type MobileMenuProps = {
 export function MobileMenu({ locale }: MobileMenuProps) {
   const [open, setOpen] = useState(false);
   const copy = nls[locale].common;
+  const { isSignedIn, user } = useUser();
+  const signInLabel =
+    locale === "en" ? "Sign in" : locale === "de" ? "Anmelden" : locale === "nl" ? "Inloggen" : "Se connecter";
+  const signUpLabel =
+    locale === "en" ? "Create account" : locale === "de" ? "Konto erstellen" : locale === "nl" ? "Account aanmaken" : "Créer un compte";
+  const signOutLabel =
+    locale === "en" ? "Sign out" : locale === "de" ? "Abmelden" : locale === "nl" ? "Uitloggen" : "Se déconnecter";
+  const dashboardLabel =
+    locale === "fr" ? "Tableau de bord" : "Dashboard";
   const navItems = [
     { href: "/", label: copy.quickNav.home },
     { href: "/concert", label: copy.nav.concert },
@@ -78,8 +88,82 @@ export function MobileMenu({ locale }: MobileMenuProps) {
           ))}
         </nav>
 
-        <div className="mt-auto pt-8">
+        <div className="mt-auto pt-6">
           <div className="mb-4 h-px bg-white/5" />
+
+          {isSignedIn ? (
+            <div className="mb-4 space-y-2">
+              <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+                <div className="flex size-9 items-center justify-center rounded-full bg-blood/20 font-display text-sm uppercase text-blood">
+                  {(user?.firstName?.[0] ?? user?.primaryEmailAddress?.emailAddress?.[0] ?? "M").toUpperCase()}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-mono text-[10px] uppercase tracking-[0.2em] text-paper-mute">
+                    {locale === "fr" ? "Connecté" : "Signed in"}
+                  </p>
+                  <p className="truncate text-sm text-paper">
+                    {user?.firstName ?? user?.primaryEmailAddress?.emailAddress ?? ""}
+                  </p>
+                </div>
+              </div>
+              <Button
+                asChild
+                className="h-12 w-full justify-start gap-3 text-sm"
+                size="lg"
+                variant="outline"
+              >
+                <Link
+                  href={localizedHref("/dashboard", locale)}
+                  onClick={() => setOpen(false)}
+                >
+                  <LayoutDashboard className="size-4" />
+                  {dashboardLabel}
+                </Link>
+              </Button>
+              <SignOutButton redirectUrl={localizedHref("/", locale)}>
+                <button
+                  className="flex h-12 w-full items-center justify-start gap-3 rounded-md border border-white/10 px-4 text-sm text-paper-dim transition-colors hover:border-blood/40 hover:bg-blood/10 hover:text-paper"
+                  onClick={() => setOpen(false)}
+                  type="button"
+                >
+                  <LogOut className="size-4" />
+                  {signOutLabel}
+                </button>
+              </SignOutButton>
+            </div>
+          ) : (
+            <div className="mb-4 grid grid-cols-2 gap-2">
+              <Button
+                asChild
+                className="h-12 justify-center gap-2 text-sm"
+                size="lg"
+                variant="outline"
+              >
+                <Link
+                  href={localizedHref("/sign-in?redirect_url=/dashboard", locale)}
+                  onClick={() => setOpen(false)}
+                >
+                  <LogIn className="size-4" />
+                  {signInLabel}
+                </Link>
+              </Button>
+              <Button
+                asChild
+                className="h-12 justify-center gap-2 text-sm"
+                size="lg"
+                variant="ghost"
+              >
+                <Link
+                  href={localizedHref("/sign-up?redirect_url=/dashboard", locale)}
+                  onClick={() => setOpen(false)}
+                >
+                  <UserPlus className="size-4" />
+                  {signUpLabel}
+                </Link>
+              </Button>
+            </div>
+          )}
+
           <Button
             asChild
             className="h-14 w-full text-base"
