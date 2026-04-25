@@ -43,7 +43,7 @@ build = ["pnpm", "run", "build"]
 [userenv]
 
 [userenv.shared]
-ADMIN_EMAILS = "admin@mbokahub.com"
+ADMIN_EMAILS = "admin@mbokahub.com,contact@mbokahub.com"
 STRIPE_WEBHOOK_SECRET = "whsec_9yfO1TqFc4cqL0E3DwVWSmMgV1aVJFqy"
 
 [userenv.development]
