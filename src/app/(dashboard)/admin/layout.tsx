@@ -4,8 +4,11 @@ import { requireAdmin } from "@/lib/admin";
 const NAV = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/users", label: "Utilisateurs" },
-  { href: "/admin/pros", label: "Pros" },
+  { href: "/admin/pros", label: "Pros & Beauté" },
   { href: "/admin/trajets", label: "Trajets" },
+  { href: "/admin/afters", label: "Afters" },
+  { href: "/admin/merch", label: "Merch" },
+  { href: "/admin/paris", label: "Paris pratique" },
   { href: "/admin/communautes", label: "Communautés" },
   { href: "/admin/moderateurs", label: "Modérateurs" },
   { href: "/admin/signalements", label: "🚨 Signalements" },
