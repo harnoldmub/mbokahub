@@ -1,9 +1,11 @@
 "use client";
 
 import { UserButton, useUser } from "@clerk/nextjs";
+import { Crown } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { MegaMenu } from "@/components/layout/mega-menu";
@@ -15,6 +17,25 @@ export function SiteHeader() {
   const locale = getLocale(useSearchParams().get("lang"));
   const copy = nls[locale].common;
   const { isSignedIn } = useUser();
+  const [isVip, setIsVip] = useState(false);
+  useEffect(() => {
+    if (!isSignedIn) {
+      setIsVip(false);
+      return;
+    }
+    let cancelled = false;
+    fetch("/api/me/vip", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!cancelled) setIsVip(Boolean(d?.isVip));
+      })
+      .catch(() => {
+        if (!cancelled) setIsVip(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [isSignedIn]);
   const dashboardLabel =
     locale === "en"
       ? "Dashboard"
@@ -155,14 +176,28 @@ export function SiteHeader() {
             </Link>
           </Button>
           {isSignedIn ? (
-            <UserButton
-              afterSignOutUrl={localizedHref("/", locale)}
-              appearance={{
-                elements: {
-                  avatarBox: "h-8 w-8 ring-1 ring-blood/40",
-                },
-              }}
-            />
+            <div className="flex items-center gap-2">
+              {isVip ? (
+                <span
+                  aria-label="Membre VIP Famille"
+                  className="hidden items-center gap-1 rounded-full border border-amber-400/50 bg-amber-400/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] text-amber-200 sm:inline-flex"
+                  title="Famille Mboka VIP"
+                >
+                  <Crown aria-hidden className="size-3" />
+                  VIP
+                </span>
+              ) : null}
+              <UserButton
+                afterSignOutUrl={localizedHref("/", locale)}
+                appearance={{
+                  elements: {
+                    avatarBox: isVip
+                      ? "h-8 w-8 ring-2 ring-amber-400/70"
+                      : "h-8 w-8 ring-1 ring-blood/40",
+                  },
+                }}
+              />
+            </div>
           ) : null}
           <MobileMenu locale={locale} />
         </div>

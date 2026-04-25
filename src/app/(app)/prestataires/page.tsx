@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 
+import { VipMemberBanner } from "@/components/marketing/vip-member-banner";
 import { prisma } from "@/lib/db/prisma";
 import { PrestatairesListClient } from "@/components/pros/prestataires-list-client";
 import {
@@ -55,6 +56,7 @@ export default async function PrestatairesPage({ searchParams }: Props) {
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[600px] bg-gradient-to-b from-blood/10 via-transparent to-transparent" />
 
       <section className="relative z-10 mx-auto max-w-7xl px-6 pt-24 pb-12 lg:px-8">
+        <VipMemberBanner message="Tous les contacts WhatsApp des prestataires sont débloqués." />
         <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-blood">
           {copy.eyebrow}
         </p>

@@ -4,7 +4,9 @@ import Link from "next/link";
 
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getOptionalDbUser, isCurrentUserVip } from "@/lib/auth-helpers";
 import {
   PRICE_VIP_EUR,
   formatEuro,
@@ -35,6 +37,15 @@ const benefits = [
 
 export default async function VipPage() {
   const { userId } = await auth();
+  const isVip = await isCurrentUserVip();
+  const dbUser = isVip ? await getOptionalDbUser() : null;
+  const vipUntil = dbUser?.vipUntil
+    ? dbUser.vipUntil.toLocaleDateString("fr-FR", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : null;
   const earlyBird = isEarlyBirdActive();
   const currentPrice = earlyBird ? PRICE_VIP_EARLY_BIRD_EUR : PRICE_VIP_EUR;
   const deadline = EARLY_BIRD_DEADLINE.toLocaleDateString("fr-FR", {
@@ -42,6 +53,75 @@ export default async function VipPage() {
     month: "long",
     year: "numeric",
   });
+
+  if (isVip) {
+    return (
+      <div>
+        <section className="mx-auto max-w-5xl px-4 py-20 sm:px-6 lg:px-8">
+          <div className="rounded-3xl border border-amber-400/40 bg-gradient-to-br from-amber-500/15 via-background to-background p-8 sm:p-12">
+            <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-4">
+                <span className="flex size-14 items-center justify-center rounded-full bg-amber-400/20 text-amber-300">
+                  <Crown aria-hidden className="size-7" />
+                </span>
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-amber-200">
+                    Famille Mboka
+                  </p>
+                  <h1 className="mt-1 font-display text-4xl uppercase leading-none text-paper sm:text-5xl">
+                    Tu es <span className="text-amber-300">VIP</span>
+                  </h1>
+                </div>
+              </div>
+              <Badge className="border-amber-400/50 bg-amber-400/10 text-amber-200" variant="outline">
+                Pass actif
+              </Badge>
+            </div>
+
+            <p className="mt-6 max-w-2xl text-lg text-paper-dim">
+              Merci de soutenir Mboka Hub. Tous les avantages VIP sont activés
+              sur ton compte
+              {vipUntil ? (
+                <>
+                  {" "}
+                  jusqu&apos;au{" "}
+                  <span className="font-mono text-amber-200">{vipUntil}</span>
+                </>
+              ) : null}
+              .
+            </p>
+
+            <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+              {benefits.map((b) => (
+                <li
+                  className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 p-4 text-paper"
+                  key={b}
+                >
+                  <Check
+                    aria-hidden
+                    className="mt-0.5 size-4 shrink-0 text-amber-300"
+                  />
+                  <span className="text-sm">{b}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-10 flex flex-wrap gap-3">
+              <Button asChild className="shadow-[var(--glow-red)]">
+                <Link href="/dashboard">Mon tableau de bord</Link>
+              </Button>
+              <Button asChild variant="outline">
+                <Link href="/prestataires">Voir les prestataires</Link>
+              </Button>
+              <Button asChild variant="ghost">
+                <Link href="/trajets">Trouver un trajet</Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div>

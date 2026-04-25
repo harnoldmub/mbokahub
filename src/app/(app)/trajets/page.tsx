@@ -1,15 +1,17 @@
 import { Plus } from "lucide-react";
 import Link from "next/link";
 
+import { VipMemberBanner } from "@/components/marketing/vip-member-banner";
 import { TrajetsListClient } from "@/components/trajets/trajets-list-client";
 import { Button } from "@/components/ui/button";
 import type { TrajetDemo } from "@/lib/demo-data";
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
 export default function TrajetsPage() {
   return (
     <main className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <VipMemberBanner message="Tous les contacts covoiturage WhatsApp sont débloqués." />
       <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.3em] text-blood">
