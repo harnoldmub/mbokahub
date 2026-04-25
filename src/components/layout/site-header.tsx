@@ -23,6 +23,14 @@ export function SiteHeader() {
         : locale === "nl"
           ? "Dashboard"
           : "Tableau de bord";
+  const signInLabel =
+    locale === "en"
+      ? "Sign in"
+      : locale === "de"
+        ? "Anmelden"
+        : locale === "nl"
+          ? "Inloggen"
+          : "Se connecter";
   const m = copy.megaServices;
   const megaSections = [
     {
@@ -120,8 +128,20 @@ export function SiteHeader() {
         </nav>
 
         {/* Right actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <LanguageSwitcher />
+          {!isSignedIn ? (
+            <Button
+              asChild
+              className="hidden sm:inline-flex"
+              size="sm"
+              variant="ghost"
+            >
+              <Link href={localizedHref("/sign-in?redirect_url=/dashboard", locale)}>
+                {signInLabel}
+              </Link>
+            </Button>
+          ) : null}
           <Button
             asChild
             className="hidden sm:inline-flex"

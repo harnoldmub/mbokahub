@@ -1,4 +1,5 @@
 import { ClerkProvider } from "@clerk/nextjs";
+import { frFR } from "@clerk/localizations";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -89,7 +90,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider localization={frFR}>
       <html lang="fr" className="dark" suppressHydrationWarning>
         <body
           className={`${fontVariables} min-h-screen bg-ink font-body text-paper antialiased`}
