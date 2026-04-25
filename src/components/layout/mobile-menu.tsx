@@ -4,8 +4,15 @@ import { ArrowRight, Home, Menu } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
+
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { type Locale, localizedHref, nls } from "@/lib/nls";
 
 type MobileMenuProps = {
@@ -47,6 +54,9 @@ export function MobileMenu({ locale }: MobileMenuProps) {
         className="flex flex-col border-white/10 bg-coal px-6 py-8"
         side="right"
       >
+        <VisuallyHidden.Root>
+          <SheetTitle>{copy.menu}</SheetTitle>
+        </VisuallyHidden.Root>
         <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-blood">
           {copy.menu}
         </p>

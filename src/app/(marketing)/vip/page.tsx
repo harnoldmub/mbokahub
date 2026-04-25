@@ -147,7 +147,7 @@ export default async function VipPage() {
             {userId ? (
               <VipCheckoutButton priceLabel={formatEuro(currentPrice)} />
             ) : (
-              <div className="grid gap-3">
+              <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
                 <Link
                   className="inline-flex w-full items-center justify-center rounded-full bg-primary px-6 py-4 font-mono text-ink text-sm uppercase tracking-[0.2em] transition hover:bg-primary/90"
                   href={`/sign-up?redirect_url=/vip`}
@@ -155,10 +155,10 @@ export default async function VipPage() {
                   Devenir VIP — {formatEuro(currentPrice)}
                 </Link>
                 <Link
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3 font-mono text-paper text-xs uppercase tracking-[0.2em] transition hover:border-white/30 hover:bg-white/10"
+                  className="inline-flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-full border border-white/15 bg-white/5 px-6 py-4 font-mono text-paper text-xs uppercase tracking-[0.2em] transition hover:border-white/30 hover:bg-white/10"
                   href={`/sign-in?redirect_url=/dashboard`}
                 >
-                  Déjà VIP&nbsp;? Se connecter
+                  Se connecter
                 </Link>
               </div>
             )}
