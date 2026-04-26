@@ -520,7 +520,7 @@ export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = 
   const endGame = useCallback(() => {
     stateRef.current = "dead";
     setGameState("dead");
-    const final = scoreRef.current;
+    const final = Math.floor(scoreRef.current);
     setHighScore((prev) => {
       const next = Math.max(prev, final);
       localStorage.setItem("saperun_highscore", String(next));
