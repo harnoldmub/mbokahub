@@ -1,0 +1,166 @@
+2026-04-26 16:18:21.21
+ef273a98
+User
+source: undefined
+2026-04-26 16:18:21.21
+ef273a98
+User
+statusCode: 400,
+2026-04-26 16:18:21.21
+ef273a98
+User
+at <unknown> (.next/server/chunks/8675.js:1:9984) {
+2026-04-26 16:18:21.21
+ef273a98
+User
+code: 'resource_missing',
+2026-04-26 16:18:21.21
+ef273a98
+User
+param: 'line_items[0][price]',
+2026-04-26 16:18:21.21
+ef273a98
+User
+userMessage: undefined,
+2026-04-26 16:18:21.21
+ef273a98
+User
+payment_method: undefined,
+2026-04-26 16:18:21.21
+ef273a98
+User
+detail: undefined,
+2026-04-26 16:18:21.21
+ef273a98
+User
+payment_method_type: undefined,
+2026-04-26 16:18:21.21
+ef273a98
+User
+[checkout/vip] Error: No such price: 'price_1TQN8wHgqcjJnzrUc7TuKESM'
+2026-04-26 16:18:21.21
+ef273a98
+User
+charge: undefined,
+2026-04-26 16:18:21.21
+ef273a98
+User
+decline_code: undefined,
+2026-04-26 16:18:21.21
+ef273a98
+User
+headers: [Object],
+2026-04-26 16:18:21.21
+ef273a98
+User
+doc_url: 'https://stripe.com/docs/error-codes/resource-missing',
+2026-04-26 16:18:21.21
+ef273a98
+User
+requestId: 'req_OGmjk8tp9hPXbq',
+2026-04-26 16:18:21.21
+ef273a98
+User
+at f (.next/server/chunks/8675.js:1:2350)
+2026-04-26 16:18:21.21
+ef273a98
+User
+type: 'StripeInvalidRequestError',
+2026-04-26 16:18:21.21
+ef273a98
+User
+payment_intent: undefined,
+2026-04-26 16:18:21.21
+ef273a98
+User
+raw: [Object],
+2026-04-26 16:18:21.21
+ef273a98
+User
+rawType: 'invalid_request_error',
+2026-04-26 16:19:28.31
+ef273a98
+User
+decline_code: undefined,
+2026-04-26 16:19:28.31
+ef273a98
+User
+detail: undefined,
+2026-04-26 16:19:28.31
+ef273a98
+User
+code: 'resource_missing',
+2026-04-26 16:19:28.31
+ef273a98
+User
+at <unknown> (.next/server/chunks/8675.js:1:9984) {
+2026-04-26 16:19:28.31
+ef273a98
+User
+type: 'StripeInvalidRequestError',
+2026-04-26 16:19:28.31
+ef273a98
+User
+at f (.next/server/chunks/8675.js:1:2350)
+2026-04-26 16:19:28.31
+ef273a98
+User
+charge: undefined,
+2026-04-26 16:19:28.31
+ef273a98
+User
+setup_intent: undefined,
+2026-04-26 16:19:28.31
+ef273a98
+User
+raw: [Object],
+2026-04-26 16:19:28.31
+ef273a98
+User
+[checkout/vip] Error: No such price: 'price_1TQN8wHgqcjJnzrUc7TuKESM'
+2026-04-26 16:19:28.31
+ef273a98
+User
+userMessage: undefined,
+2026-04-26 16:19:28.31
+ef273a98
+User
+statusCode: 400,
+2026-04-26 16:19:28.31
+ef273a98
+User
+headers: [Object],
+2026-04-26 16:19:28.31
+ef273a98
+User
+doc_url: 'https://stripe.com/docs/error-codes/resource-missing',
+2026-04-26 16:19:28.31
+ef273a98
+User
+payment_method_type: undefined,
+2026-04-26 16:19:28.31
+ef273a98
+User
+payment_method: undefined,
+2026-04-26 16:19:28.31
+ef273a98
+User
+payment_intent: undefined,
+2026-04-26 16:19:28.31
+ef273a98
+User
+rawType: 'invalid_request_error',
+2026-04-26 16:19:28.31
+ef273a98
+User
+param: 'line_items[0][price]',
+2026-04-26 16:19:28.31
+ef273a98
+User
+requestId: 'req_NpXNHMF0qHZniE',
+
+Collapse
+
+Wrap
+
+Colors
