@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
+import { Readable } from "node:stream";
 
 import { requireAdmin } from "@/lib/admin";
 import {
@@ -67,11 +68,7 @@ export async function POST(req: Request) {
     const buffer = Buffer.from(await file.arrayBuffer());
 
     try {
-      const result = await client.uploadFromBytes(key, buffer);
-      if (!result.ok) {
-        errors.push(`${file.name}: ${result.error?.message ?? "échec stockage"}`);
-        continue;
-      }
+      await client.uploadFromStream(key, Readable.from(buffer));
       uploaded.push({
         url: publicUrlForKey(key),
         name: file.name,
