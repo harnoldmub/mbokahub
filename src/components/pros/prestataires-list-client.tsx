@@ -134,36 +134,34 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
   }
 
   return (
-    <section className="relative z-10 mx-auto max-w-7xl px-6 pb-32 lg:px-8">
-      <div className="relative z-30 rounded-[2rem] border border-white/10 bg-coal/60 p-6 backdrop-blur-md sm:p-8">
-        {/* Search */}
-        <div className="space-y-2">
-          <label className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
-            Rechercher
-          </label>
+    <section className="relative z-10 mx-auto max-w-7xl px-6 pb-12 lg:px-8">
+      <div className="relative z-30 rounded-2xl border border-white/10 bg-coal/60 p-4 backdrop-blur-md sm:p-5">
+        {/* Search + filters in one compact row */}
+        <div className="grid gap-3 lg:grid-cols-[2fr_1fr_1fr_1fr] lg:items-end">
           <div className="relative">
-            <Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-paper-mute" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-paper-mute" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Nom, ville, spécialité…"
-              className="w-full rounded-2xl border border-white/10 bg-smoke py-3 pl-11 pr-10 text-paper placeholder:text-paper-mute focus:border-blood focus:outline-none"
+              aria-label="Rechercher un prestataire"
+              className="h-10 w-full rounded-xl border border-white/10 bg-smoke pl-9 pr-9 text-sm text-paper placeholder:text-paper-mute focus:border-blood focus:outline-none"
             />
             {search && (
               <button
                 type="button"
                 onClick={() => setSearch("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-paper-mute hover:bg-white/10 hover:text-paper"
+                aria-label="Effacer la recherche"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-paper-mute hover:bg-white/10 hover:text-paper"
               >
                 <X className="size-4" />
               </button>
             )}
           </div>
-        </div>
 
-        {/* Dropdown filters: Famille, Catégorie, Ville (with search) */}
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Dropdown filters: Famille, Catégorie, Ville (with search) */}
+          <div className="contents lg:contents">
           <SearchableSelect
             label="Famille"
             value={activeGroup}
@@ -207,24 +205,25 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
               ]}
             />
           )}
+          </div>
         </div>
 
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-white/5 pt-6">
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-white/5 pt-3">
           <button
             type="button"
             onClick={() => setPremiumOnly((v) => !v)}
             className={cn(
-              "flex items-center gap-2 rounded-full px-4 py-2 font-mono text-[11px] uppercase tracking-widest transition",
+              "flex items-center gap-1.5 rounded-full px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest transition",
               premiumOnly
-                ? "bg-vip text-coal shadow-[0_0_30px_rgba(252,211,77,0.4)]"
+                ? "bg-vip text-coal shadow-[0_0_20px_rgba(252,211,77,0.3)]"
                 : "border border-white/10 bg-white/5 text-paper-dim hover:border-vip/40 hover:text-vip",
             )}
           >
-            <Sparkles className="size-3.5" />
+            <Sparkles className="size-3" />
             Certifiés uniquement
           </button>
 
-          <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-widest text-paper-mute">
+          <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-paper-mute">
             <span>
               {filtered.length} {filtered.length > 1 ? "résultats" : "résultat"}
             </span>
@@ -232,7 +231,7 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
               <button
                 type="button"
                 onClick={reset}
-                className="rounded-full border border-white/10 px-3 py-1 text-paper-dim hover:border-blood hover:text-blood"
+                className="rounded-full border border-white/10 px-2.5 py-1 text-paper-dim hover:border-blood hover:text-blood"
               >
                 Réinitialiser
               </button>

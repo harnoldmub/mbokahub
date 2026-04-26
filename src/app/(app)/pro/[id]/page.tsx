@@ -10,6 +10,7 @@ import {
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
+import { ProGalleryClient } from "@/components/pros/pro-gallery-client";
 import { ContactLock } from "@/components/shared/contact-lock";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -112,25 +113,11 @@ export default async function ProDetailsPage({ params }: ProDetailsPageProps) {
               <p className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
                 Galerie
               </p>
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
-                {galleryPhotos.map((src, i) => (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <a
-                    key={`${src}-${i}`}
-                    href={src}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="group relative aspect-square overflow-hidden rounded-xl border border-white/10 bg-black/40"
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={src}
-                      alt={`${displayedName} — photo ${i + 2}`}
-                      className="h-full w-full object-cover transition group-hover:scale-105"
-                    />
-                  </a>
-                ))}
-              </div>
+              <ProGalleryClient
+                photos={galleryPhotos}
+                altPrefix={displayedName}
+                startIndex={2}
+              />
             </div>
           )}
 

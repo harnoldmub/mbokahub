@@ -72,21 +72,17 @@ export default async function PrestatairesPage({ searchParams }: Props) {
     <main className="relative min-h-screen overflow-hidden bg-background">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[600px] bg-gradient-to-b from-blood/10 via-transparent to-transparent" />
 
-      <section className="relative z-10 mx-auto max-w-7xl px-6 pt-24 pb-12 lg:px-8">
+      <section className="relative z-10 mx-auto max-w-7xl px-6 pt-20 pb-4 lg:px-8">
         <VipMemberBanner message="Tous les contacts WhatsApp des prestataires sont débloqués." />
         <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-blood">
           {copy.eyebrow}
         </p>
-        <h1 className="mt-4 font-display text-5xl uppercase tracking-tight text-paper sm:text-6xl lg:text-7xl">
+        <h1 className="mt-3 font-display text-3xl uppercase tracking-tight text-paper sm:text-4xl lg:text-5xl">
           {copy.title}
         </h1>
-        <p className="mt-6 max-w-2xl text-lg text-paper-dim">
+        <p className="mt-3 max-w-2xl text-sm text-paper-dim sm:text-base">
           {copy.subtitle}
         </p>
-
-        <div className="mt-10">
-          <GuaranteeStrip />
-        </div>
       </section>
 
       <Suspense
@@ -98,6 +94,10 @@ export default async function PrestatairesPage({ searchParams }: Props) {
       >
         <PrestatairesListClient pros={pros} unlocked={unlocked} />
       </Suspense>
+
+      <section className="relative z-10 mx-auto max-w-7xl px-6 pb-24 lg:px-8">
+        <GuaranteeStrip />
+      </section>
     </main>
   );
 }

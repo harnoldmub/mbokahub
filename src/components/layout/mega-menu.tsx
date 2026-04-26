@@ -68,39 +68,41 @@ export function MegaMenu({ label, sections, locale }: MegaMenuProps) {
 
       {open && (
         <div
-          className="absolute left-1/2 top-full z-50 mt-3 w-[min(92vw,720px)] -translate-x-1/2 rounded-2xl border border-white/10 bg-coal/95 p-6 shadow-2xl backdrop-blur-xl"
+          className="absolute left-1/2 top-full z-50 -translate-x-1/2 pt-3"
           id={panelId}
           role="menu"
         >
-          <div className="grid grid-cols-2 gap-x-8 gap-y-6 sm:grid-cols-3">
-            {sections.map((section) => (
-              <div key={section.title}>
-                <p className="mb-3 font-mono text-[9px] uppercase tracking-[0.3em] text-blood">
-                  {section.title}
-                </p>
-                <ul className="flex flex-col gap-2">
-                  {section.links.map((link) => (
-                    <li key={link.href}>
-                      <Link
-                        className="block rounded-lg px-2 py-1.5 transition-colors hover:bg-blood/10"
-                        href={localizedHref(link.href, locale)}
-                        onClick={() => setOpen(false)}
-                        role="menuitem"
-                      >
-                        <span className="block font-body text-sm text-paper">
-                          {link.label}
-                        </span>
-                        {link.description && (
-                          <span className="mt-0.5 block text-xs text-paper-mute">
-                            {link.description}
+          <div className="w-[min(92vw,720px)] rounded-2xl border border-white/10 bg-coal/95 p-6 shadow-2xl backdrop-blur-xl">
+            <div className="grid grid-cols-2 gap-x-8 gap-y-6 sm:grid-cols-3">
+              {sections.map((section) => (
+                <div key={section.title}>
+                  <p className="mb-3 font-mono text-[9px] uppercase tracking-[0.3em] text-blood">
+                    {section.title}
+                  </p>
+                  <ul className="flex flex-col gap-2">
+                    {section.links.map((link) => (
+                      <li key={link.href}>
+                        <Link
+                          className="block rounded-lg px-2 py-1.5 transition-colors hover:bg-blood/10"
+                          href={localizedHref(link.href, locale)}
+                          onClick={() => setOpen(false)}
+                          role="menuitem"
+                        >
+                          <span className="block font-body text-sm text-paper">
+                            {link.label}
                           </span>
-                        )}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+                          {link.description && (
+                            <span className="mt-0.5 block text-xs text-paper-mute">
+                              {link.description}
+                            </span>
+                          )}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
