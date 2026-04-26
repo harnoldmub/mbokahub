@@ -1,4 +1,4 @@
-import { Megaphone, Plus } from "lucide-react";
+import { Megaphone, Pencil, Plus } from "lucide-react";
 import Link from "next/link";
 
 import { AnnonceActions } from "@/components/dashboard/annonce-actions";
@@ -82,6 +82,11 @@ export default async function AnnoncesPage() {
                     </Badge>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
+                    <Button asChild size="sm" variant="outline">
+                      <Link href="/dashboard/profil-pro">
+                        <Pencil aria-hidden /> Modifier ma fiche
+                      </Link>
+                    </Button>
                     <PremiumActivateButton
                       category={proProfile.category}
                       alreadyActive={proProfile.isPremium}

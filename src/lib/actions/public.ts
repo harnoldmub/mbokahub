@@ -157,6 +157,60 @@ export async function createProProfileAction(form: FormData) {
   redirect("/dashboard/annonces?published=pro");
 }
 
+export async function updateProProfileAction(form: FormData) {
+  const user = await ensureUser("/dashboard/profil-pro");
+
+  const existing = await prisma.proProfile.findUnique({
+    where: { userId: user.id },
+  });
+  if (!existing) {
+    redirect("/pro/inscrire");
+  }
+
+  const displayName = String(form.get("displayName") || "").trim();
+  const city = String(form.get("city") || "").trim();
+  const country = String(form.get("country") || "France").trim();
+  const bio = String(form.get("bio") || "").trim() || null;
+  const whatsapp = String(form.get("whatsapp") || "").trim();
+  const instagramHandle =
+    String(form.get("instagramHandle") || "").trim().replace(/^@/, "") || null;
+  const tiktokHandle =
+    String(form.get("tiktokHandle") || "").trim().replace(/^@/, "") || null;
+  const priceRange = String(form.get("priceRange") || "").trim() || null;
+  const specialitiesRaw = String(form.get("specialities") || "").trim();
+  const specialities = specialitiesRaw
+    ? specialitiesRaw
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
+    : [];
+
+  if (!displayName || !city || !whatsapp) {
+    redirect("/dashboard/profil-pro?error=missing");
+  }
+
+  await prisma.proProfile.update({
+    where: { userId: user.id },
+    data: {
+      displayName,
+      city,
+      country,
+      bio,
+      whatsapp,
+      instagramHandle,
+      tiktokHandle,
+      priceRange,
+      specialities,
+    },
+  });
+
+  revalidatePath("/dashboard/profil-pro");
+  revalidatePath("/dashboard/annonces");
+  revalidatePath("/prestataires");
+  revalidatePath(`/pro/${existing.id}`);
+  redirect("/dashboard/profil-pro?saved=1");
+}
+
 export async function applyAsModeratorAction(form: FormData) {
   const user = await ensureUser("/communaute/devenir-moderateur");
 

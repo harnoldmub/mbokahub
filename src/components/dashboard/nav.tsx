@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import {
   BarChart3,
   Contact,
+  IdCard,
   LayoutDashboard,
   Megaphone,
   Settings,
@@ -17,6 +18,7 @@ const baseItems = [
   { href: "/dashboard", label: "Vue d'ensemble", icon: LayoutDashboard },
   { href: "/dashboard/contacts", label: "Contacts", icon: Contact },
   { href: "/dashboard/annonces", label: "Annonces", icon: Megaphone },
+  { href: "/dashboard/profil-pro", label: "Ma fiche pro", icon: IdCard },
   { href: "/dashboard/stats", label: "Stats", icon: BarChart3 },
   { href: "/dashboard/parametres", label: "Paramètres", icon: Settings },
 ] as const;
