@@ -1,14 +1,16 @@
 "use client";
 
-import { LockKeyhole, Search, Sparkles, X } from "lucide-react";
+import { ArrowRight, LockKeyhole, Search, Sparkles, X } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
+import { PhotoLightbox } from "@/components/pros/photo-lightbox";
 import {
   PRO_CATEGORIES,
   PRO_CATEGORY_BY_ID,
   PRO_CATEGORY_GROUPS,
 } from "@/lib/pro-categories";
+import { formatPriceRange } from "@/lib/pro-display";
 import { cn } from "@/lib/utils";
 import { SearchableSelect } from "@/components/ui/searchable-select";
 import type { ProCategory } from "@prisma/client";
@@ -50,6 +52,9 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
   const [activeGroup, setActiveGroup] = useState<string>("all");
   const [activeCity, setActiveCity] = useState<string>("all");
   const [premiumOnly, setPremiumOnly] = useState(false);
+  const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(
+    null,
+  );
 
   const cities = useMemo(
     () =>
@@ -259,31 +264,39 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
             const meta = PRO_CATEGORY_BY_ID[p.category];
             const cover = p.photos?.[0];
             return (
-              <Link
+              <article
                 key={p.id}
-                href={`/pro/${p.id}`}
                 className="group relative flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-coal/60 transition hover:-translate-y-1 hover:border-blood/40 hover:shadow-[0_30px_60px_-30px_rgba(230,57,70,0.4)]"
               >
                 <div className="relative aspect-[4/3] w-full overflow-hidden bg-smoke">
                   {cover ? (
-                    /* eslint-disable-next-line @next/next/no-img-element */
-                    <img
-                      src={cover}
-                      alt={p.displayName}
-                      className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
-                    />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setLightbox({ src: cover, alt: p.displayName })
+                      }
+                      aria-label={`Agrandir la photo de ${p.displayName}`}
+                      className="block h-full w-full cursor-zoom-in"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={cover}
+                        alt={p.displayName}
+                        className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
+                      />
+                    </button>
                   ) : (
                     <div className="flex h-full items-center justify-center text-6xl opacity-40">
                       {meta?.icon ?? "✨"}
                     </div>
                   )}
                   {p.isPremium && (
-                    <span className="absolute right-3 top-3 rounded-full bg-vip px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-coal">
+                    <span className="pointer-events-none absolute right-3 top-3 rounded-full bg-vip px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-coal">
                       ★ Certifié
                     </span>
                   )}
                   {p.isBoosted && (
-                    <span className="absolute left-3 top-3 rounded-full bg-blood/90 px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-paper backdrop-blur">
+                    <span className="pointer-events-none absolute left-3 top-3 rounded-full bg-blood/90 px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-paper backdrop-blur">
                       Boost
                     </span>
                   )}
@@ -317,7 +330,7 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
                   )}
                   <div className="mt-auto flex items-center justify-between border-t border-white/5 pt-4">
                     <span className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
-                      {p.priceRange ?? "Sur devis"}
+                      {formatPriceRange(p.priceRange)}
                     </span>
                     {p.rating > 0 && (
                       <span className="flex items-center gap-1 font-mono text-xs text-vip">
@@ -328,12 +341,38 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
                       </span>
                     )}
                   </div>
+
+                  {unlocked ? (
+                    <Link
+                      href={`/pro/${p.id}`}
+                      className="mt-2 flex items-center justify-center gap-2 rounded-xl border border-blood/40 bg-blood/10 px-4 py-2.5 font-mono text-[10px] uppercase tracking-widest text-blood transition hover:bg-blood/20"
+                    >
+                      Voir la fiche
+                      <ArrowRight className="size-3.5" />
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/vip"
+                      className="mt-2 flex items-center justify-center gap-2 rounded-xl border border-vip/40 bg-vip/10 px-4 py-2.5 font-mono text-[10px] uppercase tracking-widest text-vip transition hover:bg-vip/15"
+                    >
+                      <LockKeyhole className="size-3.5" />
+                      Fiche réservée aux VIP
+                    </Link>
+                  )}
                 </div>
-              </Link>
+              </article>
             );
           })}
         </div>
       )}
+
+      {lightbox ? (
+        <PhotoLightbox
+          src={lightbox.src}
+          alt={lightbox.alt}
+          onClose={() => setLightbox(null)}
+        />
+      ) : null}
     </section>
   );
 }

@@ -7,6 +7,7 @@ import { prisma } from "@/lib/db/prisma";
 import type { ProCategory } from "@prisma/client";
 
 import { PRO_CATEGORY_IDS } from "@/lib/pro-categories";
+import { detectContactInBio, normalizePriceRangeInput } from "@/lib/pro-display";
 
 const VALID_PRO_CATEGORIES: ProCategory[] = PRO_CATEGORY_IDS;
 
@@ -105,7 +106,7 @@ export async function createProProfileAction(form: FormData) {
   const whatsapp = String(form.get("whatsapp") || "").trim();
   const instagramHandle = String(form.get("instagramHandle") || "").trim() || null;
   const tiktokHandle = String(form.get("tiktokHandle") || "").trim() || null;
-  const priceRange = String(form.get("priceRange") || "").trim() || null;
+  const priceRange = normalizePriceRangeInput(String(form.get("priceRange") || ""));
   const specialitiesRaw = String(form.get("specialities") || "").trim();
   const specialities = specialitiesRaw
     ? specialitiesRaw.split(",").map((s) => s.trim()).filter(Boolean)
@@ -113,6 +114,10 @@ export async function createProProfileAction(form: FormData) {
 
   if (!category || !displayName || !city || !whatsapp) {
     redirect("/pro/inscrire?error=missing");
+  }
+
+  if (detectContactInBio(bio)) {
+    redirect("/pro/inscrire?error=contact-in-bio");
   }
 
   const existing = await prisma.proProfile.findUnique({ where: { userId: user.id } });
@@ -176,7 +181,7 @@ export async function updateProProfileAction(form: FormData) {
     String(form.get("instagramHandle") || "").trim().replace(/^@/, "") || null;
   const tiktokHandle =
     String(form.get("tiktokHandle") || "").trim().replace(/^@/, "") || null;
-  const priceRange = String(form.get("priceRange") || "").trim() || null;
+  const priceRange = normalizePriceRangeInput(String(form.get("priceRange") || ""));
   const specialitiesRaw = String(form.get("specialities") || "").trim();
   const specialities = specialitiesRaw
     ? specialitiesRaw
@@ -197,6 +202,10 @@ export async function updateProProfileAction(form: FormData) {
 
   if (!displayName || !city || !whatsapp) {
     redirect("/dashboard/profil-pro?error=missing");
+  }
+
+  if (detectContactInBio(bio)) {
+    redirect("/dashboard/profil-pro?error=contact-in-bio");
   }
 
   await prisma.proProfile.update({

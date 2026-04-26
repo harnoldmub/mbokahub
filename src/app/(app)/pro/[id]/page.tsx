@@ -8,7 +8,7 @@ import {
   Star,
 } from "lucide-react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { ContactLock } from "@/components/shared/contact-lock";
 import { Badge } from "@/components/ui/badge";
@@ -31,6 +31,12 @@ export default async function ProDetailsPage({ params }: ProDetailsPageProps) {
 
   if (!pro) {
     notFound();
+  }
+
+  // The detailed pro card (real name, contacts, full gallery) is a VIP perk.
+  // Non-VIP visitors stay on the masked listing.
+  if (!unlocked) {
+    redirect("/vip?from=pro-detail");
   }
 
   const meta = PRO_CATEGORY_BY_ID[pro.category];

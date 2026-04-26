@@ -167,7 +167,7 @@ export function ProRegistrationForm() {
           />
         </FormField>
 
-        <FormField label="Présentation (optionnel)" helperText="Quelques lignes pour te présenter">
+        <FormField label="Présentation (optionnel)" helperText="Parle de ton métier. Pas de numéro, email ni nom de réseau (WhatsApp, Instagram, TikTok…) — ces contacts sont gérés par les champs dédiés.">
           <textarea
             name="bio"
             rows={4}

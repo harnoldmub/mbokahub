@@ -94,6 +94,16 @@ export default async function ProfilProPage({
           Champs obligatoires manquants : nom, ville et WhatsApp.
         </div>
       ) : null}
+      {sp.error === "contact-in-bio" ? (
+        <div className="rounded-2xl border border-blood/40 bg-blood/10 p-4 text-paper text-sm">
+          <ScrollToTopOnMount />
+          <strong className="text-blood">Présentation refusée.</strong> Aucun
+          numéro de téléphone, email, lien ni nom de réseau (WhatsApp,
+          Instagram, TikTok, Snapchat, Telegram…) n&apos;est autorisé dans la
+          présentation. Tes contacts sont déjà gérés par les champs WhatsApp et
+          Instagram et débloqués via le Pass VIP Famille.
+        </div>
+      ) : null}
 
       <form
         action={updateProProfileAction}
@@ -210,7 +220,7 @@ export default async function ProfilProPage({
 
         <FormField
           label="Présentation (optionnel)"
-          helperText="Quelques lignes pour te présenter"
+          helperText="Quelques lignes pour parler de ton métier. Pas de numéro, email ni nom de réseau (WhatsApp, Instagram, TikTok…) — ces contacts sont gérés par les champs dédiés."
         >
           <textarea
             name="bio"
