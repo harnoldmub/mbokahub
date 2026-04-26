@@ -492,18 +492,6 @@ const ALL_QUESTIONS = [
     image: "/images/fally/fally-cameroun-2021.jpg",
   },
   {
-    id: 32,
-    question:
-      "Dadju, partenaire de Fally sur « Jaloux », est le frère de quel artiste célèbre ?",
-    options: ["Booba", "Lacrim", "Maître Gims", "Rohff"],
-    correct: 2,
-    anecdote:
-      "Dadju est le frère de Maître Gims (Gandhi Djuna), l'un des artistes francophones les plus streamés au monde.",
-    category: "Collaborations",
-    album: ALBUMS.tokooos,
-    image: "/images/fally/fally-cameroun-2021.jpg",
-  },
-  {
     id: 33,
     question:
       "En quelle année Fally et Dadju sortent-ils « Jaloux » ensemble ?",
