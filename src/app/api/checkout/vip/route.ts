@@ -100,7 +100,7 @@ export async function POST(req: Request) {
         );
       }
 
-      if (promo.discountPercent < 100) {
+      if (promo.discountPercent !== 100) {
         // Partial discounts go through Stripe via allow_promotion_codes (mapped Stripe coupon).
         // Mboka Hub doesn't yet sync internal codes to Stripe coupons.
         return NextResponse.json(
@@ -136,10 +136,13 @@ export async function POST(req: Request) {
               userId: dbUser.id,
             },
           });
-          await tx.user.update({
-            where: { id: dbUser.id },
+          const vipClaim = await tx.user.updateMany({
+            where: { id: dbUser.id, isVipActive: false },
             data: { isVipActive: true, vipUntil: VIP_END },
           });
+          if (vipClaim.count !== 1) {
+            throw new PromoUnavailableError();
+          }
           await tx.payment.create({
             data: {
               userId: dbUser.id,
