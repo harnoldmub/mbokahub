@@ -1,6 +1,7 @@
-import { AtSign, CheckCircle2, IdCard, Sparkles } from "lucide-react";
+import { AtSign, Camera, CheckCircle2, IdCard, Sparkles } from "lucide-react";
 import Link from "next/link";
 
+import { PhotoUploader } from "@/components/admin/photo-uploader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
@@ -216,6 +217,29 @@ export default async function ProfilProPage({
             placeholder="Je suis maquilleuse depuis 8 ans, spécialisée en peau noire..."
           />
         </FormField>
+
+        <div className="grid gap-4 rounded-2xl border border-white/10 bg-ink/40 p-5">
+          <div className="flex items-center gap-3">
+            <span className="flex size-9 items-center justify-center rounded-xl bg-blood/15 text-blood">
+              <Camera className="size-4" />
+            </span>
+            <div>
+              <h3 className="font-display text-base uppercase text-paper">
+                Mes photos
+              </h3>
+              <p className="text-paper-mute text-xs">
+                Mets en avant ton travail. La 1ère photo est la couverture.
+              </p>
+            </div>
+          </div>
+          <PhotoUploader
+            name="photos"
+            defaultUrls={pro.photos}
+            multiple
+            maxFiles={12}
+            helpText="Ajoute, retire ou réorganise. JPG/PNG/WebP, 5 Mo max."
+          />
+        </div>
 
         <div className="flex flex-col items-stretch gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-paper-mute text-xs">

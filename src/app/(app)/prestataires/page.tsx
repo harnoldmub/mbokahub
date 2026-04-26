@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 
+import { GuaranteeStrip } from "@/components/marketing/guarantee-strip";
 import { VipMemberBanner } from "@/components/marketing/vip-member-banner";
 import { canSeePrivateProInfo } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/db/prisma";
@@ -82,6 +83,10 @@ export default async function PrestatairesPage({ searchParams }: Props) {
         <p className="mt-6 max-w-2xl text-lg text-paper-dim">
           {copy.subtitle}
         </p>
+
+        <div className="mt-10">
+          <GuaranteeStrip />
+        </div>
       </section>
 
       <Suspense

@@ -1,3 +1,4 @@
+import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
 import { Readable } from "node:stream";
@@ -17,11 +18,18 @@ export const dynamic = "force-dynamic";
 type UploadedFile = { url: string; name: string; size: number; type: string };
 
 export async function POST(req: Request) {
-  try {
-    await requireAdmin();
-  } catch {
+  const { userId } = await auth();
+  if (!userId) {
     return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
   }
+  let admin = false;
+  try {
+    await requireAdmin();
+    admin = true;
+  } catch {
+    admin = false;
+  }
+  const keyPrefix = admin ? "uploads" : `pro-photos/${userId}`;
 
   let formData: FormData;
   try {
@@ -64,7 +72,7 @@ export async function POST(req: Request) {
     }
 
     const ext = extForMime(file.type);
-    const key = `uploads/${Date.now()}-${randomUUID()}.${ext}`;
+    const key = `${keyPrefix}/${Date.now()}-${randomUUID()}.${ext}`;
     const buffer = Buffer.from(await file.arrayBuffer());
 
     try {

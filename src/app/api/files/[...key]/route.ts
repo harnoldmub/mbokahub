@@ -13,7 +13,7 @@ const MIME_BY_EXT: Record<string, string> = {
   gif: "image/gif",
 };
 
-const ALLOWED_PREFIXES = ["uploads/"];
+const ALLOWED_PREFIXES = ["uploads/", "pro-photos/"];
 
 export async function GET(
   _req: Request,

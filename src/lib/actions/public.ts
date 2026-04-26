@@ -185,6 +185,16 @@ export async function updateProProfileAction(form: FormData) {
         .filter(Boolean)
     : [];
 
+  const photosRaw = String(form.get("photos") || "");
+  const photos = photosRaw
+    .split("\n")
+    .map((s) => s.trim())
+    .filter(
+      (s) =>
+        /^https?:\/\//i.test(s) || s.startsWith("/api/files/"),
+    )
+    .slice(0, 12);
+
   if (!displayName || !city || !whatsapp) {
     redirect("/dashboard/profil-pro?error=missing");
   }
@@ -201,6 +211,7 @@ export async function updateProProfileAction(form: FormData) {
       tiktokHandle,
       priceRange,
       specialities,
+      photos,
     },
   });
 
