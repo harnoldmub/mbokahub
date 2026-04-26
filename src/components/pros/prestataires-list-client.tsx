@@ -8,11 +8,10 @@ import { PhotoLightbox } from "@/components/pros/photo-lightbox";
 import {
   PRO_CATEGORIES,
   PRO_CATEGORY_BY_ID,
-  PRO_CATEGORY_GROUPS,
 } from "@/lib/pro-categories";
 import { formatPriceRange } from "@/lib/pro-display";
 import { cn } from "@/lib/utils";
-import { SearchableSelect } from "@/components/ui/searchable-select";
+import { MultiSelect } from "@/components/ui/multi-select";
 import type { ProCategory } from "@prisma/client";
 
 type ProListItem = {
@@ -46,11 +45,8 @@ type Props = {
 
 export function PrestatairesListClient({ pros, unlocked = false }: Props) {
   const [search, setSearch] = useState("");
-  const [activeCategory, setActiveCategory] = useState<ProCategory | "all">(
-    "all",
-  );
-  const [activeGroup, setActiveGroup] = useState<string>("all");
-  const [activeCity, setActiveCity] = useState<string>("all");
+  const [activeCategories, setActiveCategories] = useState<ProCategory[]>([]);
+  const [activeCities, setActiveCities] = useState<string[]>([]);
   const [premiumOnly, setPremiumOnly] = useState(false);
   const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(
     null,
@@ -62,21 +58,12 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
     [pros],
   );
 
-  const visibleCategories = useMemo(() => {
-    if (activeGroup === "all") return PRO_CATEGORIES;
-    return PRO_CATEGORIES.filter((c) => c.group === activeGroup);
-  }, [activeGroup]);
-
   const filtered = useMemo(() => {
+    const categorySet = new Set<ProCategory>(activeCategories);
+    const citySet = new Set<string>(activeCities);
     return pros.filter((p) => {
-      if (activeCategory !== "all" && p.category !== activeCategory)
-        return false;
-      if (
-        activeGroup !== "all" &&
-        PRO_CATEGORY_BY_ID[p.category]?.group !== activeGroup
-      )
-        return false;
-      if (activeCity !== "all" && p.city !== activeCity) return false;
+      if (categorySet.size > 0 && !categorySet.has(p.category)) return false;
+      if (citySet.size > 0 && !citySet.has(p.city)) return false;
       if (premiumOnly && !p.isPremium) return false;
 
       if (search.trim()) {
@@ -93,20 +80,18 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
       }
       return true;
     });
-  }, [pros, search, activeCategory, activeGroup, activeCity, premiumOnly]);
+  }, [pros, search, activeCategories, activeCities, premiumOnly]);
 
   const hasActiveFilters =
     !!search ||
-    activeCategory !== "all" ||
-    activeGroup !== "all" ||
-    activeCity !== "all" ||
+    activeCategories.length > 0 ||
+    activeCities.length > 0 ||
     premiumOnly;
 
   const reset = () => {
     setSearch("");
-    setActiveCategory("all");
-    setActiveGroup("all");
-    setActiveCity("all");
+    setActiveCategories([]);
+    setActiveCities([]);
     setPremiumOnly(false);
   };
 
@@ -160,49 +145,31 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
             )}
           </div>
 
-          <SearchableSelect
-            value={activeGroup}
-            onChange={(v) => {
-              setActiveGroup(v);
-              setActiveCategory("all");
-            }}
-            searchPlaceholder="Rechercher une famille…"
-            options={[
-              { value: "all", label: "Toutes les familles", sticky: true },
-              ...PRO_CATEGORY_GROUPS.map((g) => ({
-                value: g.id,
-                label: g.label,
-              })),
-            ]}
-            className="min-w-[160px] flex-1 basis-[170px]"
-            buttonClassName="h-10 py-0 rounded-xl"
-          />
-
-          <SearchableSelect
-            value={activeCategory}
-            onChange={(v) => setActiveCategory(v as ProCategory | "all")}
+          <MultiSelect
+            values={activeCategories}
+            onChange={(v) => setActiveCategories(v as ProCategory[])}
+            placeholder="Toutes les catégories"
+            itemNounSingular="catégorie"
+            itemNounPlural="catégories"
             searchPlaceholder="Rechercher une catégorie…"
-            options={[
-              { value: "all", label: "Toutes les catégories", sticky: true },
-              ...visibleCategories.map((c) => ({
-                value: c.id,
-                label: `${c.icon}  ${c.label}`,
-              })),
-            ]}
-            className="min-w-[160px] flex-1 basis-[170px]"
+            options={PRO_CATEGORIES.map((c) => ({
+              value: c.id,
+              label: `${c.icon}  ${c.label}`,
+            }))}
+            className="min-w-[180px] flex-1 basis-[200px]"
             buttonClassName="h-10 py-0 rounded-xl"
           />
 
           {cities.length > 0 && (
-            <SearchableSelect
-              value={activeCity}
-              onChange={setActiveCity}
+            <MultiSelect
+              values={activeCities}
+              onChange={setActiveCities}
+              placeholder="Toutes les villes"
+              itemNounSingular="ville"
+              itemNounPlural="villes"
               searchPlaceholder="Rechercher une ville…"
-              options={[
-                { value: "all", label: "Toutes les villes", sticky: true },
-                ...cities.map((city) => ({ value: city, label: city })),
-              ]}
-              className="min-w-[150px] flex-1 basis-[160px]"
+              options={cities.map((city) => ({ value: city, label: city }))}
+              className="min-w-[160px] flex-1 basis-[180px]"
               buttonClassName="h-10 py-0 rounded-xl"
             />
           )}
@@ -247,7 +214,7 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
             Aucun prestataire ne correspond
           </p>
           <p className="mt-3 text-paper-dim">
-            Essaie d'élargir tes filtres ou de changer de famille.
+            Essaie d'élargir tes filtres ou d'en retirer quelques-uns.
           </p>
           <button
             type="button"
