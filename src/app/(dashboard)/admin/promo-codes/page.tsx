@@ -41,7 +41,8 @@ export default async function AdminPromoCodesPage() {
           <p className="mt-1 text-muted-foreground text-sm">
             10 codes VIP + 10 codes Pro + le code universel{" "}
             <span className="font-mono text-foreground">MBKFREE</span>{" "}
-            (inscription Pro gratuite, toutes catégories).
+            (inscription Pro gratuite, toutes catégories,{" "}
+            <strong>limité à 20 utilisations</strong>).
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -50,7 +51,7 @@ export default async function AdminPromoCodesPage() {
             triggerLabel={hasMbkFree ? "Recharger MBKFREE" : "Créer MBKFREE"}
             triggerClassName="rounded-full bg-amber-500 px-4 py-2 text-sm text-black hover:bg-amber-400"
             title="Activer le code MBKFREE ?"
-            description="Crée (ou réactive) le code universel MBKFREE — 100% de réduction, 9999 utilisations, valable pour n'importe quelle catégorie pro."
+            description="Crée (ou réactive) le code universel MBKFREE — 100% de réduction, limité à 20 utilisations, valable pour n'importe quelle catégorie pro."
             confirmLabel="Activer MBKFREE"
             variant="warning"
           />
@@ -67,51 +68,109 @@ export default async function AdminPromoCodesPage() {
       </div>
 
       <section className="rounded-2xl border border-white/10 bg-white/5 p-6">
-        <h3 className="font-heading text-foreground text-lg">Créer un code</h3>
+        <h3 className="font-heading text-foreground text-lg">
+          Créer un code promo
+        </h3>
+        <p className="mt-1 text-muted-foreground text-xs">
+          Un code = une réduction (en %) appliquée au paiement, valable un
+          certain nombre de fois. Exemple :{" "}
+          <span className="font-mono">PRO-001</span>, 100% de réduction, 1
+          utilisation = 1 prestataire peut s'inscrire gratuitement avec ce code.
+        </p>
         <form
           action={createPromoCode}
-          className="mt-4 grid gap-3 sm:grid-cols-5"
+          className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-5"
         >
-          <input
-            name="code"
-            placeholder="CODE-001"
-            required
-            className="rounded-md border border-white/20 bg-white/5 px-3 py-2 text-foreground text-sm uppercase placeholder:text-muted-foreground"
-          />
-          <select
-            name="category"
-            required
-            className="rounded-md border border-white/20 bg-white/5 px-3 py-2 text-foreground text-sm"
-          >
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c}>
-                {CATEGORY_LABEL[c]}
-              </option>
-            ))}
-          </select>
-          <input
-            name="label"
-            placeholder="Libellé (optionnel)"
-            className="rounded-md border border-white/20 bg-white/5 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
-          />
-          <input
-            name="discountPercent"
-            type="number"
-            defaultValue={100}
-            min={1}
-            max={100}
-            className="rounded-md border border-white/20 bg-white/5 px-3 py-2 text-foreground text-sm"
-          />
-          <input
-            name="maxUses"
-            type="number"
-            defaultValue={1}
-            min={1}
-            className="rounded-md border border-white/20 bg-white/5 px-3 py-2 text-foreground text-sm"
-          />
+          <label className="space-y-1.5">
+            <span className="block text-foreground text-xs font-medium">
+              Code <span className="text-red-400">*</span>
+            </span>
+            <input
+              name="code"
+              placeholder="ex : PRO-001"
+              required
+              className="w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-foreground text-sm uppercase placeholder:text-muted-foreground"
+            />
+            <span className="block text-muted-foreground text-[11px]">
+              Ce que tape le client.
+            </span>
+          </label>
+
+          <label className="space-y-1.5">
+            <span className="block text-foreground text-xs font-medium">
+              Catégorie <span className="text-red-400">*</span>
+            </span>
+            <select
+              name="category"
+              required
+              className="w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-foreground text-sm"
+            >
+              {CATEGORIES.map((c) => (
+                <option key={c} value={c}>
+                  {CATEGORY_LABEL[c]}
+                </option>
+              ))}
+            </select>
+            <span className="block text-muted-foreground text-[11px]">
+              Sur quel achat il s'applique.
+            </span>
+          </label>
+
+          <label className="space-y-1.5">
+            <span className="block text-foreground text-xs font-medium">
+              Libellé interne
+            </span>
+            <input
+              name="label"
+              placeholder="ex : Influenceur Sarah"
+              className="w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            />
+            <span className="block text-muted-foreground text-[11px]">
+              Note privée (optionnel).
+            </span>
+          </label>
+
+          <label className="space-y-1.5">
+            <span className="block text-foreground text-xs font-medium">
+              Réduction (%) <span className="text-red-400">*</span>
+            </span>
+            <div className="relative">
+              <input
+                name="discountPercent"
+                type="number"
+                defaultValue={100}
+                min={1}
+                max={100}
+                className="w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 pr-8 text-foreground text-sm"
+              />
+              <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
+                %
+              </span>
+            </div>
+            <span className="block text-muted-foreground text-[11px]">
+              100 = gratuit, 50 = moitié prix.
+            </span>
+          </label>
+
+          <label className="space-y-1.5">
+            <span className="block text-foreground text-xs font-medium">
+              Nombre d'utilisations <span className="text-red-400">*</span>
+            </span>
+            <input
+              name="maxUses"
+              type="number"
+              defaultValue={1}
+              min={1}
+              className="w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-foreground text-sm"
+            />
+            <span className="block text-muted-foreground text-[11px]">
+              Combien de personnes peuvent l'utiliser.
+            </span>
+          </label>
+
           <button
             type="submit"
-            className="col-span-full rounded-md bg-white/10 px-4 py-2 text-foreground text-sm hover:bg-white/20"
+            className="col-span-full rounded-md bg-red-500 px-4 py-2.5 text-white text-sm font-medium hover:bg-red-600"
           >
             Ajouter le code
           </button>

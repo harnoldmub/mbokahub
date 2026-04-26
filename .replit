@@ -45,9 +45,9 @@ build = ["pnpm", "run", "build"]
 [userenv.shared]
 ADMIN_EMAILS = "admin@mbokahub.com,contact@mbokahub.com"
 STRIPE_WEBHOOK_SECRET = "whsec_9yfO1TqFc4cqL0E3DwVWSmMgV1aVJFqy"
-STRIPE_VIP_PRICE_ID = "price_1TQN8wHgqcjJnzrUCkKPXdtc"
-STRIPE_PRO_PRICE_ID = "price_1TQN8wHgqcjJnzrU7rwscfyr"
-STRIPE_BOOST_PRICE_ID = "price_1TQN8yHgqcjJnzrUcKTHLtiZ"
-STRIPE_VIP_EARLY_BIRD_PRICE_ID = "price_1TQN8wHgqcjJnzrUc7TuKESM"
+STRIPE_VIP_PRICE_ID = "price_1TQNhtCWVY7OGzL2jSt9uzG3"
+STRIPE_PRO_PRICE_ID = "price_1TQNhvCWVY7OGzL2xMHpDc7n"
+STRIPE_BOOST_PRICE_ID = "price_1TQNhwCWVY7OGzL2SPcu4xdV"
+STRIPE_VIP_EARLY_BIRD_PRICE_ID = "price_1TQNhuCWVY7OGzL28mGgUWWA"
 
 [userenv.development]

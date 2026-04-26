@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, Search, Sparkles, X } from "lucide-react";
+import { Search, Sparkles, X } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
@@ -10,6 +10,7 @@ import {
   PRO_CATEGORY_GROUPS,
 } from "@/lib/pro-categories";
 import { cn } from "@/lib/utils";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import type { ProCategory } from "@prisma/client";
 
 type ProListItem = {
@@ -34,43 +35,6 @@ type ProListItem = {
 type Props = {
   pros: ProListItem[];
 };
-
-function FilterSelect({
-  label,
-  value,
-  onChange,
-  options,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  options: { value: string; label: string }[];
-}) {
-  return (
-    <div className="space-y-2">
-      <label className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
-        {label}
-      </label>
-      <div className="relative">
-        <select
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="w-full appearance-none rounded-2xl border border-white/10 bg-smoke py-3 pl-4 pr-10 font-body text-sm text-paper focus:border-blood focus:outline-none"
-        >
-          {options.map((o) => (
-            <option key={o.value} value={o.value} className="bg-coal text-paper">
-              {o.label}
-            </option>
-          ))}
-        </select>
-        <ChevronDown
-          aria-hidden
-          className="pointer-events-none absolute right-4 top-1/2 size-4 -translate-y-1/2 text-paper-mute"
-        />
-      </div>
-    </div>
-  );
-}
 
 export function PrestatairesListClient({ pros }: Props) {
   const [search, setSearch] = useState("");
@@ -187,17 +151,18 @@ export function PrestatairesListClient({ pros }: Props) {
           </div>
         </div>
 
-        {/* Dropdown filters: Famille, Catégorie, Ville */}
+        {/* Dropdown filters: Famille, Catégorie, Ville (with search) */}
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <FilterSelect
+          <SearchableSelect
             label="Famille"
             value={activeGroup}
             onChange={(v) => {
               setActiveGroup(v);
               setActiveCategory("all");
             }}
+            searchPlaceholder="Rechercher une famille…"
             options={[
-              { value: "all", label: "Toutes les familles" },
+              { value: "all", label: "Toutes les familles", sticky: true },
               ...PRO_CATEGORY_GROUPS.map((g) => ({
                 value: g.id,
                 label: g.label,
@@ -205,12 +170,13 @@ export function PrestatairesListClient({ pros }: Props) {
             ]}
           />
 
-          <FilterSelect
+          <SearchableSelect
             label="Catégorie"
             value={activeCategory}
             onChange={(v) => setActiveCategory(v as ProCategory | "all")}
+            searchPlaceholder="Rechercher une catégorie…"
             options={[
-              { value: "all", label: "Toutes les catégories" },
+              { value: "all", label: "Toutes les catégories", sticky: true },
               ...visibleCategories.map((c) => ({
                 value: c.id,
                 label: `${c.icon}  ${c.label}`,
@@ -219,12 +185,13 @@ export function PrestatairesListClient({ pros }: Props) {
           />
 
           {cities.length > 0 && (
-            <FilterSelect
+            <SearchableSelect
               label="Ville"
               value={activeCity}
               onChange={setActiveCity}
+              searchPlaceholder="Rechercher une ville…"
               options={[
-                { value: "all", label: "Toutes les villes" },
+                { value: "all", label: "Toutes les villes", sticky: true },
                 ...cities.map((city) => ({ value: city, label: city })),
               ]}
             />

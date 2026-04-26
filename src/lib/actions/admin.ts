@@ -163,9 +163,9 @@ export async function generateInitialPromoCodes(): Promise<void> {
       data: {
         code: "MBKFREE",
         category: "PRO",
-        label: "Inscription Pro gratuite — toutes catégories",
+        label: "Inscription Pro gratuite — limité à 20 utilisations",
         discountPercent: 100,
-        maxUses: 9999,
+        maxUses: 20,
       },
     });
   }
@@ -184,9 +184,9 @@ export async function ensureMbkFreeCode(): Promise<void> {
       data: {
         category: "PRO",
         discountPercent: 100,
-        maxUses: Math.max(existing.maxUses, 9999),
+        maxUses: 20,
         isActive: true,
-        label: existing.label ?? "Inscription Pro gratuite — toutes catégories",
+        label: existing.label ?? "Inscription Pro gratuite — limité à 20 utilisations",
       },
     });
   } else {
@@ -194,9 +194,9 @@ export async function ensureMbkFreeCode(): Promise<void> {
       data: {
         code: "MBKFREE",
         category: "PRO",
-        label: "Inscription Pro gratuite — toutes catégories",
+        label: "Inscription Pro gratuite — limité à 20 utilisations",
         discountPercent: 100,
-        maxUses: 9999,
+        maxUses: 20,
       },
     });
   }

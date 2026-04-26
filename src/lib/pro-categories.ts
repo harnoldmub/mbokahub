@@ -75,6 +75,14 @@ export const PRO_CATEGORIES: ProCategoryMeta[] = [
     group: "EVENT",
   },
   {
+    id: "CREATEUR_CONTENU",
+    label: "Créateur·rice de contenu",
+    shortLabel: "Créateur",
+    icon: "📱",
+    description: "Reels, TikTok, couverture social media.",
+    group: "EVENT",
+  },
+  {
     id: "DJ",
     label: "DJ",
     shortLabel: "DJ",

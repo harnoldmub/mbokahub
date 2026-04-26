@@ -7,7 +7,7 @@ import {
 
 export const PRICE_VIP_EARLY_BIRD_EUR = 6.99;
 
-export const EARLY_BIRD_DEADLINE = new Date("2026-04-30T23:59:59+02:00");
+export const EARLY_BIRD_DEADLINE = new Date("2026-04-28T23:59:59+02:00");
 
 export const EVENT_END = new Date("2026-05-31T23:59:59+02:00");
 
