@@ -1,6 +1,7 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import { frFR } from "@clerk/localizations";
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Suspense } from "react";
 
 import { QuickNav } from "@/components/layout/quick-nav";
@@ -15,6 +16,7 @@ import "./globals.css";
 
 const fontVariables = `${fontDisplay.variable} ${fontSerif.variable} ${fontBody.variable} ${fontMono.variable}`;
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3001";
+const GA_ID = "G-YS8CL4ZE62";
 
 export const metadata: Metadata = {
   applicationName: "Mboka Hub",
@@ -110,6 +112,18 @@ export default function RootLayout({
             </div>
             <CookieConsent />
           </AppProviders>
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+            strategy="afterInteractive"
+          />
+          <Script id="ga4-init" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${GA_ID}', { anonymize_ip: true });
+            `}
+          </Script>
         </body>
       </html>
     </ClerkProvider>
