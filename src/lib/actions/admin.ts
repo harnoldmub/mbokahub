@@ -84,6 +84,61 @@ export async function deleteProProfile(profileId: string) {
   revalidatePath("/admin/pros");
 }
 
+export async function updateProProfileAdmin(
+  profileId: string,
+  form: FormData,
+) {
+  await requireAdmin();
+
+  const displayName = String(form.get("displayName") || "").trim();
+  const category = String(form.get("category") || "") as ProCategory;
+  const city = String(form.get("city") || "").trim();
+  const country = String(form.get("country") || "France").trim();
+  const whatsapp = String(form.get("whatsapp") || "").trim();
+  const bio = String(form.get("bio") || "").trim() || null;
+  const priceRange = String(form.get("priceRange") || "").trim() || null;
+  const instagramHandle =
+    String(form.get("instagramHandle") || "").trim().replace(/^@/, "") || null;
+  const tiktokHandle =
+    String(form.get("tiktokHandle") || "").trim().replace(/^@/, "") || null;
+
+  const specialitiesStr = String(form.get("specialities") || "").trim();
+  const specialities = specialitiesStr
+    ? specialitiesStr.split(",").map((s) => s.trim()).filter(Boolean)
+    : [];
+
+  const photosStr = String(form.get("photos") || "").trim();
+  const photos = photosStr
+    ? photosStr.split(/[\n,]+/).map((s) => s.trim()).filter(Boolean)
+    : [];
+
+  if (!displayName || !category || !city || !whatsapp) {
+    throw new Error("Nom, catégorie, ville et WhatsApp obligatoires");
+  }
+
+  await prisma.proProfile.update({
+    where: { id: profileId },
+    data: {
+      displayName,
+      category,
+      city,
+      country,
+      whatsapp,
+      bio,
+      priceRange,
+      instagramHandle,
+      tiktokHandle,
+      specialities,
+      photos,
+    },
+  });
+
+  revalidatePath("/admin/pros");
+  revalidatePath("/prestataires");
+  revalidatePath("/beaute");
+  revalidatePath(`/pro/${profileId}`);
+}
+
 export async function deleteTrajet(trajetId: string) {
   await requireAdmin();
   await prisma.trajet.delete({ where: { id: trajetId } });
