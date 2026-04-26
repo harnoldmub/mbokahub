@@ -1090,15 +1090,15 @@ export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = 
 
         {/* Overlay: Idle */}
         {gameState === "idle" && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center rounded-[2rem] bg-ink/70 backdrop-blur-sm">
-            <div className="text-center px-6">
-              <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.4em] text-blood">
+          <div className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden rounded-[2rem] bg-ink/70 backdrop-blur-sm">
+            <div className="w-full max-w-sm px-3 text-center sm:px-6">
+              <p className="mb-1 font-mono text-[9px] uppercase tracking-[0.3em] text-blood sm:mb-2 sm:text-[10px] sm:tracking-[0.4em]">
                 {c.idleEyebrow}
               </p>
-              <h2 className="mb-4 font-display text-5xl uppercase text-paper leading-tight">
+              <h2 className="mb-1 font-display text-2xl uppercase leading-tight text-paper sm:mb-4 sm:text-5xl">
                 {c.idleTitle}
               </h2>
-              <p className="mb-6 max-w-xs mx-auto font-body text-paper-dim text-sm italic leading-relaxed">
+              <p className="mx-auto mb-3 hidden max-w-xs font-body text-sm italic leading-relaxed text-paper-dim sm:mb-6 sm:block">
                 {c.idleTagline}
               </p>
 
@@ -1107,11 +1107,11 @@ export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = 
                   e.preventDefault();
                   startGame();
                 }}
-                className="mx-auto mb-6 flex max-w-xs flex-col items-stretch gap-3"
+                className="mx-auto mb-2 flex max-w-xs flex-col items-stretch gap-1.5 sm:mb-6 sm:gap-3"
               >
                 <label
                   htmlFor="saperun-pseudo"
-                  className="font-mono text-[10px] uppercase tracking-[0.3em] text-paper-mute"
+                  className="font-mono text-[9px] uppercase tracking-[0.25em] text-paper-mute sm:text-[10px] sm:tracking-[0.3em]"
                 >
                   {c.namePrompt}
                 </label>
@@ -1134,24 +1134,24 @@ export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = 
                     }
                   }}
                   placeholder={c.namePlaceholder}
-                  className="rounded-xl border border-white/10 bg-smoke/60 px-4 py-3 text-center font-display text-lg uppercase tracking-wider text-paper placeholder:font-mono placeholder:text-xs placeholder:tracking-widest placeholder:text-paper-mute focus:border-blood/60 focus:outline-none focus:ring-2 focus:ring-blood/40"
+                  className="rounded-lg border border-white/10 bg-smoke/60 px-3 py-1.5 text-center font-display text-sm uppercase tracking-wider text-paper placeholder:font-mono placeholder:text-[10px] placeholder:tracking-widest placeholder:text-paper-mute focus:border-blood/60 focus:outline-none focus:ring-2 focus:ring-blood/40 sm:rounded-xl sm:px-4 sm:py-3 sm:text-lg sm:placeholder:text-xs"
                 />
                 {nameError && (
-                  <p className="font-mono text-[10px] uppercase tracking-wider text-blood">
+                  <p className="font-mono text-[9px] uppercase tracking-wider text-blood sm:text-[10px]">
                     {nameError}
                   </p>
                 )}
                 <button
                   type="submit"
-                  className="flex items-center justify-center gap-3 rounded-2xl bg-blood px-10 py-4 font-mono text-sm uppercase tracking-wider text-white shadow-glow-blood hover:bg-blood/90 transition-all disabled:cursor-not-allowed disabled:opacity-40"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-blood px-5 py-2 font-mono text-xs uppercase tracking-wider text-white shadow-glow-blood transition-all hover:bg-blood/90 disabled:cursor-not-allowed disabled:opacity-40 sm:gap-3 sm:rounded-2xl sm:px-10 sm:py-4 sm:text-sm"
                   disabled={firstName.trim().length < 2}
                 >
-                  <Play className="size-5 fill-current" />
+                  <Play className="size-4 fill-current sm:size-5" />
                   {c.start}
                 </button>
               </form>
 
-              <p className="font-mono text-[9px] uppercase tracking-widest text-paper-mute">
+              <p className="hidden font-mono text-[9px] uppercase tracking-widest text-paper-mute sm:block">
                 {c.controlsHint}
               </p>
             </div>
