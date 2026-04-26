@@ -3,7 +3,10 @@ import { Client } from "@replit/object-storage";
 let cached: Client | null = null;
 
 export function getStorageClient(): Client {
-  if (!cached) cached = new Client();
+  if (!cached) {
+    const bucketId = process.env.DEFAULT_OBJECT_STORAGE_BUCKET_ID;
+    cached = bucketId ? new Client({ bucketId }) : new Client();
+  }
   return cached;
 }
 
