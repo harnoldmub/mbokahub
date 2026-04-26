@@ -15,24 +15,14 @@ const BOOST_END = new Date("2026-05-31T23:59:59+02:00");
 const KNOWN_TYPES = new Set([
   "VIP_FAN",
   "BOOST",
-  "PRO_PREMIUM_MAQUILLEUSE",
-  "PRO_PREMIUM_COIFFEUR",
-  "PRO_PREMIUM_BARBIER",
-  "PRO_PREMIUM_PHOTOGRAPHE",
-  "PRO_PREMIUM_MERCH",
-  "PRO_PREMIUM_AFTER",
+  "PRO_PREMIUM",
   "CONDUCTEUR_REVEAL",
 ]);
 
 type PaymentTypeEnum =
   | "VIP_FAN"
   | "BOOST"
-  | "PRO_PREMIUM_MAQUILLEUSE"
-  | "PRO_PREMIUM_COIFFEUR"
-  | "PRO_PREMIUM_BARBIER"
-  | "PRO_PREMIUM_PHOTOGRAPHE"
-  | "PRO_PREMIUM_MERCH"
-  | "PRO_PREMIUM_AFTER"
+  | "PRO_PREMIUM"
   | "CONDUCTEUR_REVEAL";
 
 function paymentTypeFromMetadata(
@@ -173,7 +163,7 @@ async function handleSessionEvent(
   if (outcome === "failed") {
     await recordPayment(session, userId, type, "FAILED", meta);
     if (type === "VIP_FAN") await revokeVip(userId);
-    else if (type.startsWith("PRO_PREMIUM_")) await revokeProPremium(userId);
+    else if (type === "PRO_PREMIUM") await revokeProPremium(userId);
     else if (type === "BOOST") await revokeBoost(meta);
     return;
   }
@@ -186,7 +176,7 @@ async function handleSessionEvent(
   // outcome === "settled" — payment confirmed paid by Stripe
   await recordPayment(session, userId, type, "COMPLETED", meta);
   if (type === "VIP_FAN") await activateVip(userId);
-  else if (type.startsWith("PRO_PREMIUM_")) await activateProPremium(userId);
+  else if (type === "PRO_PREMIUM") await activateProPremium(userId);
   else if (type === "BOOST") await activateBoost(meta);
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Sparkles, X } from "lucide-react";
+import { ChevronDown, Search, Sparkles, X } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
@@ -35,28 +35,40 @@ type Props = {
   pros: ProListItem[];
 };
 
-function FilterChip({
-  active,
-  onClick,
-  children,
+function FilterSelect({
+  label,
+  value,
+  onChange,
+  options,
 }: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  options: { value: string; label: string }[];
 }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "rounded-full border px-4 py-2 font-mono text-[11px] uppercase tracking-widest transition",
-        active
-          ? "border-blood bg-blood text-paper shadow-glow-blood"
-          : "border-white/10 bg-white/5 text-paper-dim hover:border-white/30 hover:text-paper",
-      )}
-    >
-      {children}
-    </button>
+    <div className="space-y-2">
+      <label className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
+        {label}
+      </label>
+      <div className="relative">
+        <select
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="w-full appearance-none rounded-2xl border border-white/10 bg-smoke py-3 pl-4 pr-10 font-body text-sm text-paper focus:border-blood focus:outline-none"
+        >
+          {options.map((o) => (
+            <option key={o.value} value={o.value} className="bg-coal text-paper">
+              {o.label}
+            </option>
+          ))}
+        </select>
+        <ChevronDown
+          aria-hidden
+          className="pointer-events-none absolute right-4 top-1/2 size-4 -translate-y-1/2 text-paper-mute"
+        />
+      </div>
+    </div>
   );
 }
 
@@ -175,86 +187,49 @@ export function PrestatairesListClient({ pros }: Props) {
           </div>
         </div>
 
-        {/* Group selector */}
-        <div className="mt-6 space-y-2">
-          <label className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
-            Famille
-          </label>
-          <div className="flex flex-wrap gap-2">
-            <FilterChip
-              active={activeGroup === "all"}
-              onClick={() => {
-                setActiveGroup("all");
-                setActiveCategory("all");
-              }}
-            >
-              Toutes
-            </FilterChip>
-            {PRO_CATEGORY_GROUPS.map((g) => (
-              <FilterChip
-                key={g.id}
-                active={activeGroup === g.id}
-                onClick={() => {
-                  setActiveGroup(g.id);
-                  setActiveCategory("all");
-                }}
-              >
-                {g.label}
-              </FilterChip>
-            ))}
-          </div>
-        </div>
+        {/* Dropdown filters: Famille, Catégorie, Ville */}
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <FilterSelect
+            label="Famille"
+            value={activeGroup}
+            onChange={(v) => {
+              setActiveGroup(v);
+              setActiveCategory("all");
+            }}
+            options={[
+              { value: "all", label: "Toutes les familles" },
+              ...PRO_CATEGORY_GROUPS.map((g) => ({
+                value: g.id,
+                label: g.label,
+              })),
+            ]}
+          />
 
-        {/* Category chips */}
-        <div className="mt-6 space-y-2">
-          <label className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
-            Catégorie
-          </label>
-          <div className="flex flex-wrap gap-2">
-            <FilterChip
-              active={activeCategory === "all"}
-              onClick={() => setActiveCategory("all")}
-            >
-              Toutes
-            </FilterChip>
-            {visibleCategories.map((c) => (
-              <FilterChip
-                key={c.id}
-                active={activeCategory === c.id}
-                onClick={() => setActiveCategory(c.id)}
-              >
-                <span className="mr-1.5">{c.icon}</span>
-                {c.shortLabel}
-              </FilterChip>
-            ))}
-          </div>
-        </div>
+          <FilterSelect
+            label="Catégorie"
+            value={activeCategory}
+            onChange={(v) => setActiveCategory(v as ProCategory | "all")}
+            options={[
+              { value: "all", label: "Toutes les catégories" },
+              ...visibleCategories.map((c) => ({
+                value: c.id,
+                label: `${c.icon}  ${c.label}`,
+              })),
+            ]}
+          />
 
-        {/* City + premium */}
-        {cities.length > 0 && (
-          <div className="mt-6 space-y-2">
-            <label className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
-              Ville
-            </label>
-            <div className="flex flex-wrap gap-2">
-              <FilterChip
-                active={activeCity === "all"}
-                onClick={() => setActiveCity("all")}
-              >
-                Toutes
-              </FilterChip>
-              {cities.map((city) => (
-                <FilterChip
-                  key={city}
-                  active={activeCity === city}
-                  onClick={() => setActiveCity(city)}
-                >
-                  {city}
-                </FilterChip>
-              ))}
-            </div>
-          </div>
-        )}
+          {cities.length > 0 && (
+            <FilterSelect
+              label="Ville"
+              value={activeCity}
+              onChange={setActiveCity}
+              options={[
+                { value: "all", label: "Toutes les villes" },
+                ...cities.map((city) => ({ value: city, label: city })),
+              ]}
+            />
+          )}
+        </div>
 
         <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-white/5 pt-6">
           <button

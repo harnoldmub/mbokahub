@@ -7,15 +7,6 @@ import { prisma } from "@/lib/db/prisma";
 import { getEnv } from "@/lib/env";
 import { getStripe } from "@/lib/stripe";
 
-const PRO_CATEGORY_TO_PAYMENT_TYPE: Record<string, string> = {
-  MAQUILLEUSE: "PRO_PREMIUM_MAQUILLEUSE",
-  COIFFEUR: "PRO_PREMIUM_COIFFEUR",
-  BARBIER: "PRO_PREMIUM_BARBIER",
-  PHOTOGRAPHE: "PRO_PREMIUM_PHOTOGRAPHE",
-  VENDEUR_MERCH: "PRO_PREMIUM_MERCH",
-  ORGANISATEUR_AFTER: "PRO_PREMIUM_AFTER",
-};
-
 const bodySchema = z
   .object({
     category: z.string().optional(),
@@ -54,9 +45,8 @@ export async function POST(req: Request) {
     } catch {
       category = undefined;
     }
-    const paymentType =
-      (category && PRO_CATEGORY_TO_PAYMENT_TYPE[category]) ||
-      "PRO_PREMIUM_MAQUILLEUSE";
+    // Toutes les catégories pro partagent le même prix et le même type
+    const paymentType = "PRO_PREMIUM";
 
     const dbUser = await prisma.user.upsert({
       where: { clerkId: userId },

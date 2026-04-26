@@ -5,19 +5,17 @@ import {
   togglePromoCode,
   deletePromoCode,
   generateInitialPromoCodes,
+  ensureMbkFreeCode,
 } from "@/lib/actions/admin";
 
 export const dynamic = "force-dynamic";
 
-const CATEGORIES = [
-  "VIP_FAN",
-  "PRO_MAQUILLEUSE",
-  "PRO_COIFFEUR",
-  "PRO_BARBIER",
-  "PRO_PHOTOGRAPHE",
-  "PRO_VENDEUR_MERCH",
-  "PRO_ORGANISATEUR_AFTER",
-] as const;
+const CATEGORIES = ["VIP_FAN", "PRO"] as const;
+
+const CATEGORY_LABEL: Record<(typeof CATEGORIES)[number], string> = {
+  VIP_FAN: "VIP Famille",
+  PRO: "Prestataires Pro (toutes catégories)",
+};
 
 export default async function AdminPromoCodesPage() {
   const codes = await prisma.promoCode.findMany({
@@ -31,6 +29,7 @@ export default async function AdminPromoCodesPage() {
   }));
 
   const total = codes.length;
+  const hasMbkFree = codes.some((c) => c.code === "MBKFREE");
 
   return (
     <div className="space-y-8">
@@ -40,18 +39,31 @@ export default async function AdminPromoCodesPage() {
             Codes promo ({total})
           </h2>
           <p className="mt-1 text-muted-foreground text-sm">
-            10 codes par catégorie offerts aux premiers inscrits.
+            10 codes VIP + 10 codes Pro + le code universel{" "}
+            <span className="font-mono text-foreground">MBKFREE</span>{" "}
+            (inscription Pro gratuite, toutes catégories).
           </p>
         </div>
-        <ConfirmActionForm
-          action={generateInitialPromoCodes}
-          triggerLabel="Générer les 70 codes initiaux"
-          triggerClassName="rounded-full bg-red-500 px-4 py-2 text-sm text-white hover:bg-red-600"
-          title="Générer 70 codes promo ?"
-          description="Cela va créer 10 codes par catégorie (VIP, Pro, etc.) en une seule fois. Si certains codes existent déjà, ils seront ignorés. Action en masse — assure-toi d'être prêt."
-          confirmLabel="Générer maintenant"
-          variant="warning"
-        />
+        <div className="flex flex-wrap gap-2">
+          <ConfirmActionForm
+            action={ensureMbkFreeCode}
+            triggerLabel={hasMbkFree ? "Recharger MBKFREE" : "Créer MBKFREE"}
+            triggerClassName="rounded-full bg-amber-500 px-4 py-2 text-sm text-black hover:bg-amber-400"
+            title="Activer le code MBKFREE ?"
+            description="Crée (ou réactive) le code universel MBKFREE — 100% de réduction, 9999 utilisations, valable pour n'importe quelle catégorie pro."
+            confirmLabel="Activer MBKFREE"
+            variant="warning"
+          />
+          <ConfirmActionForm
+            action={generateInitialPromoCodes}
+            triggerLabel="Générer les codes initiaux (20 + MBKFREE)"
+            triggerClassName="rounded-full bg-red-500 px-4 py-2 text-sm text-white hover:bg-red-600"
+            title="Générer les codes promo initiaux ?"
+            description="Cela va créer 10 codes VIP + 10 codes Pro + le code MBKFREE. Les codes existants ne sont pas écrasés."
+            confirmLabel="Générer maintenant"
+            variant="warning"
+          />
+        </div>
       </div>
 
       <section className="rounded-2xl border border-white/10 bg-white/5 p-6">
@@ -72,7 +84,9 @@ export default async function AdminPromoCodesPage() {
             className="rounded-md border border-white/20 bg-white/5 px-3 py-2 text-foreground text-sm"
           >
             {CATEGORIES.map((c) => (
-              <option key={c} value={c}>{c}</option>
+              <option key={c} value={c}>
+                {CATEGORY_LABEL[c]}
+              </option>
             ))}
           </select>
           <input
@@ -107,7 +121,7 @@ export default async function AdminPromoCodesPage() {
       {grouped.map((group) => (
         <section key={group.category}>
           <h3 className="mb-3 font-heading text-foreground text-lg">
-            {group.category} ({group.codes.length})
+            {CATEGORY_LABEL[group.category]} ({group.codes.length})
           </h3>
           <div className="overflow-x-auto rounded-2xl border border-white/10">
             <table className="min-w-full divide-y divide-white/10 text-sm">
@@ -167,7 +181,7 @@ export default async function AdminPromoCodesPage() {
                 {group.codes.length === 0 && (
                   <tr>
                     <td colSpan={6} className="px-4 py-6 text-center text-muted-foreground text-xs">
-                      Aucun code dans cette catégorie. Cliquez sur "Générer les 70 codes initiaux" en haut.
+                      Aucun code dans cette catégorie. Cliquez sur "Générer les codes initiaux" en haut.
                     </td>
                   </tr>
                 )}

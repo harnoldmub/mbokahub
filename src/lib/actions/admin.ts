@@ -37,12 +37,12 @@ function genCode(prefix: string, n: number) {
 
 const CATEGORY_PREFIX: Record<PromoCodeCategory, string> = {
   VIP_FAN: "FAN-VIP",
-  PRO_MAQUILLEUSE: "PRO-MUA",
-  PRO_COIFFEUR: "PRO-COIF",
-  PRO_BARBIER: "PRO-BARB",
-  PRO_PHOTOGRAPHE: "PRO-PHOTO",
-  PRO_VENDEUR_MERCH: "PRO-MERCH",
-  PRO_ORGANISATEUR_AFTER: "PRO-AFTER",
+  PRO: "PRO",
+};
+
+const CATEGORY_LABEL: Record<PromoCodeCategory, string> = {
+  VIP_FAN: "VIP Famille",
+  PRO: "Prestataire pro",
 };
 
 export async function setUserRole(userId: string, role: UserRole) {
@@ -133,19 +133,11 @@ export async function deletePromoCode(promoId: string) {
 export async function generateInitialPromoCodes(): Promise<void> {
   await requireAdmin();
 
-  const categories: PromoCodeCategory[] = [
-    "VIP_FAN",
-    "PRO_MAQUILLEUSE",
-    "PRO_COIFFEUR",
-    "PRO_BARBIER",
-    "PRO_PHOTOGRAPHE",
-    "PRO_VENDEUR_MERCH",
-    "PRO_ORGANISATEUR_AFTER",
-  ];
+  const categories: PromoCodeCategory[] = ["VIP_FAN", "PRO"];
 
-  let created = 0;
   for (const category of categories) {
     const prefix = CATEGORY_PREFIX[category];
+    const label = CATEGORY_LABEL[category];
     for (let i = 1; i <= 10; i++) {
       const code = genCode(prefix, i);
       const exists = await prisma.promoCode.findUnique({ where: { code } });
@@ -154,13 +146,59 @@ export async function generateInitialPromoCodes(): Promise<void> {
         data: {
           code,
           category,
-          label: `Premier inscrit ${category} #${i}`,
+          label: `Premier inscrit ${label} #${i}`,
           discountPercent: 100,
           maxUses: 1,
         },
       });
-      created++;
     }
+  }
+
+  // MBKFREE — code universel pour inscription Pro gratuite (toutes catégories)
+  const mbkfree = await prisma.promoCode.findUnique({
+    where: { code: "MBKFREE" },
+  });
+  if (!mbkfree) {
+    await prisma.promoCode.create({
+      data: {
+        code: "MBKFREE",
+        category: "PRO",
+        label: "Inscription Pro gratuite — toutes catégories",
+        discountPercent: 100,
+        maxUses: 9999,
+      },
+    });
+  }
+
+  revalidatePath("/admin/promo-codes");
+}
+
+export async function ensureMbkFreeCode(): Promise<void> {
+  await requireAdmin();
+  const existing = await prisma.promoCode.findUnique({
+    where: { code: "MBKFREE" },
+  });
+  if (existing) {
+    await prisma.promoCode.update({
+      where: { id: existing.id },
+      data: {
+        category: "PRO",
+        discountPercent: 100,
+        maxUses: Math.max(existing.maxUses, 9999),
+        isActive: true,
+        label: existing.label ?? "Inscription Pro gratuite — toutes catégories",
+      },
+    });
+  } else {
+    await prisma.promoCode.create({
+      data: {
+        code: "MBKFREE",
+        category: "PRO",
+        label: "Inscription Pro gratuite — toutes catégories",
+        discountPercent: 100,
+        maxUses: 9999,
+      },
+    });
   }
   revalidatePath("/admin/promo-codes");
 }

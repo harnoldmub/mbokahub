@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { ArrowRight, Check, ShieldCheck } from "lucide-react";
+import { ArrowRight, Check, ShieldCheck, UserPlus } from "lucide-react";
 import Link from "next/link";
 
 import { SectionHeading } from "@/components/marketing/section-heading";
@@ -23,18 +23,19 @@ export default async function ProPage() {
   const ctaHref = !userId
     ? "/sign-up?redirect_url=/pro/inscrire"
     : alreadyPro
-      ? "/dashboard/pro"
+      ? "/dashboard"
       : "/pro/inscrire";
   const ctaLabel = !userId
-    ? "Créer mon compte"
+    ? "Créer un compte pour m'inscrire"
     : alreadyPro
-      ? "Gérer mon profil pro"
-      : "M'inscrire comme prestataire";
+      ? "Voir mon tableau de bord"
+      : "Remplir le formulaire d'inscription";
   const ctaLabelPrimary = !userId
-    ? "Créer mon compte"
+    ? "Créer un compte pour m'inscrire"
     : alreadyPro
       ? "Voir mon profil pro"
-      : "Devenir prestataire Mboka Hub";
+      : "Remplir le formulaire d'inscription";
+  const CtaIcon = !userId ? UserPlus : alreadyPro ? ArrowRight : ArrowRight;
 
   return (
     <div>
@@ -55,10 +56,22 @@ export default async function ProPage() {
             beauté, merch et afters. Les paiements premium vont uniquement à
             Mboka Hub.
           </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          {userId && (
+            <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 font-mono text-[11px] text-paper-dim uppercase tracking-widest">
+              <span
+                className={`size-2 rounded-full ${alreadyPro ? "bg-emerald-400" : "bg-amber-400"}`}
+                aria-hidden
+              />
+              {alreadyPro
+                ? "Tu as déjà un profil pro actif"
+                : "Connecté · prêt à t'inscrire"}
+            </div>
+          )}
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <Button asChild className="shadow-[var(--glow-red)]" size="lg">
               <Link href={ctaHref}>
-                {ctaLabel} <ArrowRight aria-hidden />
+                <CtaIcon aria-hidden />
+                {ctaLabel}
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline">
@@ -67,7 +80,13 @@ export default async function ProPage() {
           </div>
           {userId && !alreadyPro && (
             <p className="mt-3 text-muted-foreground text-xs">
-              Tu es déjà connecté — un clic et tu es prestataire.
+              Tu es déjà connecté — un clic et tu accèdes au formulaire d'inscription.
+            </p>
+          )}
+          {!userId && (
+            <p className="mt-3 text-muted-foreground text-xs">
+              Pas encore de compte ? On t'amène d'abord à la création de compte,
+              puis directement au formulaire d'inscription pro.
             </p>
           )}
         </div>
