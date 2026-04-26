@@ -31,26 +31,31 @@ const stripe = new Stripe(SECRET, { apiVersion: "2026-03-25.dahlia" });
 
 console.log(`\n>>> Configuring Stripe (${mode}) for ${APP_URL}\n`);
 
+const LOGO_URL = `${APP_URL}/logo.png`;
+
 const PRODUCTS = {
   vip: {
-    name: "Mboka Hub — Pass VIP Famille",
+    name: "VIP Famille Mboka Hub",
     description:
-      "Accès VIP fan diaspora pour Fally Ipupa au Stade de France (2-3 mai 2026). Déblocage des contacts covoiturage & prestataires, badge VIP et avantages de la Famille Mboka.",
+      "Pass VIP fan : Famille privée, déblocage contacts pros, covoiturages prioritaires, tirage meet & greet. Valide jusqu'au 31 mai 2026.",
     statement_descriptor: "MBOKAHUB VIP",
+    images: [LOGO_URL],
     metadata: { type: "vip", brand: "Mboka Hub" },
   },
   pro: {
-    name: "Mboka Hub — Fiche Pro Premium",
+    name: "Inscription Pro Mboka Hub",
     description:
-      "Activation de la fiche prestataire Premium sur Mboka Hub : visibilité prioritaire, badge vérifié et accès aux demandes des fans diaspora jusqu'au 31 mai 2026.",
+      "Inscription unique forfait week-end pour tous les prestataires : beauté, merch, afters, restauration, mobilité, sécurité. Profil vérifié + statistiques.",
     statement_descriptor: "MBOKAHUB PRO",
+    images: [LOGO_URL],
     metadata: { type: "pro", brand: "Mboka Hub" },
   },
   boost: {
-    name: "Mboka Hub — Boost Vedette",
+    name: "Boost de visibilité",
     description:
-      "Mise en avant d'une annonce covoiturage ou d'une fiche prestataire en tête des listes Mboka Hub jusqu'au 31 mai 2026.",
+      "Mise en avant prioritaire d'un trajet ou d'un profil pro pendant 7 jours.",
     statement_descriptor: "MBOKAHUB BOOST",
+    images: [LOGO_URL],
     metadata: { type: "boost", brand: "Mboka Hub" },
   },
 };
@@ -65,6 +70,7 @@ async function ensureProduct(spec) {
     name: spec.name,
     description: spec.description,
     statement_descriptor: spec.statement_descriptor,
+    images: spec.images,
     metadata: spec.metadata,
   };
   if (list.data[0]) {
@@ -129,7 +135,7 @@ async function ensureWebhook(url) {
     vipProduct.id,
     "mbokahub_vip_early_699",
     699,
-    "Pass VIP Famille — Early Bird (jusqu'au 30 avril)",
+    "VIP Famille — Early Bird (jusqu'au 30 avril 2026)",
   );
 
   const proProduct = await ensureProduct(PRODUCTS.pro);
