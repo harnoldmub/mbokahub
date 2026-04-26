@@ -9,6 +9,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { AppProviders } from "@/components/providers/app-providers";
 import { CookieConsent } from "@/components/shared/cookie-consent";
+import { FomoTicker } from "@/components/shared/fomo-ticker";
 import { EVENT_CONTEXT } from "@/lib/constants";
 import { fontBody, fontDisplay, fontMono, fontSerif } from "./fonts";
 
@@ -111,6 +112,7 @@ export default function RootLayout({
               </Suspense>
             </div>
             <CookieConsent />
+            <FomoTicker />
           </AppProviders>
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
