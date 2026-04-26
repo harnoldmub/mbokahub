@@ -155,7 +155,7 @@ async function ensureWebhook(url) {
     console.log("STRIPE_WEBHOOK_SECRET=<existing — rotate via Stripe dashboard if you don't have it>");
   }
   if (isLive) {
-    console.log(`STRIPE_SECRET_KEY=${SECRET}`);
+    console.log("STRIPE_SECRET_KEY=<keep your existing sk_live_... secret — never print it>");
     console.log("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_... (from your Stripe dashboard)");
   }
   console.log(
