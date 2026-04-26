@@ -1,0 +1,42 @@
+26 11:38:26
+userMessage: undefined,
+04-26 11:38:26
+at <unknown> (.next/server/chunks/8675.js:1:9984) {
+04-26 11:38:26
+param: 'line_items[0][price]',
+04-26 11:38:26
+headers: [Object],
+04-26 11:38:26
+rawType: 'invalid_request_error',
+04-26 11:38:26
+[checkout/vip] Error: No such price: 'price_1TQN8wHgqcjJnzrUc7TuKESM'
+04-26 11:38:26
+decline_code: undefined,
+04-26 11:38:26
+doc_url: 'https://stripe.com/docs/error-codes/resource-missing',
+04-26 11:38:26
+payment_method_type: undefined,
+04-26 11:38:26
+source: undefined
+04-26 11:38:26
+type: 'StripeInvalidRequestError',
+04-26 11:38:26
+setup_intent: undefined,
+04-26 11:38:26
+requestId: 'req_vsNgO0YIu4dyT8',
+04-26 11:38:26
+statusCode: 400,
+04-26 11:38:26
+payment_intent: undefined,
+04-26 11:38:26
+at f (.next/server/chunks/8675.js:1:2350)
+04-26 11:41:15
+prisma:error Error in PostgreSQL connection: Error { kind: Db, cause: Some(DbError { severity: "FATAL", parsed_severity: Some(Fatal), code: SqlState(E57P01), message: "terminating connection due to administrator command", detail: None, hint: None, position: None, where_: None, schema: None, table: None, column: None, datatype: None, constraint: None, file: Some("postgres.c"), line: Some(3289), routine: Some("ProcessInterrupts") }) }
+04-26 11:41:15
+prisma:error Error in PostgreSQL connection: Error { kind: Db, cause: Some(DbError { severity: "FATAL", parsed_severity: Some(Fatal), code: SqlState(E57P01), message: "terminating connection due to administrator command", detail: None, hint: None, position: None, where_: None, schema: None, table: None, column: None, datatype: None, constraint: None, file: Some("postgres.c"), line: Some(3289), routine: Some("ProcessInterrupts") }) }
+04-26 11:41:15
+prisma:error Error in PostgreSQL connection: Error { kind: Db, cause: Some(DbError { severity: "FATAL", parsed_severity: Some(Fatal), code: SqlState(E57P01), message: "terminating connection due to administrator command", detail: None, hint: None, position: None, where_: None, schema: None, table: None, column: None, datatype: None, constraint: None, file: Some("postgres.c"), line: Some(3289), routine: Some("ProcessInterrupts") }) }
+04-26 11:41:15
+prisma:error Error in PostgreSQL connection: Error { kind: Db, cause: Some(DbError { severity: "FATAL", parsed_severity: Some(Fatal), code: SqlState(E57P01), message: "terminating connection due to administrator command", detail: None, hint: None, position: None, where_: None, schema: None, table: None, column: None, datatype: None, constraint: None, file: Some("postgres.c"), line: Some(3289), routine: Some("ProcessInterrupts") }) }
+04-26 11:52:45
+prisma:error Error in PostgreSQL connection: Error
