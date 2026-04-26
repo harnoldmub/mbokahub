@@ -135,10 +135,10 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
 
   return (
     <section className="relative z-10 mx-auto max-w-7xl px-6 pb-12 lg:px-8">
-      <div className="relative z-30 rounded-2xl border border-white/10 bg-coal/60 p-4 backdrop-blur-md sm:p-5">
-        {/* Search + filters in one compact row */}
-        <div className="grid gap-3 lg:grid-cols-[2fr_1fr_1fr_1fr] lg:items-end">
-          <div className="relative">
+      <div className="relative z-30 rounded-2xl border border-white/10 bg-coal/60 p-3 backdrop-blur-md sm:p-4">
+        {/* All filters on a single wrapping row */}
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="relative min-w-[200px] flex-1 basis-[220px]">
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-paper-mute" />
             <input
               type="text"
@@ -160,10 +160,7 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
             )}
           </div>
 
-          {/* Dropdown filters: Famille, Catégorie, Ville (with search) */}
-          <div className="contents lg:contents">
           <SearchableSelect
-            label="Famille"
             value={activeGroup}
             onChange={(v) => {
               setActiveGroup(v);
@@ -177,10 +174,11 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
                 label: g.label,
               })),
             ]}
+            className="min-w-[160px] flex-1 basis-[170px]"
+            buttonClassName="h-10 py-0 rounded-xl"
           />
 
           <SearchableSelect
-            label="Catégorie"
             value={activeCategory}
             onChange={(v) => setActiveCategory(v as ProCategory | "all")}
             searchPlaceholder="Rechercher une catégorie…"
@@ -191,11 +189,12 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
                 label: `${c.icon}  ${c.label}`,
               })),
             ]}
+            className="min-w-[160px] flex-1 basis-[170px]"
+            buttonClassName="h-10 py-0 rounded-xl"
           />
 
           {cities.length > 0 && (
             <SearchableSelect
-              label="Ville"
               value={activeCity}
               onChange={setActiveCity}
               searchPlaceholder="Rechercher une ville…"
@@ -203,29 +202,30 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
                 { value: "all", label: "Toutes les villes", sticky: true },
                 ...cities.map((city) => ({ value: city, label: city })),
               ]}
+              className="min-w-[150px] flex-1 basis-[160px]"
+              buttonClassName="h-10 py-0 rounded-xl"
             />
           )}
-          </div>
-        </div>
 
-        <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-white/5 pt-3">
           <button
             type="button"
             onClick={() => setPremiumOnly((v) => !v)}
+            aria-pressed={premiumOnly}
             className={cn(
-              "flex items-center gap-1.5 rounded-full px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest transition",
+              "flex h-10 shrink-0 items-center gap-1.5 rounded-xl px-3 font-mono text-[10px] uppercase tracking-widest transition",
               premiumOnly
                 ? "bg-vip text-coal shadow-[0_0_20px_rgba(252,211,77,0.3)]"
                 : "border border-white/10 bg-white/5 text-paper-dim hover:border-vip/40 hover:text-vip",
             )}
           >
             <Sparkles className="size-3" />
-            Certifiés uniquement
+            Certifiés
           </button>
 
-          <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-paper-mute">
+          <div className="flex h-10 shrink-0 items-center gap-2 px-2 font-mono text-[10px] uppercase tracking-widest text-paper-mute">
             <span>
-              {filtered.length} {filtered.length > 1 ? "résultats" : "résultat"}
+              {filtered.length}{" "}
+              {filtered.length > 1 ? "résultats" : "résultat"}
             </span>
             {hasActiveFilters && (
               <button

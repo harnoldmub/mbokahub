@@ -164,9 +164,9 @@ export function SearchableSelect({
                         close(true);
                       }}
                       className={cn(
-                        "flex w-full items-center justify-between gap-2 px-4 py-2 text-left text-sm transition hover:bg-white/5",
+                        "flex w-full items-center justify-between gap-2 px-4 py-2 text-left text-sm text-paper transition hover:bg-white/5",
                         o.value === value
-                          ? "text-blood"
+                          ? "bg-blood/15 text-paper"
                           : "text-paper-dim hover:text-paper",
                       )}
                     >
