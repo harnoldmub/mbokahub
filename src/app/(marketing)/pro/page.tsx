@@ -1,13 +1,41 @@
+import { auth } from "@clerk/nextjs/server";
 import { ArrowRight, Check, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 
 import { SectionHeading } from "@/components/marketing/section-heading";
+import { prisma } from "@/lib/db/prisma";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { proOffer, proProofPoints } from "@/lib/marketing-data";
 
-export default function ProPage() {
+export default async function ProPage() {
+  const { userId } = await auth();
+  let alreadyPro = false;
+  if (userId) {
+    const u = await prisma.user.findUnique({
+      where: { clerkId: userId },
+      select: { proProfile: { select: { id: true } } },
+    });
+    alreadyPro = !!u?.proProfile;
+  }
+
+  const ctaHref = !userId
+    ? "/sign-up?redirect_url=/pro/inscrire"
+    : alreadyPro
+      ? "/dashboard/pro"
+      : "/pro/inscrire";
+  const ctaLabel = !userId
+    ? "Créer mon compte"
+    : alreadyPro
+      ? "Gérer mon profil pro"
+      : "M'inscrire comme prestataire";
+  const ctaLabelPrimary = !userId
+    ? "Créer mon compte"
+    : alreadyPro
+      ? "Voir mon profil pro"
+      : "Devenir prestataire Mboka Hub";
+
   return (
     <div>
       <section className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_0.85fr] lg:px-8">
@@ -29,14 +57,19 @@ export default function ProPage() {
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button asChild className="shadow-[var(--glow-red)]" size="lg">
-              <Link href="/sign-up?redirect_url=/pro/inscrire">
-                Créer mon compte <ArrowRight aria-hidden />
+              <Link href={ctaHref}>
+                {ctaLabel} <ArrowRight aria-hidden />
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline">
               <Link href="/cgu">Voir les règles</Link>
             </Button>
           </div>
+          {userId && !alreadyPro && (
+            <p className="mt-3 text-muted-foreground text-xs">
+              Tu es déjà connecté — un clic et tu es prestataire.
+            </p>
+          )}
         </div>
 
         <div className="grid content-start gap-3">
@@ -132,12 +165,14 @@ export default function ProPage() {
                 </div>
 
                 <Button asChild size="lg" className="w-full">
-                  <Link href="/sign-up?redirect_url=/pro/inscrire">
-                    Devenir prestataire Mboka Hub <ArrowRight aria-hidden />
+                  <Link href={ctaHref}>
+                    {ctaLabelPrimary} <ArrowRight aria-hidden />
                   </Link>
                 </Button>
                 <p className="text-center text-muted-foreground text-xs">
-                  Une seule inscription, valable pour n'importe quel service.
+                  {alreadyPro
+                    ? "Tu as déjà un profil pro actif. Gère-le depuis ton tableau de bord."
+                    : "Une seule inscription, valable pour n'importe quel service."}
                 </p>
               </CardContent>
             </Card>

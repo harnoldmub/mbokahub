@@ -40,6 +40,13 @@ export async function POST(req: Request) {
     }
 
     const env = getEnv();
+    if (!env.STRIPE_BOOST_PRICE_ID) {
+      console.error("[checkout/boost] missing STRIPE_BOOST_PRICE_ID");
+      return NextResponse.json(
+        { error: "Paiement temporairement indisponible. Réessaie plus tard." },
+        { status: 503 },
+      );
+    }
     const stripe = await getStripe();
 
     const dbUser = await prisma.user.upsert({
@@ -109,7 +116,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ url: session.url });
   } catch (err) {
     console.error("[checkout/boost]", err);
-    const msg = err instanceof Error ? err.message : "Erreur inconnue";
-    return NextResponse.json({ error: msg }, { status: 500 });
+    return NextResponse.json(
+      { error: "Une erreur est survenue. Réessaie dans un instant." },
+      { status: 500 },
+    );
   }
 }

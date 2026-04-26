@@ -36,6 +36,13 @@ export async function POST(req: Request) {
     }
 
     const env = getEnv();
+    if (!env.STRIPE_PRO_PRICE_ID) {
+      console.error("[checkout/pro] missing STRIPE_PRO_PRICE_ID");
+      return NextResponse.json(
+        { error: "Paiement temporairement indisponible. Réessaie plus tard." },
+        { status: 503 },
+      );
+    }
     const stripe = await getStripe();
     const appUrl = getAppUrl(req);
 
@@ -99,7 +106,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ url: session.url });
   } catch (err) {
     console.error("[checkout/pro]", err);
-    const msg = err instanceof Error ? err.message : "Erreur inconnue";
-    return NextResponse.json({ error: msg }, { status: 500 });
+    return NextResponse.json(
+      { error: "Une erreur est survenue. Réessaie dans un instant." },
+      { status: 500 },
+    );
   }
 }

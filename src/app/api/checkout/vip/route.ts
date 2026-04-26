@@ -48,6 +48,13 @@ export async function POST(req: Request) {
       earlyBird && env.STRIPE_VIP_EARLY_BIRD_PRICE_ID
         ? env.STRIPE_VIP_EARLY_BIRD_PRICE_ID
         : env.STRIPE_VIP_PRICE_ID;
+    if (!priceId) {
+      console.error("[checkout/vip] missing STRIPE_VIP_PRICE_ID");
+      return NextResponse.json(
+        { error: "Paiement temporairement indisponible. Réessaie plus tard." },
+        { status: 503 },
+      );
+    }
 
     let stripeCustomerId = dbUser.stripeCustomerId;
     if (!stripeCustomerId) {
@@ -85,7 +92,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ url: session.url });
   } catch (err) {
     console.error("[checkout/vip]", err);
-    const msg = err instanceof Error ? err.message : "Erreur inconnue";
-    return NextResponse.json({ error: msg }, { status: 500 });
+    return NextResponse.json(
+      { error: "Une erreur est survenue. Réessaie dans un instant." },
+      { status: 500 },
+    );
   }
 }
