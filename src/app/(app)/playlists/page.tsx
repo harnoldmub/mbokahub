@@ -143,8 +143,8 @@ const PLAYLISTS: Playlist[] = [
   },
 ];
 
-const SPOTIFY_PROFILE = "https://open.spotify.com/artist/7HE6h7kJSjoOnqzSUH4Lmm";
-const YOUTUBE_CHANNEL = "https://www.youtube.com/@FallyIpupaOfficiel";
+const SPOTIFY_PLAYLIST = "https://open.spotify.com/playlist/37i9dQZF1DZ06evO3XZfhO";
+const YOUTUBE_CHANNEL = "https://www.youtube.com/channel/UCBFYkrVI8OfHm9PzbAGFqlA";
 
 export const metadata = {
   title: "Playlists Fally Ipupa — Les meilleurs sons & paroles | Mboka Hub",
@@ -171,8 +171,8 @@ export default function PlaylistsPage() {
 
         <div className="flex flex-wrap gap-4">
           <Button asChild variant="outline" size="lg">
-            <a href={SPOTIFY_PROFILE} target="_blank" rel="noopener noreferrer">
-              Profil Spotify de Fally <ExternalLink className="ml-2 size-4" />
+            <a href={SPOTIFY_PLAYLIST} target="_blank" rel="noopener noreferrer">
+              Playlist Spotify de Fally <ExternalLink className="ml-2 size-4" />
             </a>
           </Button>
           <Button asChild variant="outline" size="lg">
