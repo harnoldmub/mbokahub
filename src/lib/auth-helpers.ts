@@ -30,3 +30,17 @@ export async function isCurrentUserVip(): Promise<boolean> {
   if (user.vipUntil && user.vipUntil < new Date()) return false;
   return true;
 }
+
+export async function isCurrentUserAdmin(): Promise<boolean> {
+  const user = await getOptionalDbUser();
+  return user?.role === "ADMIN";
+}
+
+export async function canSeePrivateProInfo(): Promise<boolean> {
+  const user = await getOptionalDbUser();
+  if (!user) return false;
+  if (user.role === "ADMIN") return true;
+  if (!user.isVipActive) return false;
+  if (user.vipUntil && user.vipUntil < new Date()) return false;
+  return true;
+}

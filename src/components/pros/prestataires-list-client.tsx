@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Sparkles, X } from "lucide-react";
+import { LockKeyhole, Search, Sparkles, X } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
@@ -34,9 +34,15 @@ type ProListItem = {
 
 type Props = {
   pros: ProListItem[];
+  /**
+   * When false, names have already been replaced server-side by a generic
+   * label (e.g. "Maquilleuse · Paris 15") and Instagram/TikTok handles are
+   * null. We just add the lock UI on top.
+   */
+  unlocked?: boolean;
 };
 
-export function PrestatairesListClient({ pros }: Props) {
+export function PrestatairesListClient({ pros, unlocked = false }: Props) {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<ProCategory | "all">(
     "all",
@@ -287,7 +293,12 @@ export function PrestatairesListClient({ pros }: Props) {
                     <span>{meta?.icon}</span>
                     <span>{meta?.shortLabel}</span>
                   </div>
-                  <h3 className="font-display text-2xl text-paper">
+                  <h3
+                    className={cn(
+                      "font-display text-2xl text-paper",
+                      !unlocked && "italic text-paper-dim",
+                    )}
+                  >
                     {p.displayName}
                   </h3>
                   <p className="text-sm text-paper-dim">
@@ -297,6 +308,12 @@ export function PrestatairesListClient({ pros }: Props) {
                     <p className="line-clamp-2 text-sm text-paper-mute">
                       {p.bio}
                     </p>
+                  )}
+                  {!unlocked && (
+                    <div className="flex items-center gap-2 rounded-xl border border-vip/30 bg-vip/5 px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-vip">
+                      <LockKeyhole className="size-3" />
+                      Pass VIP Famille pour voir le nom &amp; les contacts
+                    </div>
                   )}
                   <div className="mt-auto flex items-center justify-between border-t border-white/5 pt-4">
                     <span className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">

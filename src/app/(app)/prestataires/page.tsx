@@ -1,8 +1,10 @@
 import { Suspense } from "react";
 
 import { VipMemberBanner } from "@/components/marketing/vip-member-banner";
+import { canSeePrivateProInfo } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/db/prisma";
 import { PrestatairesListClient } from "@/components/pros/prestataires-list-client";
+import { maskedProLabel } from "@/lib/pro-display";
 import {
   getLocaleFromSearchParams,
   nls,
@@ -22,34 +24,48 @@ export default async function PrestatairesPage({ searchParams }: Props) {
   const locale = getLocaleFromSearchParams(await searchParams);
   const copy = nls[locale].prestatairesPage;
 
-  const pros = await prisma.proProfile.findMany({
-    where: { isVerified: true },
-    orderBy: [
-      { isBoosted: "desc" },
-      { isPremium: "desc" },
-      { rating: "desc" },
-      { createdAt: "desc" },
-    ],
-    select: {
-      id: true,
-      slug: true,
-      displayName: true,
-      category: true,
-      city: true,
-      country: true,
-      bio: true,
-      photos: true,
-      priceRange: true,
-      isPremium: true,
-      isBoosted: true,
-      isVerified: true,
-      rating: true,
-      reviewsCount: true,
-      instagramHandle: true,
-      tiktokHandle: true,
-    },
-    take: 200,
-  });
+  const [unlocked, prosRaw] = await Promise.all([
+    canSeePrivateProInfo(),
+    prisma.proProfile.findMany({
+      where: { isVerified: true },
+      orderBy: [
+        { isBoosted: "desc" },
+        { isPremium: "desc" },
+        { rating: "desc" },
+        { createdAt: "desc" },
+      ],
+      select: {
+        id: true,
+        slug: true,
+        displayName: true,
+        category: true,
+        city: true,
+        country: true,
+        bio: true,
+        photos: true,
+        priceRange: true,
+        isPremium: true,
+        isBoosted: true,
+        isVerified: true,
+        rating: true,
+        reviewsCount: true,
+        instagramHandle: true,
+        tiktokHandle: true,
+      },
+      take: 200,
+    }),
+  ]);
+
+  // Server-side masking: never ship the real name / handles to the browser
+  // unless the viewer has unlocked access (VIP or admin).
+  const pros = prosRaw.map((p) => ({
+    ...p,
+    displayName: unlocked
+      ? p.displayName
+      : maskedProLabel(p.category, p.city),
+    instagramHandle: unlocked ? p.instagramHandle : null,
+    tiktokHandle: unlocked ? p.tiktokHandle : null,
+  }));
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-background">
@@ -75,7 +91,7 @@ export default async function PrestatairesPage({ searchParams }: Props) {
           </div>
         }
       >
-        <PrestatairesListClient pros={pros} />
+        <PrestatairesListClient pros={pros} unlocked={unlocked} />
       </Suspense>
     </main>
   );

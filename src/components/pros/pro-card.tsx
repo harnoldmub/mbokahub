@@ -1,4 +1,11 @@
-import { ArrowRight, AtSign, ShieldCheck, Sparkles, Star } from "lucide-react";
+import {
+  ArrowRight,
+  AtSign,
+  LockKeyhole,
+  ShieldCheck,
+  Sparkles,
+  Star,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -21,6 +28,7 @@ type ProCardProps = {
 
 export function ProCard({ pro, unlocked }: ProCardProps) {
   const photo = pro.photos?.[0];
+  const showInstagram = unlocked && !!pro.instagramHandle;
 
   return (
     <Card className="group relative overflow-hidden bg-coal border-white/10 rounded-[2rem] transition-all duration-500 hover:border-gold/40 hover:-translate-y-2 hover:shadow-2xl">
@@ -57,7 +65,7 @@ export function ProCard({ pro, unlocked }: ProCardProps) {
           )}
         </div>
 
-        {pro.instagramHandle && (
+        {showInstagram ? (
           <div className="absolute bottom-4 left-4">
             <div className="bg-ink/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/5 flex items-center gap-2">
               <AtSign className="size-3 text-paper-mute" />
@@ -66,7 +74,7 @@ export function ProCard({ pro, unlocked }: ProCardProps) {
               </span>
             </div>
           </div>
-        )}
+        ) : null}
       </div>
 
       <CardHeader className="pt-6">
@@ -118,11 +126,21 @@ export function ProCard({ pro, unlocked }: ProCardProps) {
         </div>
 
         <div className="space-y-3">
-          <ContactLock
-            value={pro.whatsappMasked}
-            unlocked={unlocked}
-            rawValue={pro.whatsappRaw ?? undefined}
-          />
+          {unlocked ? (
+            <ContactLock
+              value={pro.whatsappMasked}
+              unlocked={unlocked}
+              rawValue={pro.whatsappRaw ?? undefined}
+            />
+          ) : (
+            <Link
+              href="/vip"
+              className="flex items-center justify-center gap-2 rounded-xl border border-vip/40 bg-vip/10 px-4 py-2.5 font-mono text-[10px] uppercase tracking-widest text-vip transition hover:bg-vip/15"
+            >
+              <LockKeyhole className="size-3.5" />
+              Débloquer avec le Pass VIP Famille
+            </Link>
+          )}
           <Button
             asChild
             className="w-full h-12 bg-smoke border-white/5 hover:bg-gold hover:text-ink group/btn transition-all duration-500 rounded-xl"
