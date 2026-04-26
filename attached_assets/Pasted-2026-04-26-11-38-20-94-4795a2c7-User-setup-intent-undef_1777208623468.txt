@@ -1,0 +1,136 @@
+2026-04-26 11:38:20.94
+4795a2c7
+User
+setup_intent: undefined,
+2026-04-26 11:38:20.94
+4795a2c7
+User
+decline_code: undefined,
+2026-04-26 11:38:20.94
+4795a2c7
+User
+headers: [Object],
+2026-04-26 11:38:20.94
+4795a2c7
+User
+requestId: 'req_cS0onYtxo32tU3',
+2026-04-26 11:38:20.94
+4795a2c7
+User
+source: undefined
+2026-04-26 11:38:20.94
+4795a2c7
+User
+raw: [Object],
+2026-04-26 11:38:20.94
+4795a2c7
+User
+detail: undefined,
+2026-04-26 11:38:20.94
+4795a2c7
+User
+statusCode: 400,
+2026-04-26 11:38:20.94
+4795a2c7
+User
+}
+2026-04-26 11:38:20.94
+4795a2c7
+User
+rawType: 'invalid_request_error',
+2026-04-26 11:38:20.94
+4795a2c7
+User
+payment_intent: undefined,
+2026-04-26 11:38:20.94
+4795a2c7
+User
+[checkout/vip] Error: No such price: 'price_1TQN8wHgqcjJnzrUc7TuKESM'
+2026-04-26 11:38:20.94
+4795a2c7
+User
+code: 'resource_missing',
+2026-04-26 11:38:26.50
+4795a2c7
+User
+payment_method: undefined,
+2026-04-26 11:38:26.50
+4795a2c7
+User
+}
+2026-04-26 11:38:26.50
+4795a2c7
+User
+detail: undefined,
+2026-04-26 11:38:26.50
+4795a2c7
+User
+charge: undefined,
+2026-04-26 11:38:26.50
+4795a2c7
+User
+userMessage: undefined,
+2026-04-26 11:38:26.50
+4795a2c7
+User
+at <unknown> (.next/server/chunks/8675.js:1:9984) {
+2026-04-26 11:38:26.50
+4795a2c7
+User
+param: 'line_items[0][price]',
+2026-04-26 11:38:26.50
+4795a2c7
+User
+headers: [Object],
+2026-04-26 11:38:26.50
+4795a2c7
+User
+rawType: 'invalid_request_error',
+2026-04-26 11:38:26.50
+4795a2c7
+User
+[checkout/vip] Error: No such price: 'price_1TQN8wHgqcjJnzrUc7TuKESM'
+2026-04-26 11:38:26.50
+4795a2c7
+User
+decline_code: undefined,
+2026-04-26 11:38:26.50
+4795a2c7
+User
+at f (.next/server/chunks/8675.js:1:2350)
+2026-04-26 11:38:26.50
+4795a2c7
+User
+payment_method_type: undefined,
+2026-04-26 11:38:26.50
+4795a2c7
+User
+doc_url: 'https://stripe.com/docs/error-codes/resource-missing',
+2026-04-26 11:38:26.50
+4795a2c7
+User
+type: 'StripeInvalidRequestError',
+2026-04-26 11:38:26.50
+4795a2c7
+User
+setup_intent: undefined,
+2026-04-26 11:38:26.50
+4795a2c7
+User
+requestId: 'req_vsNgO0YIu4dyT8',
+2026-04-26 11:38:26.50
+4795a2c7
+User
+statusCode: 400,
+2026-04-26 11:38:26.50
+4795a2c7
+User
+payment_intent: undefined,
+2026-04-26 11:38:26.50
+4795a2c7
+User
+source: undefined
+
+2026-04-26 11:41:15.80
+4795a2c7
+User
