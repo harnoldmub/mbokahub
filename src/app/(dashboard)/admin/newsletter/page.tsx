@@ -1,3 +1,4 @@
+import { ConfirmActionForm } from "@/components/admin/confirm-action-form";
 import { prisma } from "@/lib/db/prisma";
 import { deleteNewsletterSubscriber } from "@/lib/actions/admin";
 
@@ -51,9 +52,20 @@ export default async function AdminNewsletterPage() {
                   {s.createdAt.toLocaleDateString("fr-FR")}
                 </td>
                 <td className="px-4 py-3 text-right">
-                  <form action={deleteNewsletterSubscriber.bind(null, s.id)}>
-                    <button type="submit" className="text-red-400 text-xs hover:text-red-300">Supprimer</button>
-                  </form>
+                  <ConfirmActionForm
+                    action={deleteNewsletterSubscriber.bind(null, s.id)}
+                    triggerLabel="Supprimer"
+                    triggerClassName="text-red-400 text-xs hover:text-red-300"
+                    title="Désinscrire cet abonné ?"
+                    description={
+                      <>
+                        L&apos;email{" "}
+                        <span className="font-semibold text-foreground">{s.email}</span>{" "}
+                        sera retiré de la newsletter.
+                      </>
+                    }
+                    confirmLabel="Supprimer"
+                  />
                 </td>
               </tr>
             ))}

@@ -1,3 +1,4 @@
+import { ConfirmActionForm } from "@/components/admin/confirm-action-form";
 import { prisma } from "@/lib/db/prisma";
 import {
   approveModerator,
@@ -155,23 +156,24 @@ export default async function AdminModerateursPage({
                         </form>
                       )}
                       {m.status !== "SUSPENDED" && (
-                        <form action={suspendModerator.bind(null, m.id)}>
-                          <button
-                            type="submit"
-                            className="rounded-md bg-yellow-500/20 px-2 py-1 text-yellow-300 text-xs hover:bg-yellow-500/30"
-                          >
-                            Suspendre
-                          </button>
-                        </form>
+                        <ConfirmActionForm
+                          action={suspendModerator.bind(null, m.id)}
+                          triggerLabel="Suspendre"
+                          triggerClassName="rounded-md bg-yellow-500/20 px-2 py-1 text-yellow-300 text-xs hover:bg-yellow-500/30"
+                          title="Suspendre ce modérateur ?"
+                          description="Le modérateur perdra immédiatement son accès. Tu pourras le réactiver plus tard."
+                          confirmLabel="Suspendre"
+                          variant="warning"
+                        />
                       )}
-                      <form action={deleteModerator.bind(null, m.id)}>
-                        <button
-                          type="submit"
-                          className="text-red-400 text-xs hover:text-red-300"
-                        >
-                          Supprimer
-                        </button>
-                      </form>
+                      <ConfirmActionForm
+                        action={deleteModerator.bind(null, m.id)}
+                        triggerLabel="Supprimer"
+                        triggerClassName="text-red-400 text-xs hover:text-red-300"
+                        title="Supprimer ce modérateur ?"
+                        description="Suppression définitive du rôle de modérateur. Le compte utilisateur reste."
+                        confirmLabel="Supprimer"
+                      />
                     </div>
                   </td>
                 </tr>

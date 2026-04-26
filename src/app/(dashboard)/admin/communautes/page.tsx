@@ -1,3 +1,4 @@
+import { ConfirmActionForm } from "@/components/admin/confirm-action-form";
 import { prisma } from "@/lib/db/prisma";
 import {
   createCommunityAction,
@@ -185,14 +186,20 @@ export default async function AdminCommunautesPage() {
                         {c.isFeatured ? "★ Retirer" : "☆ Mettre en avant"}
                       </button>
                     </form>
-                    <form action={deleteCommunity.bind(null, c.id)}>
-                      <button
-                        type="submit"
-                        className="text-red-400 text-xs hover:text-red-300"
-                      >
-                        Supprimer
-                      </button>
-                    </form>
+                    <ConfirmActionForm
+                      action={deleteCommunity.bind(null, c.id)}
+                      triggerLabel="Supprimer"
+                      triggerClassName="text-red-400 text-xs hover:text-red-300"
+                      title="Supprimer cette communauté ?"
+                      description={
+                        <>
+                          La communauté{" "}
+                          <span className="font-semibold text-foreground">{c.name}</span>{" "}
+                          sera supprimée définitivement.
+                        </>
+                      }
+                      confirmLabel="Supprimer"
+                    />
                   </div>
                 </td>
               </tr>

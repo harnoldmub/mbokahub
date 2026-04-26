@@ -1,3 +1,4 @@
+import { ConfirmActionForm } from "@/components/admin/confirm-action-form";
 import { prisma } from "@/lib/db/prisma";
 import {
   certifyProProfile,
@@ -208,9 +209,23 @@ export default async function AdminProsPage({
                         {p.isPremium ? "Retirer premium" : "Premium"}
                       </button>
                     </form>
-                    <form action={deleteProProfile.bind(null, p.id)}>
-                      <button type="submit" className="text-red-400 text-xs hover:text-red-300">Supprimer</button>
-                    </form>
+                    <ConfirmActionForm
+                      action={deleteProProfile.bind(null, p.id)}
+                      triggerLabel="Supprimer"
+                      triggerClassName="text-red-400 text-xs hover:text-red-300"
+                      title="Supprimer ce profil pro ?"
+                      description={
+                        <>
+                          Tu vas supprimer le profil de{" "}
+                          <span className="font-semibold text-foreground">
+                            {p.displayName}
+                          </span>{" "}
+                          ({p.category}). Le compte utilisateur reste, mais le profil
+                          public et toutes ses photos seront supprimés.
+                        </>
+                      }
+                      confirmLabel="Supprimer le profil"
+                    />
                   </div>
                 </td>
               </tr>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ConfirmActionForm } from "@/components/admin/confirm-action-form";
 import { prisma } from "@/lib/db/prisma";
 import {
   updateReportStatus,
@@ -156,29 +157,47 @@ export default async function AdminReportsPage({
                   Prendre en charge
                 </button>
               </form>
-              <form action={updateReportStatus.bind(null, r.id, "RESOLVED", undefined)}>
-                <button type="submit" className="rounded-md bg-green-500/20 px-3 py-1 text-green-300 text-xs hover:bg-green-500/30">
-                  Marquer résolu
-                </button>
-              </form>
-              <form action={updateReportStatus.bind(null, r.id, "DISMISSED", undefined)}>
-                <button type="submit" className="rounded-md bg-white/10 px-3 py-1 text-muted-foreground text-xs hover:bg-white/20">
-                  Rejeter
-                </button>
-              </form>
-              <form action={deleteReportedTarget.bind(null, r.id, r.targetType, r.targetId)}>
-                <button
-                  type="submit"
-                  className="rounded-md bg-red-500/20 px-3 py-1 text-red-300 text-xs hover:bg-red-500/30"
-                >
-                  🗑 Supprimer la cible + résoudre
-                </button>
-              </form>
-              <form action={deleteReport.bind(null, r.id)} className="ml-auto">
-                <button type="submit" className="text-muted-foreground text-xs hover:text-red-300">
-                  Supprimer ce signalement
-                </button>
-              </form>
+              <ConfirmActionForm
+                action={updateReportStatus.bind(null, r.id, "RESOLVED", undefined)}
+                triggerLabel="Marquer résolu"
+                triggerClassName="rounded-md bg-green-500/20 px-3 py-1 text-green-300 text-xs hover:bg-green-500/30"
+                title="Marquer ce signalement comme résolu ?"
+                description="Le signalement sera classé comme résolu. Tu pourras toujours consulter l'historique."
+                confirmLabel="Marquer résolu"
+                variant="default"
+              />
+              <ConfirmActionForm
+                action={updateReportStatus.bind(null, r.id, "DISMISSED", undefined)}
+                triggerLabel="Rejeter"
+                triggerClassName="rounded-md bg-white/10 px-3 py-1 text-muted-foreground text-xs hover:bg-white/20"
+                title="Rejeter ce signalement ?"
+                description="Le signalement sera marqué comme rejeté (non fondé). La cible n'est pas affectée."
+                confirmLabel="Rejeter"
+                variant="warning"
+              />
+              <ConfirmActionForm
+                action={deleteReportedTarget.bind(null, r.id, r.targetType, r.targetId)}
+                triggerLabel="🗑 Supprimer la cible + résoudre"
+                triggerClassName="rounded-md bg-red-500/20 px-3 py-1 text-red-300 text-xs hover:bg-red-500/30"
+                title="Supprimer la cible signalée ?"
+                description={
+                  <>
+                    Le contenu signalé ({r.targetType}) sera supprimé définitivement
+                    et le signalement marqué résolu. Action irréversible.
+                  </>
+                }
+                confirmLabel="Supprimer la cible"
+              />
+              <div className="ml-auto">
+                <ConfirmActionForm
+                  action={deleteReport.bind(null, r.id)}
+                  triggerLabel="Supprimer ce signalement"
+                  triggerClassName="text-muted-foreground text-xs hover:text-red-300"
+                  title="Supprimer ce signalement ?"
+                  description="Le signalement disparaît de la liste. La cible n'est pas affectée."
+                  confirmLabel="Supprimer le signalement"
+                />
+              </div>
             </div>
           </article>
         ))}

@@ -1,3 +1,4 @@
+import { ConfirmActionForm } from "@/components/admin/confirm-action-form";
 import { prisma } from "@/lib/db/prisma";
 import {
   createAfterAdmin,
@@ -166,9 +167,20 @@ export default async function AdminAftersPage() {
                         {a.isBoosted ? "Débooster" : "Booster"}
                       </button>
                     </form>
-                    <form action={deleteAfter.bind(null, a.id)}>
-                      <button type="submit" className="text-red-400 text-xs hover:text-red-300">Supprimer</button>
-                    </form>
+                    <ConfirmActionForm
+                      action={deleteAfter.bind(null, a.id)}
+                      triggerLabel="Supprimer"
+                      triggerClassName="text-red-400 text-xs hover:text-red-300"
+                      title="Supprimer cet after ?"
+                      description={
+                        <>
+                          L&apos;after{" "}
+                          <span className="font-semibold text-foreground">{a.name}</span>{" "}
+                          sera supprimé définitivement.
+                        </>
+                      }
+                      confirmLabel="Supprimer l'after"
+                    />
                   </div>
                 </td>
               </tr>

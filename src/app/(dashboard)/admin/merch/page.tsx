@@ -1,3 +1,4 @@
+import { ConfirmActionForm } from "@/components/admin/confirm-action-form";
 import { prisma } from "@/lib/db/prisma";
 import {
   createMerchAdmin,
@@ -135,9 +136,20 @@ export default async function AdminMerchPage() {
                         {p.isFeatured ? "Retirer" : "Mettre en avant"}
                       </button>
                     </form>
-                    <form action={deleteMerch.bind(null, p.id)}>
-                      <button type="submit" className="text-red-400 text-xs hover:text-red-300">Supprimer</button>
-                    </form>
+                    <ConfirmActionForm
+                      action={deleteMerch.bind(null, p.id)}
+                      triggerLabel="Supprimer"
+                      triggerClassName="text-red-400 text-xs hover:text-red-300"
+                      title="Supprimer ce produit ?"
+                      description={
+                        <>
+                          Le produit{" "}
+                          <span className="font-semibold text-foreground">{p.title}</span>{" "}
+                          ({p.vendorName}) sera retiré de la boutique.
+                        </>
+                      }
+                      confirmLabel="Supprimer"
+                    />
                   </div>
                 </td>
               </tr>

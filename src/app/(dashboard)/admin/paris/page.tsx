@@ -1,3 +1,4 @@
+import { ConfirmActionForm } from "@/components/admin/confirm-action-form";
 import { prisma } from "@/lib/db/prisma";
 import {
   createParisAdmin,
@@ -160,9 +161,20 @@ export default async function AdminParisPage() {
                         {p.isSponsored ? "Retirer" : "Sponsoriser"}
                       </button>
                     </form>
-                    <form action={deleteParis.bind(null, p.id)}>
-                      <button type="submit" className="text-red-400 text-xs hover:text-red-300">Supprimer</button>
-                    </form>
+                    <ConfirmActionForm
+                      action={deleteParis.bind(null, p.id)}
+                      triggerLabel="Supprimer"
+                      triggerClassName="text-red-400 text-xs hover:text-red-300"
+                      title="Supprimer ce lieu ?"
+                      description={
+                        <>
+                          Le lieu{" "}
+                          <span className="font-semibold text-foreground">{p.name}</span>{" "}
+                          sera retiré des classiques de Paris.
+                        </>
+                      }
+                      confirmLabel="Supprimer"
+                    />
                   </div>
                 </td>
               </tr>

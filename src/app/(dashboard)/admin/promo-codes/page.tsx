@@ -1,3 +1,4 @@
+import { ConfirmActionForm } from "@/components/admin/confirm-action-form";
 import { prisma } from "@/lib/db/prisma";
 import {
   createPromoCode,
@@ -42,14 +43,15 @@ export default async function AdminPromoCodesPage() {
             10 codes par catégorie offerts aux premiers inscrits.
           </p>
         </div>
-        <form action={generateInitialPromoCodes}>
-          <button
-            type="submit"
-            className="rounded-full bg-red-500 px-4 py-2 text-sm text-white hover:bg-red-600"
-          >
-            Générer les 70 codes initiaux
-          </button>
-        </form>
+        <ConfirmActionForm
+          action={generateInitialPromoCodes}
+          triggerLabel="Générer les 70 codes initiaux"
+          triggerClassName="rounded-full bg-red-500 px-4 py-2 text-sm text-white hover:bg-red-600"
+          title="Générer 70 codes promo ?"
+          description="Cela va créer 10 codes par catégorie (VIP, Pro, etc.) en une seule fois. Si certains codes existent déjà, ils seront ignorés. Action en masse — assure-toi d'être prêt."
+          confirmLabel="Générer maintenant"
+          variant="warning"
+        />
       </div>
 
       <section className="rounded-2xl border border-white/10 bg-white/5 p-6">
@@ -142,9 +144,22 @@ export default async function AdminPromoCodesPage() {
                             {c.isActive ? "Désactiver" : "Activer"}
                           </button>
                         </form>
-                        <form action={deletePromoCode.bind(null, c.id)}>
-                          <button type="submit" className="text-red-400 text-xs hover:text-red-300">Supprimer</button>
-                        </form>
+                        <ConfirmActionForm
+                          action={deletePromoCode.bind(null, c.id)}
+                          triggerLabel="Supprimer"
+                          triggerClassName="text-red-400 text-xs hover:text-red-300"
+                          title="Supprimer ce code promo ?"
+                          description={
+                            <>
+                              Le code{" "}
+                              <span className="font-mono font-semibold text-foreground">
+                                {c.code}
+                              </span>{" "}
+                              sera supprimé. Les utilisations passées resteront tracées.
+                            </>
+                          }
+                          confirmLabel="Supprimer"
+                        />
                       </div>
                     </td>
                   </tr>

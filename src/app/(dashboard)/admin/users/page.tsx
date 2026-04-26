@@ -1,3 +1,4 @@
+import { ConfirmActionForm } from "@/components/admin/confirm-action-form";
 import { prisma } from "@/lib/db/prisma";
 import { setUserRole, toggleUserVip, deleteUser } from "@/lib/actions/admin";
 
@@ -120,14 +121,23 @@ export default async function AdminUsersPage({
                   {u.createdAt.toLocaleDateString("fr-FR")}
                 </td>
                 <td className="px-4 py-3 text-right">
-                  <form action={deleteUser.bind(null, u.id)}>
-                    <button
-                      type="submit"
-                      className="text-red-400 text-xs hover:text-red-300"
-                    >
-                      Supprimer
-                    </button>
-                  </form>
+                  <ConfirmActionForm
+                    action={deleteUser.bind(null, u.id)}
+                    triggerLabel="Supprimer"
+                    triggerClassName="text-red-400 text-xs hover:text-red-300"
+                    title="Supprimer cet utilisateur ?"
+                    description={
+                      <>
+                        Tu vas supprimer définitivement{" "}
+                        <span className="font-semibold text-foreground">
+                          {u.email}
+                        </span>
+                        . Toutes ses données associées (trajets, paiements, profil pro)
+                        seront perdues. Cette action est irréversible.
+                      </>
+                    }
+                    confirmLabel="Supprimer définitivement"
+                  />
                 </td>
               </tr>
             ))}

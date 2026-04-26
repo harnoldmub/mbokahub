@@ -1,3 +1,4 @@
+import { ConfirmActionForm } from "@/components/admin/confirm-action-form";
 import { prisma } from "@/lib/db/prisma";
 import {
   createTrajetAdmin,
@@ -173,9 +174,22 @@ export default async function AdminTrajetsPage() {
                         {t.isActive ? "Masquer" : "Activer"}
                       </button>
                     </form>
-                    <form action={deleteTrajet.bind(null, t.id)}>
-                      <button type="submit" className="text-red-400 text-xs hover:text-red-300">Supprimer</button>
-                    </form>
+                    <ConfirmActionForm
+                      action={deleteTrajet.bind(null, t.id)}
+                      triggerLabel="Supprimer"
+                      triggerClassName="text-red-400 text-xs hover:text-red-300"
+                      title="Supprimer ce trajet ?"
+                      description={
+                        <>
+                          Trajet{" "}
+                          <span className="font-semibold text-foreground">
+                            {t.villeDepart} → {t.villeArrivee}
+                          </span>{" "}
+                          du {t.date.toLocaleDateString("fr-FR")}. Action irréversible.
+                        </>
+                      }
+                      confirmLabel="Supprimer le trajet"
+                    />
                   </div>
                 </td>
               </tr>
