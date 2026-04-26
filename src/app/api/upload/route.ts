@@ -76,7 +76,28 @@ export async function POST(req: Request) {
     const buffer = Buffer.from(await file.arrayBuffer());
 
     try {
-      await client.uploadFromStream(key, Readable.from(buffer));
+      const result = await client.uploadFromBytes(key, buffer);
+      if (!result.ok) {
+        const msg = result.error?.message ?? "échec de l'upload";
+        console.error("[api/upload] uploadFromBytes failed", {
+          key,
+          file: file.name,
+          err: msg,
+        });
+        // Fallback: try the streaming path (forces resumable:false internally).
+        try {
+          await client.uploadFromStream(key, Readable.from(buffer));
+        } catch (streamErr) {
+          const streamMsg =
+            streamErr instanceof Error ? streamErr.message : String(streamErr);
+          console.error("[api/upload] uploadFromStream fallback failed", {
+            key,
+            err: streamMsg,
+          });
+          errors.push(`${file.name}: ${msg} (stream: ${streamMsg})`);
+          continue;
+        }
+      }
       uploaded.push({
         url: publicUrlForKey(key),
         name: file.name,
@@ -84,6 +105,10 @@ export async function POST(req: Request) {
         type: file.type,
       });
     } catch (e) {
+      console.error("[api/upload] unexpected error", {
+        key,
+        err: e instanceof Error ? e.message : String(e),
+      });
       errors.push(
         `${file.name}: ${e instanceof Error ? e.message : "erreur inconnue"}`,
       );

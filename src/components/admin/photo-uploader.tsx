@@ -9,6 +9,8 @@ type PhotoUploaderProps = {
   label?: string;
   helpText?: string;
   maxFiles?: number;
+  /** Show "Faire la couverture" badge/button (first photo = profile photo). */
+  enableCoverActions?: boolean;
 };
 
 type UploadedFile = { url: string; name: string; size: number; type: string };
@@ -20,6 +22,7 @@ export function PhotoUploader({
   label,
   helpText,
   maxFiles = 12,
+  enableCoverActions = false,
 }: PhotoUploaderProps) {
   const inputId = useId();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -74,6 +77,16 @@ export function PhotoUploader({
     setUrls((prev) => prev.filter((_, i) => i !== idx));
   };
 
+  const makeCover = (idx: number) => {
+    setUrls((prev) => {
+      if (idx <= 0 || idx >= prev.length) return prev;
+      const next = [...prev];
+      const [chosen] = next.splice(idx, 1);
+      next.unshift(chosen);
+      return next;
+    });
+  };
+
   const onDrop = (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
     if (e.dataTransfer.files?.length) {
@@ -102,7 +115,11 @@ export function PhotoUploader({
           {urls.map((url, i) => (
             <div
               key={`${url}-${i}`}
-              className="group relative aspect-square overflow-hidden rounded-lg border border-white/10 bg-black/40"
+              className={`group relative aspect-square overflow-hidden rounded-lg border bg-black/40 ${
+                enableCoverActions && i === 0
+                  ? "border-red-500/60 ring-2 ring-red-500/40"
+                  : "border-white/10"
+              }`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -110,6 +127,24 @@ export function PhotoUploader({
                 alt={`upload ${i + 1}`}
                 className="h-full w-full object-cover"
               />
+
+              {enableCoverActions && i === 0 && (
+                <span className="absolute left-1 top-1 rounded-full bg-red-500 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-white shadow">
+                  Couverture
+                </span>
+              )}
+
+              {enableCoverActions && i > 0 && (
+                <button
+                  type="button"
+                  onClick={() => makeCover(i)}
+                  aria-label={`Faire de la photo ${i + 1} la couverture`}
+                  className="absolute bottom-1 left-1 rounded-full bg-black/70 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-white opacity-0 transition focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 group-hover:opacity-100 hover:bg-red-500"
+                >
+                  Faire la couverture
+                </button>
+              )}
+
               <button
                 type="button"
                 onClick={() => removeAt(i)}

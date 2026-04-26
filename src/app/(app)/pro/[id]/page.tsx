@@ -35,6 +35,7 @@ export default async function ProDetailsPage({ params }: ProDetailsPageProps) {
 
   const meta = PRO_CATEGORY_BY_ID[pro.category];
   const cover = pro.photos?.[0];
+  const galleryPhotos = (pro.photos ?? []).slice(1);
   const maskedWa = pro.whatsapp.replace(/(\+?\d{2,3})\d+(\d{2})/, "$1******$2");
   const displayedName = publicProName({
     category: pro.category,
@@ -98,6 +99,33 @@ export default async function ProDetailsPage({ params }: ProDetailsPageProps) {
 
           {pro.bio && (
             <p className="whitespace-pre-line text-paper-dim">{pro.bio}</p>
+          )}
+
+          {galleryPhotos.length > 0 && (
+            <div className="space-y-3">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
+                Galerie
+              </p>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+                {galleryPhotos.map((src, i) => (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <a
+                    key={`${src}-${i}`}
+                    href={src}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group relative aspect-square overflow-hidden rounded-xl border border-white/10 bg-black/40"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={src}
+                      alt={`${displayedName} — photo ${i + 2}`}
+                      className="h-full w-full object-cover transition group-hover:scale-105"
+                    />
+                  </a>
+                ))}
+              </div>
+            </div>
           )}
 
           {pro.specialities.length > 0 && (

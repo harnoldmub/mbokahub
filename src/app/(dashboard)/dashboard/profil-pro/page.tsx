@@ -225,10 +225,11 @@ export default async function ProfilProPage({
             </span>
             <div>
               <h3 className="font-display text-base uppercase text-paper">
-                Mes photos
+                Photo de profil & galerie
               </h3>
               <p className="text-paper-mute text-xs">
-                Mets en avant ton travail. La 1ère photo est la couverture.
+                La 1ère photo est ta couverture. Survole les autres pour la
+                changer ou les retirer.
               </p>
             </div>
           </div>
@@ -237,7 +238,8 @@ export default async function ProfilProPage({
             defaultUrls={pro.photos}
             multiple
             maxFiles={12}
-            helpText="Ajoute, retire ou réorganise. JPG/PNG/WebP, 5 Mo max."
+            enableCoverActions
+            helpText="JPG/PNG/WebP/GIF · 5 Mo max · jusqu'à 12 photos."
           />
         </div>
 
