@@ -1,7 +1,7 @@
+import { Readable } from "node:stream";
 import { NextResponse } from "next/server";
-import { Readable } from "stream";
 
-import { getStorageClient } from "@/lib/storage";
+import { isSafeMediaKey, mediaExists, mediaReadStream } from "@/lib/storage";
 
 export const runtime = "nodejs";
 
@@ -15,8 +15,6 @@ const MIME_BY_EXT: Record<string, string> = {
   heif: "image/heif",
 };
 
-const ALLOWED_PREFIXES = ["uploads/", "pro-photos/"];
-
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ key: string[] }> },
@@ -24,25 +22,18 @@ export async function GET(
   const { key } = await params;
   const objectKey = key.join("/");
 
-  if (
-    !objectKey ||
-    objectKey.includes("..") ||
-    !ALLOWED_PREFIXES.some((p) => objectKey.startsWith(p))
-  ) {
+  if (!isSafeMediaKey(objectKey)) {
     return NextResponse.json({ error: "Clé invalide" }, { status: 400 });
   }
 
-  const client = getStorageClient();
-
-  const exists = await client.exists(objectKey);
-  if (!exists.ok || !exists.value) {
+  if (!(await mediaExists(objectKey))) {
     return NextResponse.json({ error: "Fichier introuvable" }, { status: 404 });
   }
 
   const ext = objectKey.split(".").pop()?.toLowerCase() ?? "";
   const contentType = MIME_BY_EXT[ext] ?? "application/octet-stream";
 
-  const nodeStream = client.downloadAsStream(objectKey);
+  const nodeStream = mediaReadStream(objectKey);
   const webStream = Readable.toWeb(nodeStream) as ReadableStream<Uint8Array>;
 
   return new NextResponse(webStream, {

@@ -1,26 +1,31 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { randomUUID } from "node:crypto";
-import { prisma } from "@/lib/db/prisma";
-import { requireAdmin } from "@/lib/admin";
-import { sendProValidatedEmail } from "@/lib/email";
 import type { ProCategory, PromoCodeCategory, UserRole } from "@prisma/client";
+import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/admin";
+import { prisma } from "@/lib/db/prisma";
+import { sendProValidatedEmail } from "@/lib/email";
+import { deleteMediaByUrl, normalizeUploadedMediaUrls } from "@/lib/storage";
 
 function slugify(input: string): string {
-  return input
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 60) || `entry-${Date.now()}`;
+  return (
+    input
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 60) || `entry-${Date.now()}`
+  );
 }
 
 async function getOrCreateManagedUser(email: string, name: string) {
   const cleanEmail = email.trim().toLowerCase();
   if (!cleanEmail) throw new Error("Email obligatoire pour créer le porteur");
-  const existing = await prisma.user.findUnique({ where: { email: cleanEmail } });
+  const existing = await prisma.user.findUnique({
+    where: { email: cleanEmail },
+  });
   if (existing) return existing;
   return prisma.user.create({
     data: {
@@ -109,14 +114,18 @@ export async function verifyProProfile(profileId: string, verified: boolean) {
 
 export async function deleteProProfile(profileId: string) {
   await requireAdmin();
+  const profile = await prisma.proProfile.findUnique({
+    where: { id: profileId },
+    select: { photos: true },
+  });
+  if (profile) {
+    await Promise.all(profile.photos.map((photo) => deleteMediaByUrl(photo)));
+  }
   await prisma.proProfile.delete({ where: { id: profileId } });
   revalidatePath("/admin/pros");
 }
 
-export async function updateProProfileAdmin(
-  profileId: string,
-  form: FormData,
-) {
+export async function updateProProfileAdmin(profileId: string, form: FormData) {
   await requireAdmin();
 
   const displayName = String(form.get("displayName") || "").trim();
@@ -127,23 +136,32 @@ export async function updateProProfileAdmin(
   const bio = String(form.get("bio") || "").trim() || null;
   const priceRange = String(form.get("priceRange") || "").trim() || null;
   const instagramHandle =
-    String(form.get("instagramHandle") || "").trim().replace(/^@/, "") || null;
+    String(form.get("instagramHandle") || "")
+      .trim()
+      .replace(/^@/, "") || null;
   const tiktokHandle =
-    String(form.get("tiktokHandle") || "").trim().replace(/^@/, "") || null;
+    String(form.get("tiktokHandle") || "")
+      .trim()
+      .replace(/^@/, "") || null;
 
   const specialitiesStr = String(form.get("specialities") || "").trim();
   const specialities = specialitiesStr
-    ? specialitiesStr.split(",").map((s) => s.trim()).filter(Boolean)
+    ? specialitiesStr
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
     : [];
 
-  const photosStr = String(form.get("photos") || "").trim();
-  const photos = photosStr
-    ? photosStr.split(/[\n,]+/).map((s) => s.trim()).filter(Boolean)
-    : [];
+  const photos = normalizeUploadedMediaUrls(String(form.get("photos") || ""));
 
   if (!displayName || !category || !city || !whatsapp) {
     throw new Error("Nom, catégorie, ville et WhatsApp obligatoires");
   }
+
+  const before = await prisma.proProfile.findUnique({
+    where: { id: profileId },
+    select: { photos: true },
+  });
 
   await prisma.proProfile.update({
     where: { id: profileId },
@@ -161,6 +179,10 @@ export async function updateProProfileAdmin(
       photos,
     },
   });
+
+  const removedPhotos =
+    before?.photos.filter((photo) => !photos.includes(photo)) ?? [];
+  await Promise.all(removedPhotos.map((photo) => deleteMediaByUrl(photo)));
 
   revalidatePath("/admin/pros");
   revalidatePath("/prestataires");
@@ -185,7 +207,9 @@ export async function toggleTrajetActive(trajetId: string, isActive: boolean) {
 
 export async function createPromoCode(form: FormData) {
   await requireAdmin();
-  const code = String(form.get("code") || "").trim().toUpperCase();
+  const code = String(form.get("code") || "")
+    .trim()
+    .toUpperCase();
   const category = String(form.get("category") || "") as PromoCodeCategory;
   const label = String(form.get("label") || "").trim() || null;
   const discountPercent = Number(form.get("discountPercent") || 100);
@@ -270,7 +294,9 @@ export async function ensureMbkFreeCode(): Promise<void> {
         discountPercent: 100,
         maxUses: 20,
         isActive: true,
-        label: existing.label ?? "Inscription Pro gratuite — limité à 20 utilisations",
+        label:
+          existing.label ??
+          "Inscription Pro gratuite — limité à 20 utilisations",
       },
     });
   } else {
@@ -304,7 +330,8 @@ export async function updateReportStatus(
     data: {
       status,
       adminNotes: adminNotes ?? undefined,
-      resolvedAt: status === "RESOLVED" || status === "DISMISSED" ? new Date() : null,
+      resolvedAt:
+        status === "RESOLVED" || status === "DISMISSED" ? new Date() : null,
     },
   });
   revalidatePath("/admin/signalements");
@@ -328,7 +355,9 @@ export async function deleteReportedTarget(
       await prisma.trajet.delete({ where: { id: targetId } }).catch(() => null);
       break;
     case "PRO_PROFILE":
-      await prisma.proProfile.delete({ where: { id: targetId } }).catch(() => null);
+      await prisma.proProfile
+        .delete({ where: { id: targetId } })
+        .catch(() => null);
       break;
     case "AFTER":
       await prisma.after.delete({ where: { id: targetId } }).catch(() => null);
@@ -337,7 +366,9 @@ export async function deleteReportedTarget(
       await prisma.user.delete({ where: { id: targetId } }).catch(() => null);
       break;
     case "MERCH_PRODUCT":
-      await prisma.merchProduct.delete({ where: { id: targetId } }).catch(() => null);
+      await prisma.merchProduct
+        .delete({ where: { id: targetId } })
+        .catch(() => null);
       break;
   }
 
@@ -507,7 +538,9 @@ export async function certifyProProfile(profileId: string, certified: boolean) {
 
 export async function createTrajetAdmin(form: FormData) {
   await requireAdmin();
-  const driverEmail = String(form.get("driverEmail") || "").trim().toLowerCase();
+  const driverEmail = String(form.get("driverEmail") || "")
+    .trim()
+    .toLowerCase();
   const driverName = String(form.get("driverName") || "").trim();
   const villeDepart = String(form.get("villeDepart") || "").trim();
   const paysDepart = String(form.get("paysDepart") || "").trim();
@@ -522,10 +555,20 @@ export async function createTrajetAdmin(form: FormData) {
   const vehiculeColor = String(form.get("vehiculeColor") || "").trim() || null;
   const note = String(form.get("note") || "").trim() || null;
 
-  if (!driverEmail || !villeDepart || !paysDepart || !dateStr || !heureDepart || !whatsapp) {
-    throw new Error("Champs obligatoires manquants (email, départ, pays, date, heure, WhatsApp)");
+  if (
+    !driverEmail ||
+    !villeDepart ||
+    !paysDepart ||
+    !dateStr ||
+    !heureDepart ||
+    !whatsapp
+  ) {
+    throw new Error(
+      "Champs obligatoires manquants (email, départ, pays, date, heure, WhatsApp)",
+    );
   }
-  if (!Number.isFinite(placesTotal) || placesTotal < 1) throw new Error("Nombre de places invalide");
+  if (!Number.isFinite(placesTotal) || placesTotal < 1)
+    throw new Error("Nombre de places invalide");
   if (!Number.isFinite(prix) || prix < 0) throw new Error("Prix invalide");
 
   const user = await getOrCreateManagedUser(driverEmail, driverName);
@@ -555,7 +598,9 @@ export async function createTrajetAdmin(form: FormData) {
 
 export async function createProProfileAdmin(form: FormData) {
   await requireAdmin();
-  const proEmail = String(form.get("proEmail") || "").trim().toLowerCase();
+  const proEmail = String(form.get("proEmail") || "")
+    .trim()
+    .toLowerCase();
   const displayName = String(form.get("displayName") || "").trim();
   const category = String(form.get("category") || "") as ProCategory;
   const city = String(form.get("city") || "").trim();
@@ -564,13 +609,14 @@ export async function createProProfileAdmin(form: FormData) {
   const bio = String(form.get("bio") || "").trim() || null;
   const specialitiesStr = String(form.get("specialities") || "").trim();
   const specialities = specialitiesStr
-    ? specialitiesStr.split(",").map((s) => s.trim()).filter(Boolean)
+    ? specialitiesStr
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
     : [];
-  const photosStr = String(form.get("photos") || "").trim();
-  const photos = photosStr
-    ? photosStr.split(/[\n,]+/).map((s) => s.trim()).filter(Boolean)
-    : [];
-  const instagramHandle = String(form.get("instagramHandle") || "").trim() || null;
+  const photos = normalizeUploadedMediaUrls(String(form.get("photos") || ""));
+  const instagramHandle =
+    String(form.get("instagramHandle") || "").trim() || null;
   const tiktokHandle = String(form.get("tiktokHandle") || "").trim() || null;
   const priceRange = String(form.get("priceRange") || "").trim() || null;
   const isPremium = form.get("isPremium") === "on";
@@ -581,10 +627,12 @@ export async function createProProfileAdmin(form: FormData) {
   }
 
   const user = await getOrCreateManagedUser(proEmail, displayName);
-  const existingProfile = await prisma.proProfile.findUnique({ where: { userId: user.id } });
+  const existingProfile = await prisma.proProfile.findUnique({
+    where: { userId: user.id },
+  });
   if (existingProfile) throw new Error("Cet email a déjà un profil pro");
 
-  let baseSlug = slugify(displayName);
+  const baseSlug = slugify(displayName);
   let slug = baseSlug;
   let i = 2;
   while (await prisma.proProfile.findUnique({ where: { slug } })) {
@@ -635,10 +683,12 @@ export async function createAfterAdmin(form: FormData) {
   const isVerified = form.get("isVerified") === "on";
 
   if (!name || !description || !dateStr || !venue || !address || !ticketUrl) {
-    throw new Error("Nom, description, date, lieu, adresse et URL billetterie obligatoires");
+    throw new Error(
+      "Nom, description, date, lieu, adresse et URL billetterie obligatoires",
+    );
   }
 
-  let baseSlug = slugify(name);
+  const baseSlug = slugify(name);
   let slug = baseSlug;
   let i = 2;
   while (await prisma.after.findUnique({ where: { slug } })) {
@@ -706,7 +756,16 @@ export async function createMerchAdmin(form: FormData) {
   if (!Number.isFinite(price) || price < 0) throw new Error("Prix invalide");
 
   await prisma.merchProduct.create({
-    data: { vendorName, title, description, imageUrl, price, externalUrl, category, isFeatured },
+    data: {
+      vendorName,
+      title,
+      description,
+      imageUrl,
+      price,
+      externalUrl,
+      category,
+      isFeatured,
+    },
   });
   revalidatePath("/admin/merch");
   revalidatePath("/merch");
@@ -743,7 +802,12 @@ export async function createParisAdmin(form: FormData) {
   const phone = String(form.get("phone") || "").trim() || null;
   const imageUrl = String(form.get("imageUrl") || "").trim() || null;
   const tagsStr = String(form.get("tags") || "").trim();
-  const tags = tagsStr ? tagsStr.split(",").map((s) => s.trim()).filter(Boolean) : [];
+  const tags = tagsStr
+    ? tagsStr
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
+    : [];
   const isSponsored = form.get("isSponsored") === "on";
   const orderStr = String(form.get("order") || "0").trim();
   const order = parseInt(orderStr, 10) || 0;
@@ -758,7 +822,10 @@ export async function createParisAdmin(form: FormData) {
       category,
       description,
       address,
-      arrondissement: arrondissement && Number.isFinite(arrondissement) ? arrondissement : null,
+      arrondissement:
+        arrondissement && Number.isFinite(arrondissement)
+          ? arrondissement
+          : null,
       priceLevel,
       externalUrl,
       googleMapsUrl,

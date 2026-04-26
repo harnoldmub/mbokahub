@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { prisma } from "@/lib/db/prisma";
+import { deleteMediaByUrl } from "@/lib/storage";
 
 async function getAuthenticatedUser() {
   const { userId } = await auth();
@@ -57,6 +58,15 @@ export async function toggleTrajetStatusAction(trajetId: string) {
 
 export async function deleteProProfileAction() {
   const user = await getAuthenticatedUser();
+
+  const profile = await prisma.proProfile.findUnique({
+    where: { userId: user.id },
+    select: { photos: true },
+  });
+
+  if (profile) {
+    await Promise.all(profile.photos.map((photo) => deleteMediaByUrl(photo)));
+  }
 
   await prisma.proProfile.delete({
     where: { userId: user.id },

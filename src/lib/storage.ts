@@ -1,13 +1,30 @@
-import { Client } from "@replit/object-storage";
+import { createReadStream } from "node:fs";
+import { mkdir, stat, unlink, writeFile } from "node:fs/promises";
+import path from "node:path";
 
-let cached: Client | null = null;
+const ALLOWED_MEDIA_PREFIXES = ["uploads/", "pro-photos/"] as const;
 
-export function getStorageClient(): Client {
-  if (!cached) {
-    const bucketId = process.env.DEFAULT_OBJECT_STORAGE_BUCKET_ID;
-    cached = bucketId ? new Client({ bucketId }) : new Client();
+export function getMediaStorageRoot(): string {
+  const configured = process.env.MEDIA_STORAGE_ROOT?.trim();
+  return configured
+    ? path.resolve(process.cwd(), configured)
+    : path.join(process.cwd(), ".media");
+}
+
+export function isSafeMediaKey(key: string): boolean {
+  return Boolean(
+    key &&
+      !key.includes("..") &&
+      ALLOWED_MEDIA_PREFIXES.some((prefix) => key.startsWith(prefix)),
+  );
+}
+
+function resolveLocalPathForKey(key: string): string {
+  if (!isSafeMediaKey(key)) {
+    throw new Error("Clé media invalide");
   }
-  return cached;
+
+  return path.join(getMediaStorageRoot(), ...key.split("/"));
 }
 
 export const ALLOWED_IMAGE_TYPES = [
@@ -79,6 +96,74 @@ export function resolveImageMime(file: { type: string; name: string }): string {
   return file.type || "";
 }
 
+export async function putMediaObject(
+  key: string,
+  buffer: Buffer,
+): Promise<void> {
+  const absolutePath = resolveLocalPathForKey(key);
+  await mkdir(path.dirname(absolutePath), { recursive: true });
+  await writeFile(absolutePath, buffer);
+}
+
+export async function mediaExists(key: string): Promise<boolean> {
+  try {
+    await stat(resolveLocalPathForKey(key));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function mediaReadStream(key: string) {
+  return createReadStream(resolveLocalPathForKey(key));
+}
+
 export function publicUrlForKey(key: string): string {
   return `/api/files/${key}`;
+}
+
+export function mediaKeyFromPublicUrl(url: string): string | null {
+  const prefix = "/api/files/";
+  if (!url.startsWith(prefix)) return null;
+
+  const key = decodeURIComponent(url.slice(prefix.length));
+  return isSafeMediaKey(key) ? key : null;
+}
+
+export async function deleteMediaByUrl(url: string): Promise<void> {
+  const key = mediaKeyFromPublicUrl(url);
+  if (!key) return;
+
+  try {
+    await unlink(resolveLocalPathForKey(key));
+  } catch {
+    // Ignore missing files / old orphaned references.
+  }
+}
+
+export function normalizeUploadedMediaUrls(
+  value: string,
+  maxFiles = 12,
+): string[] {
+  const seen = new Set<string>();
+  const normalized: string[] = [];
+
+  for (const raw of value.split(/[\n,]+/)) {
+    const candidate = raw.trim();
+    if (!candidate) continue;
+    if (
+      !/^https?:\/\//i.test(candidate) &&
+      !candidate.startsWith("/api/files/")
+    ) {
+      continue;
+    }
+    if (seen.has(candidate)) continue;
+
+    seen.add(candidate);
+    normalized.push(candidate);
+
+    if (normalized.length >= maxFiles) break;
+  }
+
+  return normalized;
 }

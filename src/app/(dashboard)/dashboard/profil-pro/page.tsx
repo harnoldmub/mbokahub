@@ -6,10 +6,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
+import { updateProProfileAction } from "@/lib/actions/public";
 import { getDashboardUser } from "@/lib/dashboard";
 import { prisma } from "@/lib/db/prisma";
 import { PRO_CATEGORY_BY_ID } from "@/lib/pro-categories";
-import { updateProProfileAction } from "@/lib/actions/public";
 
 type SearchParams = {
   saved?: string;
@@ -38,9 +38,8 @@ export default async function ProfilProPage({
             Pas encore de profil professionnel
           </h1>
           <p className="mt-3 max-w-2xl text-paper-dim leading-7">
-            Tu n&apos;as pas encore inscrit ton service. Crée-le en deux
-            minutes pour apparaître dans l&apos;annuaire des prestataires
-            Mboka Hub.
+            Tu n&apos;as pas encore inscrit ton service. Crée-le en deux minutes
+            pour apparaître dans l&apos;annuaire des prestataires Mboka Hub.
           </p>
         </div>
         <div>
@@ -64,8 +63,8 @@ export default async function ProfilProPage({
           Modifier ma fiche pro
         </h1>
         <p className="mt-3 max-w-2xl text-paper-dim leading-7">
-          Mets à jour tes infos pro à tout moment. Les changements
-          apparaissent immédiatement sur ta fiche publique.
+          Mets à jour tes infos pro à tout moment. Les changements apparaissent
+          immédiatement sur ta fiche publique.
         </p>
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <Badge variant="outline">
@@ -239,7 +238,7 @@ export default async function ProfilProPage({
             multiple
             maxFiles={12}
             enableCoverActions
-            helpText="JPG/PNG/WebP/GIF · 5 Mo max · jusqu'à 12 photos."
+            helpText="JPG/PNG/WebP/GIF/HEIC · 15 Mo max · jusqu'à 12 photos."
           />
         </div>
 

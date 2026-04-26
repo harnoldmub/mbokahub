@@ -3,16 +3,13 @@
 import { ArrowRight, AtSign, ShieldCheck, Sparkles } from "lucide-react";
 import { useState } from "react";
 
+import { PhotoUploader } from "@/components/admin/photo-uploader";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
-import { PhotoUpload } from "@/components/ui/photo-upload";
-import { cn } from "@/lib/utils";
 import { createProProfileAction } from "@/lib/actions/public";
-import {
-  PRO_CATEGORIES,
-  PRO_CATEGORY_GROUPS,
-} from "@/lib/pro-categories";
+import { PRO_CATEGORIES, PRO_CATEGORY_GROUPS } from "@/lib/pro-categories";
+import { cn } from "@/lib/utils";
 
 export function ProRegistrationForm() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -132,7 +129,10 @@ export function ProRegistrationForm() {
               className="h-12 bg-smoke border-none"
             />
           </FormField>
-          <FormField label="WhatsApp" helperText="Pour que les clients te contactent">
+          <FormField
+            label="WhatsApp"
+            helperText="Pour que les clients te contactent"
+          >
             <Input
               name="whatsapp"
               required
@@ -147,7 +147,10 @@ export function ProRegistrationForm() {
               className="h-12 bg-smoke border-none"
             />
           </FormField>
-          <FormField label="Tarifs (optionnel)" helperText="Ex: à partir de 50€">
+          <FormField
+            label="Tarifs (optionnel)"
+            helperText="Ex: à partir de 50€"
+          >
             <Input
               name="priceRange"
               placeholder="à partir de 50€"
@@ -167,7 +170,10 @@ export function ProRegistrationForm() {
           />
         </FormField>
 
-        <FormField label="Présentation (optionnel)" helperText="Quelques lignes pour te présenter">
+        <FormField
+          label="Présentation (optionnel)"
+          helperText="Quelques lignes pour te présenter"
+        >
           <textarea
             name="bio"
             rows={4}
@@ -235,14 +241,22 @@ export function ProRegistrationForm() {
         </div>
 
         {/* PHOTOS */}
-        <div className="grid sm:grid-cols-2 gap-8">
-          <PhotoUpload
-            label="Avatar / Logo"
-            description="L'image principale de ton profil"
-          />
-          <PhotoUpload
-            label="Photo de service"
-            description="Exemple de ton travail (Maquillage, Coiffure...)"
+        <div className="grid gap-4 rounded-2xl border border-white/10 bg-ink/40 p-5">
+          <div>
+            <h3 className="font-display text-base uppercase text-paper">
+              Photo principale & galerie
+            </h3>
+            <p className="mt-1 text-xs text-paper-mute">
+              Ajoute ta photo principale puis ta galerie. La 1ère photo devient
+              automatiquement la couverture publique de ton profil.
+            </p>
+          </div>
+          <PhotoUploader
+            name="photos"
+            multiple
+            maxFiles={12}
+            enableCoverActions
+            helpText="JPG/PNG/WebP/GIF/HEIC · 15 Mo max · jusqu'à 12 photos."
           />
         </div>
 

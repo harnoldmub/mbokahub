@@ -1,19 +1,22 @@
 "use server";
 
 import { auth, currentUser } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
-import { prisma } from "@/lib/db/prisma";
 import type { ProCategory } from "@prisma/client";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { prisma } from "@/lib/db/prisma";
 
 import { PRO_CATEGORY_IDS } from "@/lib/pro-categories";
+import { deleteMediaByUrl, normalizeUploadedMediaUrls } from "@/lib/storage";
 
 const VALID_PRO_CATEGORIES: ProCategory[] = PRO_CATEGORY_IDS;
 
 async function ensureUser(redirectAfterSignIn: string) {
   const { userId } = await auth();
   if (!userId) {
-    redirect(`/sign-in?redirect_url=${encodeURIComponent(redirectAfterSignIn)}`);
+    redirect(
+      `/sign-in?redirect_url=${encodeURIComponent(redirectAfterSignIn)}`,
+    );
   }
 
   const user = await currentUser();
@@ -42,7 +45,9 @@ export async function createTrajetAction(form: FormData) {
   const heureDepart = String(form.get("heureDepart") || "").trim();
   const placesTotal = Number(form.get("placesTotal") || 0);
   const placesDispoRaw = Number(form.get("placesDispo") || placesTotal);
-  const placesDispo = Number.isFinite(placesDispoRaw) ? placesDispoRaw : placesTotal;
+  const placesDispo = Number.isFinite(placesDispoRaw)
+    ? placesDispoRaw
+    : placesTotal;
   const prix = Number(form.get("prix") || 0);
   const vehiculeModel = String(form.get("vehiculeModel") || "").trim() || null;
   const vehiculeColor = String(form.get("vehiculeColor") || "").trim() || null;
@@ -103,19 +108,26 @@ export async function createProProfileAction(form: FormData) {
   const country = String(form.get("country") || "Belgique").trim();
   const bio = String(form.get("bio") || "").trim() || null;
   const whatsapp = String(form.get("whatsapp") || "").trim();
-  const instagramHandle = String(form.get("instagramHandle") || "").trim() || null;
+  const instagramHandle =
+    String(form.get("instagramHandle") || "").trim() || null;
   const tiktokHandle = String(form.get("tiktokHandle") || "").trim() || null;
   const priceRange = String(form.get("priceRange") || "").trim() || null;
   const specialitiesRaw = String(form.get("specialities") || "").trim();
   const specialities = specialitiesRaw
-    ? specialitiesRaw.split(",").map((s) => s.trim()).filter(Boolean)
+    ? specialitiesRaw
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
     : [];
+  const photos = normalizeUploadedMediaUrls(String(form.get("photos") || ""));
 
   if (!category || !displayName || !city || !whatsapp) {
     redirect("/pro/inscrire?error=missing");
   }
 
-  const existing = await prisma.proProfile.findUnique({ where: { userId: user.id } });
+  const existing = await prisma.proProfile.findUnique({
+    where: { userId: user.id },
+  });
   if (existing) {
     redirect("/dashboard/annonces?error=profile-exists");
   }
@@ -143,7 +155,7 @@ export async function createProProfileAction(form: FormData) {
       tiktokHandle,
       priceRange,
       specialities,
-      photos: [],
+      photos,
     },
   });
 
@@ -173,9 +185,13 @@ export async function updateProProfileAction(form: FormData) {
   const bio = String(form.get("bio") || "").trim() || null;
   const whatsapp = String(form.get("whatsapp") || "").trim();
   const instagramHandle =
-    String(form.get("instagramHandle") || "").trim().replace(/^@/, "") || null;
+    String(form.get("instagramHandle") || "")
+      .trim()
+      .replace(/^@/, "") || null;
   const tiktokHandle =
-    String(form.get("tiktokHandle") || "").trim().replace(/^@/, "") || null;
+    String(form.get("tiktokHandle") || "")
+      .trim()
+      .replace(/^@/, "") || null;
   const priceRange = String(form.get("priceRange") || "").trim() || null;
   const specialitiesRaw = String(form.get("specialities") || "").trim();
   const specialities = specialitiesRaw
@@ -185,19 +201,15 @@ export async function updateProProfileAction(form: FormData) {
         .filter(Boolean)
     : [];
 
-  const photosRaw = String(form.get("photos") || "");
-  const photos = photosRaw
-    .split("\n")
-    .map((s) => s.trim())
-    .filter(
-      (s) =>
-        /^https?:\/\//i.test(s) || s.startsWith("/api/files/"),
-    )
-    .slice(0, 12);
+  const photos = normalizeUploadedMediaUrls(String(form.get("photos") || ""));
 
   if (!displayName || !city || !whatsapp) {
     redirect("/dashboard/profil-pro?error=missing");
   }
+
+  const removedPhotos = existing.photos.filter(
+    (photo) => !photos.includes(photo),
+  );
 
   await prisma.proProfile.update({
     where: { userId: user.id },
@@ -214,6 +226,8 @@ export async function updateProProfileAction(form: FormData) {
       photos,
     },
   });
+
+  await Promise.all(removedPhotos.map((photo) => deleteMediaByUrl(photo)));
 
   revalidatePath("/dashboard/profil-pro");
   revalidatePath("/dashboard/annonces");

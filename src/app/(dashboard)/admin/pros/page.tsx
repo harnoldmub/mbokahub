@@ -1,13 +1,13 @@
 import { ConfirmActionForm } from "@/components/admin/confirm-action-form";
 import { EditProForm } from "@/components/admin/edit-pro-form";
 import { PhotoUploader } from "@/components/admin/photo-uploader";
-import { prisma } from "@/lib/db/prisma";
 import {
   certifyProProfile,
   createProProfileAdmin,
   deleteProProfile,
   verifyProProfile,
 } from "@/lib/actions/admin";
+import { prisma } from "@/lib/db/prisma";
 
 export const dynamic = "force-dynamic";
 
@@ -59,12 +59,29 @@ export default async function AdminProsPage({
           Profils pros & beauté ({pros.length})
         </h2>
         <p className="mt-1 text-muted-foreground text-sm">
-          Créer, valider, certifier ou supprimer les profils prestataires (toutes catégories : maquilleuses, coiffeurs, photographes, DJ, traiteurs…).
+          Créer, valider, certifier ou supprimer les profils prestataires
+          (toutes catégories : maquilleuses, coiffeurs, photographes, DJ,
+          traiteurs…).
         </p>
         <div className="mt-4 flex gap-2">
-          <a href="/admin/pros" className="rounded-full border border-white/20 px-3 py-1 text-foreground text-xs hover:bg-white/10">Tous</a>
-          <a href="/admin/pros?status=pending" className="rounded-full border border-yellow-500/40 bg-yellow-500/10 px-3 py-1 text-yellow-300 text-xs hover:bg-yellow-500/20">En attente</a>
-          <a href="/admin/pros?status=verified" className="rounded-full border border-green-500/40 bg-green-500/10 px-3 py-1 text-green-300 text-xs hover:bg-green-500/20">Validés</a>
+          <a
+            href="/admin/pros"
+            className="rounded-full border border-white/20 px-3 py-1 text-foreground text-xs hover:bg-white/10"
+          >
+            Tous
+          </a>
+          <a
+            href="/admin/pros?status=pending"
+            className="rounded-full border border-yellow-500/40 bg-yellow-500/10 px-3 py-1 text-yellow-300 text-xs hover:bg-yellow-500/20"
+          >
+            En attente
+          </a>
+          <a
+            href="/admin/pros?status=verified"
+            className="rounded-full border border-green-500/40 bg-green-500/10 px-3 py-1 text-green-300 text-xs hover:bg-green-500/20"
+          >
+            Validés
+          </a>
         </div>
       </div>
 
@@ -95,9 +112,13 @@ export default async function AdminProsPage({
             defaultValue=""
             className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm"
           >
-            <option value="" disabled>— Catégorie —</option>
+            <option value="" disabled>
+              — Catégorie —
+            </option>
             {CATEGORIES.map((c) => (
-              <option key={c} value={c}>{c}</option>
+              <option key={c} value={c}>
+                {c}
+              </option>
             ))}
           </select>
           <input
@@ -150,7 +171,7 @@ export default async function AdminProsPage({
               label="Photos du prestataire"
               multiple
               maxFiles={12}
-              helpText="La première photo devient la couverture sur l'annuaire."
+              helpText="La première photo devient la couverture sur l'annuaire. JPG/PNG/WebP/GIF/HEIC · 15 Mo max."
             />
           </div>
           <label className="flex items-center gap-2 text-foreground text-sm">
@@ -188,18 +209,30 @@ export default async function AdminProsPage({
             {pros.map((p) => (
               <tr key={p.id} className="hover:bg-white/5">
                 <td className="px-4 py-3 text-foreground">{p.displayName}</td>
-                <td className="px-4 py-3 text-muted-foreground text-xs">{p.category}</td>
-                <td className="px-4 py-3 text-muted-foreground">{p.city}, {p.country}</td>
-                <td className="px-4 py-3 font-mono text-muted-foreground text-xs">{p.whatsapp}</td>
-                <td className="px-4 py-3 font-mono text-muted-foreground text-xs">{p.user.email}</td>
+                <td className="px-4 py-3 text-muted-foreground text-xs">
+                  {p.category}
+                </td>
+                <td className="px-4 py-3 text-muted-foreground">
+                  {p.city}, {p.country}
+                </td>
+                <td className="px-4 py-3 font-mono text-muted-foreground text-xs">
+                  {p.whatsapp}
+                </td>
+                <td className="px-4 py-3 font-mono text-muted-foreground text-xs">
+                  {p.user.email}
+                </td>
                 <td className="px-4 py-3 text-muted-foreground text-xs">
                   {p.isPremium ? "✓" : "—"}
                 </td>
                 <td className="px-4 py-3">
                   {p.isVerified ? (
-                    <span className="rounded-full bg-green-500/20 px-2 py-1 text-green-300 text-xs">Validé</span>
+                    <span className="rounded-full bg-green-500/20 px-2 py-1 text-green-300 text-xs">
+                      Validé
+                    </span>
                   ) : (
-                    <span className="rounded-full bg-yellow-500/20 px-2 py-1 text-yellow-300 text-xs">En attente</span>
+                    <span className="rounded-full bg-yellow-500/20 px-2 py-1 text-yellow-300 text-xs">
+                      En attente
+                    </span>
                   )}
                 </td>
                 <td className="px-4 py-3 text-right">
@@ -221,11 +254,7 @@ export default async function AdminProsPage({
                       }}
                     />
                     <ConfirmActionForm
-                      action={verifyProProfile.bind(
-                        null,
-                        p.id,
-                        !p.isVerified,
-                      )}
+                      action={verifyProProfile.bind(null, p.id, !p.isVerified)}
                       triggerLabel={p.isVerified ? "Dévalider" : "Valider"}
                       triggerClassName="rounded-md bg-green-500/20 px-2 py-1 text-green-300 text-xs hover:bg-green-500/30"
                       title={
@@ -260,14 +289,8 @@ export default async function AdminProsPage({
                       variant={p.isVerified ? "warning" : "default"}
                     />
                     <ConfirmActionForm
-                      action={certifyProProfile.bind(
-                        null,
-                        p.id,
-                        !p.isPremium,
-                      )}
-                      triggerLabel={
-                        p.isPremium ? "Retirer premium" : "Premium"
-                      }
+                      action={certifyProProfile.bind(null, p.id, !p.isPremium)}
+                      triggerLabel={p.isPremium ? "Retirer premium" : "Premium"}
                       triggerClassName="rounded-md bg-amber-500/20 px-2 py-1 text-amber-200 text-xs hover:bg-amber-500/30"
                       title={
                         p.isPremium
@@ -280,8 +303,8 @@ export default async function AdminProsPage({
                             <span className="font-semibold text-foreground">
                               {p.displayName}
                             </span>{" "}
-                            perdra le badge ★ Certifié et son boost dans
-                            l'ordre d'affichage.
+                            perdra le badge ★ Certifié et son boost dans l'ordre
+                            d'affichage.
                           </>
                         ) : (
                           <>
@@ -309,8 +332,8 @@ export default async function AdminProsPage({
                           <span className="font-semibold text-foreground">
                             {p.displayName}
                           </span>{" "}
-                          ({p.category}). Le compte utilisateur reste, mais le profil
-                          public et toutes ses photos seront supprimés.
+                          ({p.category}). Le compte utilisateur reste, mais le
+                          profil public et toutes ses photos seront supprimés.
                         </>
                       }
                       confirmLabel="Supprimer le profil"
@@ -321,7 +344,10 @@ export default async function AdminProsPage({
             ))}
             {pros.length === 0 && (
               <tr>
-                <td colSpan={8} className="px-4 py-12 text-center text-muted-foreground">
+                <td
+                  colSpan={8}
+                  className="px-4 py-12 text-center text-muted-foreground"
+                >
                   Aucun profil pro pour le moment.
                 </td>
               </tr>
