@@ -345,7 +345,7 @@ export default function ConcertPage() {
           <div className="overflow-hidden rounded-3xl border border-white/10 bg-coal shadow-2xl">
             <iframe
               title="Playlist Spotify Fally Ipupa"
-              src="https://open.spotify.com/embed/playlist/37i9dQZF1DZ06evO3XZfhO?utm_source=generator&theme=0"
+              src="https://open.spotify.com/embed/playlist/1gYERmVgRIly3kef2tvTIi?utm_source=generator&theme=0"
               width="100%"
               height="380"
               frameBorder="0"

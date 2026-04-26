@@ -143,7 +143,7 @@ const PLAYLISTS: Playlist[] = [
   },
 ];
 
-const SPOTIFY_PLAYLIST = "https://open.spotify.com/playlist/37i9dQZF1DZ06evO3XZfhO";
+const SPOTIFY_PLAYLIST = "https://open.spotify.com/playlist/1gYERmVgRIly3kef2tvTIi";
 const YOUTUBE_CHANNEL = "https://www.youtube.com/channel/UCBFYkrVI8OfHm9PzbAGFqlA";
 
 export const metadata = {
