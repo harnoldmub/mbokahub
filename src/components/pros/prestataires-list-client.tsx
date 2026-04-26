@@ -1,8 +1,16 @@
 "use client";
 
-import { ArrowRight, LockKeyhole, Search, Sparkles, X } from "lucide-react";
+import {
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  LockKeyhole,
+  Search,
+  Sparkles,
+  X,
+} from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { PhotoLightbox } from "@/components/pros/photo-lightbox";
 import {
@@ -43,11 +51,15 @@ type Props = {
   unlocked?: boolean;
 };
 
+const PAGE_SIZE = 20;
+
 export function PrestatairesListClient({ pros, unlocked = false }: Props) {
   const [search, setSearch] = useState("");
   const [activeCategories, setActiveCategories] = useState<ProCategory[]>([]);
   const [activeCities, setActiveCities] = useState<string[]>([]);
   const [premiumOnly, setPremiumOnly] = useState(false);
+  const [page, setPage] = useState(1);
+  const listTopRef = useRef<HTMLDivElement>(null);
   const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(
     null,
   );
@@ -94,6 +106,35 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
     setActiveCities([]);
     setPremiumOnly(false);
   };
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const pageStart = (currentPage - 1) * PAGE_SIZE;
+  const paginated = filtered.slice(pageStart, pageStart + PAGE_SIZE);
+
+  // Reset to page 1 whenever filters/search change
+  useEffect(() => {
+    setPage(1);
+  }, [search, activeCategories, activeCities, premiumOnly]);
+
+  const goToPage = (p: number) => {
+    const next = Math.max(1, Math.min(totalPages, p));
+    setPage(next);
+    if (typeof window !== "undefined") {
+      listTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  const pageNumbers = useMemo(() => {
+    // Compact page list: 1, …, p-1, p, p+1, …, totalPages
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+    const pages = new Set<number>([1, totalPages, currentPage]);
+    if (currentPage - 1 > 1) pages.add(currentPage - 1);
+    if (currentPage + 1 < totalPages) pages.add(currentPage + 1);
+    return Array.from(pages).sort((a, b) => a - b);
+  }, [totalPages, currentPage]);
 
   if (pros.length === 0) {
     return (
@@ -225,8 +266,9 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
           </button>
         </div>
       ) : (
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((p) => {
+        <>
+        <div ref={listTopRef} className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 scroll-mt-24">
+          {paginated.map((p) => {
             const meta = PRO_CATEGORY_BY_ID[p.category];
             const cover = p.photos?.[0];
             return (
@@ -330,6 +372,71 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
             );
           })}
         </div>
+
+        {totalPages > 1 && (
+          <nav
+            aria-label="Pagination des prestataires"
+            className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-white/5 pt-6"
+          >
+            <p className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
+              Page {currentPage} sur {totalPages} · {filtered.length}{" "}
+              {filtered.length > 1 ? "prestataires" : "prestataire"}
+            </p>
+
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => goToPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                aria-label="Page précédente"
+                className="flex h-9 items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-3 font-mono text-[10px] uppercase tracking-widest text-paper-dim transition hover:border-blood/40 hover:text-paper disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-white/10 disabled:hover:text-paper-dim"
+              >
+                <ChevronLeft className="size-3.5" />
+                Préc.
+              </button>
+
+              {pageNumbers.map((p, idx) => {
+                const prev = pageNumbers[idx - 1];
+                const showGap = prev !== undefined && p - prev > 1;
+                return (
+                  <span key={p} className="flex items-center gap-1">
+                    {showGap && (
+                      <span className="px-1 font-mono text-[10px] text-paper-mute">
+                        …
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => goToPage(p)}
+                      aria-label={`Aller à la page ${p}`}
+                      aria-current={p === currentPage ? "page" : undefined}
+                      className={cn(
+                        "h-9 min-w-9 rounded-lg border px-3 font-mono text-[10px] uppercase tracking-widest transition",
+                        p === currentPage
+                          ? "border-blood bg-blood text-paper"
+                          : "border-white/10 bg-white/5 text-paper-dim hover:border-blood/40 hover:text-paper",
+                      )}
+                    >
+                      {p}
+                    </button>
+                  </span>
+                );
+              })}
+
+              <button
+                type="button"
+                onClick={() => goToPage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                aria-label="Page suivante"
+                className="flex h-9 items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-3 font-mono text-[10px] uppercase tracking-widest text-paper-dim transition hover:border-blood/40 hover:text-paper disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-white/10 disabled:hover:text-paper-dim"
+              >
+                Suiv.
+                <ChevronRight className="size-3.5" />
+              </button>
+            </div>
+          </nav>
+        )}
+        </>
       )}
 
       {lightbox ? (

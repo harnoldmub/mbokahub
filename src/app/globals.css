@@ -17,6 +17,8 @@
   /* OR — le premium, le VIP */
   --color-gold: #f2b705;
   --color-gold-soft: #e3a40d;
+  --color-vip: #f2b705;
+  --color-vip-soft: #e3a40d;
 
   /* TEXTE — crème, pas blanc pur */
   --color-paper: #f5efe4;
