@@ -1,5 +1,6 @@
 import { ConfirmActionForm } from "@/components/admin/confirm-action-form";
 import { EditProForm } from "@/components/admin/edit-pro-form";
+import { PhotoUploader } from "@/components/admin/photo-uploader";
 import { prisma } from "@/lib/db/prisma";
 import {
   certifyProProfile,
@@ -143,12 +144,15 @@ export default async function AdminProsPage({
             placeholder="Bio / présentation"
             className="sm:col-span-2 rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
-          <textarea
-            name="photos"
-            rows={2}
-            placeholder="URLs photos (une par ligne ou séparées par virgule)"
-            className="sm:col-span-2 rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
-          />
+          <div className="sm:col-span-2">
+            <PhotoUploader
+              name="photos"
+              label="Photos du prestataire"
+              multiple
+              maxFiles={12}
+              helpText="La première photo devient la couverture sur l'annuaire."
+            />
+          </div>
           <label className="flex items-center gap-2 text-foreground text-sm">
             <input type="checkbox" name="isVerified" defaultChecked />
             Marquer comme validé

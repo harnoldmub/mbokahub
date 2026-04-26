@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { randomUUID } from "node:crypto";
 import { prisma } from "@/lib/db/prisma";
 import { requireAdmin } from "@/lib/admin";
+import { sendProValidatedEmail } from "@/lib/email";
 import type { ProCategory, PromoCodeCategory, UserRole } from "@prisma/client";
 
 function slugify(input: string): string {
@@ -71,11 +72,39 @@ export async function deleteUser(userId: string) {
 
 export async function verifyProProfile(profileId: string, verified: boolean) {
   await requireAdmin();
+
+  const before = await prisma.proProfile.findUnique({
+    where: { id: profileId },
+    select: {
+      isVerified: true,
+      displayName: true,
+      category: true,
+      user: { select: { email: true } },
+    },
+  });
+
   await prisma.proProfile.update({
     where: { id: profileId },
     data: { isVerified: verified, verifiedAt: verified ? new Date() : null },
   });
+
+  // Send activation email when transitioning from unverified -> verified
+  if (verified && before && !before.isVerified && before.user?.email) {
+    try {
+      await sendProValidatedEmail({
+        to: before.user.email,
+        displayName: before.displayName,
+        proId: profileId,
+        category: before.category,
+      });
+    } catch (e) {
+      console.error("[verifyProProfile] email send failed", e);
+    }
+  }
+
   revalidatePath("/admin/pros");
+  revalidatePath("/prestataires");
+  revalidatePath("/beaute");
 }
 
 export async function deleteProProfile(profileId: string) {

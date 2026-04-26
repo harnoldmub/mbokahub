@@ -10,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { PhotoUploader } from "@/components/admin/photo-uploader";
 import { updateProProfileAdmin } from "@/lib/actions/admin";
 
 const CATEGORIES = [
@@ -200,20 +201,16 @@ export function EditProForm({ pro }: EditProFormProps) {
               />
             </label>
 
-            <label className="sm:col-span-2 flex flex-col gap-1 text-xs text-muted-foreground">
-              Photos (URLs, une par ligne ou séparées par virgule)
-              <textarea
+            <div className="sm:col-span-2">
+              <PhotoUploader
                 name="photos"
-                rows={4}
-                defaultValue={pro.photos.join("\n")}
-                placeholder="https://… (Cloudinary, Unsplash, ton CDN…)"
-                className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm font-mono"
+                label="Photos du prestataire"
+                defaultUrls={pro.photos}
+                multiple
+                maxFiles={12}
+                helpText="Glisse-dépose ou clique pour ajouter. La première photo est la couverture."
               />
-              <span className="text-[10px] text-muted-foreground/80">
-                {pro.photos.length} photo{pro.photos.length > 1 ? "s" : ""}{" "}
-                actuellement.
-              </span>
-            </label>
+            </div>
 
             {error && (
               <div className="sm:col-span-2 rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-red-300 text-xs">
