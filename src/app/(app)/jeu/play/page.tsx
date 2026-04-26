@@ -31,23 +31,11 @@ export default async function JeuPlayPage({ searchParams }: JeuPlayPageProps) {
       <div className="relative z-10 mx-auto max-w-4xl px-4 py-10">
         <Link
           href={localizedHref("/jeu", locale)}
-          className="mb-10 inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-paper-mute transition-colors hover:text-blood"
+          className="mb-6 inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-paper-mute transition-colors hover:text-blood"
         >
           <ChevronLeft className="size-3" />
           {copy.back}
         </Link>
-
-        <div className="mb-8 text-center">
-          <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-blood">
-            {copy.eyebrow}
-          </p>
-          <h1 className="mt-3 font-display text-5xl uppercase text-paper leading-tight sm:text-6xl">
-            {copy.titleLine1} {copy.titleLine2}
-          </h1>
-          <p className="mt-3 font-serif italic text-paper-dim">
-            {copy.tagline}
-          </p>
-        </div>
 
         <SapeRunClient
           copy={{

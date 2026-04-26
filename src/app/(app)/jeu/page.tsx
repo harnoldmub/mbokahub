@@ -2,6 +2,7 @@ import { ArrowRight, Gamepad2, Trophy, Users, Zap } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import { prisma } from "@/lib/db/prisma";
 import {
   getLocaleFromSearchParams,
   localizedHref,
@@ -14,33 +15,64 @@ type GamePageProps = {
   searchParams?: Promise<SearchParams>;
 };
 
-const leaderboard = [
-  {
-    user: "DjosonTheKing",
-    score: "142,500",
-    rank: "01",
-    icon: Trophy,
-    color: "text-gold",
-  },
-  {
-    user: "MammySape",
-    score: "98,200",
-    rank: "02",
-    icon: Zap,
-    color: "text-silver",
-  },
-  {
-    user: "MbokaRunner99",
-    score: "87,150",
-    rank: "03",
-    icon: Users,
-    color: "text-bronze",
-  },
+export const dynamic = "force-dynamic";
+
+const RANK_STYLES = [
+  { icon: Trophy, color: "text-gold" },
+  { icon: Zap, color: "text-silver" },
+  { icon: Users, color: "text-bronze" },
 ] as const;
+
+function formatScore(n: number, locale: string): string {
+  try {
+    return new Intl.NumberFormat(locale).format(n);
+  } catch {
+    return n.toLocaleString();
+  }
+}
+
+function formatUpdatedAt(d: Date, locale: string): string {
+  try {
+    return new Intl.DateTimeFormat(locale, {
+      hour: "2-digit",
+      minute: "2-digit",
+      day: "2-digit",
+      month: "2-digit",
+    }).format(d);
+  } catch {
+    return d.toISOString();
+  }
+}
 
 export default async function GamePage({ searchParams }: GamePageProps) {
   const locale = getLocaleFromSearchParams(await searchParams);
   const copy = nls[locale].game;
+
+  // Real weekly leaderboard: top 3 unique pseudos in the last 7 days.
+  const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  const grouped = await prisma.gameScore.groupBy({
+    by: ["pseudo"],
+    where: { createdAt: { gte: since } },
+    _max: { score: true, createdAt: true },
+    orderBy: { _max: { score: "desc" } },
+    take: 3,
+  });
+
+  const leaderboard = grouped.map((row, i) => {
+    const style = RANK_STYLES[i] ?? RANK_STYLES[2];
+    return {
+      user: row.pseudo,
+      score: formatScore(row._max.score ?? 0, locale),
+      rank: String(i + 1).padStart(2, "0"),
+      icon: style.icon,
+      color: style.color,
+    };
+  });
+
+  const lastUpdate = grouped
+    .map((g) => g._max.createdAt)
+    .filter((d): d is Date => d instanceof Date)
+    .sort((a, b) => b.getTime() - a.getTime())[0];
 
   return (
     <main className="relative min-h-[95svh] flex items-center justify-center overflow-hidden bg-ink">
@@ -100,31 +132,50 @@ export default async function GamePage({ searchParams }: GamePageProps) {
               {copy.weeklyLeaderboard}
             </h3>
 
-            <div className="space-y-4">
-              {leaderboard.map((item) => (
-                <div
-                  className="group flex items-center justify-between rounded-2xl border border-white/5 bg-smoke/50 p-4 transition-colors hover:border-blood/30"
-                  key={item.user}
+            {leaderboard.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-white/10 bg-smoke/30 p-8 text-center">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
+                  {copy.emptyLeaderboard}
+                </p>
+                <Button
+                  asChild
+                  size="sm"
+                  className="mt-4 bg-blood text-white hover:bg-blood/90"
                 >
-                  <div className="flex items-center gap-4">
-                    <span className="font-mono text-blood text-xs">
-                      {item.rank}
-                    </span>
-                    <div>
-                      <p className="font-heading text-paper">{item.user}</p>
-                      <p className="font-mono text-[10px] text-paper-mute">
-                        {item.score} {copy.points}
-                      </p>
+                  <Link href={localizedHref("/jeu/play", locale)}>
+                    {copy.beFirst}
+                  </Link>
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {leaderboard.map((item, idx) => (
+                  <div
+                    className="group flex items-center justify-between rounded-2xl border border-white/5 bg-smoke/50 p-4 transition-colors hover:border-blood/30"
+                    key={`${item.user}-${idx}`}
+                  >
+                    <div className="flex items-center gap-4">
+                      <span className="font-mono text-blood text-xs">
+                        {item.rank}
+                      </span>
+                      <div>
+                        <p className="font-heading text-paper">{item.user}</p>
+                        <p className="font-mono text-[10px] text-paper-mute">
+                          {item.score} {copy.points}
+                        </p>
+                      </div>
                     </div>
+                    <item.icon className={cn("size-4", item.color)} />
                   </div>
-                  <item.icon className={cn("size-4", item.color)} />
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
 
-            <p className="pt-4 text-center font-mono text-[9px] text-paper-mute uppercase tracking-widest">
-              {copy.updated}
-            </p>
+            {lastUpdate && (
+              <p className="pt-4 text-center font-mono text-[9px] text-paper-mute uppercase tracking-widest">
+                {copy.updatedAt} {formatUpdatedAt(lastUpdate, locale)}
+              </p>
+            )}
           </div>
         </div>
       </div>
