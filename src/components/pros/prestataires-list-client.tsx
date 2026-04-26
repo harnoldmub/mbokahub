@@ -124,7 +124,7 @@ export function PrestatairesListClient({ pros }: Props) {
 
   return (
     <section className="relative z-10 mx-auto max-w-7xl px-6 pb-32 lg:px-8">
-      <div className="rounded-[2rem] border border-white/10 bg-coal/60 p-6 backdrop-blur-md sm:p-8">
+      <div className="relative z-30 rounded-[2rem] border border-white/10 bg-coal/60 p-6 backdrop-blur-md sm:p-8">
         {/* Search */}
         <div className="space-y-2">
           <label className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
