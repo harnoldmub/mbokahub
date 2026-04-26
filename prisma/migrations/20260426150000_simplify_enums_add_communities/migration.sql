@@ -9,6 +9,10 @@ END $$;
 
 -- AlterEnum: PaymentType -> (VIP_FAN, PRO_PREMIUM, BOOST, CONDUCTEUR_REVEAL)
 -- Only run the rename dance if the current PaymentType still contains old labels.
+-- Drop any leftover _new/_old types from a previously aborted run before retrying.
+DROP TYPE IF EXISTS "public"."PaymentType_new";
+DROP TYPE IF EXISTS "public"."PaymentType_old";
+
 DO $$
 DECLARE
   has_old BOOLEAN;

@@ -6,6 +6,7 @@ import {
   CalendarDays,
   Clock,
   ExternalLink,
+  Headphones,
   MapPin,
   Music,
   Ticket,
@@ -17,6 +18,19 @@ import { SectionHeading } from "@/components/marketing/section-heading";
 import { Countdown } from "@/components/marketing/countdown";
 import { Button } from "@/components/ui/button";
 import { EVENT_CONTEXT } from "@/lib/constants";
+
+function YoutubeIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      className={className}
+    >
+      <path d="M21.582 6.186a2.506 2.506 0 0 0-1.768-1.768C18.254 4 12 4 12 4s-6.254 0-7.814.418A2.506 2.506 0 0 0 2.418 6.186C2 7.746 2 12 2 12s0 4.254.418 5.814a2.506 2.506 0 0 0 1.768 1.768C5.746 20 12 20 12 20s6.254 0 7.814-.418a2.506 2.506 0 0 0 1.768-1.768C22 16.254 22 12 22 12s0-4.254-.418-5.814zM10 15.5v-7l6 3.5-6 3.5z" />
+    </svg>
+  );
+}
 
 const TICKET_VENDORS = [
   {
@@ -307,6 +321,68 @@ export default function ConcertPage() {
               </p>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="relative z-10 mx-auto max-w-7xl px-6 py-16 space-y-8">
+        <div className="flex items-center gap-3">
+          <Headphones className="size-7 text-blood" />
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-blood">
+              Vibe avec lui
+            </p>
+            <h2 className="font-display text-3xl uppercase text-paper sm:text-4xl">
+              Écoute Fally en attendant
+            </h2>
+            <p className="mt-2 max-w-2xl text-paper-dim">
+              Chauffe l'ambiance avec la playlist officielle Spotify et abonne-toi à
+              sa chaîne YouTube pour ne rien rater des derniers clips.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+          <div className="overflow-hidden rounded-3xl border border-white/10 bg-coal shadow-2xl">
+            <iframe
+              title="Playlist Spotify Fally Ipupa"
+              src="https://open.spotify.com/embed/playlist/37i9dQZF1DZ06evO3XZfhO?utm_source=generator&theme=0"
+              width="100%"
+              height="380"
+              frameBorder="0"
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation"
+              loading="lazy"
+              className="block"
+            />
+          </div>
+
+          <a
+            href="https://www.youtube.com/channel/UCBFYkrVI8OfHm9PzbAGFqlA"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex flex-col justify-between gap-6 overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-blood/15 via-coal to-coal p-8 transition-colors hover:border-blood/40"
+          >
+            <div className="flex items-center gap-3">
+              <YoutubeIcon className="size-10 text-blood" />
+              <span className="rounded-full bg-blood/20 px-3 py-1 font-mono text-[9px] uppercase tracking-widest text-blood">
+                Officiel
+              </span>
+            </div>
+
+            <div className="space-y-3">
+              <p className="font-display text-2xl uppercase text-paper sm:text-3xl">
+                Chaîne YouTube de Fally Ipupa
+              </p>
+              <p className="text-sm text-paper-dim">
+                Clips, lives, coulisses & dernières sorties. Abonne-toi pour
+                vivre la route vers le Stade de France.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-paper transition-transform group-hover:translate-x-1">
+              S'abonner <ArrowRight className="size-4 text-blood" />
+            </div>
+          </a>
         </div>
       </section>
 
