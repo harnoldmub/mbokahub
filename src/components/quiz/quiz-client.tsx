@@ -384,11 +384,11 @@ const ALL_QUESTIONS = [
   {
     id: 24,
     question:
-      "Quel est le sixième et dernier album de Fally Ipupa (à ce jour) ?",
-    options: ["Control", "Tokooos II", "Formule 7", "Stade de France Live"],
-    correct: 2,
+      "Quel est le dernier album de Fally Ipupa (à ce jour) ?",
+    options: ["Control", "Tokooos II", "Formule 7", "XX"],
+    correct: 3,
     anecdote:
-      "« Formule 7 » sort en 2022 et représente le 6e album studio de Fally, où il explore de nouvelles sonorités.",
+      "« XX » est le dernier album en date de Fally Ipupa — la suite de son aventure musicale après Formule 7 (2022).",
     category: "Discographie",
     album: ALBUMS.formule,
     image: "/images/fally/fally-paris.jpg",
@@ -820,16 +820,6 @@ const ALL_QUESTIONS = [
     image: "/images/fally/fally-2014.jpg",
   },
   {
-    id: 58,
-    question: "Quel est le titre de la chanson devenue un hymne lors de la CAN 2024 ?",
-    options: ["Mayday", "Mannequin", "Likolo", "Allô"],
-    correct: 0,
-    anecdote: "« Mayday » a accompagné les Léopards de RDC pendant toute la CAN 2024.",
-    category: "Culture",
-    album: ALBUMS.formule,
-    image: "/images/fally/fally-afcon.jpg",
-  },
-  {
     id: 59,
     question: "Quel titre de l'album Tokooos réunit Fally Ipupa et R. Kelly ?",
     options: ["Original", "Bad Like Me", "Nidja", "Likolo"],
@@ -968,16 +958,6 @@ const ALL_QUESTIONS = [
     category: "Culture",
     album: ALBUMS.droit,
     image: "/images/fally/fally-cameroun-2021.jpg",
-  },
-  {
-    id: 75,
-    question: "Sur quel album figure le titre « Mayday » ?",
-    options: ["Tokooos", "Control", "Power Kosa Leka", "Formule 7"],
-    correct: 3,
-    anecdote: "« Mayday » figure sur Formule 7 (2022) — devenu hymne CAN 2024.",
-    category: "Discographie",
-    album: ALBUMS.formule,
-    image: "/images/fally/fally-afcon.jpg",
   },
   {
     id: 76,
@@ -1158,16 +1138,6 @@ const ALL_QUESTIONS = [
     category: "Culture",
     album: ALBUMS.tokooos,
     image: "/images/fally/fally-paris.jpg",
-  },
-  {
-    id: 95,
-    question: "Quel mot lingala signifie « venez » et est souvent crié en concert ?",
-    options: ["Bonga", "Yaka", "Kotazo", "Tokomi"],
-    correct: 1,
-    anecdote: "« Yaka » (« viens » / « venez ») est l'appel collectif lancé par Fally à son public.",
-    category: "Culture",
-    album: ALBUMS.power,
-    image: "/images/fally/fally-2014.jpg",
   },
   {
     id: 96,
