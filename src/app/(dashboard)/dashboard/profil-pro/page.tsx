@@ -2,6 +2,7 @@ import { AtSign, Camera, CheckCircle2, IdCard, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 import { PhotoUploader } from "@/components/admin/photo-uploader";
+import { ScrollToTopOnMount } from "@/components/dashboard/scroll-to-top-on-mount";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
@@ -82,12 +83,14 @@ export default async function ProfilProPage({
 
       {sp.saved ? (
         <div className="flex items-center gap-3 rounded-2xl border border-emerald-400/30 bg-emerald-500/10 p-4 text-emerald-200 text-sm">
+          <ScrollToTopOnMount />
           <CheckCircle2 aria-hidden className="size-5" />
           Tes modifications ont bien été enregistrées.
         </div>
       ) : null}
       {sp.error === "missing" ? (
         <div className="rounded-2xl border border-yellow-400/40 bg-yellow-400/10 p-4 text-yellow-200 text-sm">
+          <ScrollToTopOnMount />
           Champs obligatoires manquants : nom, ville et WhatsApp.
         </div>
       ) : null}

@@ -1,5 +1,6 @@
 import { ShieldAlert, UserRound } from "lucide-react";
 
+import { ScrollToTopOnMount } from "@/components/dashboard/scroll-to-top-on-mount";
 import { deleteAccountAction } from "@/lib/actions/account";
 import { formatDate, getDashboardUser } from "@/lib/dashboard";
 
@@ -69,6 +70,7 @@ export default async function SettingsPage({
         </p>
         {error === "confirmation" ? (
           <p className="mt-4 rounded-2xl border border-error/30 bg-error/10 p-3 text-error">
+            <ScrollToTopOnMount />
             Tape exactement SUPPRIMER pour confirmer.
           </p>
         ) : null}
