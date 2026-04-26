@@ -11,6 +11,8 @@ const MIME_BY_EXT: Record<string, string> = {
   png: "image/png",
   webp: "image/webp",
   gif: "image/gif",
+  heic: "image/heic",
+  heif: "image/heif",
 };
 
 const ALLOWED_PREFIXES = ["uploads/", "pro-photos/"];

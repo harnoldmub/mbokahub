@@ -10,6 +10,7 @@ import {
   extForMime,
   getStorageClient,
   publicUrlForKey,
+  resolveImageMime,
 } from "@/lib/storage";
 
 export const runtime = "nodejs";
@@ -59,19 +60,27 @@ export async function POST(req: Request) {
   const uploaded: UploadedFile[] = [];
   const errors: string[] = [];
 
+  const maxMb = Math.round(MAX_IMAGE_BYTES / 1024 / 1024);
   for (const file of files) {
-    if (!ALLOWED_IMAGE_TYPES.includes(file.type as (typeof ALLOWED_IMAGE_TYPES)[number])) {
-      errors.push(`${file.name}: type non supporté (${file.type || "inconnu"})`);
+    const mime = resolveImageMime(file);
+    if (!ALLOWED_IMAGE_TYPES.includes(mime as (typeof ALLOWED_IMAGE_TYPES)[number])) {
+      errors.push(
+        `${file.name}: format non supporté (${file.type || "inconnu"}). Formats acceptés : JPG, PNG, WebP, GIF, HEIC.`,
+      );
+      continue;
+    }
+    if (file.size === 0) {
+      errors.push(`${file.name}: fichier vide`);
       continue;
     }
     if (file.size > MAX_IMAGE_BYTES) {
       errors.push(
-        `${file.name}: trop lourd (${(file.size / 1024 / 1024).toFixed(1)} Mo, max 5 Mo)`,
+        `${file.name}: trop lourd (${(file.size / 1024 / 1024).toFixed(1)} Mo, max ${maxMb} Mo)`,
       );
       continue;
     }
 
-    const ext = extForMime(file.type);
+    const ext = extForMime(mime);
     const key = `${keyPrefix}/${Date.now()}-${randomUUID()}.${ext}`;
     const buffer = Buffer.from(await file.arrayBuffer());
 

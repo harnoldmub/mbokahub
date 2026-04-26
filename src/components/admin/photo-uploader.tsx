@@ -177,14 +177,14 @@ export function PhotoUploader({
                 : "Glisse une photo ou clique"}
           </span>
           <span className="text-[11px] text-muted-foreground">
-            JPG, PNG, WebP ou GIF · 5 Mo max{multiple ? ` · jusqu'à ${maxFiles} photos` : ""}
+            JPG, PNG, WebP, GIF ou HEIC (iPhone) · 15 Mo max{multiple ? ` · jusqu'à ${maxFiles} photos` : ""}
           </span>
           <input
             ref={fileInputRef}
             id={inputId}
             type="file"
             multiple={multiple}
-            accept="image/jpeg,image/png,image/webp,image/gif"
+            accept="image/jpeg,image/jpg,image/png,image/webp,image/gif,image/heic,image/heif,.jpg,.jpeg,.png,.webp,.gif,.heic,.heif"
             disabled={busy}
             onChange={(e) => {
               if (e.target.files) upload(e.target.files);
