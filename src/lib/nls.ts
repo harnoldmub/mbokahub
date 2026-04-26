@@ -289,6 +289,10 @@ export const nls = {
       recordLabel: "Record",
       speed: "VITESSE",
       goal: "STADE DE FRANCE",
+      namePrompt: "Ton prénom (pour le classement)",
+      namePlaceholder: "Ton prénom",
+      nameRequired: "Entre ton prénom pour démarrer",
+      playerLabel: "Joueur",
     },
     quizGame: {
       eyebrow: "Pendant que tu attends le concert",
@@ -624,6 +628,10 @@ export const nls = {
       recordLabel: "Best",
       speed: "SPEED",
       goal: "STADE DE FRANCE",
+      namePrompt: "Your first name (for the leaderboard)",
+      namePlaceholder: "Your first name",
+      nameRequired: "Enter your first name to start",
+      playerLabel: "Player",
     },
     quizGame: {
       eyebrow: "While you wait for the concert",
@@ -960,6 +968,10 @@ export const nls = {
       recordLabel: "Rekord",
       speed: "TEMPO",
       goal: "STADE DE FRANCE",
+      namePrompt: "Dein Vorname (für die Bestenliste)",
+      namePlaceholder: "Dein Vorname",
+      nameRequired: "Gib deinen Vornamen ein, um zu starten",
+      playerLabel: "Spieler",
     },
     quizGame: {
       eyebrow: "Während du auf das Konzert wartest",
@@ -1296,6 +1308,10 @@ export const nls = {
       recordLabel: "Record",
       speed: "SNELHEID",
       goal: "STADE DE FRANCE",
+      namePrompt: "Je voornaam (voor het klassement)",
+      namePlaceholder: "Je voornaam",
+      nameRequired: "Vul je voornaam in om te starten",
+      playerLabel: "Speler",
     },
     quizGame: {
       eyebrow: "Terwijl je wacht op het concert",

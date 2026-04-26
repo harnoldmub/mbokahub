@@ -66,6 +66,10 @@ export default async function JeuPlayPage({ searchParams }: JeuPlayPageProps) {
             recordLabel: copy.recordLabel,
             speed: copy.speed,
             goal: copy.goal,
+            namePrompt: copy.namePrompt,
+            namePlaceholder: copy.namePlaceholder,
+            nameRequired: copy.nameRequired,
+            playerLabel: copy.playerLabel,
           }}
         />
       </div>

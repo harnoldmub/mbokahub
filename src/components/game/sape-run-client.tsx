@@ -425,6 +425,10 @@ export interface SapeRunCopy {
   recordLabel: string;
   speed: string;
   goal: string;
+  namePrompt: string;
+  namePlaceholder: string;
+  nameRequired: string;
+  playerLabel: string;
 }
 
 const DEFAULT_COPY: SapeRunCopy = {
@@ -444,7 +448,22 @@ const DEFAULT_COPY: SapeRunCopy = {
   recordLabel: "Record",
   speed: "VITESSE",
   goal: "STADE DE FRANCE",
+  namePrompt: "Ton prénom (pour le classement)",
+  namePlaceholder: "Ton prénom",
+  nameRequired: "Entre ton prénom pour démarrer",
+  playerLabel: "Joueur",
 };
+
+const PSEUDO_STORAGE_KEY = "saperun_pseudo";
+const MAX_PSEUDO_LEN = 24;
+
+function sanitizePseudo(input: string): string {
+  return input
+    .replace(/[\u0000-\u001f\u007f]/g, "")
+    .replace(/\s+/g, " ")
+    .trimStart()
+    .slice(0, MAX_PSEUDO_LEN);
+}
 
 // ── Main Component ─────────────────────────────────────────────────────────────
 export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = {}) {
@@ -479,10 +498,19 @@ export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = 
   const [displayScore, setDisplayScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
   const [_combo, setCombo] = useState(0);
+  const [firstName, setFirstName] = useState("");
+  const [nameError, setNameError] = useState<string | null>(null);
+  const firstNameRef = useRef("");
 
   useEffect(() => {
     const stored = localStorage.getItem("saperun_highscore");
     if (stored) setHighScore(parseInt(stored, 10));
+    const storedName = localStorage.getItem(PSEUDO_STORAGE_KEY);
+    if (storedName) {
+      const cleaned = sanitizePseudo(storedName);
+      setFirstName(cleaned);
+      firstNameRef.current = cleaned;
+    }
   }, []);
 
   const jump = useCallback(() => {
@@ -494,6 +522,12 @@ export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = 
   }, []);
 
   const startGame = useCallback(() => {
+    const pseudo = sanitizePseudo(firstNameRef.current).trim();
+    if (pseudo.length < 2) {
+      setNameError(c.nameRequired);
+      return;
+    }
+    setNameError(null);
     playerRef.current = {
       x: 80,
       y: GROUND - 60,
@@ -515,7 +549,7 @@ export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = 
     setGameState("running");
     setDisplayScore(0);
     setCombo(0);
-  }, []);
+  }, [c.nameRequired]);
 
   const endGame = useCallback(() => {
     stateRef.current = "dead";
@@ -526,6 +560,19 @@ export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = 
       localStorage.setItem("saperun_highscore", String(next));
       return next;
     });
+
+    // Persist run with player pseudo (best-effort).
+    const pseudo = sanitizePseudo(firstNameRef.current).trim();
+    if (pseudo.length >= 2 && final > 0) {
+      void fetch("/api/games/sape-run/score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pseudo, score: final }),
+        keepalive: true,
+      }).catch((err) => {
+        console.warn("[sape-run] score post failed", err);
+      });
+    }
     // Death particles
     const p = playerRef.current;
     for (let i = 0; i < 20; i++) {
@@ -994,13 +1041,25 @@ export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = 
   // Keyboard controls
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.code === "Space" || e.code === "ArrowUp") {
-        e.preventDefault();
-        if (stateRef.current === "idle" || stateRef.current === "dead") {
-          startGame();
-        } else {
-          jump();
+      if (e.code !== "Space" && e.code !== "ArrowUp") return;
+      // Don't hijack the spacebar when typing in an input/textarea.
+      const target = e.target as HTMLElement | null;
+      if (target) {
+        const tag = target.tagName;
+        if (
+          tag === "INPUT" ||
+          tag === "TEXTAREA" ||
+          tag === "SELECT" ||
+          target.isContentEditable
+        ) {
+          return;
         }
+      }
+      e.preventDefault();
+      if (stateRef.current === "idle" || stateRef.current === "dead") {
+        startGame();
+      } else {
+        jump();
       }
     }
     window.addEventListener("keydown", onKey);
@@ -1039,18 +1098,60 @@ export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = 
               <h2 className="mb-4 font-display text-5xl uppercase text-paper leading-tight">
                 {c.idleTitle}
               </h2>
-              <p className="mb-8 max-w-xs mx-auto font-body text-paper-dim text-sm italic leading-relaxed">
+              <p className="mb-6 max-w-xs mx-auto font-body text-paper-dim text-sm italic leading-relaxed">
                 {c.idleTagline}
               </p>
-              <button
-                type="button"
-                onClick={startGame}
-                className="flex items-center gap-3 mx-auto rounded-2xl bg-blood px-10 py-4 font-mono text-sm uppercase tracking-wider text-white shadow-glow-blood hover:bg-blood/90 transition-all"
+
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  startGame();
+                }}
+                className="mx-auto mb-6 flex max-w-xs flex-col items-stretch gap-3"
               >
-                <Play className="size-5 fill-current" />
-                {c.start}
-              </button>
-              <p className="mt-6 font-mono text-[9px] uppercase tracking-widest text-paper-mute">
+                <label
+                  htmlFor="saperun-pseudo"
+                  className="font-mono text-[10px] uppercase tracking-[0.3em] text-paper-mute"
+                >
+                  {c.namePrompt}
+                </label>
+                <input
+                  id="saperun-pseudo"
+                  type="text"
+                  inputMode="text"
+                  autoComplete="given-name"
+                  maxLength={MAX_PSEUDO_LEN}
+                  value={firstName}
+                  onChange={(e) => {
+                    const next = sanitizePseudo(e.target.value);
+                    setFirstName(next);
+                    firstNameRef.current = next;
+                    if (nameError) setNameError(null);
+                    try {
+                      localStorage.setItem(PSEUDO_STORAGE_KEY, next);
+                    } catch {
+                      /* ignore quota / private mode */
+                    }
+                  }}
+                  placeholder={c.namePlaceholder}
+                  className="rounded-xl border border-white/10 bg-smoke/60 px-4 py-3 text-center font-display text-lg uppercase tracking-wider text-paper placeholder:font-mono placeholder:text-xs placeholder:tracking-widest placeholder:text-paper-mute focus:border-blood/60 focus:outline-none focus:ring-2 focus:ring-blood/40"
+                />
+                {nameError && (
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-blood">
+                    {nameError}
+                  </p>
+                )}
+                <button
+                  type="submit"
+                  className="flex items-center justify-center gap-3 rounded-2xl bg-blood px-10 py-4 font-mono text-sm uppercase tracking-wider text-white shadow-glow-blood hover:bg-blood/90 transition-all disabled:cursor-not-allowed disabled:opacity-40"
+                  disabled={firstName.trim().length < 2}
+                >
+                  <Play className="size-5 fill-current" />
+                  {c.start}
+                </button>
+              </form>
+
+              <p className="font-mono text-[9px] uppercase tracking-widest text-paper-mute">
                 {c.controlsHint}
               </p>
             </div>
@@ -1064,9 +1165,15 @@ export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = 
               <p className="mb-1 font-mono text-[9px] uppercase tracking-[0.3em] text-blood sm:text-[10px] sm:tracking-[0.4em]">
                 {c.gameOver}
               </p>
-              <h2 className="mb-2 font-display text-xl uppercase text-paper sm:mb-6 sm:text-4xl">
+              <h2 className="mb-2 font-display text-xl uppercase text-paper sm:mb-3 sm:text-4xl">
                 {c.fallen}
               </h2>
+              {firstName.trim().length >= 2 && (
+                <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.3em] text-paper-mute sm:mb-4">
+                  {c.playerLabel} ·{" "}
+                  <span className="text-paper">{firstName.trim()}</span>
+                </p>
+              )}
 
               <div className="mx-auto mb-3 grid max-w-xs grid-cols-2 gap-2 sm:mb-6 sm:gap-4">
                 <div className="min-w-0 rounded-xl border border-white/10 bg-smoke/50 p-2 sm:rounded-2xl sm:p-4">
