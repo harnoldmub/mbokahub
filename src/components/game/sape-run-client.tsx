@@ -1059,38 +1059,38 @@ export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = 
 
         {/* Overlay: Dead */}
         {gameState === "dead" && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center rounded-[2rem] bg-ink/80 backdrop-blur-sm">
-            <div className="text-center px-6">
-              <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.4em] text-blood">
+          <div className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden rounded-[2rem] bg-ink/80 backdrop-blur-sm">
+            <div className="w-full max-w-sm px-3 text-center sm:px-6">
+              <p className="mb-1 font-mono text-[9px] uppercase tracking-[0.3em] text-blood sm:text-[10px] sm:tracking-[0.4em]">
                 {c.gameOver}
               </p>
-              <h2 className="mb-6 font-display text-4xl uppercase text-paper">
+              <h2 className="mb-2 font-display text-xl uppercase text-paper sm:mb-6 sm:text-4xl">
                 {c.fallen}
               </h2>
 
-              <div className="mb-6 grid grid-cols-2 gap-4 max-w-xs mx-auto">
-                <div className="rounded-2xl border border-white/10 bg-smoke/50 p-4">
-                  <p className="font-mono text-[9px] uppercase tracking-widest text-paper-mute mb-1">
+              <div className="mx-auto mb-3 grid max-w-xs grid-cols-2 gap-2 sm:mb-6 sm:gap-4">
+                <div className="min-w-0 rounded-xl border border-white/10 bg-smoke/50 p-2 sm:rounded-2xl sm:p-4">
+                  <p className="mb-0.5 font-mono text-[8px] uppercase tracking-widest text-paper-mute sm:mb-1 sm:text-[9px]">
                     {c.score}
                   </p>
-                  <p className="font-display text-3xl text-paper">
+                  <p className="truncate font-display text-lg tabular-nums text-paper sm:text-3xl">
                     {displayScore}
                   </p>
                 </div>
                 <div
                   className={cn(
-                    "rounded-2xl border p-4",
+                    "min-w-0 rounded-xl border p-2 sm:rounded-2xl sm:p-4",
                     displayScore >= highScore
                       ? "border-gold/50 bg-gold/10"
                       : "border-white/10 bg-smoke/50",
                   )}
                 >
-                  <p className="font-mono text-[9px] uppercase tracking-widest text-paper-mute mb-1">
+                  <p className="mb-0.5 font-mono text-[8px] uppercase tracking-widest text-paper-mute sm:mb-1 sm:text-[9px]">
                     {displayScore >= highScore ? c.newRecord : c.record}
                   </p>
                   <p
                     className={cn(
-                      "font-display text-3xl",
+                      "truncate font-display text-lg tabular-nums sm:text-3xl",
                       displayScore >= highScore ? "text-gold" : "text-paper",
                     )}
                   >
@@ -1102,7 +1102,7 @@ export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = 
               <button
                 type="button"
                 onClick={startGame}
-                className="flex items-center gap-3 mx-auto rounded-2xl bg-blood px-10 py-4 font-mono text-sm uppercase tracking-wider text-white shadow-glow-blood hover:bg-blood/90 transition-all"
+                className="mx-auto flex items-center gap-2 rounded-xl bg-blood px-5 py-2.5 font-mono text-xs uppercase tracking-wider text-white shadow-glow-blood transition-all hover:bg-blood/90 sm:gap-3 sm:rounded-2xl sm:px-10 sm:py-4 sm:text-sm"
               >
                 <RotateCcw className="size-4" />
                 {c.retry}
