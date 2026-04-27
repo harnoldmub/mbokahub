@@ -1,6 +1,7 @@
 import { ArrowRight, Info } from "lucide-react";
 
 import { SectionHeading } from "@/components/marketing/section-heading";
+import { PriceSuggester } from "@/components/trajets/price-suggester";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { PhoneInput } from "@/components/ui/phone-input";
@@ -54,6 +55,8 @@ export default async function PublishTrajetPage({
                 Accès VIP Uniquement pour les contacts
               </span>
             </div>
+
+            <PriceSuggester />
           </div>
         </div>
 
