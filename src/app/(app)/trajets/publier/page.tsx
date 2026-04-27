@@ -3,6 +3,7 @@ import { ArrowRight, Info } from "lucide-react";
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { Input } from "@/components/ui/input";
 import { createTrajetAction } from "@/lib/actions/public";
 
@@ -121,8 +122,8 @@ export default async function PublishTrajetPage({
                   <FormField label="Prix / place" helperText="En Euros (€)">
                     <Input name="prix" type="number" min="0" step="0.5" required placeholder="25" className="h-12 bg-smoke border-none" />
                   </FormField>
-                  <FormField label="WhatsApp" helperText="Contact direct">
-                    <Input name="whatsapp" required placeholder="+32 ..." className="h-12 bg-smoke border-none" />
+                  <FormField label="WhatsApp" helperText="Choisis ton indicatif pays puis tape ton numéro">
+                    <PhoneInput name="whatsapp" required />
                   </FormField>
                 </div>
 

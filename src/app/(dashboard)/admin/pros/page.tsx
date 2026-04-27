@@ -1,6 +1,7 @@
 import { ConfirmActionForm } from "@/components/admin/confirm-action-form";
 import { EditProForm } from "@/components/admin/edit-pro-form";
 import { PhotoUploader } from "@/components/admin/photo-uploader";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { prisma } from "@/lib/db/prisma";
 import {
   certifyProProfile,
@@ -112,12 +113,7 @@ export default async function AdminProsPage({
             placeholder="Pays"
             className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
-          <input
-            name="whatsapp"
-            required
-            placeholder="WhatsApp (+33…)"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
-          />
+          <PhoneInput name="whatsapp" required />
           <input
             name="instagramHandle"
             placeholder="Instagram (@handle)"

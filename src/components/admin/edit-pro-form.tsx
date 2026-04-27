@@ -2,6 +2,8 @@
 
 import { useState, useTransition } from "react";
 
+import { PhoneInput } from "@/components/ui/phone-input";
+
 import {
   Dialog,
   DialogContent,
@@ -142,13 +144,7 @@ export function EditProForm({ pro }: EditProFormProps) {
 
             <label className="flex flex-col gap-1 text-xs text-muted-foreground">
               WhatsApp
-              <input
-                name="whatsapp"
-                required
-                defaultValue={pro.whatsapp}
-                placeholder="+33…"
-                className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm"
-              />
+              <PhoneInput name="whatsapp" required defaultValue={pro.whatsapp} />
             </label>
 
             <label className="flex flex-col gap-1 text-xs text-muted-foreground">

@@ -3,6 +3,8 @@
 import { ArrowRight, AtSign, ShieldCheck, Sparkles } from "lucide-react";
 import { useState } from "react";
 
+import { PhoneInput } from "@/components/ui/phone-input";
+
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
@@ -132,13 +134,8 @@ export function ProRegistrationForm() {
               className="h-12 bg-smoke border-none"
             />
           </FormField>
-          <FormField label="WhatsApp" helperText="Pour que les clients te contactent">
-            <Input
-              name="whatsapp"
-              required
-              placeholder="+33 6 ..."
-              className="h-12 bg-smoke border-none"
-            />
+          <FormField label="WhatsApp" helperText="Choisis ton indicatif pays puis tape ton numéro">
+            <PhoneInput name="whatsapp" required />
           </FormField>
           <FormField label="TikTok (optionnel)" helperText="@handle">
             <Input

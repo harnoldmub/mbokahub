@@ -2,6 +2,7 @@ import { AtSign, Camera, CheckCircle2, IdCard, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 import { PhotoUploader } from "@/components/admin/photo-uploader";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { ScrollToTopOnMount } from "@/components/dashboard/scroll-to-top-on-mount";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -158,14 +159,12 @@ export default async function ProfilProPage({
           </FormField>
           <FormField
             label="WhatsApp"
-            helperText="Pour que les VIP te contactent directement"
+            helperText="Choisis ton indicatif pays puis tape ton numéro"
           >
-            <Input
+            <PhoneInput
               name="whatsapp"
               required
               defaultValue={pro.whatsapp}
-              placeholder="+33 6 ..."
-              className="h-12 bg-smoke border-none"
             />
           </FormField>
           <FormField label="Instagram (optionnel)" helperText="@handle">

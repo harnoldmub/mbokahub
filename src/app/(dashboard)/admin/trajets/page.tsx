@@ -1,4 +1,5 @@
 import { ConfirmActionForm } from "@/components/admin/confirm-action-form";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { prisma } from "@/lib/db/prisma";
 import {
   createTrajetAdmin,
@@ -104,12 +105,7 @@ export default async function AdminTrajetsPage() {
             placeholder="Prix par place (€)"
             className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
-          <input
-            name="whatsapp"
-            required
-            placeholder="WhatsApp (+33…)"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
-          />
+          <PhoneInput name="whatsapp" required />
           <input
             name="vehicule"
             placeholder="Marque véhicule"
