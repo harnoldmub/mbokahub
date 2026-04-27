@@ -121,6 +121,66 @@ export async function sendProValidatedEmail(args: {
   });
 }
 
+export async function sendTrajetPriceSuggestionEmail(args: {
+  to: string;
+  displayName: string | null;
+  villeDepart: string;
+  villeArrivee: string;
+  prixPublie: number;
+  perPlaceFair: number;
+  perPlaceMax: number;
+  trajetId: string;
+}) {
+  const dashboardUrl = `${PUBLIC_URL}/dashboard/annonces`;
+  const greeting = args.displayName
+    ? `Salut ${escapeHtml(args.displayName)}`
+    : "Salut";
+
+  const body = `
+    <h1 style="font-size:26px;font-weight:800;color:#fff;margin:0 0 16px;line-height:1.2;">
+      Ton prix semble un peu élevé 💸
+    </h1>
+    <p style="font-size:16px;line-height:1.6;color:#d4d4d4;margin:0 0 16px;">
+      ${greeting},
+    </p>
+    <p style="font-size:16px;line-height:1.6;color:#d4d4d4;margin:0 0 24px;">
+      Merci d'avoir publié ton trajet <strong style="color:#fff;">${escapeHtml(args.villeDepart)} → ${escapeHtml(args.villeArrivee)}</strong> pour le week-end Fally Ipupa au Stade de France.
+    </p>
+    <div style="background:#1a1a1a;border:1px solid rgba(229,9,20,0.25);border-radius:16px;padding:20px;margin:0 0 24px;">
+      <div style="font-family:'Courier New',monospace;font-size:11px;letter-spacing:0.2em;color:#E50914;margin:0 0 12px;text-transform:uppercase;">
+        Notre estimation
+      </div>
+      <p style="font-size:15px;line-height:1.6;color:#d4d4d4;margin:0 0 8px;">
+        Ton prix publié : <strong style="color:#fff;">${args.prixPublie} €</strong> par place
+      </p>
+      <p style="font-size:15px;line-height:1.6;color:#d4d4d4;margin:0;">
+        Prix conseillé pour ce trajet : <strong style="color:#fff;">~${args.perPlaceFair} €</strong> par place (jusqu'à ${args.perPlaceMax} €)
+      </p>
+    </div>
+    <p style="font-size:15px;line-height:1.6;color:#d4d4d4;margin:0 0 16px;">
+      Notre estimation se base sur la distance, l'essence (~0,085 €/km) et les péages (~0,04 €/km), divisé par toi + tes passagers.
+    </p>
+    <p style="font-size:15px;line-height:1.6;color:#d4d4d4;margin:0 0 24px;">
+      Tu peux bien sûr garder ton prix, mais nos données montrent que les trajets dans la fourchette conseillée se remplissent <strong style="color:#fff;">2 à 3× plus vite</strong>. Si tu veux ajuster, tu peux modifier ton annonce en un clic depuis ton dashboard.
+    </p>
+    <div style="text-align:center;margin:32px 0;">
+      <a href="${dashboardUrl}" style="display:inline-block;background:#E50914;color:#fff;padding:14px 28px;border-radius:999px;text-decoration:none;font-weight:600;font-size:14px;">
+        Modifier mon trajet
+      </a>
+    </div>
+    <p style="font-size:14px;line-height:1.6;color:#a4a4a4;margin:0;">
+      Une question ? Réponds simplement à ce mail, on te lit.
+    </p>
+  `;
+
+  return sendEmail({
+    to: args.to,
+    subject: `💸 ${args.villeDepart} → ${args.villeArrivee} : ton prix est un peu au-dessus du conseillé`,
+    html: emailLayout("Suggestion de prix", body),
+    text: `${greeting}, ton trajet ${args.villeDepart} → ${args.villeArrivee} est publié à ${args.prixPublie}€/place. Le prix conseillé est ~${args.perPlaceFair}€ (jusqu'à ${args.perPlaceMax}€). Modifier : ${dashboardUrl}`,
+  });
+}
+
 function escapeHtml(s: string) {
   return s
     .replace(/&/g, "&amp;")

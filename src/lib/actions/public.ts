@@ -3,10 +3,13 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 import { prisma } from "@/lib/db/prisma";
 import type { ProCategory } from "@prisma/client";
 
 import { PRO_CATEGORY_IDS } from "@/lib/pro-categories";
+import { findCity, suggestPrice } from "@/lib/data/cities";
+import { sendTrajetPriceSuggestionEmail } from "@/lib/email";
 import { detectContactInBio, normalizePriceRangeInput } from "@/lib/pro-display";
 
 const VALID_PRO_CATEGORIES: ProCategory[] = PRO_CATEGORY_IDS;
@@ -67,7 +70,7 @@ export async function createTrajetAction(form: FormData) {
     redirect("/trajets/publier?error=missing");
   }
 
-  await prisma.trajet.create({
+  const created = await prisma.trajet.create({
     data: {
       userId: user.id,
       villeDepart,
@@ -86,6 +89,38 @@ export async function createTrajetAction(form: FormData) {
       isApproved: false,
     },
   });
+
+  try {
+    const fromCity = findCity(villeDepart);
+    const toCity = findCity(villeArrivee);
+    if (fromCity && toCity && user.email && prix > 0) {
+      const suggestion = suggestPrice(fromCity, toCity, placesTotal);
+      const overpricedThreshold = suggestion.perPlaceMax * 1.2;
+      if (prix > overpricedThreshold) {
+        const userEmail = user.email;
+        const userName = user.name;
+        const trajetId = created.id;
+        after(async () => {
+          try {
+            await sendTrajetPriceSuggestionEmail({
+              to: userEmail,
+              displayName: userName,
+              villeDepart,
+              villeArrivee,
+              prixPublie: prix,
+              perPlaceFair: suggestion.perPlaceFair,
+              perPlaceMax: suggestion.perPlaceMax,
+              trajetId,
+            });
+          } catch (e) {
+            console.error("[trajet] price-suggestion email failed:", e);
+          }
+        });
+      }
+    }
+  } catch (e) {
+    console.error("[trajet] price-suggestion compute failed:", e);
+  }
 
   revalidatePath("/trajets");
   revalidatePath("/dashboard/annonces");
