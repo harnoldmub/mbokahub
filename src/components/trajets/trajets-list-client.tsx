@@ -6,18 +6,13 @@ import { useMemo, useState } from "react";
 
 import { TrajetCard } from "@/components/trajets/trajet-card";
 import { Input } from "@/components/ui/input";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import type { TrajetDemo } from "@/lib/demo-data";
 import { cn } from "@/lib/utils";
 
-type Props = { trajets: TrajetDemo[]; unlocked?: boolean };
+type TrajetWithDate = TrajetDemo & { dateIso?: string };
 
-type DateFilter = "all" | "may2" | "may3";
-
-const dateFilters: { id: DateFilter; label: string }[] = [
-  { id: "all", label: "Toutes dates" },
-  { id: "may2", label: "Sam. 2 mai" },
-  { id: "may3", label: "Dim. 3 mai" },
-];
+type Props = { trajets: TrajetWithDate[]; unlocked?: boolean };
 
 export function TrajetsListClient({ trajets, unlocked }: Props) {
   const villes = useMemo(
@@ -25,8 +20,21 @@ export function TrajetsListClient({ trajets, unlocked }: Props) {
     [trajets],
   );
 
+  // Adaptive date list: derive from actual trajets data and sort chronologically.
+  const datesOptions = useMemo(() => {
+    const map = new Map<string, string>(); // dateIso -> dateLabel
+    for (const t of trajets) {
+      if (t.dateIso && !map.has(t.dateIso)) {
+        map.set(t.dateIso, t.dateLabel);
+      }
+    }
+    return Array.from(map.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([iso, label]) => ({ value: iso, label }));
+  }, [trajets]);
+
   const [activeVille, setActiveVille] = useState<string>("all");
-  const [activeDate, setActiveDate] = useState<DateFilter>("all");
+  const [activeDate, setActiveDate] = useState<string>("all");
   const [boostOnly, setBoostOnly] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -34,12 +42,7 @@ export function TrajetsListClient({ trajets, unlocked }: Props) {
     return trajets.filter((t) => {
       if (activeVille !== "all" && t.villeDepart !== activeVille) return false;
       if (boostOnly && !t.isBoosted) return false;
-
-      if (activeDate !== "all") {
-        const label = t.dateLabel.toLowerCase();
-        if (activeDate === "may2" && !label.includes("2 mai")) return false;
-        if (activeDate === "may3" && !label.includes("3 mai")) return false;
-      }
+      if (activeDate !== "all" && t.dateIso !== activeDate) return false;
 
       if (search) {
         const q = search.toLowerCase();
@@ -99,8 +102,18 @@ export function TrajetsListClient({ trajets, unlocked }: Props) {
     );
   }
 
+  const villeOptions = [
+    { value: "all", label: "Toutes les villes", sticky: true },
+    ...villes.map((v) => ({ value: v, label: v })),
+  ];
+
+  const dateSelectOptions = [
+    { value: "all", label: "Toutes les dates", sticky: true },
+    ...datesOptions,
+  ];
+
   return (
-    <div className="space-y-10">
+    <div className="space-y-8">
       {/* Search */}
       <div className="relative">
         <Search className="absolute left-5 top-1/2 -translate-y-1/2 size-5 text-paper-mute pointer-events-none" />
@@ -123,65 +136,51 @@ export function TrajetsListClient({ trajets, unlocked }: Props) {
         )}
       </div>
 
-      {/* Filter row 1 — départ */}
-      {villes.length > 0 && (
-        <div className="space-y-3">
-          <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-paper-mute">
-            Ville de départ
-          </p>
-          <div className="flex flex-wrap gap-2">
-            <FilterChip
-              active={activeVille === "all"}
-              label="Toutes"
-              onClick={() => setActiveVille("all")}
-            />
-            {villes.map((ville) => (
-              <FilterChip
-                active={activeVille === ville}
-                key={ville}
-                label={ville}
-                onClick={() => setActiveVille(ville)}
-              />
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Filters card */}
+      <div className="rounded-3xl border border-white/10 bg-gradient-to-b from-coal/80 to-coal/40 p-5 sm:p-6">
+        <div className="grid gap-5 lg:grid-cols-[1fr_1fr_auto] lg:items-end">
+          <SearchableSelect
+            label="Ville de départ"
+            value={activeVille}
+            onChange={setActiveVille}
+            options={villeOptions}
+            placeholder="Toutes les villes"
+            searchPlaceholder="Rechercher une ville…"
+            emptyLabel="Aucune ville"
+          />
 
-      {/* Filter row 2 — date + vedettes */}
-      <div className="flex flex-wrap items-end justify-between gap-6">
-        <div className="space-y-3">
-          <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-paper-mute">
-            Date du concert
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {dateFilters.map((d) => (
-              <FilterChip
-                active={activeDate === d.id}
-                key={d.id}
-                label={d.label}
-                onClick={() => setActiveDate(d.id)}
-              />
-            ))}
-          </div>
-        </div>
+          <SearchableSelect
+            label="Date du trajet"
+            value={activeDate}
+            onChange={setActiveDate}
+            options={dateSelectOptions}
+            placeholder="Toutes les dates"
+            searchPlaceholder="Rechercher une date…"
+            emptyLabel="Aucune date"
+            noSort
+          />
 
-        <div className="space-y-3">
-          <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-paper-mute">
-            Mise en avant
-          </p>
-          <button
-            className={cn(
-              "inline-flex items-center gap-2 rounded-xl border px-4 py-2 font-mono text-[11px] uppercase tracking-[0.15em] transition-all",
-              boostOnly
-                ? "border-gold bg-gold/15 text-gold"
-                : "border-white/10 bg-coal/60 text-paper-mute hover:border-white/25 hover:text-paper",
-            )}
-            onClick={() => setBoostOnly((v) => !v)}
-            type="button"
-          >
-            <Star className={cn("size-3.5", boostOnly && "fill-current")} />
-            Vedettes uniquement
-          </button>
+          <div className="space-y-2">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
+              Mise en avant
+            </p>
+            <button
+              className={cn(
+                "inline-flex h-[46px] w-full items-center justify-center gap-2 rounded-2xl border px-5 font-mono text-[11px] uppercase tracking-[0.15em] transition-all lg:w-auto",
+                boostOnly
+                  ? "border-gold bg-gold/15 text-gold"
+                  : "border-white/10 bg-smoke text-paper-mute hover:border-white/25 hover:text-paper",
+              )}
+              onClick={() => setBoostOnly((v) => !v)}
+              type="button"
+            >
+              <Star
+                aria-hidden
+                className={cn("size-3.5", boostOnly && "fill-current")}
+              />
+              Vedettes
+            </button>
+          </div>
         </div>
       </div>
 
@@ -230,30 +229,5 @@ export function TrajetsListClient({ trajets, unlocked }: Props) {
         </div>
       )}
     </div>
-  );
-}
-
-function FilterChip({
-  active,
-  label,
-  onClick,
-}: {
-  active: boolean;
-  label: string;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      className={cn(
-        "rounded-xl border px-4 py-2 font-mono text-[11px] uppercase tracking-[0.15em] transition-all duration-200",
-        active
-          ? "border-blood bg-blood text-white shadow-glow-blood"
-          : "border-white/10 bg-coal/60 text-paper-mute hover:border-white/25 hover:text-paper",
-      )}
-      onClick={onClick}
-      type="button"
-    >
-      {label}
-    </button>
   );
 }

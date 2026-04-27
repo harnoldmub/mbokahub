@@ -62,6 +62,7 @@ export default async function TrajetsPage() {
   ]);
 
   const trajets: (TrajetDemo & {
+    dateIso: string;
     carPhoto?: string | null;
     vehiculeColor?: string | null;
     vehiculeModel?: string | null;
@@ -71,6 +72,7 @@ export default async function TrajetsPage() {
     villeDepart: t.villeDepart,
     paysDepart: t.paysDepart,
     dateLabel: formatDateLabel(t.date),
+    dateIso: t.date.toISOString().slice(0, 10),
     heureDepart: t.heureDepart,
     placesDispo: t.placesDispo,
     placesTotal: t.placesTotal,
