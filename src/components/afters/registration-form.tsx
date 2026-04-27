@@ -1,17 +1,67 @@
 "use client";
 
-import { ArrowRight, Calendar, MapPin, Ticket, Zap } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowRight,
+  Calendar,
+  Check,
+  MapPin,
+  Ticket,
+  Zap,
+} from "lucide-react";
+import { useSearchParams } from "next/navigation";
+
+import { createAfterAction } from "@/lib/actions/public";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
-import { PhotoUpload } from "@/components/ui/photo-upload";
+
+const ERROR_LABELS: Record<string, string> = {
+  missing: "Tous les champs obligatoires (nom, description, date, lieu, ville, billetterie) doivent être remplis.",
+  ticketurl: "Le lien billetterie doit commencer par http:// ou https://",
+  date: "La date n'est pas valide.",
+};
 
 export function AfterRegistrationForm() {
+  const params = useSearchParams();
+  const error = params.get("error");
+  const published = params.get("published");
+  const isPending = params.get("pending") === "1";
+
   return (
     <div className="relative">
       <div className="absolute -top-40 -right-40 size-[500px] bg-blood/10 blur-[120px] rounded-full pointer-events-none" />
 
-      <form className="relative space-y-12">
+      {/* Status banners */}
+      {published === "after" && isPending && (
+        <div className="relative mb-8 rounded-2xl border border-emerald-400/40 bg-emerald-500/10 p-5">
+          <div className="flex items-start gap-3">
+            <Check className="mt-0.5 size-5 shrink-0 text-emerald-300" />
+            <div className="space-y-1">
+              <p className="font-heading text-paper">After envoyé pour modération</p>
+              <p className="text-sm text-paper-dim">
+                Merci ! Notre équipe valide ton after dans les heures qui
+                viennent. Une fois approuvé, il apparaîtra dans la liste
+                publique.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {error && ERROR_LABELS[error] && (
+        <div className="relative mb-8 rounded-2xl border border-blood/40 bg-blood/10 p-5">
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="mt-0.5 size-5 shrink-0 text-blood" />
+            <p className="text-sm text-paper">{ERROR_LABELS[error]}</p>
+          </div>
+        </div>
+      )}
+
+      <form
+        action={createAfterAction}
+        className="relative space-y-12"
+      >
         {/* SECTION 1: IDENTITY */}
         <section className="space-y-8">
           <div className="flex items-center gap-4">
@@ -19,7 +69,7 @@ export function AfterRegistrationForm() {
               <Zap className="size-5" />
             </div>
             <h2 className="font-display text-3xl text-paper uppercase tracking-tight">
-              L'Événement
+              L&apos;Événement
             </h2>
           </div>
 
@@ -29,6 +79,9 @@ export function AfterRegistrationForm() {
               helperText="Un nom qui claque (ex: Nuit Afro Paris)."
             >
               <Input
+                name="name"
+                required
+                maxLength={100}
                 placeholder="Paris Rumba Nights"
                 className="h-14 bg-coal border-white/10"
               />
@@ -36,8 +89,12 @@ export function AfterRegistrationForm() {
 
             <FormField label="Description">
               <textarea
+                name="description"
+                required
+                minLength={20}
+                maxLength={2000}
                 className="w-full min-h-32 bg-coal border border-white/10 px-4 py-4 rounded-2xl text-paper outline-none focus:ring-1 ring-blood/40 transition-all font-body text-sm"
-                placeholder="Décris l'ambiance, le line-up, l'ambiance..."
+                placeholder="Décris l'ambiance, le line-up, les DJs, le dress-code…"
               />
             </FormField>
           </div>
@@ -56,10 +113,18 @@ export function AfterRegistrationForm() {
 
           <div className="grid sm:grid-cols-2 gap-8">
             <FormField label="Date" icon={<Calendar className="size-4" />}>
-              <Input type="date" className="h-14 bg-coal border-white/10" />
+              <Input
+                name="date"
+                type="date"
+                required
+                min="2026-04-27"
+                max="2026-05-10"
+                className="h-14 bg-coal border-white/10"
+              />
             </FormField>
             <FormField label="Heure de début">
               <Input
+                name="heureDepart"
                 type="time"
                 placeholder="23:30"
                 className="h-14 bg-coal border-white/10"
@@ -67,13 +132,40 @@ export function AfterRegistrationForm() {
             </FormField>
             <FormField label="Lieu / Venue">
               <Input
-                placeholder="Pavillon Baltard, Salon privé..."
+                name="venue"
+                required
+                placeholder="Pavillon Baltard, Salon privé…"
                 className="h-14 bg-coal border-white/10"
               />
             </FormField>
             <FormField label="Ville">
               <Input
-                placeholder="Saint-Denis, Paris 18..."
+                name="city"
+                required
+                defaultValue="Saint-Denis"
+                placeholder="Saint-Denis, Paris 18…"
+                className="h-14 bg-coal border-white/10"
+              />
+            </FormField>
+            <FormField
+              label="Adresse (optionnel)"
+              helperText="Adresse exacte si tu veux la rendre publique."
+            >
+              <Input
+                name="address"
+                placeholder="12 rue de la République"
+                className="h-14 bg-coal border-white/10"
+              />
+            </FormField>
+            <FormField
+              label="Capacité (optionnel)"
+              helperText="Nombre de places maximum."
+            >
+              <Input
+                name="capacity"
+                type="number"
+                min={0}
+                placeholder="300"
                 className="h-14 bg-coal border-white/10"
               />
             </FormField>
@@ -93,51 +185,47 @@ export function AfterRegistrationForm() {
 
           <div className="grid sm:grid-cols-2 gap-8">
             <FormField
-              label="Prix à partir de"
+              label="Prix à partir de (€)"
               helperText="Prix d'entrée minimum."
             >
               <Input
+                name="priceFrom"
                 type="number"
+                min={0}
+                step="0.5"
+                required
                 placeholder="20"
                 className="h-14 bg-coal border-white/10"
               />
             </FormField>
             <FormField
               label="Lien Billetterie"
-              helperText="Lien Eventbrite, Shotgun, Dice..."
+              helperText="Eventbrite, Shotgun, Dice, Weezevent…"
             >
               <Input
-                placeholder="https://..."
+                name="ticketUrl"
+                type="url"
+                required
+                placeholder="https://www.eventbrite.com/e/…"
                 className="h-14 bg-coal border-white/10"
               />
             </FormField>
           </div>
         </section>
 
-        {/* SECTION 4: VISUAL */}
-        <section className="space-y-8">
-          <div className="flex items-center gap-4">
-            <h2 className="font-display text-3xl text-paper uppercase tracking-tight">
-              Le Flyer
-            </h2>
-          </div>
-          <PhotoUpload label="Charger l'affiche de l'événement" />
-          <p className="text-paper-mute text-xs font-mono uppercase tracking-widest text-center mt-4">
-            Format recommandé : 4:5 ou Carré
-          </p>
-        </section>
-
+        {/* SUBMIT */}
         <div className="pt-10">
           <Button
+            type="submit"
             className="w-full h-20 text-2xl shadow-glow-blood bg-blood hover:bg-blood/90 group"
             size="lg"
           >
-            Publier l'After{" "}
+            Envoyer pour validation{" "}
             <ArrowRight className="ml-3 size-7 transition-transform group-hover:translate-x-3" />
           </Button>
           <p className="mt-6 text-center text-paper-dim text-sm italic">
-            "Une fois publié, ton after sera visible dans la section dédiée et
-            tu pourras le booster."
+            Ton after sera vérifié par notre équipe avant d&apos;apparaître
+            publiquement. Tu pourras le booster une fois publié.
           </p>
         </div>
       </form>

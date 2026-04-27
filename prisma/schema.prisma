@@ -167,10 +167,13 @@ model After {
   isVerified  Boolean  @default(false)
   isBoosted   Boolean  @default(false)
   isActive    Boolean  @default(true)
+  isApproved  Boolean   @default(false)
+  approvedAt  DateTime?
   views       Int      @default(0)
   createdAt   DateTime @default(now())
 
   @@index([date, isActive])
+  @@index([isApproved, isActive, date])
 }
 
 model MerchProduct {

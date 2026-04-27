@@ -93,6 +93,88 @@ export async function createTrajetAction(form: FormData) {
   redirect("/dashboard/annonces?published=trajet&pending=1");
 }
 
+export async function createAfterAction(form: FormData) {
+  const user = await ensureUser("/afters/organiser");
+
+  const name = String(form.get("name") || "").trim();
+  const description = String(form.get("description") || "").trim();
+  const dateStr = String(form.get("date") || "").trim();
+  const heureDepart = String(form.get("heureDepart") || "").trim();
+  const venue = String(form.get("venue") || "").trim();
+  const address = String(form.get("address") || "").trim() || venue;
+  const city = String(form.get("city") || "Paris").trim();
+  const priceFromRaw = Number(form.get("priceFrom") || 0);
+  const priceFrom = Number.isFinite(priceFromRaw) ? priceFromRaw : 0;
+  const ticketUrl = String(form.get("ticketUrl") || "").trim();
+  const capacityStr = String(form.get("capacity") || "").trim();
+  const capacityRaw = capacityStr ? parseInt(capacityStr, 10) : null;
+  const capacity =
+    capacityRaw && Number.isFinite(capacityRaw) && capacityRaw > 0
+      ? capacityRaw
+      : null;
+
+  if (
+    !name ||
+    !description ||
+    !dateStr ||
+    !venue ||
+    !city ||
+    !ticketUrl ||
+    priceFrom < 0
+  ) {
+    redirect("/afters/organiser?error=missing");
+  }
+
+  if (!/^https?:\/\//i.test(ticketUrl)) {
+    redirect("/afters/organiser?error=ticketurl");
+  }
+
+  // Combine date + optional time into a single Date
+  const isoCandidate = heureDepart
+    ? `${dateStr}T${heureDepart}:00`
+    : `${dateStr}T22:00:00`;
+  const dateObj = new Date(isoCandidate);
+  if (Number.isNaN(dateObj.getTime())) {
+    redirect("/afters/organiser?error=date");
+  }
+
+  // Generate unique slug
+  const baseSlug = name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 60);
+  let slug = baseSlug || `after-${Date.now()}`;
+  let i = 2;
+  while (await prisma.after.findUnique({ where: { slug } })) {
+    slug = `${baseSlug}-${i++}`;
+  }
+
+  await prisma.after.create({
+    data: {
+      slug,
+      name,
+      description,
+      date: dateObj,
+      venue,
+      address,
+      city,
+      capacity,
+      priceFrom,
+      ticketUrl,
+      organizerId: user.id,
+      isActive: true,
+      isApproved: false,
+    },
+  });
+
+  revalidatePath("/afters");
+  revalidatePath("/admin/afters");
+  redirect("/afters/organiser?published=after&pending=1");
+}
+
 export async function createProProfileAction(form: FormData) {
   const user = await ensureUser("/pro/inscrire");
 

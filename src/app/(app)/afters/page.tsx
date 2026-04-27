@@ -3,11 +3,72 @@ import Link from "next/link";
 
 import { AftersListClient } from "@/components/afters/afters-list-client";
 import { Button } from "@/components/ui/button";
-import { demoAfters } from "@/lib/demo-data";
+import { prisma } from "@/lib/db/prisma";
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
-export default function AftersPage() {
+const FR_DAYS = [
+  "Dimanche",
+  "Lundi",
+  "Mardi",
+  "Mercredi",
+  "Jeudi",
+  "Vendredi",
+  "Samedi",
+];
+const FR_MONTHS = [
+  "janvier",
+  "février",
+  "mars",
+  "avril",
+  "mai",
+  "juin",
+  "juillet",
+  "août",
+  "septembre",
+  "octobre",
+  "novembre",
+  "décembre",
+];
+
+function formatAfterDate(date: Date): string {
+  const d = FR_DAYS[date.getUTCDay()];
+  const day = date.getUTCDate();
+  const m = FR_MONTHS[date.getUTCMonth()];
+  const hh = String(date.getUTCHours()).padStart(2, "0");
+  const mm = String(date.getUTCMinutes()).padStart(2, "0");
+  return `${d} ${day} ${m}, ${hh}:${mm}`;
+}
+
+export default async function AftersPage() {
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+
+  const aftersDb = await prisma.after.findMany({
+    where: {
+      isApproved: true,
+      isActive: true,
+      date: { gte: today },
+    },
+    orderBy: [
+      { isBoosted: "desc" },
+      { date: "asc" },
+      { createdAt: "desc" },
+    ],
+    take: 200,
+  });
+
+  const afters = aftersDb.map((a) => ({
+    slug: a.slug,
+    name: a.name,
+    dateLabel: formatAfterDate(a.date),
+    venue: a.venue,
+    city: a.city,
+    priceFrom: a.priceFrom,
+    ticketUrl: a.ticketUrl,
+    isBoosted: a.isBoosted,
+  }));
+
   return (
     <main className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
       <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
@@ -19,7 +80,8 @@ export default function AftersPage() {
             Les <span className="font-serif italic text-ember">Afters</span>
           </h1>
           <p className="mt-4 max-w-md font-body text-paper-dim">
-             Toutes les soirées validées par le Hub pour fêter l&apos;Aigle après le concert.
+            Toutes les soirées validées par le Hub pour fêter l&apos;Aigle après
+            le concert.
           </p>
         </div>
         <Button
@@ -35,7 +97,7 @@ export default function AftersPage() {
         </Button>
       </div>
 
-      <AftersListClient afters={demoAfters} />
+      <AftersListClient afters={afters} />
     </main>
   );
 }

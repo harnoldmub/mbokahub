@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db/prisma";
 import {
   createAfterAdmin,
   deleteAfter,
+  setAfterApproval,
   toggleAfterActive,
   toggleAfterBoosted,
 } from "@/lib/actions/admin";
@@ -11,9 +12,14 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminAftersPage() {
   const afters = await prisma.after.findMany({
-    orderBy: { date: "asc" },
+    orderBy: [{ isApproved: "asc" }, { date: "asc" }],
+    include: {
+      organizer: { select: { email: true, name: true } },
+    },
     take: 200,
   });
+
+  const pendingCount = afters.filter((a) => !a.isApproved).length;
 
   return (
     <div className="space-y-8">
@@ -22,13 +28,23 @@ export default async function AdminAftersPage() {
           Afters ({afters.length})
         </h2>
         <p className="mt-1 text-muted-foreground text-sm">
-          Soirées after-concert. Créer, masquer, mettre en avant ou supprimer.
+          Soirées after-concert. Valider, masquer, mettre en avant ou supprimer.
         </p>
       </div>
 
+      {pendingCount > 0 && (
+        <div className="rounded-2xl border border-amber-500/40 bg-amber-500/10 px-5 py-4 text-amber-200 text-sm">
+          <span className="font-semibold">
+            ⏱ {pendingCount} after{pendingCount > 1 ? "s" : ""}
+          </span>{" "}
+          en attente de validation. Les fans ne les voient pas tant que tu ne
+          les as pas approuvés.
+        </div>
+      )}
+
       <details className="rounded-2xl border border-red-500/30 bg-red-500/5 p-5 open:bg-red-500/10">
         <summary className="cursor-pointer font-heading text-foreground text-lg">
-          ➕ Créer un after
+          ➕ Créer un after (publication par admin)
         </summary>
         <form
           action={createAfterAdmin}
@@ -108,7 +124,7 @@ export default async function AdminAftersPage() {
             type="submit"
             className="sm:col-span-2 rounded-md bg-red-500 px-4 py-2 font-semibold text-white text-sm transition hover:bg-red-600"
           >
-            Publier cet after
+            Publier cet after (validé directement)
           </button>
         </form>
       </details>
@@ -120,6 +136,7 @@ export default async function AdminAftersPage() {
               <th className="px-4 py-3">Nom</th>
               <th className="px-4 py-3">Date</th>
               <th className="px-4 py-3">Lieu</th>
+              <th className="px-4 py-3">Organisateur</th>
               <th className="px-4 py-3">Prix</th>
               <th className="px-4 py-3">Statut</th>
               <th className="px-4 py-3 text-right">Actions</th>
@@ -127,55 +144,139 @@ export default async function AdminAftersPage() {
           </thead>
           <tbody className="divide-y divide-white/5">
             {afters.map((a) => (
-              <tr key={a.id} className="hover:bg-white/5">
+              <tr
+                key={a.id}
+                className={
+                  a.isApproved
+                    ? "hover:bg-white/5"
+                    : "bg-amber-500/5 hover:bg-amber-500/10"
+                }
+              >
                 <td className="px-4 py-3 text-foreground">
                   <div>{a.name}</div>
-                  <div className="font-mono text-muted-foreground text-xs">{a.slug}</div>
+                  <div className="font-mono text-muted-foreground text-xs">
+                    {a.slug}
+                  </div>
                 </td>
                 <td className="px-4 py-3 text-muted-foreground text-xs">
-                  {a.date.toLocaleString("fr-FR")}
+                  {a.date.toLocaleString("fr-FR", {
+                    dateStyle: "short",
+                    timeStyle: "short",
+                  })}
                 </td>
                 <td className="px-4 py-3 text-muted-foreground text-xs">
                   <div>{a.venue}</div>
                   <div>{a.city}</div>
                 </td>
+                <td className="px-4 py-3 text-muted-foreground text-xs">
+                  {a.organizer ? (
+                    <>
+                      <div className="text-foreground">
+                        {a.organizer.name || "—"}
+                      </div>
+                      <div>{a.organizer.email}</div>
+                    </>
+                  ) : (
+                    <span className="italic">Admin</span>
+                  )}
+                </td>
                 <td className="px-4 py-3 text-foreground">{a.priceFrom}€</td>
                 <td className="px-4 py-3">
                   <div className="flex flex-wrap gap-1">
-                    {a.isActive ? (
-                      <span className="rounded-full bg-green-500/20 px-2 py-1 text-green-300 text-xs">Actif</span>
+                    {a.isApproved ? (
+                      <span className="rounded-full bg-emerald-500/20 px-2 py-1 text-emerald-300 text-xs">
+                        ✓ Validé
+                      </span>
                     ) : (
-                      <span className="rounded-full bg-white/10 px-2 py-1 text-muted-foreground text-xs">Masqué</span>
+                      <span className="rounded-full bg-amber-500/30 px-2 py-1 font-semibold text-amber-200 text-xs">
+                        ⏱ En attente
+                      </span>
+                    )}
+                    {a.isActive ? (
+                      <span className="rounded-full bg-green-500/20 px-2 py-1 text-green-300 text-xs">
+                        Actif
+                      </span>
+                    ) : (
+                      <span className="rounded-full bg-white/10 px-2 py-1 text-muted-foreground text-xs">
+                        Masqué
+                      </span>
                     )}
                     {a.isBoosted && (
-                      <span className="rounded-full bg-amber-500/20 px-2 py-1 text-amber-200 text-xs">Boosté</span>
+                      <span className="rounded-full bg-amber-500/20 px-2 py-1 text-amber-200 text-xs">
+                        Vedette
+                      </span>
                     )}
                     {a.isVerified && (
-                      <span className="rounded-full bg-blue-500/20 px-2 py-1 text-blue-300 text-xs">Vérifié</span>
+                      <span className="rounded-full bg-blue-500/20 px-2 py-1 text-blue-300 text-xs">
+                        Vérifié
+                      </span>
                     )}
                   </div>
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex flex-wrap justify-end gap-2">
-                    <form action={toggleAfterActive.bind(null, a.id, !a.isActive)}>
-                      <button type="submit" className="rounded-md bg-white/10 px-2 py-1 text-foreground text-xs hover:bg-white/20">
+                    {a.isApproved ? (
+                      <ConfirmActionForm
+                        action={setAfterApproval.bind(null, a.id, false)}
+                        triggerLabel="Dévalider"
+                        triggerClassName="rounded-md bg-amber-500/20 px-2 py-1 text-amber-200 text-xs hover:bg-amber-500/30"
+                        title="Retirer la validation ?"
+                        description={
+                          <>
+                            L&apos;after{" "}
+                            <span className="font-semibold text-foreground">
+                              {a.name}
+                            </span>{" "}
+                            sera retiré de la liste publique jusqu&apos;à
+                            nouvelle validation.
+                          </>
+                        }
+                        confirmLabel="Dévalider"
+                        variant="warning"
+                      />
+                    ) : (
+                      <form
+                        action={setAfterApproval.bind(null, a.id, true)}
+                      >
+                        <button
+                          type="submit"
+                          className="rounded-md bg-emerald-500/30 px-3 py-1 font-semibold text-emerald-100 text-xs hover:bg-emerald-500/40"
+                        >
+                          ✓ Valider
+                        </button>
+                      </form>
+                    )}
+                    <form
+                      action={toggleAfterActive.bind(null, a.id, !a.isActive)}
+                    >
+                      <button
+                        type="submit"
+                        className="rounded-md bg-white/10 px-2 py-1 text-foreground text-xs hover:bg-white/20"
+                      >
                         {a.isActive ? "Masquer" : "Activer"}
                       </button>
                     </form>
-                    <form action={toggleAfterBoosted.bind(null, a.id, !a.isBoosted)}>
-                      <button type="submit" className="rounded-md bg-amber-500/20 px-2 py-1 text-amber-200 text-xs hover:bg-amber-500/30">
+                    <form
+                      action={toggleAfterBoosted.bind(null, a.id, !a.isBoosted)}
+                    >
+                      <button
+                        type="submit"
+                        className="rounded-md bg-amber-500/20 px-2 py-1 text-amber-200 text-xs hover:bg-amber-500/30"
+                      >
                         {a.isBoosted ? "Débooster" : "Booster"}
                       </button>
                     </form>
                     <ConfirmActionForm
                       action={deleteAfter.bind(null, a.id)}
                       triggerLabel="Supprimer"
-                      triggerClassName="text-red-400 text-xs hover:text-red-300"
+                      triggerClassName="rounded-md bg-red-500/20 px-2 py-1 text-red-300 text-xs hover:bg-red-500/30"
                       title="Supprimer cet after ?"
                       description={
                         <>
                           L&apos;after{" "}
-                          <span className="font-semibold text-foreground">{a.name}</span>{" "}
+                          <span className="font-semibold text-foreground">
+                            {a.name}
+                          </span>{" "}
                           sera supprimé définitivement.
                         </>
                       }
@@ -187,7 +288,10 @@ export default async function AdminAftersPage() {
             ))}
             {afters.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-12 text-center text-muted-foreground">
+                <td
+                  colSpan={7}
+                  className="px-4 py-12 text-center text-muted-foreground"
+                >
                   Aucun after pour le moment.
                 </td>
               </tr>

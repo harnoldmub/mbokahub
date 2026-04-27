@@ -677,6 +677,21 @@ export async function createAfterAdmin(form: FormData) {
       flyerUrl,
       isVerified,
       isActive: true,
+      isApproved: true,
+      approvedAt: new Date(),
+    },
+  });
+  revalidatePath("/admin/afters");
+  revalidatePath("/afters");
+}
+
+export async function setAfterApproval(id: string, approved: boolean) {
+  await requireAdmin();
+  await prisma.after.update({
+    where: { id },
+    data: {
+      isApproved: approved,
+      approvedAt: approved ? new Date() : null,
     },
   });
   revalidatePath("/admin/afters");
