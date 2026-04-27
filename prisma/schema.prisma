@@ -63,12 +63,15 @@ model Trajet {
   isBoosted       Boolean  @default(false)
   boostUntil      DateTime?
   isActive        Boolean  @default(true)
+  isApproved      Boolean  @default(false)
+  approvedAt      DateTime?
   views           Int      @default(0)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
   @@index([paysDepart, villeDepart, date])
   @@index([isBoosted, createdAt])
+  @@index([isApproved, isActive])
 }
 
 model ProProfile {

@@ -4,11 +4,87 @@ import Link from "next/link";
 import { VipMemberBanner } from "@/components/marketing/vip-member-banner";
 import { TrajetsListClient } from "@/components/trajets/trajets-list-client";
 import { Button } from "@/components/ui/button";
+import { isCurrentUserVip } from "@/lib/auth-helpers";
+import { prisma } from "@/lib/db/prisma";
 import type { TrajetDemo } from "@/lib/demo-data";
 
 export const dynamic = "force-dynamic";
 
-export default function TrajetsPage() {
+const FR_DAYS = ["Dim.", "Lun.", "Mar.", "Mer.", "Jeu.", "Ven.", "Sam."];
+const FR_MONTHS = [
+  "janvier",
+  "février",
+  "mars",
+  "avril",
+  "mai",
+  "juin",
+  "juillet",
+  "août",
+  "septembre",
+  "octobre",
+  "novembre",
+  "décembre",
+];
+
+function formatDateLabel(date: Date): string {
+  const d = FR_DAYS[date.getUTCDay()];
+  const day = date.getUTCDate();
+  const m = FR_MONTHS[date.getUTCMonth()];
+  return `${d} ${day} ${m}`;
+}
+
+function maskPhone(raw: string): string {
+  const cleaned = raw.replace(/\s+/g, "");
+  if (cleaned.length <= 4) return "+•• •• •• •• ••";
+  const head = cleaned.slice(0, 3);
+  return `${head} •• •• •• ••`;
+}
+
+export default async function TrajetsPage() {
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+
+  const [trajetsDb, isVip] = await Promise.all([
+    prisma.trajet.findMany({
+      where: {
+        isApproved: true,
+        isActive: true,
+        date: { gte: today },
+      },
+      orderBy: [
+        { isBoosted: "desc" },
+        { date: "asc" },
+        { createdAt: "desc" },
+      ],
+      take: 200,
+    }),
+    isCurrentUserVip(),
+  ]);
+
+  const trajets: (TrajetDemo & {
+    carPhoto?: string | null;
+    vehiculeColor?: string | null;
+    vehiculeModel?: string | null;
+    whatsappRaw?: string | null;
+  })[] = trajetsDb.map((t) => ({
+    id: t.id,
+    villeDepart: t.villeDepart,
+    paysDepart: t.paysDepart,
+    dateLabel: formatDateLabel(t.date),
+    heureDepart: t.heureDepart,
+    placesDispo: t.placesDispo,
+    placesTotal: t.placesTotal,
+    prix: t.prix,
+    vehicule: t.vehicule ?? t.vehiculeModel ?? "Véhicule",
+    note: t.note ?? "",
+    whatsappMasked: maskPhone(t.whatsapp),
+    isBoosted: t.isBoosted,
+    carPhoto: t.carPhoto,
+    vehiculeColor: t.vehiculeColor,
+    vehiculeModel: t.vehiculeModel,
+    whatsappRaw: isVip ? t.whatsapp : null,
+  }));
+
   return (
     <main className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
       <VipMemberBanner message="Tous les contacts covoiturage WhatsApp sont débloqués." />
@@ -38,7 +114,7 @@ export default function TrajetsPage() {
         </Button>
       </div>
 
-      <TrajetsListClient trajets={[] as TrajetDemo[]} />
+      <TrajetsListClient trajets={trajets} unlocked={isVip} />
     </main>
   );
 }

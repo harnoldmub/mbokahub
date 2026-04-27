@@ -172,6 +172,7 @@ export async function deleteTrajet(trajetId: string) {
   await requireAdmin();
   await prisma.trajet.delete({ where: { id: trajetId } });
   revalidatePath("/admin/trajets");
+  revalidatePath("/trajets");
 }
 
 export async function toggleTrajetActive(trajetId: string, isActive: boolean) {
@@ -181,6 +182,20 @@ export async function toggleTrajetActive(trajetId: string, isActive: boolean) {
     data: { isActive },
   });
   revalidatePath("/admin/trajets");
+  revalidatePath("/trajets");
+}
+
+export async function setTrajetApproval(trajetId: string, approved: boolean) {
+  await requireAdmin();
+  await prisma.trajet.update({
+    where: { id: trajetId },
+    data: {
+      isApproved: approved,
+      approvedAt: approved ? new Date() : null,
+    },
+  });
+  revalidatePath("/admin/trajets");
+  revalidatePath("/trajets");
 }
 
 export async function createPromoCode(form: FormData) {
@@ -547,6 +562,8 @@ export async function createTrajetAdmin(form: FormData) {
       note,
       whatsapp,
       isActive: true,
+      isApproved: true,
+      approvedAt: new Date(),
     },
   });
   revalidatePath("/admin/trajets");

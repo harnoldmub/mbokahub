@@ -7,23 +7,56 @@ import { ReportButton } from "@/components/shared/report-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { isCurrentUserVip } from "@/lib/auth-helpers";
-import { demoTrajets } from "@/lib/demo-data";
+import { prisma } from "@/lib/db/prisma";
 
 type TrajetDetailsPageProps = {
   params: Promise<{ id: string }>;
 };
 
+const FR_DAYS = ["Dim.", "Lun.", "Mar.", "Mer.", "Jeu.", "Ven.", "Sam."];
+const FR_MONTHS = [
+  "janvier",
+  "février",
+  "mars",
+  "avril",
+  "mai",
+  "juin",
+  "juillet",
+  "août",
+  "septembre",
+  "octobre",
+  "novembre",
+  "décembre",
+];
+
+function formatDateLabel(date: Date): string {
+  return `${FR_DAYS[date.getUTCDay()]} ${date.getUTCDate()} ${FR_MONTHS[date.getUTCMonth()]}`;
+}
+
+function maskPhone(raw: string): string {
+  const cleaned = raw.replace(/\s+/g, "");
+  if (cleaned.length <= 4) return "+•• •• •• •• ••";
+  return `${cleaned.slice(0, 3)} •• •• •• ••`;
+}
+
+export const dynamic = "force-dynamic";
+
 export default async function TrajetDetailsPage({
   params,
 }: TrajetDetailsPageProps) {
   const { id } = await params;
-  const trajet = demoTrajets.find((item) => item.id === id);
+
+  const trajet = await prisma.trajet.findFirst({
+    where: { id, isApproved: true, isActive: true },
+  });
 
   if (!trajet) {
     notFound();
   }
 
   const isVip = await isCurrentUserVip();
+  const dateLabel = formatDateLabel(trajet.date);
+  const whatsappMasked = maskPhone(trajet.whatsapp);
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
@@ -38,16 +71,18 @@ export default async function TrajetDetailsPage({
           <Badge variant="outline">{trajet.paysDepart}</Badge>
         </div>
         <h1 className="mt-5 font-heading text-4xl text-foreground sm:text-5xl">
-          {trajet.villeDepart} vers Paris
+          {trajet.villeDepart} vers {trajet.villeArrivee}
         </h1>
-        <p className="mt-4 text-muted-foreground text-lg leading-8">
-          {trajet.note}
-        </p>
+        {trajet.note ? (
+          <p className="mt-4 text-muted-foreground text-lg leading-8">
+            {trajet.note}
+          </p>
+        ) : null}
         <dl className="mt-8 grid gap-4 sm:grid-cols-2">
           <div className="border border-white/10 bg-background/70 p-4">
             <dt className="text-muted-foreground text-sm">Date</dt>
             <dd className="mt-1 font-heading text-2xl">
-              {trajet.dateLabel} a {trajet.heureDepart}
+              {dateLabel} à {trajet.heureDepart}
             </dd>
           </div>
           <div className="border border-white/10 bg-background/70 p-4">
@@ -63,7 +98,11 @@ export default async function TrajetDetailsPage({
           <div className="border border-white/10 bg-background/70 p-4">
             <dt className="text-muted-foreground text-sm">Contact</dt>
             <dd className="mt-1">
-              <ContactLock value={trajet.whatsappMasked} unlocked={isVip} />
+              <ContactLock
+                value={whatsappMasked}
+                unlocked={isVip}
+                rawValue={isVip ? trajet.whatsapp : undefined}
+              />
             </dd>
           </div>
         </dl>

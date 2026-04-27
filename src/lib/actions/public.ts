@@ -83,12 +83,14 @@ export async function createTrajetAction(form: FormData) {
       whatsapp,
       note,
       isActive: true,
+      isApproved: false,
     },
   });
 
   revalidatePath("/trajets");
   revalidatePath("/dashboard/annonces");
-  redirect("/dashboard/annonces?published=trajet");
+  revalidatePath("/admin/trajets");
+  redirect("/dashboard/annonces?published=trajet&pending=1");
 }
 
 export async function createProProfileAction(form: FormData) {
