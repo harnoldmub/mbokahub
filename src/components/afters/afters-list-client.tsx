@@ -3,6 +3,7 @@
 import {
   ArrowRight,
   ExternalLink,
+  ImageOff,
   SlidersHorizontal,
   Star,
 } from "lucide-react";
@@ -11,10 +12,21 @@ import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import type { AfterDemo } from "@/lib/demo-data";
 import { cn } from "@/lib/utils";
 
-type Props = { afters: AfterDemo[] };
+export type AfterCard = {
+  slug: string;
+  name: string;
+  dateLabel: string;
+  venue: string;
+  city: string;
+  priceFrom: number;
+  ticketUrl: string;
+  isBoosted: boolean;
+  flyerUrl: string | null;
+};
+
+type Props = { afters: AfterCard[] };
 
 export function AftersListClient({ afters }: Props) {
   const villes = ["Toutes", ...Array.from(new Set(afters.map((a) => a.city)))];
@@ -75,28 +87,30 @@ export function AftersListClient({ afters }: Props) {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <span className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
-            Nuit
-          </span>
-          <div className="flex flex-wrap gap-2">
-            {nuitOptions.map((n) => (
-              <button
-                className={cn(
-                  "rounded-full border px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider transition-all",
-                  activeNuit === n
-                    ? "border-ember bg-ember text-paper shadow-[0_0_20px_rgba(255,120,50,0.3)]"
-                    : "border-white/10 text-paper-mute hover:border-ember/40 hover:text-paper",
-                )}
-                key={n}
-                onClick={() => setActiveNuit(n)}
-                type="button"
-              >
-                {n}
-              </button>
-            ))}
+        {nuitOptions.length > 1 && (
+          <div className="flex items-center gap-3">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
+              Nuit
+            </span>
+            <div className="flex flex-wrap gap-2">
+              {nuitOptions.map((n) => (
+                <button
+                  className={cn(
+                    "rounded-full border px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider transition-all",
+                    activeNuit === n
+                      ? "border-ember bg-ember text-paper shadow-[0_0_20px_rgba(255,120,50,0.3)]"
+                      : "border-white/10 text-paper-mute hover:border-ember/40 hover:text-paper",
+                  )}
+                  key={n}
+                  onClick={() => setActiveNuit(n)}
+                  type="button"
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Count */}
@@ -119,19 +133,33 @@ export function AftersListClient({ afters }: Props) {
         <div className="grid gap-5 lg:grid-cols-2">
           {filtered.map((after) => (
             <article
-              className="group flex flex-col gap-5 rounded-3xl border border-white/10 bg-coal p-7 transition-all duration-300 hover:-translate-y-1 hover:border-ember/30"
+              className="group flex flex-col gap-5 overflow-hidden rounded-3xl border border-white/10 bg-coal transition-all duration-300 hover:-translate-y-1 hover:border-ember/30"
               key={after.slug}
             >
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div className="flex flex-wrap gap-2">
+              {/* Flyer image */}
+              <div className="relative aspect-[16/9] w-full overflow-hidden bg-smoke/40">
+                {after.flyerUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={after.flyerUrl}
+                    alt={`Flyer ${after.name}`}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-paper-mute">
+                    <ImageOff className="size-10 opacity-40" />
+                  </div>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-coal/80 via-transparent to-transparent" />
+                <div className="absolute left-4 top-4 flex flex-wrap gap-2">
                   {after.isBoosted && (
-                    <Badge className="border-none bg-ember/20 font-mono text-[9px] uppercase tracking-wider text-ember">
+                    <Badge className="border-none bg-ember/90 font-mono text-[9px] uppercase tracking-wider text-ink">
                       <Star className="mr-1 size-2.5 fill-current" />
                       Vedette
                     </Badge>
                   )}
                   <Badge
-                    className="border-white/10 font-mono text-[9px] uppercase"
+                    className="border-white/20 bg-coal/80 font-mono text-[9px] uppercase backdrop-blur"
                     variant="outline"
                   >
                     {after.city}
@@ -139,38 +167,44 @@ export function AftersListClient({ afters }: Props) {
                 </div>
               </div>
 
-              <div>
-                <h3 className="font-display text-2xl uppercase leading-tight text-paper">
-                  {after.name}
-                </h3>
-                <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-blood">
-                  {after.dateLabel}
-                </p>
-              </div>
+              <div className="flex flex-col gap-5 px-7 pb-7">
+                <div>
+                  <h3 className="font-display text-2xl uppercase leading-tight text-paper">
+                    {after.name}
+                  </h3>
+                  <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-blood">
+                    {after.dateLabel}
+                  </p>
+                </div>
 
-              <div className="space-y-1 text-sm text-paper-dim">
-                <p>{after.venue}</p>
-                <p className="font-display text-xl text-paper">
-                  À partir de{" "}
-                  <span className="text-ember">{after.priceFrom} EUR</span>
-                </p>
-              </div>
+                <div className="space-y-1 text-sm text-paper-dim">
+                  <p>{after.venue}</p>
+                  <p className="font-display text-xl text-paper">
+                    À partir de{" "}
+                    <span className="text-ember">{after.priceFrom} EUR</span>
+                  </p>
+                </div>
 
-              <div className="mt-auto flex flex-col gap-3 sm:flex-row">
-                <Button
-                  asChild
-                  className="flex-1 h-11 bg-smoke border-white/5 hover:bg-ember hover:border-ember hover:text-paper transition-all"
-                  variant="outline"
-                >
-                  <Link href={`/afters/${after.slug}`}>
-                    Détails <ArrowRight className="ml-2 size-4" />
-                  </Link>
-                </Button>
-                <Button asChild className="flex-1 h-11" variant="outline">
-                  <a href={after.ticketUrl} rel="noreferrer" target="_blank">
-                    Billetterie <ExternalLink className="ml-2 size-4" />
-                  </a>
-                </Button>
+                <div className="mt-auto flex flex-col gap-3 sm:flex-row">
+                  <Button
+                    asChild
+                    className="flex-1 h-11 bg-smoke border-white/5 hover:bg-ember hover:border-ember hover:text-paper transition-all"
+                    variant="outline"
+                  >
+                    <Link href={`/afters/${after.slug}`}>
+                      Détails <ArrowRight className="ml-2 size-4" />
+                    </Link>
+                  </Button>
+                  <Button asChild className="flex-1 h-11" variant="outline">
+                    <a
+                      href={after.ticketUrl}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      Billetterie <ExternalLink className="ml-2 size-4" />
+                    </a>
+                  </Button>
+                </div>
               </div>
             </article>
           ))}

@@ -106,6 +106,12 @@ export async function createAfterAction(form: FormData) {
   const priceFromRaw = Number(form.get("priceFrom") || 0);
   const priceFrom = Number.isFinite(priceFromRaw) ? priceFromRaw : 0;
   const ticketUrl = String(form.get("ticketUrl") || "").trim();
+  const flyerUrlRaw = String(form.get("flyerUrl") || "").trim();
+  const flyerUrl =
+    flyerUrlRaw &&
+    (/^https?:\/\//i.test(flyerUrlRaw) || flyerUrlRaw.startsWith("/api/files/"))
+      ? flyerUrlRaw
+      : null;
   const capacityStr = String(form.get("capacity") || "").trim();
   const capacityRaw = capacityStr ? parseInt(capacityStr, 10) : null;
   const capacity =
@@ -164,6 +170,7 @@ export async function createAfterAction(form: FormData) {
       capacity,
       priceFrom,
       ticketUrl,
+      flyerUrl,
       organizerId: user.id,
       isActive: true,
       isApproved: false,

@@ -5,12 +5,14 @@ import {
   ArrowRight,
   Calendar,
   Check,
+  Image as ImageIcon,
   MapPin,
   Ticket,
   Zap,
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 
+import { PhotoUploader } from "@/components/admin/photo-uploader";
 import { createAfterAction } from "@/lib/actions/public";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
@@ -211,6 +213,30 @@ export function AfterRegistrationForm() {
               />
             </FormField>
           </div>
+        </section>
+
+        {/* SECTION 4: FLYER */}
+        <section className="space-y-8">
+          <div className="flex items-center gap-4">
+            <div className="size-10 rounded-xl bg-ember/10 flex items-center justify-center text-ember border border-ember/20">
+              <ImageIcon className="size-5" />
+            </div>
+            <h2 className="font-display text-3xl text-paper uppercase tracking-tight">
+              Flyer / Affiche
+            </h2>
+          </div>
+          <p className="text-sm text-paper-dim">
+            Visuel principal qui s&apos;affiche en haut de la fiche et sur les
+            cartes de la liste. Format recommandé : 16:9 ou 1:1, JPG / PNG /
+            WebP.
+          </p>
+          <PhotoUploader
+            name="flyerUrl"
+            multiple={false}
+            maxFiles={1}
+            label=""
+            helpText="Cette image sera visible publiquement par les VIP."
+          />
         </section>
 
         {/* SUBMIT */}

@@ -2,7 +2,13 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 
 import { AftersListClient } from "@/components/afters/afters-list-client";
+import { AftersPaywall } from "@/components/afters/afters-paywall";
 import { Button } from "@/components/ui/button";
+import {
+  getOptionalDbUser,
+  isCurrentUserAdmin,
+  isCurrentUserVip,
+} from "@/lib/auth-helpers";
 import { prisma } from "@/lib/db/prisma";
 
 export const dynamic = "force-dynamic";
@@ -44,6 +50,32 @@ export default async function AftersPage() {
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
 
+  const [vip, admin, dbUser, totalCount] = await Promise.all([
+    isCurrentUserVip(),
+    isCurrentUserAdmin(),
+    getOptionalDbUser(),
+    prisma.after.count({
+      where: {
+        isApproved: true,
+        isActive: true,
+        date: { gte: today },
+      },
+    }),
+  ]);
+
+  const canView = vip || admin;
+
+  if (!canView) {
+    return (
+      <main className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <AftersPaywall
+          totalCount={totalCount}
+          isAuthenticated={Boolean(dbUser)}
+        />
+      </main>
+    );
+  }
+
   const aftersDb = await prisma.after.findMany({
     where: {
       isApproved: true,
@@ -67,6 +99,7 @@ export default async function AftersPage() {
     priceFrom: a.priceFrom,
     ticketUrl: a.ticketUrl,
     isBoosted: a.isBoosted,
+    flyerUrl: a.flyerUrl,
   }));
 
   return (
@@ -74,7 +107,7 @@ export default async function AftersPage() {
       <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.3em] text-ember">
-            Soirées post-concert
+            Soirées post-concert · Accès VIP
           </p>
           <h1 className="font-display text-6xl uppercase leading-[0.9] text-paper sm:text-7xl">
             Les <span className="font-serif italic text-ember">Afters</span>

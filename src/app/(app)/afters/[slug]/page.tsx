@@ -1,10 +1,14 @@
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft, ExternalLink, ImageOff } from "lucide-react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { ReportButton } from "@/components/shared/report-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  isCurrentUserAdmin,
+  isCurrentUserVip,
+} from "@/lib/auth-helpers";
 import { prisma } from "@/lib/db/prisma";
 
 type AfterDetailsPageProps = {
@@ -51,6 +55,15 @@ export default async function AfterDetailsPage({
 }: AfterDetailsPageProps) {
   const { slug } = await params;
 
+  const [vip, admin] = await Promise.all([
+    isCurrentUserVip(),
+    isCurrentUserAdmin(),
+  ]);
+
+  if (!vip && !admin) {
+    redirect("/afters");
+  }
+
   const after = await prisma.after.findFirst({
     where: { slug, isApproved: true, isActive: true },
   });
@@ -66,17 +79,39 @@ export default async function AfterDetailsPage({
           <ArrowLeft aria-hidden /> Retour aux afters
         </Link>
       </Button>
-      <section className="mt-8 border border-white/10 bg-card p-6">
-        <div className="flex flex-wrap items-center gap-2">
-          {after.isBoosted ? <Badge>Vedette</Badge> : null}
+
+      {/* Hero flyer */}
+      <div className="relative mt-6 aspect-[16/9] w-full overflow-hidden rounded-3xl border border-white/10 bg-smoke/40 sm:aspect-[21/9]">
+        {after.flyerUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={after.flyerUrl}
+            alt={`Flyer ${after.name}`}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-paper-mute">
+            <ImageOff className="size-12 opacity-40" />
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-coal/90 via-coal/30 to-transparent" />
+        <div className="absolute bottom-6 left-6 right-6 flex flex-wrap items-center gap-2">
+          {after.isBoosted ? (
+            <Badge className="border-none bg-ember/90 text-ink">Vedette</Badge>
+          ) : null}
           {after.isVerified ? (
-            <Badge className="border-blue-400/40 bg-blue-500/10 text-blue-300">
+            <Badge className="border-blue-400/40 bg-blue-500/20 text-blue-100">
               Vérifié
             </Badge>
           ) : null}
-          <Badge variant="outline">{after.city}</Badge>
+          <Badge variant="outline" className="border-white/30 bg-coal/70 backdrop-blur">
+            {after.city}
+          </Badge>
         </div>
-        <h1 className="mt-5 font-heading text-4xl text-foreground sm:text-5xl">
+      </div>
+
+      <section className="mt-8 border border-white/10 bg-card p-6">
+        <h1 className="font-heading text-4xl text-foreground sm:text-5xl">
           {after.name}
         </h1>
         <p className="mt-4 text-muted-foreground text-lg leading-8 whitespace-pre-line">
