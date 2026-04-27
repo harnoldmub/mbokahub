@@ -8,6 +8,7 @@ type Props = {
   villeDepart: string;
   villeArrivee: string;
   isSignedIn: boolean;
+  suggestedPrice?: number | null;
 };
 
 export function PriceOfferDialog({
@@ -16,9 +17,13 @@ export function PriceOfferDialog({
   villeDepart,
   villeArrivee,
   isSignedIn,
+  suggestedPrice = null,
 }: Props) {
+  const hasSuggestion = suggestedPrice !== null && suggestedPrice > 0;
+  const initialPrix = hasSuggestion ? String(suggestedPrice) : "";
+
   const [open, setOpen] = useState(false);
-  const [prix, setPrix] = useState<string>("");
+  const [prix, setPrix] = useState<string>(initialPrix);
   const [message, setMessage] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -27,7 +32,7 @@ export function PriceOfferDialog({
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   function reset() {
-    setPrix("");
+    setPrix(initialPrix);
     setMessage("");
     setName("");
     setEmail("");
@@ -76,7 +81,9 @@ export function PriceOfferDialog({
         onClick={() => setOpen(true)}
         className="inline-flex items-center gap-2 rounded-full border border-[#E50914]/40 bg-[#E50914]/10 px-4 py-2 font-medium text-[#ff5a63] text-sm transition hover:border-[#E50914]/70 hover:bg-[#E50914]/20"
       >
-        💬 Proposer un autre prix
+        {hasSuggestion
+          ? `💡 Suggérer le prix conseillé : ${suggestedPrice} €`
+          : "💬 Proposer un autre prix"}
       </button>
 
       {open && (
@@ -92,13 +99,29 @@ export function PriceOfferDialog({
             onClick={(e) => e.stopPropagation()}
           >
             <h3 className="font-heading text-foreground text-xl">
-              Proposer un autre prix
+              {hasSuggestion
+                ? "Suggérer le prix conseillé"
+                : "Proposer un autre prix"}
             </h3>
             <p className="mt-1 text-muted-foreground text-sm">
               Trajet <strong className="text-foreground">{villeDepart} → {villeArrivee}</strong>{" "}
               · prix actuel <strong className="text-foreground">{prixPublie} €</strong> / place.
               Le conducteur reçoit ta proposition par email.
             </p>
+
+            {hasSuggestion && (
+              <div className="mt-4 rounded-xl border border-[#E50914]/25 bg-[#E50914]/[0.06] p-4">
+                <div className="font-mono text-[#ff5a63] text-[10px] tracking-[0.18em] uppercase">
+                  Estimation Mboka Hub
+                </div>
+                <p className="mt-2 text-foreground text-sm leading-relaxed">
+                  Pour ce trajet, on estime un prix juste à{" "}
+                  <strong className="text-foreground">~{suggestedPrice} € / place</strong>{" "}
+                  (essence + péages divisés par toi + les autres passagers). Le
+                  champ ci-dessous est pré-rempli, tu peux ajuster si tu veux.
+                </p>
+              </div>
+            )}
 
             <form onSubmit={submit} className="mt-5 space-y-4">
               <div>
@@ -204,7 +227,11 @@ export function PriceOfferDialog({
                   disabled={status === "loading" || status === "ok"}
                   className="rounded-md bg-[#E50914] px-4 py-2 font-medium text-white text-sm transition hover:bg-[#b8070f] disabled:opacity-50"
                 >
-                  {status === "loading" ? "Envoi..." : "Envoyer"}
+                  {status === "loading"
+                    ? "Envoi..."
+                    : hasSuggestion
+                      ? "Envoyer la suggestion"
+                      : "Envoyer"}
                 </button>
               </div>
             </form>

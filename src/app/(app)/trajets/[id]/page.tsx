@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { auth } from "@clerk/nextjs/server";
 import { isCurrentUserAdmin, isCurrentUserVip } from "@/lib/auth-helpers";
+import { findCity, suggestPrice } from "@/lib/data/cities";
 import { prisma } from "@/lib/db/prisma";
 
 type TrajetDetailsPageProps = {
@@ -76,6 +77,15 @@ export default async function TrajetDetailsPage({
   const dateLabel = formatDateLabel(trajet.date);
   const whatsappMasked = maskPhone(trajet.whatsapp);
 
+  const fromCity = findCity(trajet.villeDepart);
+  const toCity = findCity(trajet.villeArrivee);
+  const suggestion =
+    fromCity && toCity ? suggestPrice(fromCity, toCity, trajet.placesTotal) : null;
+  const suggestedPrice =
+    suggestion && trajet.prix > suggestion.perPlaceFair
+      ? suggestion.perPlaceFair
+      : null;
+
   return (
     <main className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
       <Button asChild size="sm" variant="ghost">
@@ -139,6 +149,7 @@ export default async function TrajetDetailsPage({
               villeDepart={trajet.villeDepart}
               villeArrivee={trajet.villeArrivee}
               isSignedIn={!!clerkId}
+              suggestedPrice={suggestedPrice}
             />
           )}
           <RulesDialog />
