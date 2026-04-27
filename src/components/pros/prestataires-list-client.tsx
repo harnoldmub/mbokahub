@@ -320,7 +320,16 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
                       !unlocked && "italic text-paper-dim",
                     )}
                   >
-                    {p.displayName}
+                    {unlocked ? (
+                      <Link
+                        href={`/pro/${p.id}`}
+                        className="transition hover:text-blood"
+                      >
+                        {p.displayName}
+                      </Link>
+                    ) : (
+                      p.displayName
+                    )}
                   </h3>
                   <p className="text-sm text-paper-dim">
                     {p.city}, {p.country}

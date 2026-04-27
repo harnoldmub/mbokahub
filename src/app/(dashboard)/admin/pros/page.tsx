@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { ConfirmActionForm } from "@/components/admin/confirm-action-form";
 import { EditProForm } from "@/components/admin/edit-pro-form";
 import { PhotoUploader } from "@/components/admin/photo-uploader";
@@ -183,7 +185,14 @@ export default async function AdminProsPage({
           <tbody className="divide-y divide-white/5">
             {pros.map((p) => (
               <tr key={p.id} className="hover:bg-white/5">
-                <td className="px-4 py-3 text-foreground">{p.displayName}</td>
+                <td className="px-4 py-3 text-foreground">
+                  <Link
+                    href={`/pro/${p.id}`}
+                    className="hover:text-blood hover:underline"
+                  >
+                    {p.displayName}
+                  </Link>
+                </td>
                 <td className="px-4 py-3 text-muted-foreground text-xs">{p.category}</td>
                 <td className="px-4 py-3 text-muted-foreground">{p.city}, {p.country}</td>
                 <td className="px-4 py-3 font-mono text-muted-foreground text-xs">{p.whatsapp}</td>
@@ -200,14 +209,12 @@ export default async function AdminProsPage({
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex flex-wrap justify-end gap-2">
-                    <a
+                    <Link
                       href={`/pro/${p.id}`}
-                      target="_blank"
-                      rel="noreferrer"
                       className="rounded-md bg-blue-500/20 px-2 py-1 text-blue-300 text-xs hover:bg-blue-500/30"
                     >
                       Voir la fiche
-                    </a>
+                    </Link>
                     <EditProForm
                       pro={{
                         id: p.id,

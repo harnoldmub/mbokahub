@@ -1,9 +1,11 @@
+import { auth } from "@clerk/nextjs/server";
 import {
   ArrowLeft,
   AtSign,
   Crown,
   LockKeyhole,
   MapPin,
+  Pencil,
   Sparkles,
   Star,
 } from "lucide-react";
@@ -14,7 +16,10 @@ import { ProGalleryClient } from "@/components/pros/pro-gallery-client";
 import { ContactLock } from "@/components/shared/contact-lock";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { canSeePrivateProInfo } from "@/lib/auth-helpers";
+import {
+  canSeePrivateProInfo,
+  isCurrentUserAdmin,
+} from "@/lib/auth-helpers";
 import { prisma } from "@/lib/db/prisma";
 import { PRO_CATEGORY_BY_ID } from "@/lib/pro-categories";
 import { publicProName } from "@/lib/pro-display";
@@ -25,17 +30,28 @@ type ProDetailsPageProps = {
 
 export default async function ProDetailsPage({ params }: ProDetailsPageProps) {
   const { id } = await params;
-  const [pro, unlocked] = await Promise.all([
+  const { userId: clerkId } = await auth();
+  const [pro, baseUnlocked, isAdmin, dbUser] = await Promise.all([
     prisma.proProfile.findUnique({ where: { id } }),
     canSeePrivateProInfo(),
+    isCurrentUserAdmin(),
+    clerkId
+      ? prisma.user.findUnique({
+          where: { clerkId },
+          select: { id: true },
+        })
+      : null,
   ]);
 
   if (!pro) {
     notFound();
   }
 
-  // The detailed pro card (real name, contacts, full gallery) is a VIP perk.
-  // Non-VIP visitors stay on the masked listing.
+  const isOwner = dbUser !== null && dbUser.id === pro.userId;
+  // Owner sees their own card unmasked, admins see everything, otherwise it
+  // remains a VIP perk.
+  const unlocked = baseUnlocked || isOwner || isAdmin;
+
   if (!unlocked) {
     redirect("/vip?from=pro-detail");
   }
@@ -53,11 +69,21 @@ export default async function ProDetailsPage({ params }: ProDetailsPageProps) {
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-      <Button asChild size="sm" variant="ghost">
-        <Link href="/prestataires">
-          <ArrowLeft aria-hidden /> Retour aux prestataires
-        </Link>
-      </Button>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <Button asChild size="sm" variant="ghost">
+          <Link href="/prestataires">
+            <ArrowLeft aria-hidden /> Retour aux prestataires
+          </Link>
+        </Button>
+        {(isOwner || isAdmin) && (
+          <Button asChild size="sm" variant="outline">
+            <Link href={isOwner ? "/dashboard/profil-pro" : "/admin/pros"}>
+              <Pencil aria-hidden />
+              {isOwner ? "Modifier ma fiche" : "Modifier (admin)"}
+            </Link>
+          </Button>
+        )}
+      </div>
 
       <section className="mt-8 overflow-hidden rounded-3xl border border-white/10 bg-coal/60">
         {cover ? (
