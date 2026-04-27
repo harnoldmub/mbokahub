@@ -10,8 +10,6 @@ import { getStripe } from "@/lib/stripe";
 
 const PREMIUM_END = new Date("2026-05-31T23:59:59+02:00");
 
-class PromoUnavailableError extends Error {}
-
 const bodySchema = z
   .object({
     category: z.string().optional(),
@@ -111,12 +109,12 @@ export async function POST(req: Request) {
           promoCodeId_userEmail: { promoCodeId: promo.id, userEmail: email },
         },
       });
-      if (alreadyRedeemed) {
-        return NextResponse.json(
-          { error: "Tu as déjà utilisé ce code." },
-          { status: 400 },
-        );
-      }
+      // The "already premium" check at the top of the route catches users who
+      // fully completed activation. If alreadyRedeemed is true here, a prior
+      // attempt created the redemption row but did not finalize Premium. We
+      // treat that as recovery: skip claim/redemption and re-run idempotent
+      // activation below.
+
       if (promo.discountPercent !== 100) {
         return NextResponse.json(
           {
@@ -127,70 +125,89 @@ export async function POST(req: Request) {
         );
       }
 
-      try {
-        await prisma.$transaction(async (tx) => {
-          const claim = await tx.promoCode.updateMany({
-            where: {
-              id: promo.id,
-              isActive: true,
-              usedCount: { lt: promo.maxUses },
-              OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
-            },
-            data: { usedCount: { increment: 1 } },
-          });
-          if (claim.count !== 1) {
-            throw new PromoUnavailableError();
-          }
-          await tx.promoCodeRedemption.create({
+      // Sequential, recoverable operations (no $transaction → no WebSocket).
+      // Atomicity preserved by:
+      //   - conditional updateMany on promoCode (atomic seat claim)
+      //   - unique constraint on promoCodeRedemption (single-claim per user)
+      //   - idempotent updateMany on proProfile (only flips false → true)
+      //   - upsert on payment with deterministic stripeSessionId
+      // Recovery: a retry with alreadyRedeemed=true skips steps 1+2 and only
+      // re-runs the idempotent activation/payment steps.
+
+      if (!alreadyRedeemed) {
+        const claim = await prisma.promoCode.updateMany({
+          where: {
+            id: promo.id,
+            isActive: true,
+            usedCount: { lt: promo.maxUses },
+            OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+          },
+          data: { usedCount: { increment: 1 } },
+        });
+        if (claim.count !== 1) {
+          return NextResponse.json(
+            { error: "Ce code promo n'est plus disponible." },
+            { status: 400 },
+          );
+        }
+
+        try {
+          await prisma.promoCodeRedemption.create({
             data: {
               promoCodeId: promo.id,
               userEmail: email,
               userId: dbUser.id,
             },
           });
-          const premiumClaim = await tx.proProfile.updateMany({
-            where: { userId: dbUser.id, isPremium: false },
-            data: { isPremium: true, premiumUntil: PREMIUM_END },
-          });
-          if (premiumClaim.count !== 1) {
-            throw new PromoUnavailableError();
+        } catch (err) {
+          await prisma.promoCode
+            .update({
+              where: { id: promo.id },
+              data: { usedCount: { decrement: 1 } },
+            })
+            .catch((rollbackErr) => {
+              console.error(
+                "[checkout/pro] seat rollback failed:",
+                rollbackErr,
+              );
+            });
+          if (
+            err instanceof Prisma.PrismaClientKnownRequestError &&
+            err.code === "P2002"
+          ) {
+            // Race: redemption was created concurrently. Fall through to
+            // recovery activation instead of erroring.
+          } else {
+            throw err;
           }
-          await tx.payment.create({
-            data: {
-              userId: dbUser.id,
-              stripeSessionId: `promo_${promo.code}_${dbUser.id}_${Date.now()}`,
-              type: "PRO_PREMIUM",
-              amount: 0,
-              currency: "eur",
-              status: "COMPLETED",
-              completedAt: new Date(),
-              metadata: {
-                promoCode: promo.code,
-                promoLabel: promo.label,
-                discountPercent: promo.discountPercent,
-                category: category ?? proProfile.category,
-              },
-            },
-          });
-        });
-      } catch (err) {
-        if (err instanceof PromoUnavailableError) {
-          return NextResponse.json(
-            { error: "Ce code promo n'est plus disponible." },
-            { status: 400 },
-          );
         }
-        if (
-          err instanceof Prisma.PrismaClientKnownRequestError &&
-          err.code === "P2002"
-        ) {
-          return NextResponse.json(
-            { error: "Tu as déjà utilisé ce code." },
-            { status: 400 },
-          );
-        }
-        throw err;
       }
+
+      await prisma.proProfile.updateMany({
+        where: { userId: dbUser.id, isPremium: false },
+        data: { isPremium: true, premiumUntil: PREMIUM_END },
+      });
+
+      const paymentRef = `promo_${promo.code}_${dbUser.id}`;
+      await prisma.payment.upsert({
+        where: { stripeSessionId: paymentRef },
+        update: {},
+        create: {
+          userId: dbUser.id,
+          stripeSessionId: paymentRef,
+          type: "PRO_PREMIUM",
+          amount: 0,
+          currency: "eur",
+          status: "COMPLETED",
+          completedAt: new Date(),
+          metadata: {
+            promoCode: promo.code,
+            promoLabel: promo.label,
+            discountPercent: promo.discountPercent,
+            category: category ?? proProfile.category,
+          },
+        },
+      });
 
       return NextResponse.json({
         redirect: `/checkout/success?type=pro&promo=${encodeURIComponent(promo.code)}`,

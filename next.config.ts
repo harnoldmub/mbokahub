@@ -28,6 +28,14 @@ const nextConfig: NextConfig = {
     ],
   },
   allowedDevOrigins,
+  serverExternalPackages: [
+    "ws",
+    "bufferutil",
+    "utf-8-validate",
+    "@neondatabase/serverless",
+    "@prisma/adapter-neon",
+    "@prisma/client",
+  ],
   eslint: {
     ignoreDuringBuilds: true,
   },

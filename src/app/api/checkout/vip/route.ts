@@ -10,8 +10,6 @@ import { isEarlyBirdActive } from "@/lib/stripe-config";
 
 const VIP_END = new Date("2026-05-31T23:59:59+02:00");
 
-class PromoUnavailableError extends Error {}
-
 export async function POST(req: Request) {
   const appUrl = getAppUrl(req);
   try {
@@ -93,12 +91,11 @@ export async function POST(req: Request) {
           promoCodeId_userEmail: { promoCodeId: promo.id, userEmail: email },
         },
       });
-      if (alreadyRedeemed) {
-        return NextResponse.json(
-          { error: "Tu as déjà utilisé ce code." },
-          { status: 400 },
-        );
-      }
+      // Note: a previous "already VIP" check at the top of the route already
+      // caught users who completed activation. So if alreadyRedeemed is true
+      // here, it means a previous attempt created the redemption row but did
+      // not finish the VIP activation. We treat that as a recovery: skip the
+      // claim/redemption steps and re-run the idempotent activation below.
 
       if (promo.discountPercent !== 100) {
         // Partial discounts go through Stripe via allow_promotion_codes (mapped Stripe coupon).
@@ -113,71 +110,88 @@ export async function POST(req: Request) {
       }
 
       // 100% discount → activate VIP directly, no Stripe required.
-      // Use an interactive transaction with a conditional updateMany to atomically
-      // claim the promo seat (prevents over-redemption under concurrency).
-      try {
-        await prisma.$transaction(async (tx) => {
-          const claim = await tx.promoCode.updateMany({
-            where: {
-              id: promo.id,
-              isActive: true,
-              usedCount: { lt: promo.maxUses },
-              OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
-            },
-            data: { usedCount: { increment: 1 } },
-          });
-          if (claim.count !== 1) {
-            throw new PromoUnavailableError();
-          }
-          await tx.promoCodeRedemption.create({
+      // Sequential, recoverable operations (no $transaction → no WebSocket):
+      //   1. (skipped on recovery) atomic conditional updateMany to claim seat
+      //   2. (skipped on recovery) create redemption row
+      //   3. activate VIP (idempotent via isVipActive:false filter)
+      //   4. upsert payment with deterministic stripeSessionId (idempotent)
+      // If the user retries after a partial-success first attempt, steps 1+2
+      // are skipped (alreadyRedeemed branch) and 3+4 still complete the flow.
+
+      if (!alreadyRedeemed) {
+        const claim = await prisma.promoCode.updateMany({
+          where: {
+            id: promo.id,
+            isActive: true,
+            usedCount: { lt: promo.maxUses },
+            OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+          },
+          data: { usedCount: { increment: 1 } },
+        });
+        if (claim.count !== 1) {
+          return NextResponse.json(
+            { error: "Ce code promo n'est plus disponible." },
+            { status: 400 },
+          );
+        }
+
+        try {
+          await prisma.promoCodeRedemption.create({
             data: {
               promoCodeId: promo.id,
               userEmail: email,
               userId: dbUser.id,
             },
           });
-          const vipClaim = await tx.user.updateMany({
-            where: { id: dbUser.id, isVipActive: false },
-            data: { isVipActive: true, vipUntil: VIP_END },
-          });
-          if (vipClaim.count !== 1) {
-            throw new PromoUnavailableError();
+        } catch (err) {
+          // Compensate the seat we just took (best effort).
+          await prisma.promoCode
+            .update({
+              where: { id: promo.id },
+              data: { usedCount: { decrement: 1 } },
+            })
+            .catch((rollbackErr) => {
+              console.error(
+                "[checkout/vip] seat rollback failed:",
+                rollbackErr,
+              );
+            });
+          if (
+            err instanceof Prisma.PrismaClientKnownRequestError &&
+            err.code === "P2002"
+          ) {
+            // Race: another concurrent request already created the row.
+            // Fall through to recovery activation instead of erroring.
+          } else {
+            throw err;
           }
-          await tx.payment.create({
-            data: {
-              userId: dbUser.id,
-              stripeSessionId: `promo_${promo.code}_${dbUser.id}_${Date.now()}`,
-              type: "VIP_FAN",
-              amount: 0,
-              currency: "eur",
-              status: "COMPLETED",
-              completedAt: new Date(),
-              metadata: {
-                promoCode: promo.code,
-                promoLabel: promo.label,
-                discountPercent: promo.discountPercent,
-              },
-            },
-          });
-        });
-      } catch (err) {
-        if (err instanceof PromoUnavailableError) {
-          return NextResponse.json(
-            { error: "Ce code promo n'est plus disponible." },
-            { status: 400 },
-          );
         }
-        if (
-          err instanceof Prisma.PrismaClientKnownRequestError &&
-          err.code === "P2002"
-        ) {
-          return NextResponse.json(
-            { error: "Tu as déjà utilisé ce code." },
-            { status: 400 },
-          );
-        }
-        throw err;
       }
+
+      await prisma.user.updateMany({
+        where: { id: dbUser.id, isVipActive: false },
+        data: { isVipActive: true, vipUntil: VIP_END },
+      });
+
+      const paymentRef = `promo_${promo.code}_${dbUser.id}`;
+      await prisma.payment.upsert({
+        where: { stripeSessionId: paymentRef },
+        update: {},
+        create: {
+          userId: dbUser.id,
+          stripeSessionId: paymentRef,
+          type: "VIP_FAN",
+          amount: 0,
+          currency: "eur",
+          status: "COMPLETED",
+          completedAt: new Date(),
+          metadata: {
+            promoCode: promo.code,
+            promoLabel: promo.label,
+            discountPercent: promo.discountPercent,
+          },
+        },
+      });
 
       return NextResponse.json({
         redirect: `/checkout/success?type=vip&promo=${encodeURIComponent(promo.code)}`,
