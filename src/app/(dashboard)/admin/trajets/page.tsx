@@ -165,8 +165,6 @@ export default async function AdminTrajetsPage() {
                 <td className="px-4 py-3 text-foreground text-xs">
                   <a
                     href={`/trajets/${t.id}`}
-                    target="_blank"
-                    rel="noreferrer"
                     className="font-medium hover:text-blue-300 hover:underline"
                   >
                     {t.user.name ?? "—"}
@@ -213,8 +211,6 @@ export default async function AdminTrajetsPage() {
                   <div className="flex flex-wrap justify-end gap-2">
                     <a
                       href={`/trajets/${t.id}`}
-                      target="_blank"
-                      rel="noreferrer"
                       className="rounded-md bg-blue-500/20 px-2 py-1 text-blue-300 text-xs hover:bg-blue-500/30"
                     >
                       Voir la fiche

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { ContactLock } from "@/components/shared/contact-lock";
 import { ReportButton } from "@/components/shared/report-button";
+import { PriceOfferDialog } from "@/components/trajets/price-offer-dialog";
 import { RulesDialog } from "@/components/trajets/rules-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -123,13 +124,22 @@ export default async function TrajetDetailsPage({
             </dd>
           </div>
         </dl>
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
           {isVip ? null : (
             <Button asChild className="shadow-[var(--glow-red)]">
               <Link href="/vip">
                 <LockKeyhole aria-hidden /> Débloquer avec VIP
               </Link>
             </Button>
+          )}
+          {!isOwner && (
+            <PriceOfferDialog
+              trajetId={trajet.id}
+              prixPublie={trajet.prix}
+              villeDepart={trajet.villeDepart}
+              villeArrivee={trajet.villeArrivee}
+              isSignedIn={!!clerkId}
+            />
           )}
           <RulesDialog />
         </div>

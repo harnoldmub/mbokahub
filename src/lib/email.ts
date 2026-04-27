@@ -181,6 +181,86 @@ export async function sendTrajetPriceSuggestionEmail(args: {
   });
 }
 
+export async function sendTrajetPriceOfferEmail(args: {
+  to: string;
+  driverName: string | null;
+  villeDepart: string;
+  villeArrivee: string;
+  prixPublie: number;
+  prixPropose: number;
+  proposerName: string | null;
+  proposerEmail: string | null;
+  proposerWhatsapp: string | null;
+  message: string | null;
+  trajetId: string;
+}) {
+  const dashboardUrl = `${PUBLIC_URL}/dashboard/annonces`;
+  const greeting = args.driverName
+    ? `Salut ${escapeHtml(args.driverName)}`
+    : "Salut";
+  const proposerLabel = args.proposerName
+    ? escapeHtml(args.proposerName)
+    : "Un passager";
+  const contactLines: string[] = [];
+  if (args.proposerEmail) {
+    contactLines.push(
+      `<a href="mailto:${escapeHtml(args.proposerEmail)}" style="color:#fff;text-decoration:underline;">${escapeHtml(args.proposerEmail)}</a>`,
+    );
+  }
+  if (args.proposerWhatsapp) {
+    const cleaned = args.proposerWhatsapp.replace(/\s+/g, "");
+    contactLines.push(
+      `WhatsApp : <a href="https://wa.me/${escapeHtml(cleaned.replace(/^\+/, ""))}" style="color:#fff;text-decoration:underline;">${escapeHtml(args.proposerWhatsapp)}</a>`,
+    );
+  }
+  const contactBlock = contactLines.length
+    ? `<p style="font-size:15px;line-height:1.6;color:#d4d4d4;margin:0 0 16px;">Pour répondre :<br>${contactLines.join("<br>")}</p>`
+    : `<p style="font-size:15px;line-height:1.6;color:#a4a4a4;margin:0 0 16px;font-style:italic;">${proposerLabel} n'a pas laissé de contact direct.</p>`;
+  const messageBlock = args.message
+    ? `<div style="background:#1a1a1a;border-left:3px solid #E50914;padding:14px 16px;margin:0 0 24px;border-radius:8px;"><p style="font-size:14px;line-height:1.6;color:#d4d4d4;margin:0;font-style:italic;">« ${escapeHtml(args.message)} »</p></div>`
+    : "";
+
+  const body = `
+    <h1 style="font-size:26px;font-weight:800;color:#fff;margin:0 0 16px;line-height:1.2;">
+      Nouvelle proposition de prix 💬
+    </h1>
+    <p style="font-size:16px;line-height:1.6;color:#d4d4d4;margin:0 0 16px;">
+      ${greeting},
+    </p>
+    <p style="font-size:16px;line-height:1.6;color:#d4d4d4;margin:0 0 24px;">
+      <strong style="color:#fff;">${proposerLabel}</strong> est intéressé(e) par ton trajet <strong style="color:#fff;">${escapeHtml(args.villeDepart)} → ${escapeHtml(args.villeArrivee)}</strong> et te propose un autre prix.
+    </p>
+    <div style="background:#1a1a1a;border:1px solid rgba(229,9,20,0.25);border-radius:16px;padding:20px;margin:0 0 24px;">
+      <div style="font-family:'Courier New',monospace;font-size:11px;letter-spacing:0.2em;color:#E50914;margin:0 0 12px;text-transform:uppercase;">
+        La proposition
+      </div>
+      <p style="font-size:15px;line-height:1.6;color:#d4d4d4;margin:0 0 8px;">
+        Ton prix actuel : <strong style="color:#fff;">${args.prixPublie} €</strong> par place
+      </p>
+      <p style="font-size:18px;line-height:1.6;color:#fff;margin:0;">
+        Prix proposé : <strong style="color:#fff;">${args.prixPropose} €</strong> par place
+      </p>
+    </div>
+    ${messageBlock}
+    ${contactBlock}
+    <p style="font-size:14px;line-height:1.6;color:#a4a4a4;margin:0 0 24px;">
+      Tu restes libre d'accepter, refuser ou contre-proposer. Si la proposition te convient, tu peux ajuster le prix de ton annonce en un clic.
+    </p>
+    <div style="text-align:center;margin:32px 0;">
+      <a href="${dashboardUrl}" style="display:inline-block;background:#E50914;color:#fff;padding:14px 28px;border-radius:999px;text-decoration:none;font-weight:600;font-size:14px;">
+        Gérer mon trajet
+      </a>
+    </div>
+  `;
+
+  return sendEmail({
+    to: args.to,
+    subject: `💬 Proposition de prix : ${args.prixPropose}€ pour ${args.villeDepart} → ${args.villeArrivee}`,
+    html: emailLayout("Proposition de prix", body),
+    text: `${greeting}, ${proposerLabel} te propose ${args.prixPropose}€/place pour ton trajet ${args.villeDepart} → ${args.villeArrivee} (au lieu de ${args.prixPublie}€). Contact : ${args.proposerEmail ?? args.proposerWhatsapp ?? "non communiqué"}. Message : ${args.message ?? "—"}. Gérer : ${dashboardUrl}`,
+  });
+}
+
 function escapeHtml(s: string) {
   return s
     .replace(/&/g, "&amp;")
