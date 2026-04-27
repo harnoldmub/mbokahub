@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import { AfterRegistrationForm } from "@/components/afters/registration-form";
 import { SectionHeading } from "@/components/marketing/section-heading";
 
@@ -20,7 +22,9 @@ export default function OrganiseAfterPage() {
         />
 
         <div className="mt-20">
-          <AfterRegistrationForm />
+          <Suspense fallback={<div className="h-96 animate-pulse rounded-3xl bg-coal/40" />}>
+            <AfterRegistrationForm />
+          </Suspense>
         </div>
       </div>
     </main>
