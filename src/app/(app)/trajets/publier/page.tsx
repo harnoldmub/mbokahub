@@ -1,9 +1,11 @@
-import { ArrowRight, Info } from "lucide-react";
+import { ArrowRight, Car, Info } from "lucide-react";
+import Link from "next/link";
 
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { PriceSuggester } from "@/components/trajets/price-suggester";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
+import { NumberStepper } from "@/components/ui/number-stepper";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Input } from "@/components/ui/input";
 import { createTrajetAction } from "@/lib/actions/public";
@@ -57,6 +59,26 @@ export default async function PublishTrajetPage({
             </div>
 
             <PriceSuggester />
+
+            <Link
+              href="/pro/inscrire?category=CHAUFFEUR_VTC"
+              className="group flex items-start gap-4 rounded-2xl border border-gold/20 bg-gradient-to-br from-gold/5 to-coal p-6 transition hover:border-gold/40"
+            >
+              <div className="size-10 rounded-xl bg-gold/15 flex items-center justify-center text-gold shrink-0">
+                <Car className="size-5" />
+              </div>
+              <div className="space-y-1.5">
+                <p className="font-display text-sm uppercase text-paper">
+                  Tu es chauffeur VTC ?
+                </p>
+                <p className="text-paper-dim text-xs leading-relaxed font-body">
+                  Inscris-toi comme prestataire pro pour proposer tes courses (transferts aéroport, transport privé concert + after) à toute la diaspora.
+                </p>
+                <p className="text-gold text-xs font-mono uppercase tracking-wider mt-2 inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                  S'inscrire comme VTC <ArrowRight className="size-3" />
+                </p>
+              </div>
+            </Link>
           </div>
         </div>
 
@@ -120,7 +142,7 @@ export default async function PublishTrajetPage({
 
                 <div className="grid sm:grid-cols-3 gap-6">
                   <FormField label="Places" helperText="Total dispo">
-                    <Input name="placesTotal" type="number" min="1" max="8" required placeholder="4" className="h-12 bg-smoke border-none" />
+                    <NumberStepper name="placesTotal" defaultValue={4} min={1} max={8} required unit="places" />
                   </FormField>
                   <FormField label="Prix / place" helperText="En Euros (€)">
                     <Input name="prix" type="number" min="0" step="0.5" required placeholder="25" className="h-12 bg-smoke border-none" />

@@ -1,12 +1,16 @@
-"use client";
-
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { ProRegistrationForm } from "@/components/pro/registration-form";
 
-export default function ProRegisterPage() {
+type Props = {
+  searchParams?: Promise<{ category?: string }>;
+};
+
+export default async function ProRegisterPage({ searchParams }: Props) {
+  const sp = await searchParams;
+  const defaultCategory = sp?.category;
+
   return (
     <main className="relative min-h-screen bg-ink">
-      {/* Background watermark */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <span className="absolute left-[-5vw] top-[30vh] font-display text-[25vw] text-gold opacity-[0.02] select-none leading-none uppercase -rotate-12">
           BUSINESS
@@ -24,7 +28,7 @@ export default function ProRegisterPage() {
         </div>
 
         <div className="max-w-5xl mx-auto">
-          <ProRegistrationForm />
+          <ProRegistrationForm defaultCategory={defaultCategory} />
         </div>
       </div>
     </main>

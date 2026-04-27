@@ -16,9 +16,23 @@ import {
   PRO_CATEGORY_GROUPS,
 } from "@/lib/pro-categories";
 
-export function ProRegistrationForm() {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [activeGroup, setActiveGroup] = useState<string>("all");
+type Props = {
+  defaultCategory?: string;
+};
+
+export function ProRegistrationForm({ defaultCategory }: Props = {}) {
+  const initialCat =
+    defaultCategory && PRO_CATEGORIES.some((c) => c.id === defaultCategory)
+      ? defaultCategory
+      : null;
+  const initialGroup = initialCat
+    ? (PRO_CATEGORIES.find((c) => c.id === initialCat)?.group ?? "all")
+    : "all";
+
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(
+    initialCat,
+  );
+  const [activeGroup, setActiveGroup] = useState<string>(initialGroup);
   const [isRequestingCert, setIsRequestingCert] = useState(false);
 
   const visibleCategories =
