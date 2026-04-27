@@ -215,6 +215,14 @@ export default async function AdminAftersPage() {
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex flex-wrap justify-end gap-2">
+                    <a
+                      href={`/afters/${a.slug}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rounded-md bg-blue-500/20 px-2 py-1 text-blue-300 text-xs hover:bg-blue-500/30"
+                    >
+                      Voir la fiche
+                    </a>
                     {a.isApproved ? (
                       <ConfirmActionForm
                         action={setAfterApproval.bind(null, a.id, false)}
