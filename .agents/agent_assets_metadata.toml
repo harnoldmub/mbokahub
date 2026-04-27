@@ -6,3 +6,9 @@ id = "gQFACXM-apAt6b5HpzVPX"
 uri = "file://.local/exports/quiz_bank.md"
 type = "text"
 title = "Banque de questions Mboka Hub Quiz (101 questions, mise à jour)"
+
+[[outputs]]
+id = "zDxaZtjHajUgDfC5v5cU1"
+uri = "file://.local/exports/campagne_meta_google_ads.txt"
+type = "text"
+title = "Mboka Hub — Campagne Meta + Google Ads (90 jours)"
