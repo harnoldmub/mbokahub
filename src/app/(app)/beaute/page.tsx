@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { Button } from "@/components/ui/button";
+import { prisma } from "@/lib/db/prisma";
 import {
   getLocaleFromSearchParams,
   localizedHref,
@@ -10,6 +11,8 @@ import {
   type SearchParams,
 } from "@/lib/nls";
 import { cn } from "@/lib/utils";
+
+export const dynamic = "force-dynamic";
 
 type PrestationsPageProps = {
   searchParams?: Promise<SearchParams>;
@@ -20,25 +23,30 @@ const categoryMeta = [
     href: "/beaute/maquilleuses",
     icon: Sparkles,
     color: "text-blood",
-    count: 0,
+    categories: [
+      "MAQUILLEUSE",
+      "ESTHETICIENNE",
+      "PROTHESISTE_ONGLES",
+      "TECHNICIENNE_CILS",
+    ] as const,
   },
   {
     href: "/beaute/coiffeurs",
     icon: Scissors,
     color: "text-gold",
-    count: 0,
+    categories: ["COIFFEUR", "BARBIER"] as const,
   },
   {
     href: "/beaute/photographes",
     icon: Camera,
     color: "text-paper",
-    count: 0,
+    categories: ["PHOTOGRAPHE", "VIDEASTE"] as const,
   },
   {
     href: "/beaute/babysitting",
     icon: Baby,
     color: "text-violet-300",
-    count: 0,
+    categories: ["BABYSITTER"] as const,
   },
 ] as const;
 
@@ -47,10 +55,27 @@ export default async function PrestationsPage({
 }: PrestationsPageProps) {
   const locale = getLocaleFromSearchParams(await searchParams);
   const copy = nls[locale].prestations;
-  const categories = categoryMeta.map((meta, index) => ({
-    ...meta,
-    ...copy.categories[index],
-  }));
+
+  const grouped = await prisma.proProfile.groupBy({
+    by: ["category"],
+    where: { isVerified: true },
+    _count: { _all: true },
+  });
+  const countByCategory = new Map<string, number>(
+    grouped.map((g) => [g.category, g._count._all]),
+  );
+
+  const categories = categoryMeta.map((meta, index) => {
+    const count = meta.categories.reduce(
+      (sum, c) => sum + (countByCategory.get(c) ?? 0),
+      0,
+    );
+    return {
+      ...meta,
+      ...copy.categories[index],
+      count,
+    };
+  });
 
   return (
     <main className="relative min-h-screen bg-ink">
