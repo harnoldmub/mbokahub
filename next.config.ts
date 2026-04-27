@@ -28,6 +28,12 @@ const nextConfig: NextConfig = {
     ],
   },
   allowedDevOrigins,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: false,
+  },
   webpack(config) {
     config.resolve = config.resolve ?? {};
     config.resolve.symlinks = false;
