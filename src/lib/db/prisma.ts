@@ -27,7 +27,13 @@ function createPrismaClient(): PrismaClient {
 
   if (isNeon) {
     neonConfig.webSocketConstructor = ws;
-    const adapter = new PrismaNeon({ connectionString: url });
+    neonConfig.poolQueryViaFetch = true;
+    const adapter = new PrismaNeon({
+      connectionString: url,
+      max: 1,
+      idleTimeoutMillis: 10_000,
+      connectionTimeoutMillis: 10_000,
+    });
     return new PrismaClient({ adapter, log });
   }
 

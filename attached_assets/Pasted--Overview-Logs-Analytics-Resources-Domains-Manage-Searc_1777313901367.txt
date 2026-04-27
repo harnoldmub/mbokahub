@@ -1,0 +1,232 @@
+
+
+Overview
+
+Logs
+
+Analytics
+
+Resources
+
+Domains
+
+Manage
+Search
+
+
+Errors only
+
+Date
+Time
+Deployment
+Source
+Log
+2026-04-27 19:46:45.86
+0dc730d3
+User
+prisma:error Error in PostgreSQL connection: Error { kind: Db, cause: Some(DbError { severity: "FATAL", parsed_severity: Some(Fatal), code: SqlState(E57P01), message: "terminating connection due to administrator command", detail: None, hint: None, position: None, where_: None, schema: None, table: None, column: None, datatype: None, constraint: None, file: Some("postgres.c"), line: Some(3289), routine: Some("ProcessInterrupts") }) }
+2026-04-27 19:58:43.13
+35fd3b25
+User
+- Local: http://localhost:5000
+2026-04-27 19:58:43.13
+35fd3b25
+User
+✓ Starting...
+2026-04-27 19:58:45.12
+35fd3b25
+User
+✓ Ready in 2.4s
+2026-04-27 20:03:13.32
+0dc730d3
+System
+system: received signal terminated
+2026-04-27 20:03:13.35
+0dc730d3
+User
+ ELIFECYCLE  Command failed.
+2026-04-27 20:04:46.19
+35fd3b25
+User
+prisma:error Error in PostgreSQL connection: Error { kind: Db, cause: Some(DbError { severity: "FATAL", parsed_severity: Some(Fatal), code: SqlState(E57P01), message: "terminating connection due to administrator command", detail: None, hint: None, position: None, where_: None, schema: None, table: None, column: None, datatype: None, constraint: None, file: Some("postgres.c"), line: Some(3289), routine: Some("ProcessInterrupts") }) }
+2026-04-27 20:04:46.19
+35fd3b25
+User
+prisma:error Error in PostgreSQL connection: Error { kind: Db, cause: Some(DbError { severity: "FATAL", parsed_severity: Some(Fatal), code: SqlState(E57P01), message: "terminating connection due to administrator command", detail: None, hint: None, position: None, where_: None, schema: None, table: None, column: None, datatype: None, constraint: None, file: Some("postgres.c"), line: Some(3289), routine: Some("ProcessInterrupts") }) }
+2026-04-27 20:04:46.19
+35fd3b25
+User
+prisma:error Error in PostgreSQL connection: Error { kind: Db, cause: Some(DbError { severity: "FATAL", parsed_severity: Some(Fatal), code: SqlState(E57P01), message: "terminating connection due to administrator command", detail: None, hint: None, position: None, where_: None, schema: None, table: None, column: None, datatype: None, constraint: None, file: Some("postgres.c"), line: Some(3289), routine: Some("ProcessInterrupts") }) }
+2026-04-27 20:08:16.17
+35fd3b25
+User
+prisma:error Error in PostgreSQL connection: Error { kind: Db, cause: Some(DbError { severity: "FATAL", parsed_severity: Some(Fatal), code: SqlState(E57P01), message: "terminating connection due to administrator command", detail: None, hint: None, position: None, where_: None, schema: None, table: None, column: None, datatype: None, constraint: None, file: Some("postgres.c"), line: Some(3289), routine: Some("ProcessInterrupts") }) }
+2026-04-27 20:08:16.18
+35fd3b25
+User
+prisma:error Error in PostgreSQL connection: Error { kind: Db, cause: Some(DbError { severity: "FATAL", parsed_severity: Some(Fatal), code: SqlState(E57P01), message: "terminating connection due to administrator command", detail: None, hint: None, position: None, where_: None, schema: None, table: None, column: None, datatype: None, constraint: None, file: Some("postgres.c"), line: Some(3289), routine: Some("ProcessInterrupts") }) }
+2026-04-27 20:08:16.29
+35fd3b25
+User
+prisma:error Error in PostgreSQL connection: Error { kind: Db, cause: Some(DbError { severity: "FATAL", parsed_severity: Some(Fatal), code: SqlState(E57P01), message: "terminating connection due to administrator command", detail: None, hint: None, position: None, where_: None, schema: None, table: None, column: None, datatype: None, constraint: None, file: Some("postgres.c"), line: Some(3289), routine: Some("ProcessInterrupts") }) }
+2026-04-27 20:10:01.20
+35fd3b25
+User
+prisma:error Error in PostgreSQL connection: Error { kind: Db, cause: Some(DbError { severity: "FATAL", parsed_severity: Some(Fatal), code: SqlState(E57P01), message: "terminating connection due to administrator command", detail: None, hint: None, position: None, where_: None, schema: None, table: None, column: None, datatype: None, constraint: None, file: Some("postgres.c"), line: Some(3289), routine: Some("ProcessInterrupts") }) }
+2026-04-27 20:10:01.21
+35fd3b25
+User
+prisma:error Error in PostgreSQL connection: Error { kind: Db, cause: Some(DbError { severity: "FATAL", parsed_severity: Some(Fatal), code: SqlState(E57P01), message: "terminating connection due to administrator command", detail: None, hint: None, position: None, where_: None, schema: None, table: None, column: None, datatype: None, constraint: None, file: Some("postgres.c"), line: Some(3289), routine: Some("ProcessInterrupts") }) }
+2026-04-27 20:10:01.29
+35fd3b25
+User
+prisma:error Error in PostgreSQL connection: Error { kind: Db, cause: Some(DbError { severity: "FATAL", parsed_severity: Some(Fatal), code: SqlState(E57P01), message: "terminating connection due to administrator command", detail: None, hint: None, position: None, where_: None, schema: None, table: None, column: None, datatype: None, constraint: None, file: Some("postgres.c"), line: Some(3289), routine: Some("ProcessInterrupts") }) }
+2026-04-27 20:17:03.11
+a93d511e
+System
+starting up user application
+2026-04-27 20:17:03.11
+a93d511e
+System
+forwarding local port 5000 to external port 80 (mapped as 1104)
+2026-04-27 20:17:03.11
+a93d511e
+System
+metasidecar: loaded enterprise status from environment is_enterprise=false
+2026-04-27 20:17:04.53
+a93d511e
+User
+> mbokahub@0.1.0 start /home/runner/workspace
+2026-04-27 20:17:04.53
+a93d511e
+User
+> next start -p ${PORT:-5000} -H 0.0.0.0
+2026-04-27 20:17:05.59
+a93d511e
+User
+▲ Next.js 15.5.15
+2026-04-27 20:17:05.59
+a93d511e
+User
+- Local: http://localhost:5000
+2026-04-27 20:17:05.59
+a93d511e
+User
+✓ Starting...
+2026-04-27 20:17:05.59
+a93d511e
+User
+- Network: http://0.0.0.0:5000
+2026-04-27 20:17:07.62
+a93d511e
+User
+✓ Ready in 2.4s
+2026-04-27 20:17:27.28
+a93d511e
+User
+at J.send (.next/server/chunks/6177.js:2:25379)
+2026-04-27 20:17:27.28
+a93d511e
+User
+TypeError: b.mask is not a function
+2026-04-27 20:17:27.28
+a93d511e
+User
+at a.exports.mask (.next/server/chunks/6177.js:2:8101)
+2026-04-27 20:17:27.28
+a93d511e
+User
+at r.frame (.next/server/chunks/6177.js:2:1389)
+
+2026-04-27 20:17:27.28
+a93d511e
+User
+at r.send (.next/server/chunks/6177.js:2:3751)
+2026-04-27 20:17:27.28
+a93d511e
+User
+at Timeout._onTimeout (.next/server/chunks/6177.js:11:1002)
+2026-04-27 20:17:27.28
+a93d511e
+User
+at r.dispatch (.next/server/chunks/6177.js:2:4218)
+2026-04-27 20:17:27.28
+a93d511e
+User
+⨯ uncaughtException: TypeError: b.mask is not a function
+2026-04-27 20:17:27.28
+a93d511e
+User
+at a.exports.mask (.next/server/chunks/6177.js:2:8101)
+2026-04-27 20:17:27.28
+a93d511e
+User
+at J.send (.next/server/chunks/6177.js:2:25379)
+2026-04-27 20:17:27.28
+a93d511e
+User
+at r.send (.next/server/chunks/6177.js:2:3751)
+2026-04-27 20:17:27.28
+a93d511e
+User
+at r.dispatch (.next/server/chunks/6177.js:2:4218)
+2026-04-27 20:17:27.28
+a93d511e
+User
+at Timeout._onTimeout (.next/server/chunks/6177.js:11:1002)
+2026-04-27 20:17:27.28
+a93d511e
+User
+at r.frame (.next/server/chunks/6177.js:2:1389)
+2026-04-27 20:17:27.34
+a93d511e
+User
+TypeError: b.mask is not a function
+2026-04-27 20:17:27.34
+a93d511e
+User
+at r.send (.next/server/chunks/6177.js:2:3751)
+2026-04-27 20:17:27.34
+a93d511e
+User
+at r.dispatch (.next/server/chunks/6177.js:2:4218)
+2026-04-27 20:17:27.34
+a93d511e
+User
+at a.exports.mask (.next/server/chunks/6177.js:2:8101)
+2026-04-27 20:17:27.34
+a93d511e
+User
+at r.frame (.next/server/chunks/6177.js:2:1389)
+2026-04-27 20:17:27.34
+a93d511e
+User
+at J.send (.next/server/chunks/6177.js:2:25379)
+2026-04-27 20:17:42.27
+a93d511e
+User
+prisma:error Connection terminated unexpectedly
+2026-04-27 20:17:42.27
+a93d511e
+User
+⨯ Error: Connection terminated unexpectedly
+2026-04-27 20:17:42.27
+a93d511e
+User
+}
+2026-04-27 20:17:42.27
+a93d511e
+User
+digest: '1898775057'
+2026-04-27 20:17:42.27
+a93d511e
+User
+at async aq.performIO (.next/server/chunks/6177.js:2:41838)
+2026-04-27 20:17:42.27
+a93d511e
+User
+at async aq.queryRaw (.next/server/chunks/6177.js:2:40037) {
+2026-04-27 20:17:42.27
+a93d511e
+User
+at <unknown> (.next/server/chunks/6177.js:14:27979)

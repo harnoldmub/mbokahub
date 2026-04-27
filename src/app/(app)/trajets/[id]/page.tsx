@@ -7,7 +7,8 @@ import { ReportButton } from "@/components/shared/report-button";
 import { RulesDialog } from "@/components/trajets/rules-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { isCurrentUserVip } from "@/lib/auth-helpers";
+import { auth } from "@clerk/nextjs/server";
+import { isCurrentUserAdmin, isCurrentUserVip } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/db/prisma";
 
 type TrajetDetailsPageProps = {
@@ -47,12 +48,27 @@ export default async function TrajetDetailsPage({
 }: TrajetDetailsPageProps) {
   const { id } = await params;
 
-  const trajet = await prisma.trajet.findFirst({
-    where: { id, isApproved: true, isActive: true },
-  });
+  const trajet = await prisma.trajet.findUnique({ where: { id } });
 
   if (!trajet) {
     notFound();
+  }
+
+  const [isAdmin, { userId: clerkId }] = await Promise.all([
+    isCurrentUserAdmin(),
+    auth(),
+  ]);
+  const isOwner =
+    !!clerkId &&
+    !!(await prisma.user.findUnique({
+      where: { clerkId },
+      select: { id: true },
+    }).then((u) => u && u.id === trajet.userId));
+
+  if (!trajet.isApproved || !trajet.isActive) {
+    if (!isAdmin && !isOwner) {
+      notFound();
+    }
   }
 
   const isVip = await isCurrentUserVip();

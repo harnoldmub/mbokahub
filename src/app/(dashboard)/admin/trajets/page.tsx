@@ -163,7 +163,14 @@ export default async function AdminTrajetsPage() {
                 }
               >
                 <td className="px-4 py-3 text-foreground text-xs">
-                  <div className="font-medium">{t.user.name ?? "—"}</div>
+                  <a
+                    href={`/trajets/${t.id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-medium hover:text-blue-300 hover:underline"
+                  >
+                    {t.user.name ?? "—"}
+                  </a>
                   <div className="font-mono text-muted-foreground">{t.user.email}</div>
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">
