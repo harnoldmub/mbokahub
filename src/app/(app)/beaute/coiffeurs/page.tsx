@@ -73,8 +73,8 @@ export default async function CoiffeursPage() {
         </Link>
         <SectionHeading
           number="02"
-          description="Les meilleurs salons et coiffeurs/barbiers indés pour être au top. Noms et contacts floutés."
-          eyebrow="Coiffeurs & Barbiers"
+          description="Les meilleurs salons et coiffeurs/barbers indés pour être au top. Noms et contacts floutés."
+          eyebrow="Coiffeurs & Barbers"
           title="Beauté & Style"
         />
 

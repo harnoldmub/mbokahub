@@ -88,7 +88,7 @@ export const nls = {
           all: "Tous les prestataires",
           allDesc: "Annuaire vérifié, toutes catégories",
           maquilleuses: "Maquilleuses",
-          coiffeurs: "Coiffeurs & barbiers",
+          coiffeurs: "Coiffeurs & barbers",
           photographes: "Photographes",
           babysitting: "Babysitting",
           merch: "Merch & vendeurs",
@@ -154,10 +154,10 @@ export const nls = {
           title: "Prestataires",
           eyebrow: "Beauté & services",
           description:
-            "Maquilleuses, coiffeurs, barbiers et photographes de la diaspora.",
+            "Maquilleuses, coiffeurs, barbers et photographes de la diaspora.",
           features: [
             "Maquilleuses spé peau noire",
-            "Coiffeurs, tresseurs et barbiers",
+            "Coiffeurs, tresseurs et barbers",
             "Photographes pour shootings et événements",
             "Tarifs affichés, profils vérifiés",
           ],
@@ -231,7 +231,7 @@ export const nls = {
           description: "Pros spécialisées peaux noires et métisses.",
         },
         {
-          title: "Coiffeurs & barbiers",
+          title: "Coiffeurs & barbers",
           description: "Tresses, lace wigs, coupes et dégradés propres.",
         },
         {

@@ -27,7 +27,7 @@ export const fanModules = [
   },
   {
     title: "Beauté",
-    description: "Maquilleuses, coiffeurs et barbiers près de Paris.",
+    description: "Maquilleuses, coiffeurs et barbers près de Paris.",
     href: "/beaute/maquilleuses",
     icon: Scissors,
   },
@@ -107,7 +107,7 @@ export const proOffer = {
   description:
     "Tarif unique pour tous les pros — quel que soit ton service. Aucune commission, aucun abonnement, aucun frais caché.",
   audiences: [
-    { label: "Beauté", detail: "maquilleuses, esthéticiennes, ongles, cils, coiffeurs, barbiers, photographes, vidéastes" },
+    { label: "Beauté", detail: "maquilleuses, esthéticiennes, ongles, cils, coiffeurs, barbers, photographes, vidéastes" },
     { label: "Merch & mode", detail: "vendeurs mode, accessoires, pagne, bijoux, couture" },
     { label: "Afters & soirées", detail: "organisateurs, DJ, animateurs, décorateurs" },
     { label: "Restauration", detail: "cuisiniers, traiteurs congolais, food trucks" },

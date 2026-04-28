@@ -12,6 +12,7 @@ import {
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
+import { AdminProActionsBar } from "@/components/admin/admin-pro-actions-bar";
 import { ProGalleryClient } from "@/components/pros/pro-gallery-client";
 import { ContactLock } from "@/components/shared/contact-lock";
 import { Badge } from "@/components/ui/badge";
@@ -26,10 +27,15 @@ import { publicProName } from "@/lib/pro-display";
 
 type ProDetailsPageProps = {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ from?: string }>;
 };
 
-export default async function ProDetailsPage({ params }: ProDetailsPageProps) {
+export default async function ProDetailsPage({
+  params,
+  searchParams,
+}: ProDetailsPageProps) {
   const { id } = await params;
+  const { from } = await searchParams;
   const { userId: clerkId } = await auth();
   const [pro, baseUnlocked, isAdmin, dbUser] = await Promise.all([
     prisma.proProfile.findUnique({ where: { id } }),
@@ -71,19 +77,66 @@ export default async function ProDetailsPage({ params }: ProDetailsPageProps) {
     <main className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Button asChild size="sm" variant="ghost">
-          <Link href="/prestataires">
-            <ArrowLeft aria-hidden /> Retour aux prestataires
+          <Link
+            href={
+              isAdmin && from === "admin" ? "/admin/pros" : "/prestataires"
+            }
+          >
+            <ArrowLeft aria-hidden />
+            {isAdmin && from === "admin"
+              ? "Retour à l'admin"
+              : "Retour aux prestataires"}
           </Link>
         </Button>
-        {(isOwner || isAdmin) && (
+        {isOwner && !isAdmin && (
           <Button asChild size="sm" variant="outline">
-            <Link href={isOwner ? "/dashboard/profil-pro" : "/admin/pros"}>
-              <Pencil aria-hidden />
-              {isOwner ? "Modifier ma fiche" : "Modifier (admin)"}
+            <Link href="/dashboard/profil-pro">
+              <Pencil aria-hidden /> Modifier ma fiche
             </Link>
           </Button>
         )}
       </div>
+
+      {isAdmin && (
+        <section className="mt-6 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-amber-300">
+            Actions admin
+          </p>
+          <p className="mt-1 text-sm text-paper-dim">
+            Modifier, valider, certifier ou supprimer ce profil. Chaque action
+            demande une confirmation.
+          </p>
+          <div className="mt-3">
+            <AdminProActionsBar
+              pro={{
+                id: pro.id,
+                displayName: pro.displayName,
+                category: pro.category,
+                city: pro.city,
+                country: pro.country,
+                whatsapp: pro.whatsapp,
+                bio: pro.bio,
+                priceRange: pro.priceRange,
+                instagramHandle: pro.instagramHandle,
+                tiktokHandle: pro.tiktokHandle,
+                specialities: pro.specialities,
+                photos: pro.photos,
+                isVerified: pro.isVerified,
+                isPremium: pro.isPremium,
+              }}
+            />
+          </div>
+          {isOwner && (
+            <div className="mt-3">
+              <Button asChild size="sm" variant="outline">
+                <Link href="/dashboard/profil-pro">
+                  <Pencil aria-hidden /> Modifier ma fiche (vue propriétaire)
+                </Link>
+              </Button>
+            </div>
+          )}
+        </section>
+      )}
 
       <section className="mt-8 overflow-hidden rounded-3xl border border-white/10 bg-coal/60">
         {cover ? (

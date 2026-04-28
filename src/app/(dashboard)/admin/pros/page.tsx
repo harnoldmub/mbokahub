@@ -1,16 +1,10 @@
 import Link from "next/link";
 
-import { ConfirmActionForm } from "@/components/admin/confirm-action-form";
-import { EditProForm } from "@/components/admin/edit-pro-form";
+import { AdminProActionsBar } from "@/components/admin/admin-pro-actions-bar";
 import { PhotoUploader } from "@/components/admin/photo-uploader";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { prisma } from "@/lib/db/prisma";
-import {
-  certifyProProfile,
-  createProProfileAdmin,
-  deleteProProfile,
-  verifyProProfile,
-} from "@/lib/actions/admin";
+import { createProProfileAdmin } from "@/lib/actions/admin";
 
 export const dynamic = "force-dynamic";
 
@@ -210,12 +204,12 @@ export default async function AdminProsPage({
                 <td className="px-4 py-3 text-right">
                   <div className="flex flex-wrap justify-end gap-2">
                     <Link
-                      href={`/pro/${p.id}`}
+                      href={`/pro/${p.id}?from=admin`}
                       className="rounded-md bg-blue-500/20 px-2 py-1 text-blue-300 text-xs hover:bg-blue-500/30"
                     >
                       Voir la fiche
                     </Link>
-                    <EditProForm
+                    <AdminProActionsBar
                       pro={{
                         id: p.id,
                         displayName: p.displayName,
@@ -229,102 +223,9 @@ export default async function AdminProsPage({
                         tiktokHandle: p.tiktokHandle,
                         specialities: p.specialities,
                         photos: p.photos,
+                        isVerified: p.isVerified,
+                        isPremium: p.isPremium,
                       }}
-                    />
-                    <ConfirmActionForm
-                      action={verifyProProfile.bind(
-                        null,
-                        p.id,
-                        !p.isVerified,
-                      )}
-                      triggerLabel={p.isVerified ? "Dévalider" : "Valider"}
-                      triggerClassName="rounded-md bg-green-500/20 px-2 py-1 text-green-300 text-xs hover:bg-green-500/30"
-                      title={
-                        p.isVerified
-                          ? "Dévalider ce profil ?"
-                          : "Valider ce profil ?"
-                      }
-                      description={
-                        p.isVerified ? (
-                          <>
-                            <span className="font-semibold text-foreground">
-                              {p.displayName}
-                            </span>{" "}
-                            disparaîtra de l'annuaire public et ne sera plus
-                            visible par les utilisateurs. Tu pourras le
-                            re-valider à tout moment.
-                          </>
-                        ) : (
-                          <>
-                            <span className="font-semibold text-foreground">
-                              {p.displayName}
-                            </span>{" "}
-                            sera publié sur l'annuaire et visible par tous les
-                            visiteurs. Vérifie bien que les coordonnées et la
-                            bio sont propres avant de valider.
-                          </>
-                        )
-                      }
-                      confirmLabel={
-                        p.isVerified ? "Dévalider" : "Publier le profil"
-                      }
-                      variant={p.isVerified ? "warning" : "default"}
-                    />
-                    <ConfirmActionForm
-                      action={certifyProProfile.bind(
-                        null,
-                        p.id,
-                        !p.isPremium,
-                      )}
-                      triggerLabel={
-                        p.isPremium ? "Retirer premium" : "Premium"
-                      }
-                      triggerClassName="rounded-md bg-amber-500/20 px-2 py-1 text-amber-200 text-xs hover:bg-amber-500/30"
-                      title={
-                        p.isPremium
-                          ? "Retirer le statut Premium ?"
-                          : "Passer ce profil en Premium ?"
-                      }
-                      description={
-                        p.isPremium ? (
-                          <>
-                            <span className="font-semibold text-foreground">
-                              {p.displayName}
-                            </span>{" "}
-                            perdra le badge ★ Certifié et son boost dans
-                            l'ordre d'affichage.
-                          </>
-                        ) : (
-                          <>
-                            <span className="font-semibold text-foreground">
-                              {p.displayName}
-                            </span>{" "}
-                            recevra le badge ★ Certifié et sera mis en avant
-                            jusqu'au 31 déc. 2026.
-                          </>
-                        )
-                      }
-                      confirmLabel={
-                        p.isPremium ? "Retirer Premium" : "Activer Premium"
-                      }
-                      variant="warning"
-                    />
-                    <ConfirmActionForm
-                      action={deleteProProfile.bind(null, p.id)}
-                      triggerLabel="Supprimer"
-                      triggerClassName="rounded-md bg-red-500/20 px-2 py-1 text-red-300 text-xs hover:bg-red-500/30"
-                      title="Supprimer ce profil pro ?"
-                      description={
-                        <>
-                          Tu vas supprimer le profil de{" "}
-                          <span className="font-semibold text-foreground">
-                            {p.displayName}
-                          </span>{" "}
-                          ({p.category}). Le compte utilisateur reste, mais le profil
-                          public et toutes ses photos seront supprimés.
-                        </>
-                      }
-                      confirmLabel="Supprimer le profil"
                     />
                   </div>
                 </td>

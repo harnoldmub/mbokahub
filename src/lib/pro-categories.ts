@@ -52,7 +52,7 @@ export const PRO_CATEGORIES: ProCategoryMeta[] = [
   },
   {
     id: "BARBIER",
-    label: "Barbier",
+    label: "Barber",
     shortLabel: "Barber",
     icon: "🪒",
     description: "Coupes, dégradés, taille de barbe.",

@@ -18,7 +18,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   TOUS: "Tous",
   MAQUILLEUSE: "Maquilleuses",
   COIFFEUR: "Coiffeurs",
-  BARBIER: "Barbiers",
+  BARBIER: "Barbers",
   PHOTOGRAPHE: "Photographes",
 };
 
