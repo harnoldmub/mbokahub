@@ -1,0 +1,180 @@
+Maximiser l’adoption (fans) + créer un levier de monétisation simple (prestataires & entreprises) sans friction.
+
+⸻
+
+👤 1. UTILISATEURS (FANS)
+
+✅ Accès
+
+* 100% gratuit
+* Aucun paiement pour voir :
+    * prestataires
+    * trajets
+    * événements
+    * contacts
+
+✅ Ils peuvent :
+
+* voir les profils prestataires (photos, prix, description, WhatsApp)
+* voir les trajets (ville, prix, places, conducteur)
+* contacter directement (WhatsApp / tel / lien externe)
+
+👉 Aucune barrière à l’entrée
+
+⸻
+
+🧑‍💼 2. PRESTATAIRES (COIFFEUR, MAKEUP, ETC.)
+
+🆓 Offre gratuite (par défaut)
+
+* création de fiche
+* infos :
+    * nom
+    * ville
+    * catégorie
+    * description
+    * 3 photos
+    * contact (WhatsApp)
+
+💰 Options payantes (monétisation principale)
+
+🔥 Boost visibilité
+
+* Boost 24h → 5€
+* Boost événement (week-end concert) → 15€
+* Top prestataire (ville/catégorie) → 25€
+
+✅ Badge
+
+* Badge vérifié → 10€
+
+📦 Pack
+
+* Pack visibilité complet → 49€
+
+👉 Logique : ils payent pour être visibles, pas pour exister
+
+⸻
+
+🏢 3. ENTREPRISES (MARQUES / BUSINESS / PARTENAIRES)
+
+❗ Toujours payant (pas de gratuit)
+
+Types :
+
+* marques (boissons, mode, etc.)
+* restaurants
+* clubs / after-party
+* agences
+* sponsors
+
+💰 Offres
+
+📍 Placement sponsorisé
+
+* Bannière ou mise en avant → prix fixe
+
+🔥 Fiche sponsorisée
+
+* profil mis en avant dans les listes
+* tag “sponsorisé”
+
+📲 Contenu sponsorisé
+
+* post mis en avant dans feed
+* visibilité sur page événement
+
+📦 Packs entreprise
+
+* pack event complet (ex : concert Fally)
+* visibilité globale plateforme
+
+👉 Logique : les entreprises payent pour l’audience
+
+⸻
+
+🚗 4. COVOITURAGE
+
+🆓 Gratuit pour publier
+
+* conducteur peut publier librement
+
+⚠️ Pas de paiement via plateforme (V1)
+
+* contact direct (WhatsApp)
+
+👉 Éviter :
+
+* gestion paiement
+* litiges
+* remboursement
+
+⸻
+
+💸 5. MONÉTISATION GLOBALE
+
+Phase 1 (maintenant)
+
+* Boost prestataires
+* Packs visibilité
+* Entreprises sponsorisées
+
+Phase 2 (plus tard)
+
+* Commission (optionnelle)
+* Paiement intégré
+* réservation sécurisée
+
+⸻
+
+⚙️ 6. LOGIQUE PRODUIT À IMPLÉMENTER
+
+🎛️ Backend
+
+Ajouter champs :
+
+* isBoosted
+* boostUntil
+* isVerified
+* isSponsored
+* type: user | prestataire | entreprise
+
+📊 Algorithme affichage
+
+Ordre :
+
+1. sponsorisé (entreprises)
+2. boostés (prestataires)
+3. gratuits
+
+⸻
+
+💳 Paiement (Stripe simple)
+
+* achat boost
+* achat pack
+* achat sponsorisation
+
+⸻
+
+📱 Front
+
+Ajouter labels :
+
+* “🔥 Boosté”
+* “⭐ Vérifié”
+* “Sponsorisé”
+
+⸻
+
+🧠 RÈGLE PRINCIPALE
+
+❌ On ne fait jamais payer l’utilisateur pour voir
+✅ On fait payer ceux qui veulent de la visibilité
+
+⸻
+
+🧾 RÉSUMÉ EN UNE PHRASE
+
+Mboka Hub est gratuit pour les fans.
+Les prestataires et entreprises payent uniquement pour être visibles.
