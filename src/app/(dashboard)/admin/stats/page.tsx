@@ -133,13 +133,13 @@ export default async function AdminStatsPage() {
           Vue d'ensemble
         </h3>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatBox icon={Users} label="Utilisateurs" value={usersTotal} hint={`${vipsTotal} VIP actifs`} />
+          <StatBox icon={Users} label="Utilisateurs" value={usersTotal} hint={`${vipsTotal} ⭐ Famille Fondatrice`} />
           <StatBox icon={Crown} label="Pros total" value={prosTotal} hint={`${prosVerified} validés · ${prosPremium} premium`} tone="gold" />
           <StatBox
             icon={BadgeEuro}
             label="Recettes Mboka Hub"
             value={`${(paymentsAgg._sum.amount ?? 0).toFixed(2)} €`}
-            hint={`${paymentsAgg._count._all} paiements (VIP, badges pros, boost, déblocages)`}
+            hint={`${paymentsAgg._count._all} paiements (badges pros, boost, déblocages, anciens VIP)`}
             tone="green"
           />
           <StatBox

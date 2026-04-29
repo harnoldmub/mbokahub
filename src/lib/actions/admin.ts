@@ -36,13 +36,17 @@ function genCode(prefix: string, n: number) {
   return `${prefix}-${String(n).padStart(3, "0")}`;
 }
 
-const CATEGORY_PREFIX: Record<PromoCodeCategory, string> = {
-  VIP_FAN: "FAN-VIP",
+// Catégories actives en V1 — les codes VIP_FAN ne sont plus émis depuis le
+// pivot (fans 100% gratuits). L'enum Prisma `VIP_FAN` reste défini en base
+// pour préserver les codes historiques, mais on ne les manipule plus depuis
+// l'admin.
+const ACTIVE_PROMO_CATEGORIES = ["PRO"] as const satisfies readonly PromoCodeCategory[];
+
+const CATEGORY_PREFIX: Record<(typeof ACTIVE_PROMO_CATEGORIES)[number], string> = {
   PRO: "PRO",
 };
 
-const CATEGORY_LABEL: Record<PromoCodeCategory, string> = {
-  VIP_FAN: "VIP Famille",
+const CATEGORY_LABEL: Record<(typeof ACTIVE_PROMO_CATEGORIES)[number], string> = {
   PRO: "Prestataire pro",
 };
 
@@ -52,13 +56,20 @@ export async function setUserRole(userId: string, role: UserRole) {
   revalidatePath("/admin/users");
 }
 
-export async function toggleUserVip(userId: string, isVip: boolean) {
+/**
+ * Active / désactive le badge ⭐ "Famille Fondatrice" pour un utilisateur.
+ *
+ * Le flag `isVipActive` sert maintenant exclusivement de marqueur historique
+ * "ancien VIP / membre fondateur". Pas de date d'expiration : le badge est
+ * à vie. On nettoie également `vipUntil` pour purger les anciennes valeurs.
+ */
+export async function toggleFoundingFamily(userId: string, isFounder: boolean) {
   await requireAdmin();
   await prisma.user.update({
     where: { id: userId },
     data: {
-      isVipActive: isVip,
-      vipUntil: isVip ? new Date("2026-05-31") : null,
+      isVipActive: isFounder,
+      vipUntil: null,
     },
   });
   revalidatePath("/admin/users");
@@ -201,12 +212,25 @@ export async function setTrajetApproval(trajetId: string, approved: boolean) {
 export async function createPromoCode(form: FormData) {
   await requireAdmin();
   const code = String(form.get("code") || "").trim().toUpperCase();
-  const category = String(form.get("category") || "") as PromoCodeCategory;
+  const rawCategory = String(form.get("category") || "");
   const label = String(form.get("label") || "").trim() || null;
   const discountPercent = Number(form.get("discountPercent") || 100);
   const maxUses = Number(form.get("maxUses") || 1);
 
-  if (!code || !category) throw new Error("Code et catégorie requis");
+  if (!code || !rawCategory) throw new Error("Code et catégorie requis");
+
+  // Whitelist serveur : on n'accepte plus que les catégories actives.
+  // VIP_FAN reste dans l'enum Prisma pour les codes historiques mais ne
+  // peut plus être créé — protège contre un POST forgé.
+  const isActiveCategory = (ACTIVE_PROMO_CATEGORIES as readonly string[]).includes(
+    rawCategory,
+  );
+  if (!isActiveCategory) {
+    throw new Error(
+      `Catégorie "${rawCategory}" non autorisée. Catégories actives : ${ACTIVE_PROMO_CATEGORIES.join(", ")}.`,
+    );
+  }
+  const category = rawCategory as (typeof ACTIVE_PROMO_CATEGORIES)[number];
 
   await prisma.promoCode.create({
     data: { code, category, label, discountPercent, maxUses },
@@ -232,9 +256,7 @@ export async function deletePromoCode(promoId: string) {
 export async function generateInitialPromoCodes(): Promise<void> {
   await requireAdmin();
 
-  const categories: PromoCodeCategory[] = ["VIP_FAN", "PRO"];
-
-  for (const category of categories) {
+  for (const category of ACTIVE_PROMO_CATEGORIES) {
     const prefix = CATEGORY_PREFIX[category];
     const label = CATEGORY_LABEL[category];
     for (let i = 1; i <= 10; i++) {

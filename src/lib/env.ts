@@ -13,8 +13,9 @@ const envSchema = z.object({
   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().min(1).optional(),
   STRIPE_SECRET_KEY: z.string().min(1).optional(),
   STRIPE_WEBHOOK_SECRET: z.string().min(1).optional(),
-  STRIPE_VIP_PRICE_ID: z.string().min(1).optional(),
-  STRIPE_VIP_EARLY_BIRD_PRICE_ID: z.string().min(1).optional(),
+  // Pass VIP Fan retiré depuis le pivot — STRIPE_VIP_PRICE_ID et
+  // STRIPE_VIP_EARLY_BIRD_PRICE_ID restent dans les secrets mais ne sont
+  // plus parsés ici (à supprimer côté hébergeur si besoin).
   STRIPE_PRO_PRICE_ID: z.string().min(1).optional(),
   STRIPE_BOOST_PRICE_ID: z.string().min(1).optional(),
   RESEND_API_KEY: z.string().min(1).optional(),

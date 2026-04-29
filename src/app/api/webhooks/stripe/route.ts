@@ -8,22 +8,21 @@ import { getStripe } from "@/lib/stripe";
 
 export const runtime = "nodejs";
 
-const VIP_END = new Date("2026-05-31T23:59:59+02:00");
 const PREMIUM_END = new Date("2026-05-31T23:59:59+02:00");
 const BOOST_END = new Date("2026-05-31T23:59:59+02:00");
 
+// Le pass VIP fan n'est plus en vente (fans 100% gratuits depuis le pivot).
+// On ne traite plus que les paiements pros : BOOST, PRO_PREMIUM, CONDUCTEUR_REVEAL.
+// Si un webhook VIP_FAN traînant arrive (paiement signé avant la bascule),
+// il est ignoré silencieusement — les anciens VIP gardent déjà leur badge
+// "Famille Fondatrice" (dérivé de user.isVipActive, déjà en base).
 const KNOWN_TYPES = new Set([
-  "VIP_FAN",
   "BOOST",
   "PRO_PREMIUM",
   "CONDUCTEUR_REVEAL",
 ]);
 
-type PaymentTypeEnum =
-  | "VIP_FAN"
-  | "BOOST"
-  | "PRO_PREMIUM"
-  | "CONDUCTEUR_REVEAL";
+type PaymentTypeEnum = "BOOST" | "PRO_PREMIUM" | "CONDUCTEUR_REVEAL";
 
 function paymentTypeFromMetadata(
   meta: Record<string, string> | undefined,
@@ -92,20 +91,6 @@ async function revokeProPremium(userId: string) {
   });
 }
 
-async function activateVip(userId: string) {
-  await prisma.user.updateMany({
-    where: { id: userId },
-    data: { isVipActive: true, vipUntil: VIP_END },
-  });
-}
-
-async function revokeVip(userId: string) {
-  await prisma.user.updateMany({
-    where: { id: userId },
-    data: { isVipActive: false, vipUntil: null },
-  });
-}
-
 async function recordPayment(
   session: Stripe.Checkout.Session,
   userId: string,
@@ -156,14 +141,15 @@ async function handleSessionEvent(
   }
   const type = paymentTypeFromMetadata(meta);
   if (!type) {
-    console.warn("[stripe webhook] unknown payment type", meta.type);
+    // Inclut les anciens VIP_FAN signés avant la bascule : on log et on
+    // sort proprement, pas de mutation utilisateur.
+    console.warn("[stripe webhook] unknown / retired payment type", meta.type);
     return;
   }
 
   if (outcome === "failed") {
     await recordPayment(session, userId, type, "FAILED", meta);
-    if (type === "VIP_FAN") await revokeVip(userId);
-    else if (type === "PRO_PREMIUM") await revokeProPremium(userId);
+    if (type === "PRO_PREMIUM") await revokeProPremium(userId);
     else if (type === "BOOST") await revokeBoost(meta);
     return;
   }
@@ -175,8 +161,7 @@ async function handleSessionEvent(
 
   // outcome === "settled" — payment confirmed paid by Stripe
   await recordPayment(session, userId, type, "COMPLETED", meta);
-  if (type === "VIP_FAN") await activateVip(userId);
-  else if (type === "PRO_PREMIUM") await activateProPremium(userId);
+  if (type === "PRO_PREMIUM") await activateProPremium(userId);
   else if (type === "BOOST") await activateBoost(meta);
 }
 

@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import { isAdminEmail } from "@/lib/admin";
 import {
   getOptionalDbUser,
-  isCurrentUserVip,
   isFoundingFamilyMember,
 } from "@/lib/auth-helpers";
 
@@ -15,10 +14,10 @@ const noStore = { "Cache-Control": "no-store, max-age=0" };
 /**
  * Renvoie le statut "Famille Fondatrice" du membre courant.
  *
- * - `isFounder` : badge ⭐ à vie pour les anciens VIP qui ont payé avant la
- *   bascule (dérivé de `user.isVipActive`, pas de check d'expiration).
- * - `isVip` : conservé pour compat. avec les vieux clients (composants qui
- *   liraient encore ce champ). Tend à disparaître.
+ * - `isFounder` : badge ⭐ à vie pour les anciens VIP (dérivé de
+ *   `user.isVipActive`, pas d'expiration).
+ * - `isVip` : alias historique = `isFounder`. Conservé pour ne pas casser
+ *   un éventuel ancien client qui lirait encore ce champ.
  */
 export async function GET() {
   const user = await getOptionalDbUser();
@@ -29,18 +28,13 @@ export async function GET() {
     );
   }
 
-  const [isFounder, isVip] = await Promise.all([
-    isFoundingFamilyMember(),
-    isCurrentUserVip(),
-  ]);
+  const isFounder = await isFoundingFamilyMember();
   const isAdmin = user.role === "ADMIN" || (await isAdminEmail(user.email));
 
   return NextResponse.json(
     {
       isFounder,
-      // alias historique → toujours égal à isFounder côté front pour le
-      // badge ; conservé pour ne pas casser un éventuel ancien client.
-      isVip: isFounder || isVip,
+      isVip: isFounder,
       isAdmin,
     },
     { headers: noStore },

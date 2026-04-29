@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 
 import { prisma } from "@/lib/db/prisma";
-import { EARLY_BIRD_DEADLINE } from "@/lib/stripe-config";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -28,30 +27,17 @@ function sweep(store: Map<string, number>) {
 }
 
 async function buildPayload(presenceCount: number) {
-  const now = Date.now();
-  const oneDayAgo = new Date(now - 24 * 60 * 60 * 1000);
-  const sevenDaysAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
+  const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
-  const [proSignups24h, newsletter24h, vipPayments7d] = await Promise.all([
+  const [proSignups24h, newsletter24h] = await Promise.all([
     prisma.proProfile.count({ where: { createdAt: { gte: oneDayAgo } } }),
     prisma.newsletterSubscriber.count({ where: { createdAt: { gte: oneDayAgo } } }),
-    prisma.payment.count({
-      where: {
-        type: "VIP_FAN",
-        status: "COMPLETED",
-        createdAt: { gte: sevenDaysAgo },
-      },
-    }),
   ]);
-
-  const earlyBirdMs = Math.max(0, EARLY_BIRD_DEADLINE.getTime() - now);
 
   return {
     presence: presenceCount,
     proSignups24h,
     newsletter24h,
-    vipPayments7d,
-    earlyBirdMs,
   };
 }
 
@@ -69,7 +55,7 @@ export async function POST(req: Request) {
   } catch (e) {
     console.error("[fomo] POST", e);
     return NextResponse.json(
-      { presence: store.size, proSignups24h: 0, newsletter24h: 0, vipPayments7d: 0, earlyBirdMs: 0 },
+      { presence: store.size, proSignups24h: 0, newsletter24h: 0 },
       { status: 200 },
     );
   }
@@ -84,7 +70,7 @@ export async function GET() {
   } catch (e) {
     console.error("[fomo] GET", e);
     return NextResponse.json(
-      { presence: store.size, proSignups24h: 0, newsletter24h: 0, vipPayments7d: 0, earlyBirdMs: 0 },
+      { presence: store.size, proSignups24h: 0, newsletter24h: 0 },
       { status: 200 },
     );
   }

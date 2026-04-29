@@ -7,8 +7,6 @@ type FomoData = {
   presence: number;
   proSignups24h: number;
   newsletter24h: number;
-  vipPayments7d: number;
-  earlyBirdMs: number;
 };
 
 type Message = {
@@ -54,17 +52,6 @@ function getOrCreateSid(): string {
   }
 }
 
-function formatEarlyBird(ms: number): string {
-  const totalMinutes = Math.floor(ms / 60_000);
-  const days = Math.floor(totalMinutes / (60 * 24));
-  const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
-  const minutes = totalMinutes % 60;
-  if (days >= 2) return `${days} jours`;
-  if (days >= 1) return `${days}j ${hours}h`;
-  if (hours >= 1) return `${hours}h ${minutes}min`;
-  return `${minutes} min`;
-}
-
 function buildMessages(data: FomoData): Message[] {
   const out: Message[] = [];
 
@@ -77,15 +64,6 @@ function buildMessages(data: FomoData): Message[] {
     });
   }
 
-  if (data.earlyBirdMs > 0) {
-    out.push({
-      key: "earlybird",
-      emoji: "💎",
-      text: `Early Bird VIP à 6,99€ — fin dans ${formatEarlyBird(data.earlyBirdMs)}`,
-      accent: "gold",
-    });
-  }
-
   if (data.proSignups24h >= 1) {
     out.push({
       key: "pros",
@@ -95,18 +73,6 @@ function buildMessages(data: FomoData): Message[] {
           ? `1 nouveau pro inscrit aujourd'hui`
           : `${data.proSignups24h} nouveaux pros inscrits aujourd'hui`,
       accent: "blood",
-    });
-  }
-
-  if (data.vipPayments7d >= 1) {
-    out.push({
-      key: "vip",
-      emoji: "🎫",
-      text:
-        data.vipPayments7d === 1
-          ? `1 fan a rejoint le VIP cette semaine`
-          : `${data.vipPayments7d} fans ont rejoint le VIP cette semaine`,
-      accent: "violet",
     });
   }
 

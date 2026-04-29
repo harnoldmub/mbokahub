@@ -10,10 +10,11 @@ import {
 
 export const dynamic = "force-dynamic";
 
-const CATEGORIES = ["VIP_FAN", "PRO"] as const;
+// Codes VIP_FAN retirés depuis le pivot (fans 100% gratuits). On n'émet plus
+// que des codes Pro. L'enum Prisma reste défini pour les codes historiques.
+const CATEGORIES = ["PRO"] as const;
 
 const CATEGORY_LABEL: Record<(typeof CATEGORIES)[number], string> = {
-  VIP_FAN: "VIP Famille",
   PRO: "Prestataires Pro (toutes catégories)",
 };
 
@@ -27,6 +28,7 @@ export default async function AdminPromoCodesPage() {
     category: cat,
     codes: codes.filter((c) => c.category === cat),
   }));
+  const legacyVipCodes = codes.filter((c) => c.category === "VIP_FAN");
 
   const total = codes.length;
   const hasMbkFree = codes.some((c) => c.code === "MBKFREE");
@@ -39,7 +41,7 @@ export default async function AdminPromoCodesPage() {
             Codes promo ({total})
           </h2>
           <p className="mt-1 text-muted-foreground text-sm">
-            10 codes VIP + 10 codes Pro + le code universel{" "}
+            10 codes Pro + le code universel{" "}
             <span className="font-mono text-foreground">MBKFREE</span>{" "}
             (inscription Pro gratuite, toutes catégories,{" "}
             <strong>limité à 20 utilisations</strong>).
@@ -57,10 +59,10 @@ export default async function AdminPromoCodesPage() {
           />
           <ConfirmActionForm
             action={generateInitialPromoCodes}
-            triggerLabel="Générer les codes initiaux (20 + MBKFREE)"
+            triggerLabel="Générer les codes initiaux (10 Pro + MBKFREE)"
             triggerClassName="rounded-full bg-red-500 px-4 py-2 text-sm text-white hover:bg-red-600"
             title="Générer les codes promo initiaux ?"
-            description="Cela va créer 10 codes VIP + 10 codes Pro + le code MBKFREE. Les codes existants ne sont pas écrasés."
+            description="Cela va créer 10 codes Pro + le code MBKFREE. Les codes existants ne sont pas écrasés."
             confirmLabel="Générer maintenant"
             variant="warning"
           />
@@ -176,6 +178,21 @@ export default async function AdminPromoCodesPage() {
           </button>
         </form>
       </section>
+
+      {legacyVipCodes.length > 0 ? (
+        <section className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4 text-sm text-muted-foreground">
+          <p className="text-foreground font-medium">
+            {legacyVipCodes.length} ancien
+            {legacyVipCodes.length > 1 ? "s" : ""} code
+            {legacyVipCodes.length > 1 ? "s" : ""} VIP Famille (archive)
+          </p>
+          <p className="mt-1 text-xs">
+            Le pass VIP Fan n'est plus en vente — ces codes restent en base
+            uniquement pour la traçabilité. Tu peux les désactiver ou les
+            supprimer un par un depuis la base si besoin.
+          </p>
+        </section>
+      ) : null}
 
       {grouped.map((group) => (
         <section key={group.category}>

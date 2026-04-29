@@ -30,7 +30,7 @@ export default async function DashboardLayout({
 
           <div className="mt-5 flex flex-wrap gap-2">
             <Badge className={user.isVipActive ? "bg-gold text-ink" : ""}>
-              {user.isVipActive ? "VIP actif" : "Fan"}
+              {user.isVipActive ? "⭐ Famille Fondatrice" : "Fan"}
             </Badge>
             <Badge
               className={
@@ -71,8 +71,8 @@ export default async function DashboardLayout({
               <p className="font-heading text-paper">Rappel</p>
             </div>
             <p className="mt-3 text-paper-dim text-sm leading-6">
-              Les contacts restent floutés tant qu&apos;ils ne sont pas
-              débloqués par un achat Mboka Hub.
+              L&apos;accès aux trajets, prestataires et afters est gratuit pour
+              toute la Famille Mboka. Profite à fond !
             </p>
           </div>
         )}

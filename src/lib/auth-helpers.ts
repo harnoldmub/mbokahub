@@ -23,14 +23,6 @@ export async function getOptionalDbUser() {
   return syncClerkUser({ clerkId: userId, email, name });
 }
 
-export async function isCurrentUserVip(): Promise<boolean> {
-  const user = await getOptionalDbUser();
-  if (!user) return false;
-  if (!user.isVipActive) return false;
-  if (user.vipUntil && user.vipUntil < new Date()) return false;
-  return true;
-}
-
 export async function isCurrentUserAdmin(): Promise<boolean> {
   const user = await getOptionalDbUser();
   return user?.role === "ADMIN";
@@ -43,8 +35,11 @@ export async function canSeePrivateProInfo(): Promise<boolean> {
 }
 
 /**
- * Anciens VIP (qui ont payé 6,99€ / 9,99€ avant la bascule) : badge à vie.
- * Détection via le flag `isVipActive` historique. Plus aucun paiement possible.
+ * Anciens VIP (qui ont payé 6,99 € / 9,99 € avant la bascule au modèle gratuit) :
+ * badge ⭐ "Famille Fondatrice" à vie. Détection via le flag `isVipActive`
+ * historique en base. Aucun nouveau paiement VIP n'est possible.
+ *
+ * Pas de check `vipUntil` : le badge n'expire jamais.
  */
 export async function isFoundingFamilyMember(): Promise<boolean> {
   const user = await getOptionalDbUser();

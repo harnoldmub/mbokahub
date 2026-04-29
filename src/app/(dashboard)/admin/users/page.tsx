@@ -1,6 +1,6 @@
 import { ConfirmActionForm } from "@/components/admin/confirm-action-form";
 import { prisma } from "@/lib/db/prisma";
-import { setUserRole, toggleUserVip, deleteUser } from "@/lib/actions/admin";
+import { setUserRole, toggleFoundingFamily, deleteUser } from "@/lib/actions/admin";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +32,7 @@ export default async function AdminUsersPage({
             Utilisateurs ({users.length})
           </h2>
           <p className="mt-1 text-muted-foreground text-sm">
-            Gérer les rôles, VIP et suppressions.
+            Gérer les rôles, le badge Famille Fondatrice et les suppressions.
           </p>
         </div>
         <form className="flex gap-2">
@@ -58,7 +58,7 @@ export default async function AdminUsersPage({
               <th className="px-4 py-3">Email</th>
               <th className="px-4 py-3">Nom</th>
               <th className="px-4 py-3">Rôle</th>
-              <th className="px-4 py-3">VIP</th>
+              <th className="px-4 py-3">Fondateur</th>
               <th className="px-4 py-3">Pro</th>
               <th className="px-4 py-3">Trajets</th>
               <th className="px-4 py-3">Paiements</th>
@@ -99,7 +99,7 @@ export default async function AdminUsersPage({
                   </form>
                 </td>
                 <td className="px-4 py-3">
-                  <form action={toggleUserVip.bind(null, u.id, !u.isVipActive)}>
+                  <form action={toggleFoundingFamily.bind(null, u.id, !u.isVipActive)}>
                     <button
                       type="submit"
                       className={`rounded-full px-3 py-1 text-xs ${
@@ -107,8 +107,9 @@ export default async function AdminUsersPage({
                           ? "bg-yellow-500/20 text-yellow-300"
                           : "bg-white/5 text-muted-foreground hover:bg-white/10"
                       }`}
+                      title="Badge ⭐ Famille Fondatrice (à vie, anciens VIP)"
                     >
-                      {u.isVipActive ? "VIP ✓" : "Activer VIP"}
+                      {u.isVipActive ? "⭐ Fondateur" : "Accorder badge"}
                     </button>
                   </form>
                 </td>

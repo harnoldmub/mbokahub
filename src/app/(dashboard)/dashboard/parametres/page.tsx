@@ -49,9 +49,9 @@ export default async function SettingsPage({
             <dd className="mt-1 text-paper">{formatDate(user.createdAt)}</dd>
           </div>
           <div className="rounded-2xl border border-white/10 bg-ink/40 p-4">
-            <dt className="text-paper-mute text-sm">Statut VIP</dt>
+            <dt className="text-paper-mute text-sm">Famille Fondatrice</dt>
             <dd className="mt-1 text-paper">
-              {user.isVipActive ? "Actif" : "Inactif"}
+              {user.isVipActive ? "⭐ Membre à vie" : "—"}
             </dd>
           </div>
         </dl>

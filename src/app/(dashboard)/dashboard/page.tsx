@@ -2,8 +2,8 @@ import {
   BadgeEuro,
   CalendarDays,
   Contact,
-  Crown,
   Megaphone,
+  Star,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -11,7 +11,7 @@ import { StatCard } from "@/components/dashboard/stat-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatDate, formatMoney, getDashboardUser } from "@/lib/dashboard";
+import { formatMoney, getDashboardUser } from "@/lib/dashboard";
 import { prisma } from "@/lib/db/prisma";
 
 export default async function DashboardPage() {
@@ -51,13 +51,13 @@ export default async function DashboardPage() {
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           description={
-            user.vipUntil
-              ? `Expire le ${formatDate(user.vipUntil)}`
-              : "Pas encore activé"
+            user.isVipActive
+              ? "Badge à vie (ancien VIP)"
+              : "Réservé aux anciens VIP"
           }
-          icon={Crown}
-          label="VIP"
-          value={user.isVipActive ? "Actif" : "Inactif"}
+          icon={Star}
+          label="Famille Fondatrice"
+          value={user.isVipActive ? "⭐ Membre" : "—"}
         />
         <StatCard
           description="Contacts trajets ou pros"
@@ -118,7 +118,7 @@ export default async function DashboardPage() {
                     <div>
                       <p className="font-heading text-paper">{payment.type}</p>
                       <p className="text-paper-dim text-sm">
-                        {formatDate(payment.completedAt ?? payment.createdAt)}
+                        {(payment.completedAt ?? payment.createdAt).toLocaleDateString("fr-FR")}
                       </p>
                     </div>
                     <Badge>{formatMoney(payment.amount)}</Badge>
