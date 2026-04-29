@@ -3,9 +3,7 @@ import Link from "next/link";
 
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { PrestatairesListClient } from "@/components/pros/prestataires-list-client";
-import { canSeePrivateProInfo } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/db/prisma";
-import { maskedProLabel } from "@/lib/pro-display";
 
 export const dynamic = "force-dynamic";
 
@@ -17,49 +15,37 @@ const CATEGORIES = [
 ] as const;
 
 export default async function MaquilleusesPage() {
-  const [unlocked, prosRaw] = await Promise.all([
-    canSeePrivateProInfo(),
-    prisma.proProfile.findMany({
-      where: {
-        isVerified: true,
-        category: { in: [...CATEGORIES] },
-      },
-      orderBy: [
-        { isBoosted: "desc" },
-        { isPremium: "desc" },
-        { rating: "desc" },
-        { createdAt: "desc" },
-      ],
-      select: {
-        id: true,
-        slug: true,
-        displayName: true,
-        category: true,
-        city: true,
-        country: true,
-        bio: true,
-        photos: true,
-        priceRange: true,
-        isPremium: true,
-        isBoosted: true,
-        isVerified: true,
-        rating: true,
-        reviewsCount: true,
-        instagramHandle: true,
-        tiktokHandle: true,
-      },
-      take: 200,
-    }),
-  ]);
-
-  const pros = prosRaw.map((p) => ({
-    ...p,
-    displayName: unlocked
-      ? p.displayName
-      : maskedProLabel(p.category, p.city),
-    instagramHandle: unlocked ? p.instagramHandle : null,
-    tiktokHandle: unlocked ? p.tiktokHandle : null,
-  }));
+  const pros = await prisma.proProfile.findMany({
+    where: {
+      isVerified: true,
+      category: { in: [...CATEGORIES] },
+    },
+    orderBy: [
+      { isBoosted: "desc" },
+      { isPremium: "desc" },
+      { rating: "desc" },
+      { createdAt: "desc" },
+    ],
+    select: {
+      id: true,
+      slug: true,
+      displayName: true,
+      category: true,
+      city: true,
+      country: true,
+      bio: true,
+      photos: true,
+      priceRange: true,
+      isPremium: true,
+      isBoosted: true,
+      isVerified: true,
+      rating: true,
+      reviewsCount: true,
+      instagramHandle: true,
+      tiktokHandle: true,
+    },
+    take: 200,
+  });
 
   return (
     <main className="relative min-h-screen">
@@ -80,13 +66,13 @@ export default async function MaquilleusesPage() {
 
         <SectionHeading
           number="02"
-          description="Trouve une maquilleuse, esthéticienne, prothésiste ou technicienne cils dispo pour le jour J. Noms et contacts floutés."
+          description="Trouve une maquilleuse, esthéticienne, prothésiste ou technicienne cils dispo pour le jour J. Noms et contacts WhatsApp visibles, gratuit pour la famille."
           eyebrow="Maquilleuses & Beauté"
           title="Beauté & Style"
         />
 
         <div className="mt-14">
-          <PrestatairesListClient pros={pros} unlocked={unlocked} />
+          <PrestatairesListClient pros={pros} unlocked />
         </div>
       </div>
     </main>

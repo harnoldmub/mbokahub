@@ -102,7 +102,7 @@ export default async function ProfilProPage({
           numéro de téléphone, email, lien ni nom de réseau (WhatsApp,
           Instagram, TikTok, Snapchat, Telegram…) n&apos;est autorisé dans la
           présentation. Tes contacts sont déjà gérés par les champs WhatsApp et
-          Instagram et débloqués via le Pass VIP Famille.
+          Instagram, visibles gratuitement pour toute la famille.
         </div>
       ) : null}
 

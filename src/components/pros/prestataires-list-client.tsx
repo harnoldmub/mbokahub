@@ -4,8 +4,9 @@ import {
   ArrowRight,
   ChevronLeft,
   ChevronRight,
-  LockKeyhole,
+  Flame,
   Search,
+  ShieldCheck,
   Sparkles,
   X,
 } from "lucide-react";
@@ -44,16 +45,15 @@ type ProListItem = {
 type Props = {
   pros: ProListItem[];
   /**
-   * When false, names have already been replaced server-side by a generic
-   * label (e.g. "Maquilleuse · Paris 15") and Instagram/TikTok handles are
-   * null. We just add the lock UI on top.
+   * Conservé pour compat. — Mboka Hub est désormais 100% gratuit pour les
+   * fans. Toujours considéré comme `true` côté rendu.
    */
   unlocked?: boolean;
 };
 
 const PAGE_SIZE = 20;
 
-export function PrestatairesListClient({ pros, unlocked = false }: Props) {
+export function PrestatairesListClient({ pros }: Props) {
   const [search, setSearch] = useState("");
   const [activeCategories, setActiveCategories] = useState<ProCategory[]>([]);
   const [activeCities, setActiveCities] = useState<string[]>([]);
@@ -298,14 +298,14 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
                       {meta?.icon ?? "✨"}
                     </div>
                   )}
-                  {p.isPremium && (
-                    <span className="pointer-events-none absolute right-3 top-3 rounded-full bg-vip px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-coal">
-                      ★ Certifié
+                  {p.isVerified && (
+                    <span className="pointer-events-none absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-vip px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-coal">
+                      <ShieldCheck className="size-3" /> Vérifié
                     </span>
                   )}
                   {p.isBoosted && (
-                    <span className="pointer-events-none absolute left-3 top-3 rounded-full bg-blood/90 px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-paper backdrop-blur">
-                      Boost
+                    <span className="pointer-events-none absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-blood/90 px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-paper backdrop-blur">
+                      <Flame className="size-3" /> Boosté
                     </span>
                   )}
                 </div>
@@ -314,22 +314,13 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
                     <span>{meta?.icon}</span>
                     <span>{meta?.shortLabel}</span>
                   </div>
-                  <h3
-                    className={cn(
-                      "font-display text-2xl text-paper",
-                      !unlocked && "italic text-paper-dim",
-                    )}
-                  >
-                    {unlocked ? (
-                      <Link
-                        href={`/pro/${p.id}`}
-                        className="transition hover:text-blood"
-                      >
-                        {p.displayName}
-                      </Link>
-                    ) : (
-                      p.displayName
-                    )}
+                  <h3 className="font-display text-2xl text-paper">
+                    <Link
+                      href={`/pro/${p.id}`}
+                      className="transition hover:text-blood"
+                    >
+                      {p.displayName}
+                    </Link>
                   </h3>
                   <p className="text-sm text-paper-dim">
                     {p.city}, {p.country}
@@ -338,12 +329,6 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
                     <p className="line-clamp-2 text-sm text-paper-mute">
                       {p.bio}
                     </p>
-                  )}
-                  {!unlocked && (
-                    <div className="flex items-center gap-2 rounded-xl border border-vip/30 bg-vip/5 px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-vip">
-                      <LockKeyhole className="size-3" />
-                      Pass VIP Famille pour voir le nom &amp; les contacts
-                    </div>
                   )}
                   <div className="mt-auto flex items-center justify-between border-t border-white/5 pt-4">
                     <span className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
@@ -359,23 +344,13 @@ export function PrestatairesListClient({ pros, unlocked = false }: Props) {
                     )}
                   </div>
 
-                  {unlocked ? (
-                    <Link
-                      href={`/pro/${p.id}`}
-                      className="mt-2 flex items-center justify-center gap-2 rounded-xl border border-blood/40 bg-blood/10 px-4 py-2.5 font-mono text-[10px] uppercase tracking-widest text-blood transition hover:bg-blood/20"
-                    >
-                      Voir la fiche
-                      <ArrowRight className="size-3.5" />
-                    </Link>
-                  ) : (
-                    <Link
-                      href="/vip"
-                      className="mt-2 flex items-center justify-center gap-2 rounded-xl border border-vip/40 bg-vip/10 px-4 py-2.5 font-mono text-[10px] uppercase tracking-widest text-vip transition hover:bg-vip/15"
-                    >
-                      <LockKeyhole className="size-3.5" />
-                      Fiche réservée aux VIP
-                    </Link>
-                  )}
+                  <Link
+                    href={`/pro/${p.id}`}
+                    className="mt-2 flex items-center justify-center gap-2 rounded-xl border border-blood/40 bg-blood/10 px-4 py-2.5 font-mono text-[10px] uppercase tracking-widest text-blood transition hover:bg-blood/20"
+                  >
+                    Voir la fiche
+                    <ArrowRight className="size-3.5" />
+                  </Link>
                 </div>
               </article>
             );

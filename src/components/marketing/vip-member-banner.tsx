@@ -1,22 +1,19 @@
 import { Crown } from "lucide-react";
 
-import { isCurrentUserVip, getOptionalDbUser } from "@/lib/auth-helpers";
+import { isFoundingFamilyMember } from "@/lib/auth-helpers";
 
 type Props = {
   message?: string;
 };
 
+/**
+ * Bannière "⭐ Famille Fondatrice" — visible pour les anciens VIP qui ont payé
+ * avant la bascule vers le modèle 100% gratuit (badge à vie, pas de
+ * remboursement).
+ */
 export async function VipMemberBanner({ message }: Props) {
-  const isVip = await isCurrentUserVip();
-  if (!isVip) return null;
-  const user = await getOptionalDbUser();
-  const until = user?.vipUntil
-    ? user.vipUntil.toLocaleDateString("fr-FR", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      })
-    : null;
+  const isFounding = await isFoundingFamilyMember();
+  if (!isFounding) return null;
 
   return (
     <div className="mb-8 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-400/40 bg-gradient-to-r from-amber-500/15 via-amber-400/10 to-amber-500/15 px-5 py-3">
@@ -26,19 +23,17 @@ export async function VipMemberBanner({ message }: Props) {
         </span>
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-amber-200">
-            Famille Mboka VIP
+            ⭐ Famille Fondatrice
           </p>
           <p className="font-body text-paper text-sm">
             {message ??
-              "Tous les contacts WhatsApp sont débloqués pour toi."}
+              "Merci d'avoir cru en Mboka Hub avant tout le monde. Badge à vie."}
           </p>
         </div>
       </div>
-      {until ? (
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-amber-200/80">
-          Valide jusqu&apos;au {until}
-        </p>
-      ) : null}
+      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-amber-200/80">
+        Membre fondateur
+      </p>
     </div>
   );
 }

@@ -15,10 +15,15 @@ type TrajetCardProps = {
     vehiculeModel?: string | null;
     whatsappRaw?: string | null;
   };
+  /**
+   * Conservé pour compat. — Mboka Hub est désormais 100% gratuit pour les
+   * fans, le contact est toujours révélé.
+   */
   unlocked?: boolean;
 };
 
-export function TrajetCard({ trajet, unlocked }: TrajetCardProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function TrajetCard({ trajet, unlocked: _unlocked }: TrajetCardProps) {
   const carPhoto = trajet.carPhoto;
 
   return (
@@ -109,8 +114,7 @@ export function TrajetCard({ trajet, unlocked }: TrajetCardProps) {
             </span>
           </div>
           <ContactLock
-            value={trajet.whatsappMasked}
-            unlocked={unlocked}
+            value={trajet.whatsappRaw ?? trajet.whatsappMasked}
             rawValue={trajet.whatsappRaw ?? undefined}
           />
         </div>

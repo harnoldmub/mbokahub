@@ -4,7 +4,6 @@ import Link from "next/link";
 import { VipMemberBanner } from "@/components/marketing/vip-member-banner";
 import { TrajetsListClient } from "@/components/trajets/trajets-list-client";
 import { Button } from "@/components/ui/button";
-import { isCurrentUserVip } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/db/prisma";
 import type { TrajetDemo } from "@/lib/demo-data";
 
@@ -44,22 +43,22 @@ export default async function TrajetsPage() {
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
 
-  const [trajetsDb, isVip] = await Promise.all([
-    prisma.trajet.findMany({
-      where: {
-        isApproved: true,
-        isActive: true,
-        date: { gte: today },
-      },
-      orderBy: [
-        { isBoosted: "desc" },
-        { date: "asc" },
-        { createdAt: "desc" },
-      ],
-      take: 200,
-    }),
-    isCurrentUserVip(),
-  ]);
+  // Plateforme 100% gratuite pour les fans : tous les contacts WhatsApp des
+  // conducteurs sont visibles. Ordre : boostés d'abord, puis date la plus
+  // proche.
+  const trajetsDb = await prisma.trajet.findMany({
+    where: {
+      isApproved: true,
+      isActive: true,
+      date: { gte: today },
+    },
+    orderBy: [
+      { isBoosted: "desc" },
+      { date: "asc" },
+      { createdAt: "desc" },
+    ],
+    take: 200,
+  });
 
   const trajets: (TrajetDemo & {
     dateIso: string;
@@ -84,7 +83,7 @@ export default async function TrajetsPage() {
     carPhoto: t.carPhoto,
     vehiculeColor: t.vehiculeColor,
     vehiculeModel: t.vehiculeModel,
-    whatsappRaw: isVip ? t.whatsapp : null,
+    whatsappRaw: t.whatsapp,
   }));
 
   return (
@@ -116,7 +115,7 @@ export default async function TrajetsPage() {
         </Button>
       </div>
 
-      <TrajetsListClient trajets={trajets} unlocked={isVip} />
+      <TrajetsListClient trajets={trajets} unlocked />
     </main>
   );
 }

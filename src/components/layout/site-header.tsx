@@ -1,7 +1,7 @@
 "use client";
 
 import { UserButton, useUser } from "@clerk/nextjs";
-import { Crown } from "lucide-react";
+import { Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -17,20 +17,22 @@ export function SiteHeader() {
   const locale = getLocale(useSearchParams().get("lang"));
   const copy = nls[locale].common;
   const { isSignedIn } = useUser();
-  const [isVip, setIsVip] = useState(false);
+  // Anciens VIP → badge ⭐ Famille Fondatrice à vie. La route /api/me/vip
+  // expose le flag historique `isVip` (qui correspond aux fondateurs).
+  const [isFoundingFamily, setIsFoundingFamily] = useState(false);
   useEffect(() => {
     if (!isSignedIn) {
-      setIsVip(false);
+      setIsFoundingFamily(false);
       return;
     }
     let cancelled = false;
     fetch("/api/me/vip", { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
-        if (!cancelled) setIsVip(Boolean(d?.isVip));
+        if (!cancelled) setIsFoundingFamily(Boolean(d?.isFounder));
       })
       .catch(() => {
-        if (!cancelled) setIsVip(false);
+        if (!cancelled) setIsFoundingFamily(false);
       });
     return () => {
       cancelled = true;
@@ -170,27 +172,30 @@ export function SiteHeader() {
             variant="vip"
           >
             <Link
-              href={localizedHref(isSignedIn ? "/dashboard" : "/vip", locale)}
+              href={localizedHref(
+                isSignedIn ? "/dashboard" : "/pro/inscrire",
+                locale,
+              )}
             >
               {isSignedIn ? dashboardLabel : copy.vipCta}
             </Link>
           </Button>
           {isSignedIn ? (
             <div className="flex items-center gap-2">
-              {isVip ? (
+              {isFoundingFamily ? (
                 <span
-                  aria-label="Membre VIP Famille"
+                  aria-label="Membre Famille Fondatrice"
                   className="hidden items-center gap-1 rounded-full border border-amber-400/50 bg-amber-400/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] text-amber-200 sm:inline-flex"
-                  title="Famille Mboka VIP"
+                  title="Famille Fondatrice — badge à vie"
                 >
-                  <Crown aria-hidden className="size-3" />
-                  VIP
+                  <Star aria-hidden className="size-3 fill-current" />
+                  Fondateur
                 </span>
               ) : null}
               <UserButton
                 appearance={{
                   elements: {
-                    avatarBox: isVip
+                    avatarBox: isFoundingFamily
                       ? "h-8 w-8 ring-2 ring-amber-400/70"
                       : "h-8 w-8 ring-1 ring-blood/40",
                   },

@@ -1,14 +1,10 @@
 import { ArrowLeft, ExternalLink, ImageOff } from "lucide-react";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { ReportButton } from "@/components/shared/report-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  isCurrentUserAdmin,
-  isCurrentUserVip,
-} from "@/lib/auth-helpers";
 import { prisma } from "@/lib/db/prisma";
 
 type AfterDetailsPageProps = {
@@ -55,15 +51,7 @@ export default async function AfterDetailsPage({
 }: AfterDetailsPageProps) {
   const { slug } = await params;
 
-  const [vip, admin] = await Promise.all([
-    isCurrentUserVip(),
-    isCurrentUserAdmin(),
-  ]);
-
-  if (!vip && !admin) {
-    redirect("/afters");
-  }
-
+  // Plateforme 100% gratuite pour les fans : la fiche after est ouverte à tous.
   const after = await prisma.after.findFirst({
     where: { slug, isApproved: true, isActive: true },
   });

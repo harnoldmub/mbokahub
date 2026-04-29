@@ -171,7 +171,7 @@ export function MobileMenu({ locale }: MobileMenuProps) {
             variant="vip"
           >
             <Link
-              href={localizedHref("/vip", locale)}
+              href={localizedHref("/pro/inscrire", locale)}
               onClick={() => setOpen(false)}
             >
               {copy.vipCta}

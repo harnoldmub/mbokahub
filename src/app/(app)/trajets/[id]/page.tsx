@@ -1,4 +1,4 @@
-import { ArrowLeft, LockKeyhole } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -9,7 +9,7 @@ import { RulesDialog } from "@/components/trajets/rules-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { auth } from "@clerk/nextjs/server";
-import { isCurrentUserAdmin, isCurrentUserVip } from "@/lib/auth-helpers";
+import { isCurrentUserAdmin } from "@/lib/auth-helpers";
 import { findCity, suggestPrice } from "@/lib/data/cities";
 import { prisma } from "@/lib/db/prisma";
 
@@ -35,12 +35,6 @@ const FR_MONTHS = [
 
 function formatDateLabel(date: Date): string {
   return `${FR_DAYS[date.getUTCDay()]} ${date.getUTCDate()} ${FR_MONTHS[date.getUTCMonth()]}`;
-}
-
-function maskPhone(raw: string): string {
-  const cleaned = raw.replace(/\s+/g, "");
-  if (cleaned.length <= 4) return "+•• •• •• •• ••";
-  return `${cleaned.slice(0, 3)} •• •• •• ••`;
 }
 
 export const dynamic = "force-dynamic";
@@ -73,9 +67,7 @@ export default async function TrajetDetailsPage({
     }
   }
 
-  const isVip = await isCurrentUserVip();
   const dateLabel = formatDateLabel(trajet.date);
-  const whatsappMasked = maskPhone(trajet.whatsapp);
 
   const fromCity = findCity(trajet.villeDepart);
   const toCity = findCity(trajet.villeArrivee);
@@ -127,21 +119,13 @@ export default async function TrajetDetailsPage({
             <dt className="text-muted-foreground text-sm">Contact</dt>
             <dd className="mt-1">
               <ContactLock
-                value={whatsappMasked}
-                unlocked={isVip}
-                rawValue={isVip ? trajet.whatsapp : undefined}
+                value={trajet.whatsapp}
+                rawValue={trajet.whatsapp}
               />
             </dd>
           </div>
         </dl>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-          {isVip ? null : (
-            <Button asChild className="shadow-[var(--glow-red)]">
-              <Link href="/vip">
-                <LockKeyhole aria-hidden /> Débloquer avec VIP
-              </Link>
-            </Button>
-          )}
           {!isOwner && (
             <PriceOfferDialog
               trajetId={trajet.id}

@@ -37,10 +37,17 @@ export async function isCurrentUserAdmin(): Promise<boolean> {
 }
 
 export async function canSeePrivateProInfo(): Promise<boolean> {
+  // Modèle Mboka Hub : 100% gratuit pour les fans.
+  // Les noms et contacts des prestataires sont visibles par tout le monde.
+  return true;
+}
+
+/**
+ * Anciens VIP (qui ont payé 6,99€ / 9,99€ avant la bascule) : badge à vie.
+ * Détection via le flag `isVipActive` historique. Plus aucun paiement possible.
+ */
+export async function isFoundingFamilyMember(): Promise<boolean> {
   const user = await getOptionalDbUser();
   if (!user) return false;
-  if (user.role === "ADMIN") return true;
-  if (!user.isVipActive) return false;
-  if (user.vipUntil && user.vipUntil < new Date()) return false;
-  return true;
+  return user.isVipActive === true;
 }

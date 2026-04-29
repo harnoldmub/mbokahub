@@ -2,28 +2,22 @@ import { auth } from "@clerk/nextjs/server";
 import {
   ArrowLeft,
   AtSign,
-  Crown,
-  LockKeyhole,
   MapPin,
   Pencil,
   Sparkles,
   Star,
 } from "lucide-react";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { AdminProActionsBar } from "@/components/admin/admin-pro-actions-bar";
 import { ProGalleryClient } from "@/components/pros/pro-gallery-client";
 import { ContactLock } from "@/components/shared/contact-lock";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  canSeePrivateProInfo,
-  isCurrentUserAdmin,
-} from "@/lib/auth-helpers";
+import { isCurrentUserAdmin } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/db/prisma";
 import { PRO_CATEGORY_BY_ID } from "@/lib/pro-categories";
-import { publicProName } from "@/lib/pro-display";
 
 type ProDetailsPageProps = {
   params: Promise<{ id: string }>;
@@ -35,11 +29,12 @@ export default async function ProDetailsPage({
   searchParams,
 }: ProDetailsPageProps) {
   const { id } = await params;
+  // `from` était utilisé pour piloter le retour vers /admin/pros — on le
+  // garde pour compat. URL.
   const { from } = await searchParams;
   const { userId: clerkId } = await auth();
-  const [pro, baseUnlocked, isAdmin, dbUser] = await Promise.all([
+  const [pro, isAdmin, dbUser] = await Promise.all([
     prisma.proProfile.findUnique({ where: { id } }),
-    canSeePrivateProInfo(),
     isCurrentUserAdmin(),
     clerkId
       ? prisma.user.findUnique({
@@ -54,24 +49,11 @@ export default async function ProDetailsPage({
   }
 
   const isOwner = dbUser !== null && dbUser.id === pro.userId;
-  // Owner sees their own card unmasked, admins see everything, otherwise it
-  // remains a VIP perk.
-  const unlocked = baseUnlocked || isOwner || isAdmin;
-
-  if (!unlocked) {
-    redirect("/vip?from=pro-detail");
-  }
-
+  // Plateforme 100% gratuite pour les fans : la fiche est toujours ouverte.
   const meta = PRO_CATEGORY_BY_ID[pro.category];
   const cover = pro.photos?.[0];
   const galleryPhotos = (pro.photos ?? []).slice(1);
-  const maskedWa = pro.whatsapp.replace(/(\+?\d{2,3})\d+(\d{2})/, "$1******$2");
-  const displayedName = publicProName({
-    category: pro.category,
-    city: pro.city,
-    displayName: pro.displayName,
-    unlocked,
-  });
+  const displayedName = pro.displayName;
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
@@ -170,11 +152,7 @@ export default async function ProDetailsPage({
           </div>
 
           <div>
-            <h1
-              className={`font-display text-4xl uppercase tracking-tight text-paper ${
-                unlocked ? "" : "italic text-paper-dim"
-              }`}
-            >
+            <h1 className="font-display text-4xl uppercase tracking-tight text-paper">
               {displayedName}
             </h1>
             <p className="mt-2 flex items-center gap-2 text-sm text-paper-dim">
@@ -229,7 +207,7 @@ export default async function ProDetailsPage({
             </p>
           )}
 
-          {unlocked && pro.instagramHandle ? (
+          {pro.instagramHandle ? (
             <a
               href={`https://instagram.com/${pro.instagramHandle.replace(/^@/, "")}`}
               target="_blank"
@@ -241,65 +219,17 @@ export default async function ProDetailsPage({
             </a>
           ) : null}
 
-          {unlocked ? (
-            <div className="border-t border-white/10 pt-6">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
-                Contact WhatsApp
-              </p>
-              <div className="mt-2">
-                <ContactLock
-                  value={maskedWa}
-                  rawValue={pro.whatsapp}
-                  unlocked
-                />
-              </div>
+          <div className="border-t border-white/10 pt-6">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
+              Contact WhatsApp
+            </p>
+            <div className="mt-2">
+              <ContactLock value={pro.whatsapp} rawValue={pro.whatsapp} />
             </div>
-          ) : (
-            <div className="rounded-2xl border border-vip/30 bg-gradient-to-br from-vip/10 via-coal/40 to-coal/40 p-6">
-              <div className="flex items-center gap-3">
-                <span className="flex size-10 items-center justify-center rounded-full bg-vip/15 text-vip">
-                  <Crown className="size-5" aria-hidden />
-                </span>
-                <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-vip">
-                    Pass VIP Famille
-                  </p>
-                  <p className="mt-1 font-display text-xl uppercase text-paper">
-                    Rejoins la Famille — ceux qui savent avant les autres.
-                  </p>
-                </div>
-              </div>
-              <ul className="mt-4 grid gap-2 text-sm text-paper-dim sm:grid-cols-2">
-                <li className="flex items-start gap-2">
-                  <span className="mt-1 size-1.5 rounded-full bg-vip" />
-                  Groupe privé Famille Mboka (annonces &amp; bons plans)
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="mt-1 size-1.5 rounded-full bg-vip" />
-                  Tirage backstage avec l&apos;artiste
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="mt-1 size-1.5 rounded-full bg-vip" />
-                  Tous les contacts prestas vérifiés
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="mt-1 size-1.5 rounded-full bg-vip" />
-                  Covoiturages prioritaires
-                </li>
-              </ul>
-              <div className="mt-5 flex flex-wrap items-center gap-3">
-                <Button asChild className="shadow-[var(--glow-red)]">
-                  <Link href="/vip">
-                    <LockKeyhole aria-hidden className="size-4" />
-                    Rejoindre la Famille
-                  </Link>
-                </Button>
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper-mute">
-                  Paiement unique · pas d&apos;abonnement
-                </span>
-              </div>
-            </div>
-          )}
+            <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-300">
+              Gratuit pour la famille
+            </p>
+          </div>
         </div>
       </section>
     </main>

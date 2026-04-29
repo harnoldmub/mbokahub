@@ -2,10 +2,8 @@ import { Suspense } from "react";
 
 import { GuaranteeStrip } from "@/components/marketing/guarantee-strip";
 import { VipMemberBanner } from "@/components/marketing/vip-member-banner";
-import { canSeePrivateProInfo } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/db/prisma";
 import { PrestatairesListClient } from "@/components/pros/prestataires-list-client";
-import { maskedProLabel } from "@/lib/pro-display";
 import {
   getLocaleFromSearchParams,
   nls,
@@ -25,48 +23,37 @@ export default async function PrestatairesPage({ searchParams }: Props) {
   const locale = getLocaleFromSearchParams(await searchParams);
   const copy = nls[locale].prestatairesPage;
 
-  const [unlocked, prosRaw] = await Promise.all([
-    canSeePrivateProInfo(),
-    prisma.proProfile.findMany({
-      where: { isVerified: true },
-      orderBy: [
-        { isBoosted: "desc" },
-        { isPremium: "desc" },
-        { rating: "desc" },
-        { createdAt: "desc" },
-      ],
-      select: {
-        id: true,
-        slug: true,
-        displayName: true,
-        category: true,
-        city: true,
-        country: true,
-        bio: true,
-        photos: true,
-        priceRange: true,
-        isPremium: true,
-        isBoosted: true,
-        isVerified: true,
-        rating: true,
-        reviewsCount: true,
-        instagramHandle: true,
-        tiktokHandle: true,
-      },
-      take: 200,
-    }),
-  ]);
-
-  // Server-side masking: never ship the real name / handles to the browser
-  // unless the viewer has unlocked access (VIP or admin).
-  const pros = prosRaw.map((p) => ({
-    ...p,
-    displayName: unlocked
-      ? p.displayName
-      : maskedProLabel(p.category, p.city),
-    instagramHandle: unlocked ? p.instagramHandle : null,
-    tiktokHandle: unlocked ? p.tiktokHandle : null,
-  }));
+  // Plateforme 100% gratuite pour les fans : on expose les noms et handles
+  // de tous les prestataires. L'ordre d'affichage met en avant les fiches
+  // boostées / premium / vérifiées (sponsorisé prêt pour la V2 entreprises).
+  const pros = await prisma.proProfile.findMany({
+    where: { isVerified: true },
+    orderBy: [
+      { isBoosted: "desc" },
+      { isPremium: "desc" },
+      { rating: "desc" },
+      { createdAt: "desc" },
+    ],
+    select: {
+      id: true,
+      slug: true,
+      displayName: true,
+      category: true,
+      city: true,
+      country: true,
+      bio: true,
+      photos: true,
+      priceRange: true,
+      isPremium: true,
+      isBoosted: true,
+      isVerified: true,
+      rating: true,
+      reviewsCount: true,
+      instagramHandle: true,
+      tiktokHandle: true,
+    },
+    take: 200,
+  });
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-background">
@@ -92,7 +79,7 @@ export default async function PrestatairesPage({ searchParams }: Props) {
           </div>
         }
       >
-        <PrestatairesListClient pros={pros} unlocked={unlocked} />
+        <PrestatairesListClient pros={pros} unlocked />
       </Suspense>
 
       <section className="relative z-10 mx-auto max-w-7xl px-6 pb-24 lg:px-8">

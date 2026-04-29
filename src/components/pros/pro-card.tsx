@@ -1,7 +1,7 @@
 import {
   ArrowRight,
   AtSign,
-  LockKeyhole,
+  Flame,
   ShieldCheck,
   Sparkles,
   Star,
@@ -19,16 +19,22 @@ type ProCardData = ProDemo & {
   photos?: string[];
   instagramHandle?: string | null;
   isVerified?: boolean;
+  isBoosted?: boolean;
 };
 
 type ProCardProps = {
   pro: ProCardData & { whatsappRaw?: string | null };
+  /**
+   * Conservé pour compat. — Mboka Hub est désormais 100% gratuit pour les
+   * fans, le contact est toujours révélé.
+   */
   unlocked?: boolean;
 };
 
-export function ProCard({ pro, unlocked }: ProCardProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function ProCard({ pro, unlocked: _unlocked }: ProCardProps) {
   const photo = pro.photos?.[0];
-  const showInstagram = unlocked && !!pro.instagramHandle;
+  const showInstagram = !!pro.instagramHandle;
 
   return (
     <Card className="group relative overflow-hidden bg-coal border-white/10 rounded-[2rem] transition-all duration-500 hover:border-gold/40 hover:-translate-y-2 hover:shadow-2xl">
@@ -53,6 +59,11 @@ export function ProCard({ pro, unlocked }: ProCardProps) {
         )}
 
         <div className="absolute top-4 left-4 flex flex-wrap gap-2">
+          {pro.isBoosted && (
+            <Badge className="bg-blood text-paper shadow-glow-blood border-none font-display text-[10px] uppercase">
+              <Flame className="size-3 mr-1" /> Boosté
+            </Badge>
+          )}
           {pro.isPremium && (
             <Badge className="bg-gold text-ink shadow-glow-gold border-none font-display text-[10px] uppercase">
               <Star className="size-3 mr-1 fill-current" /> Premium
@@ -60,7 +71,7 @@ export function ProCard({ pro, unlocked }: ProCardProps) {
           )}
           {pro.isVerified && (
             <Badge className="bg-paper/10 backdrop-blur-md border-gold/40 text-gold font-mono text-[9px] uppercase flex items-center gap-1.5">
-              <ShieldCheck className="size-3" /> Certifié
+              <ShieldCheck className="size-3" /> Vérifié
             </Badge>
           )}
         </div>
@@ -126,21 +137,10 @@ export function ProCard({ pro, unlocked }: ProCardProps) {
         </div>
 
         <div className="space-y-3">
-          {unlocked ? (
-            <ContactLock
-              value={pro.whatsappMasked}
-              unlocked={unlocked}
-              rawValue={pro.whatsappRaw ?? undefined}
-            />
-          ) : (
-            <Link
-              href="/vip"
-              className="flex items-center justify-center gap-2 rounded-xl border border-vip/40 bg-vip/10 px-4 py-2.5 font-mono text-[10px] uppercase tracking-widest text-vip transition hover:bg-vip/15"
-            >
-              <LockKeyhole className="size-3.5" />
-              Débloquer avec le Pass VIP Famille
-            </Link>
-          )}
+          <ContactLock
+            value={pro.whatsappRaw ?? pro.whatsappMasked}
+            rawValue={pro.whatsappRaw ?? undefined}
+          />
           <Button
             asChild
             className="w-full h-12 bg-smoke border-white/5 hover:bg-gold hover:text-ink group/btn transition-all duration-500 rounded-xl"
