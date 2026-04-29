@@ -261,6 +261,47 @@ export async function sendTrajetPriceOfferEmail(args: {
   });
 }
 
+export async function sendProPhotoReminderEmail(args: {
+  to: string;
+  displayName: string;
+  category: string;
+}) {
+  const profilUrl = `${PUBLIC_URL}/dashboard/profil-pro`;
+
+  const body = `
+    <h1 style="font-size:26px;font-weight:800;color:#fff;margin:0 0 16px;line-height:1.2;">
+      Ajoute des photos à ta fiche pro 📸
+    </h1>
+    <p style="font-size:16px;line-height:1.6;color:#d4d4d4;margin:0 0 24px;">
+      Salut <strong style="color:#fff;">${escapeHtml(args.displayName)}</strong>,
+    </p>
+    <p style="font-size:16px;line-height:1.6;color:#d4d4d4;margin:0 0 24px;">
+      Ta fiche <strong style="color:#fff;">${escapeHtml(args.category)}</strong> est en ligne sur Mboka Hub, mais elle n'a encore <strong style="color:#fff;">aucune photo</strong>. Les fans cliquent <strong style="color:#fff;">3 à 5 fois plus</strong> sur les profils avec une vraie photo de couverture et une petite galerie.
+    </p>
+    <ul style="font-size:14px;line-height:1.7;color:#c4c4c4;padding-left:20px;margin:0 0 24px;">
+      <li>Une photo de couverture nette (visage, atelier, voiture, prestation)</li>
+      <li>2 à 4 photos de réalisations / cadre / véhicule</li>
+      <li>Format JPG / PNG / WebP, 5 Mo max par image</li>
+    </ul>
+    <div style="text-align:center;margin:32px 0;">
+      <a href="${profilUrl}" style="display:inline-block;background:#E50914;color:#fff;padding:14px 28px;border-radius:999px;text-decoration:none;font-weight:600;font-size:14px;">
+        Ajouter mes photos maintenant
+      </a>
+    </div>
+    <p style="font-size:14px;line-height:1.6;color:#a4a4a4;margin:0;">
+      Une fois tes photos en ligne, ta fiche remonte automatiquement dans
+      l&apos;annuaire — c&apos;est gratuit et ça prend deux minutes.
+    </p>
+  `;
+
+  return sendEmail({
+    to: args.to,
+    subject: "📸 Ajoute des photos à ta fiche Mboka Hub",
+    html: emailLayout("Complète ta fiche pro", body),
+    text: `Salut ${args.displayName}, ta fiche pro Mboka Hub n'a pas encore de photos. Ajoute-les ici : ${profilUrl}`,
+  });
+}
+
 function escapeHtml(s: string) {
   return s
     .replace(/&/g, "&amp;")

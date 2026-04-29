@@ -1,6 +1,7 @@
 "use client";
 
-import { Power, Trash2 } from "lucide-react";
+import { Pencil, Power, Trash2 } from "lucide-react";
+import Link from "next/link";
 import { useTransition } from "react";
 import {
   deleteTrajetAction,
@@ -18,6 +19,15 @@ export function AnnonceActions({ id, isActive }: AnnonceActionsProps) {
 
   return (
     <div className="flex items-center gap-2">
+      <Link
+        href={`/dashboard/annonces/${id}/modifier`}
+        className="size-10 rounded-xl flex items-center justify-center bg-paper/5 text-paper-mute hover:bg-paper/10 hover:text-paper transition-all"
+        title="Modifier"
+        aria-label="Modifier"
+      >
+        <Pencil className="size-4" />
+      </Link>
+
       <button
         type="button"
         onClick={() => startTransition(() => toggleTrajetStatusAction(id))}

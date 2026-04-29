@@ -1,5 +1,6 @@
 import {
   BadgeEuro,
+  Camera,
   CalendarDays,
   Contact,
   Megaphone,
@@ -47,6 +48,31 @@ export default async function DashboardPage() {
           Ici tu gères ton profil de fan, tes accès Tokooos et tes annonces pour le concert de l&apos;Aigle.
         </p>
       </div>
+
+      {proProfile && proProfile.photos.length === 0 ? (
+        <Link
+          href="/dashboard/profil-pro"
+          className="group flex items-start gap-4 rounded-3xl border border-yellow-400/30 bg-yellow-400/10 p-5 transition hover:border-yellow-400/60"
+        >
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-yellow-400/20 text-yellow-200">
+            <Camera className="size-5" />
+          </span>
+          <div className="flex-1">
+            <p className="font-display text-base uppercase text-yellow-100">
+              Ajoute des photos à ta fiche pro
+            </p>
+            <p className="mt-1 text-sm text-yellow-100/80 leading-6">
+              Ta fiche{" "}
+              <strong className="text-yellow-50">{proProfile.displayName}</strong>{" "}
+              n&apos;a pas encore de photo. Les fans cliquent 3 à 5 fois plus
+              sur les profils avec une vraie couverture et une petite galerie.
+            </p>
+            <span className="mt-2 inline-flex items-center gap-1 font-mono text-xs uppercase tracking-wider text-yellow-200 group-hover:gap-2 transition-all">
+              Compléter maintenant →
+            </span>
+          </div>
+        </Link>
+      ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard

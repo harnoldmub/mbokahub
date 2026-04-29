@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { randomUUID } from "node:crypto";
 import { prisma } from "@/lib/db/prisma";
 import { requireAdmin } from "@/lib/admin";
-import { sendProValidatedEmail } from "@/lib/email";
+import { sendProPhotoReminderEmail, sendProValidatedEmail } from "@/lib/email";
+import { PRO_CATEGORY_BY_ID } from "@/lib/pro-categories";
 import type { ProCategory, PromoCodeCategory, UserRole } from "@prisma/client";
 
 function slugify(input: string): string {
@@ -840,4 +841,32 @@ export async function toggleParisSponsored(id: string, isSponsored: boolean) {
   await prisma.parisClassic.update({ where: { id }, data: { isSponsored } });
   revalidatePath("/admin/paris");
   revalidatePath("/classiques-paris");
+}
+
+// Envoie un email "complète tes photos" au prestataire ciblé. Sans relance
+// automatique : l'admin déclenche manuellement depuis /admin/users.
+export async function sendPhotoReminderAction(proId: string) {
+  await requireAdmin();
+
+  const pro = await prisma.proProfile.findUnique({
+    where: { id: proId },
+    include: { user: true },
+  });
+
+  if (!pro) throw new Error("Profil pro introuvable");
+  if (!pro.user.email) throw new Error("Cet utilisateur n'a pas d'email");
+
+  const categoryLabel = PRO_CATEGORY_BY_ID[pro.category]?.label ?? pro.category;
+
+  const result = await sendProPhotoReminderEmail({
+    to: pro.user.email,
+    displayName: pro.displayName,
+    category: categoryLabel,
+  });
+
+  if (!result.ok && !("skipped" in result)) {
+    console.error("[admin] photo reminder email failed:", result);
+  }
+
+  revalidatePath("/admin/users");
 }

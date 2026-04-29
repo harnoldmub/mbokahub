@@ -1,6 +1,11 @@
 import { ConfirmActionForm } from "@/components/admin/confirm-action-form";
+import { PhotoReminderButton } from "@/components/admin/photo-reminder-button";
 import { prisma } from "@/lib/db/prisma";
-import { setUserRole, toggleFoundingFamily, deleteUser } from "@/lib/actions/admin";
+import {
+  deleteUser,
+  setUserRole,
+  toggleFoundingFamily,
+} from "@/lib/actions/admin";
 
 export const dynamic = "force-dynamic";
 
@@ -114,7 +119,23 @@ export default async function AdminUsersPage({
                   </form>
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">
-                  {u.proProfile ? u.proProfile.category : "—"}
+                  {u.proProfile ? (
+                    <div className="flex items-center gap-2">
+                      <span>{u.proProfile.category}</span>
+                      {u.proProfile.photos.length === 0 ? (
+                        <PhotoReminderButton proId={u.proProfile.id} />
+                      ) : (
+                        <span
+                          className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] text-emerald-200"
+                          title={`${u.proProfile.photos.length} photo(s)`}
+                        >
+                          📸 {u.proProfile.photos.length}
+                        </span>
+                      )}
+                    </div>
+                  ) : (
+                    "—"
+                  )}
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">{u._count.trajets}</td>
                 <td className="px-4 py-3 text-muted-foreground">{u._count.payments}</td>

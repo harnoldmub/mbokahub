@@ -82,6 +82,19 @@ export default async function ProfilProPage({
         </div>
       </div>
 
+      {pro.photos.length === 0 ? (
+        <div className="flex items-start gap-3 rounded-2xl border border-yellow-400/40 bg-yellow-400/10 p-4 text-yellow-100 text-sm leading-6">
+          <Camera aria-hidden className="size-5 shrink-0 mt-0.5" />
+          <div>
+            <strong className="text-yellow-50">
+              Ta fiche n&apos;a pas encore de photo.
+            </strong>{" "}
+            Ajoute au moins une photo de couverture pour booster ta visibilité
+            dans l&apos;annuaire — c&apos;est gratuit et ça prend deux minutes.
+          </div>
+        </div>
+      ) : null}
+
       {sp.saved ? (
         <div className="flex items-center gap-3 rounded-2xl border border-emerald-400/30 bg-emerald-500/10 p-4 text-emerald-200 text-sm">
           <ScrollToTopOnMount />
