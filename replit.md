@@ -92,6 +92,21 @@ The `postcss.config.mjs` sets `base: "./src"` for `@tailwindcss/postcss` to prev
 
 ### Routes
 - Duplicate route conflict resolved: removed `(legal)/disclaimer/page.tsx` (kept `(marketing)/disclaimer/page.tsx`)
+- `/api/health` returns `{ ok, db, latencyMs }` for uptime monitoring (no auth, no-cache).
+
+### Error & loading boundaries
+- `src/app/error.tsx` — friendly error UI for any route failure (with `reset()`).
+- `src/app/global-error.tsx` — fallback when even the root layout crashes.
+- `src/app/loading.tsx` — spinner shown during route transitions / suspense.
+
+### Security
+- `STRIPE_WEBHOOK_SECRET` lives **only** in Replit Secrets. It must NEVER be
+  hardcoded in `.replit` `[userenv.shared]` (was previously leaked there in
+  commit `d8b566f` — now removed). Rotate the value in the Stripe dashboard
+  whenever you suspect it has been exposed.
+- Stripe checkout redirects from `boost-button` / `premium-activate-button` are
+  validated against an `https://(checkout|billing).stripe.com/` allow-list
+  before `window.location.href` (defense in depth against open-redirect).
 
 ## Database
 

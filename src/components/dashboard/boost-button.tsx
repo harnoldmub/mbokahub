@@ -46,6 +46,9 @@ export function BoostButton({
       if (!res.ok || !data.url) {
         throw new Error(data.error ?? "Erreur paiement");
       }
+      if (!/^https:\/\/(checkout|billing)\.stripe\.com\//.test(data.url)) {
+        throw new Error("URL de paiement invalide");
+      }
       window.location.href = data.url;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur");

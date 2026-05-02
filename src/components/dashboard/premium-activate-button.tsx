@@ -51,6 +51,13 @@ export function PremiumActivateButton({
       }
       const target = data.url ?? data.redirect;
       if (!target) throw new Error("URL manquante");
+      const isStripe = /^https:\/\/(checkout|billing)\.stripe\.com\//.test(target);
+      // Refuse les URL protocol-relative comme `//evil.com/x` qui passeraient
+      // un naïf startsWith("/") tout en redirigeant vers un autre domaine.
+      const isInternal = /^\/(?!\/)/.test(target);
+      if (!isStripe && !isInternal) {
+        throw new Error("URL de redirection invalide");
+      }
       window.location.href = target;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur");
