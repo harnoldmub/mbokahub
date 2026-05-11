@@ -8,6 +8,7 @@ import { PhoneInput } from "@/components/ui/phone-input";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
+import { CityInput } from "@/components/ui/city-input";
 import { PhotoUpload } from "@/components/ui/photo-upload";
 import { cn } from "@/lib/utils";
 import { createProProfileAction } from "@/lib/actions/public";
@@ -133,11 +134,10 @@ export function ProRegistrationForm({ defaultCategory }: Props = {}) {
             label="Ville / Secteur"
             helperText="Où exerces-tu ce week-end là ?"
           >
-            <Input
+            <CityInput
               name="city"
               required
-              placeholder="Saint-Denis, Paris 18..."
-              className="h-12 bg-smoke border-none"
+              placeholder="Saint-Denis, Paris 18…"
             />
           </FormField>
           <FormField label="Pays" helperText="Pays d'exercice">

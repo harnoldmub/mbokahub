@@ -78,6 +78,9 @@ export default async function PlanningPage({
           Les clients peuvent demander un créneau depuis ta fiche publique. Tu
           confirmes, annules ou marques terminé depuis cet espace.
         </p>
+        <div className="mt-5 rounded-2xl border border-warning/30 bg-warning/10 p-4 text-sm text-paper-dim max-w-2xl">
+          <strong className="text-warning">Règle sur les acomptes :</strong> Si tu demandes un acompte pour valider une réservation, celui-ci ne doit <strong>jamais dépasser 20€</strong>. Le paiement se fait directement avec le client via PayPal, Paylib, etc. Tout abus (acompte abusif, arnaque) entraînera le bannissement de la plateforme.
+        </div>
       </div>
 
       {sp?.updated ? (

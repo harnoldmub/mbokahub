@@ -15,8 +15,7 @@ const ACCENT_RING: Record<NonNullable<AppTileProps["accent"]>, string> = {
   blood: "from-blood/30 to-blood/0 group-hover:from-blood/50",
   gold: "from-gold/30 to-gold/0 group-hover:from-gold/50",
   ember: "from-ember/30 to-ember/0 group-hover:from-ember/50",
-  violet:
-    "from-violet-500/30 to-violet-500/0 group-hover:from-violet-500/50",
+  violet: "from-blood/30 to-blood/0 group-hover:from-blood/50",
   paper: "from-paper/20 to-paper/0 group-hover:from-paper/40",
   emerald:
     "from-emerald-500/30 to-emerald-500/0 group-hover:from-emerald-500/50",
@@ -26,7 +25,7 @@ const ACCENT_TEXT: Record<NonNullable<AppTileProps["accent"]>, string> = {
   blood: "text-blood",
   gold: "text-gold",
   ember: "text-ember",
-  violet: "text-violet-400",
+  violet: "text-blood",
   paper: "text-paper",
   emerald: "text-emerald-400",
 };

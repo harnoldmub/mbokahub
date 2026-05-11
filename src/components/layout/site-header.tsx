@@ -3,18 +3,22 @@
 import { UserButton, useUser } from "@clerk/nextjs";
 import { Star, UserRound } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { MegaMenu } from "@/components/layout/mega-menu";
 import { MobileMenu } from "@/components/layout/mobile-menu";
 import { Button } from "@/components/ui/button";
+import { DEFAULT_MARKET, MARKETS, type Market } from "@/lib/markets";
 import { getLocale, localizedHref, nls } from "@/lib/nls";
 
 export function SiteHeader() {
-  const locale = getLocale(useSearchParams().get("lang"));
-  const copy = nls[locale].common;
+  const pathname = usePathname();
+  const seg = pathname.split("/")[1];
+  const market: string = MARKETS.includes(seg as Market) ? seg : DEFAULT_MARKET;
+  const lang = getLocale(useSearchParams().get("lang"));
+  const copy = nls[lang].common;
   const { isSignedIn } = useUser();
   // Anciens VIP → badge ⭐ Famille Fondatrice à vie. La route /api/me/vip
   // expose le flag historique `isVip` (qui correspond aux fondateurs).
@@ -38,11 +42,11 @@ export function SiteHeader() {
     };
   }, [isSignedIn]);
   const dashboardLabel =
-    locale === "en"
+    lang === "en"
       ? "Dashboard"
-      : locale === "de"
+      : lang === "de"
         ? "Dashboard"
-        : locale === "nl"
+        : lang === "nl"
           ? "Dashboard"
           : "Tableau de bord";
   const m = copy.megaServices;
@@ -98,7 +102,7 @@ export function SiteHeader() {
         <Link
           aria-label="Mboka Hub"
           className="group flex items-center"
-          href={localizedHref("/", locale)}
+          href={localizedHref("/", market)}
         >
           <span className="text-2xl font-black uppercase tracking-[0.22em] text-paper">
             MbokaHub
@@ -109,11 +113,11 @@ export function SiteHeader() {
           aria-label="Navigation principale"
           className="hidden items-center gap-7 md:flex"
         >
-          <MegaMenu label="Services" locale={locale} sections={megaSections} />
+          <MegaMenu label="Services" locale={market} sections={megaSections} />
           {simpleNavItems.map((item) => (
             <Link
               className="text-sm font-medium text-paper transition-colors hover:text-blood"
-              href={localizedHref(item.href, locale)}
+              href={localizedHref(item.href, market)}
               key={item.href}
             >
               {item.label}
@@ -132,7 +136,7 @@ export function SiteHeader() {
             <Link
               href={localizedHref(
                 isSignedIn ? "/dashboard" : "/pro/inscrire",
-                locale,
+                market,
               )}
             >
               {isSignedIn ? dashboardLabel : "Devenir pro"}
@@ -162,14 +166,14 @@ export function SiteHeader() {
           ) : (
             <Button asChild className="hidden sm:inline-flex" size="sm">
               <Link
-                href={localizedHref("/sign-in?redirect_url=/dashboard", locale)}
+                href={localizedHref("/sign-in?redirect_url=/dashboard", market)}
               >
                 <UserRound className="size-4" />
                 Mon compte
               </Link>
             </Button>
           )}
-          <MobileMenu locale={locale} />
+          <MobileMenu lang={lang} market={market} />
         </div>
       </div>
     </header>

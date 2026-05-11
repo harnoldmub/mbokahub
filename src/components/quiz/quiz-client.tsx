@@ -1339,7 +1339,7 @@ const PROFILES = [
 
 const TIMER_SECONDS = 20;
 const CATEGORY_COLORS: Record<string, string> = {
-  Identité: "bg-violet-500/20 text-violet-300 border-violet-500/30",
+  Identité: "bg-blood/20 text-blood border-blood/30",
   Biographie: "bg-sky-500/20 text-sky-300 border-sky-500/30",
   Carrière: "bg-amber-500/20 text-amber-300 border-amber-500/30",
   Discographie: "bg-blood/20 text-blood border-blood/30",

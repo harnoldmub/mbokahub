@@ -4,9 +4,11 @@ import Link from "next/link";
 import { PhotoUploader } from "@/components/admin/photo-uploader";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { ScrollToTopOnMount } from "@/components/dashboard/scroll-to-top-on-mount";
+import { VerifyIdentityButton } from "@/components/dashboard/verify-identity-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
+import { CityInput } from "@/components/ui/city-input";
 import { Input } from "@/components/ui/input";
 import { getDashboardUser } from "@/lib/dashboard";
 import { prisma } from "@/lib/db/prisma";
@@ -79,6 +81,7 @@ export default async function ProfilProPage({
           <Badge variant={pro.isPremium ? "default" : "outline"}>
             {pro.isPremium ? "Premium" : "Gratuit"}
           </Badge>
+          {!pro.isVerified && <VerifyIdentityButton />}
         </div>
       </div>
 
@@ -154,12 +157,11 @@ export default async function ProfilProPage({
             label="Ville / Secteur"
             helperText="Où tu exerces ce week-end là"
           >
-            <Input
+            <CityInput
               name="city"
               required
               defaultValue={pro.city}
-              placeholder="Saint-Denis, Paris 18..."
-              className="h-12 bg-smoke border-none"
+              placeholder="Saint-Denis, Paris 18…"
             />
           </FormField>
           <FormField label="Pays" helperText="Pays d'exercice">

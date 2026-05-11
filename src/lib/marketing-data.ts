@@ -105,7 +105,7 @@ export const proOffer = {
   title: "Fiche pro gratuite",
   price: "0 EUR",
   description:
-    "Inscription gratuite pour tous les prestataires. La visibilité payante reste optionnelle : boost, placement sponsorisé, campagne locale.",
+    "Inscription gratuite pour tous les prestataires, incluant vos 10 premières réservations effectuées gratuitement. Boost optionnel pour augmenter sa visibilité.",
   audiences: [
     {
       label: "Beauté",

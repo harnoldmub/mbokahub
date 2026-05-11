@@ -24,38 +24,39 @@ import {
 import { type Locale, localizedHref, nls } from "@/lib/nls";
 
 type MobileMenuProps = {
-  locale: Locale;
+  market: string;
+  lang: Locale;
 };
 
-export function MobileMenu({ locale }: MobileMenuProps) {
+export function MobileMenu({ market, lang }: MobileMenuProps) {
   const [open, setOpen] = useState(false);
-  const copy = nls[locale].common;
+  const copy = nls[lang].common;
   const { isSignedIn, user } = useUser();
   const signInLabel =
-    locale === "en"
+    lang === "en"
       ? "Sign in"
-      : locale === "de"
+      : lang === "de"
         ? "Anmelden"
-        : locale === "nl"
+        : lang === "nl"
           ? "Inloggen"
           : "Se connecter";
   const signUpLabel =
-    locale === "en"
+    lang === "en"
       ? "Create account"
-      : locale === "de"
+      : lang === "de"
         ? "Konto erstellen"
-        : locale === "nl"
+        : lang === "nl"
           ? "Account aanmaken"
           : "Créer un compte";
   const signOutLabel =
-    locale === "en"
+    lang === "en"
       ? "Sign out"
-      : locale === "de"
+      : lang === "de"
         ? "Abmelden"
-        : locale === "nl"
+        : lang === "nl"
           ? "Uitloggen"
           : "Se déconnecter";
-  const dashboardLabel = locale === "fr" ? "Tableau de bord" : "Dashboard";
+  const dashboardLabel = lang === "fr" ? "Tableau de bord" : "Dashboard";
   const navItems = [
     { href: "/", label: copy.quickNav.home },
     { href: "/prestataires", label: "Prestataires" },
@@ -95,7 +96,7 @@ export function MobileMenu({ locale }: MobileMenuProps) {
           {navItems.map((item) => (
             <Link
               className="group flex items-center justify-between rounded-xl border border-transparent px-4 py-3 transition-all hover:border-blood/20 hover:bg-blood/5"
-              href={localizedHref(item.href, locale)}
+              href={localizedHref(item.href, market)}
               key={item.href}
               onClick={() => setOpen(false)}
             >
@@ -125,7 +126,7 @@ export function MobileMenu({ locale }: MobileMenuProps) {
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-mono text-[10px] uppercase tracking-[0.2em] text-paper-mute">
-                    {locale === "fr" ? "Connecté" : "Signed in"}
+                    {lang === "fr" ? "Connecté" : "Signed in"}
                   </p>
                   <p className="truncate text-sm text-paper">
                     {user?.firstName ??
@@ -141,14 +142,14 @@ export function MobileMenu({ locale }: MobileMenuProps) {
                 variant="outline"
               >
                 <Link
-                  href={localizedHref("/dashboard", locale)}
+                  href={localizedHref("/dashboard", market)}
                   onClick={() => setOpen(false)}
                 >
                   <LayoutDashboard className="size-4" />
                   {dashboardLabel}
                 </Link>
               </Button>
-              <SignOutButton redirectUrl={localizedHref("/", locale)}>
+              <SignOutButton redirectUrl={localizedHref("/", market)}>
                 <button
                   className="flex h-12 w-full items-center justify-start gap-3 rounded-md border border-white/10 px-4 text-sm text-paper-dim transition-colors hover:border-blood/40 hover:bg-blood/10 hover:text-paper"
                   onClick={() => setOpen(false)}
@@ -170,7 +171,7 @@ export function MobileMenu({ locale }: MobileMenuProps) {
                 <Link
                   href={localizedHref(
                     "/sign-in?redirect_url=/dashboard",
-                    locale,
+                    market,
                   )}
                   onClick={() => setOpen(false)}
                 >
@@ -187,7 +188,7 @@ export function MobileMenu({ locale }: MobileMenuProps) {
                 <Link
                   href={localizedHref(
                     "/sign-up?redirect_url=/dashboard",
-                    locale,
+                    market,
                   )}
                   onClick={() => setOpen(false)}
                 >
@@ -205,7 +206,7 @@ export function MobileMenu({ locale }: MobileMenuProps) {
             variant="vip"
           >
             <Link
-              href={localizedHref("/pro/inscrire", locale)}
+              href={localizedHref("/pro/inscrire", market)}
               onClick={() => setOpen(false)}
             >
               Devenir prestataire

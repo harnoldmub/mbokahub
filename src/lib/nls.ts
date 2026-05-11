@@ -51,16 +51,11 @@ export function getLocaleFromSearchParams(
   return getLocale(searchParams?.lang);
 }
 
-export function localizedHref(href: string, locale: Locale): string {
-  if (locale === defaultLocale || href.startsWith("http")) {
-    return href;
-  }
-
-  const [path, hash] = href.split("#");
-  const separator = path.includes("?") ? "&" : "?";
-  const localizedPath = `${path}${separator}lang=${locale}`;
-
-  return hash ? `${localizedPath}#${hash}` : localizedPath;
+/** @deprecated Use marketHref from @/lib/markets instead. */
+export function localizedHref(href: string, locale: Locale | string): string {
+  if (href.startsWith("http")) return href;
+  // If a market code is passed (fr-be, fr-cod, fr) prepend it as path segment
+  return `/${locale}${href}`;
 }
 
 export const nls = {

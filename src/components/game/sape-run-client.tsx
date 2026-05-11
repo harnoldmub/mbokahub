@@ -325,20 +325,20 @@ function drawCollectible(
   }
 
   if (col.type === "microphone") {
-    ctx.fillStyle = "#a855f7";
+    ctx.fillStyle = "#E31818";
     ctx.beginPath();
     ctx.arc(0, -6, 8, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = "#7c3aed";
+    ctx.fillStyle = "#b31212";
     ctx.fillRect(-2, 2, 4, 10);
-    ctx.fillStyle = "#a855f7";
+    ctx.fillStyle = "#E31818";
     ctx.fillRect(-7, 12, 14, 3);
     // Glow
     ctx.save();
     ctx.globalAlpha = 0.3;
-    ctx.shadowColor = "#a855f7";
+    ctx.shadowColor = "#E31818";
     ctx.shadowBlur = 20;
-    ctx.fillStyle = "#a855f7";
+    ctx.fillStyle = "#E31818";
     ctx.beginPath();
     ctx.arc(0, 0, 16, 0, Math.PI * 2);
     ctx.fill();
@@ -653,7 +653,7 @@ export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = 
       for (const [angleBase, hue] of [
         [-Math.PI / 2 + sweep * 0.5, "#E50914"],
         [-Math.PI / 2 + sweep2 * 0.6, "#fbbf24"],
-        [-Math.PI / 2 - sweep * 0.7, "#a855f7"],
+        [-Math.PI / 2 - sweep * 0.7, "#E31818"],
       ] as const) {
         const grad = ctx.createLinearGradient(
           beamOriginX,
@@ -963,7 +963,7 @@ export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = 
                     ? "#fbbf24"
                     : col.type === "diamond"
                       ? "#67e8f9"
-                      : "#a855f7",
+                      : "#E31818",
                 size: 3 + Math.random() * 3,
               });
             }

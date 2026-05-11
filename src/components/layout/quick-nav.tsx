@@ -13,6 +13,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import type { ComponentType } from "react";
 
+import { DEFAULT_MARKET, MARKETS, type Market } from "@/lib/markets";
 import { getLocale, localizedHref, nls } from "@/lib/nls";
 import { cn } from "@/lib/utils";
 
@@ -34,11 +35,16 @@ const items: QuickNavItem[] = [
 
 export function QuickNav() {
   const pathname = usePathname();
-  const locale = getLocale(useSearchParams().get("lang"));
-  const labels = nls[locale].common.quickNav;
+  const lang = getLocale(useSearchParams().get("lang"));
+  const labels = nls[lang].common.quickNav;
+
+  // Extract market prefix from path for URL building and active-state matching
+  const seg = pathname.split("/")[1];
+  const market: string = MARKETS.includes(seg as Market) ? seg : DEFAULT_MARKET;
+  const localPath = market ? pathname.slice(market.length + 1) || "/" : pathname;
 
   // Hide on home page (logo already returns there)
-  if (pathname === "/" || pathname === "") return null;
+  if (localPath === "/" || localPath === "") return null;
 
   return (
     <nav
@@ -52,8 +58,8 @@ export function QuickNav() {
             const isActive =
               item.href === "/"
                 ? false
-                : pathname === item.href ||
-                  pathname.startsWith(`${item.href}/`);
+                : localPath === item.href ||
+                  localPath.startsWith(`${item.href}/`);
             return (
               <li className="shrink-0" key={item.href}>
                 <Link
@@ -65,7 +71,7 @@ export function QuickNav() {
                     item.href === "/" &&
                       "border-blood/40 bg-blood/10 text-blood",
                   )}
-                  href={localizedHref(item.href, locale)}
+                  href={localizedHref(item.href, market)}
                 >
                   <Icon aria-hidden className="size-3.5" />
                   {item.label}

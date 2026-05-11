@@ -4,7 +4,7 @@ import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 
-import { type Locale, localizedHref } from "@/lib/nls";
+import { localizedHref } from "@/lib/nls";
 
 type MegaLink = {
   href: string;
@@ -20,7 +20,7 @@ type MegaSection = {
 type MegaMenuProps = {
   label: string;
   sections: MegaSection[];
-  locale: Locale;
+  locale: string;
 };
 
 export function MegaMenu({ label, sections, locale }: MegaMenuProps) {

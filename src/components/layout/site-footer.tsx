@@ -3,14 +3,18 @@
 import { useUser } from "@clerk/nextjs";
 import { ShieldCheck } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { NewsletterForm } from "@/components/shared/newsletter-form";
+import { DEFAULT_MARKET, MARKETS, type Market } from "@/lib/markets";
 import { getLocale, localizedHref, nls } from "@/lib/nls";
 
 export function SiteFooter() {
-  const locale = getLocale(useSearchParams().get("lang"));
-  const copy = nls[locale].footer;
+  const pathname = usePathname();
+  const seg = pathname.split("/")[1];
+  const market: string = MARKETS.includes(seg as Market) ? seg : DEFAULT_MARKET;
+  const lang = getLocale(useSearchParams().get("lang"));
+  const copy = nls[lang].footer;
   const { isSignedIn } = useUser();
   const [isAdmin, setIsAdmin] = useState(false);
   useEffect(() => {
@@ -61,25 +65,25 @@ export function SiteFooter() {
             </h3>
             <nav className="flex flex-col gap-3">
               <Link
-                href={localizedHref("/trajets", locale)}
+                href={localizedHref("/trajets", market)}
                 className="text-paper-dim hover:text-paper transition-colors"
               >
                 {copy.links.rides}
               </Link>
               <Link
-                href={localizedHref("/afters", locale)}
+                href={localizedHref("/afters", market)}
                 className="text-paper-dim hover:text-paper transition-colors"
               >
                 {copy.links.afters}
               </Link>
               <Link
-                href={localizedHref("/prestataires", locale)}
+                href={localizedHref("/prestataires", market)}
                 className="text-paper-dim hover:text-paper transition-colors"
               >
                 {copy.links.services}
               </Link>
               <Link
-                href={localizedHref("/beaute/photographes", locale)}
+                href={localizedHref("/beaute/photographes", market)}
                 className="text-paper-dim hover:text-paper transition-colors"
               >
                 {copy.links.photographers}
@@ -93,19 +97,19 @@ export function SiteFooter() {
             </h3>
             <nav className="flex flex-col gap-3">
               <Link
-                href={localizedHref("/pro", locale)}
+                href={localizedHref("/pro", market)}
                 className="text-paper-dim hover:text-paper transition-colors"
               >
                 {copy.links.proSpace}
               </Link>
               <Link
-                href={localizedHref("/partenariat", locale)}
+                href={localizedHref("/partenariat", market)}
                 className="text-paper-dim hover:text-paper transition-colors"
               >
                 {copy.links.partnerships}
               </Link>
               <Link
-                href={localizedHref("/ads", locale)}
+                href={localizedHref("/ads", market)}
                 className="text-paper-dim hover:text-paper transition-colors"
               >
                 {copy.links.ads}
@@ -119,19 +123,19 @@ export function SiteFooter() {
             </h3>
             <nav className="flex flex-col gap-3">
               <Link
-                href={localizedHref("/equipe", locale)}
+                href={localizedHref("/equipe", market)}
                 className="text-paper-dim hover:text-paper transition-colors"
               >
                 {copy.links.team}
               </Link>
               <Link
-                href={localizedHref("/contact", locale)}
+                href={localizedHref("/contact", market)}
                 className="text-paper-dim hover:text-paper transition-colors"
               >
                 {copy.links.contact}
               </Link>
               <Link
-                href={localizedHref("/faq", locale)}
+                href={localizedHref("/faq", market)}
                 className="text-paper-dim hover:text-paper transition-colors"
               >
                 {copy.links.faq}
@@ -147,7 +151,7 @@ export function SiteFooter() {
               {legalLinks.map((link) => (
                 <Link
                   className="text-paper-dim hover:text-paper transition-colors"
-                  href={localizedHref(link.href, locale)}
+                  href={localizedHref(link.href, market)}
                   key={link.href}
                 >
                   {link.label}

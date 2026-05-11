@@ -8,9 +8,9 @@
   --color-smoke: #f4f5f7;
   --color-ash: #d7dbe2;
 
-  /* ACCENTS — violet fonctionnel + noir CTA */
-  --color-blood: #6257ff;
-  --color-blood-deep: #4f46e5;
+  /* ACCENTS — rouge fonctionnel + noir CTA */
+  --color-blood: #E31818;
+  --color-blood-deep: #b31212;
   --color-ember: #2f80ed;
   --color-flame: #1d4ed8;
 
@@ -37,7 +37,7 @@
   --color-background: #ffffff;
   --color-muted: #f4f5f7;
   --color-muted-foreground: #4d5157;
-  --color-accent: #6257ff;
+  --color-accent: #E31818;
   --color-accent-foreground: #ffffff;
   --color-border: #d7dbe2;
   --color-card: #ffffff;
@@ -50,6 +50,11 @@
   --font-serif: var(--font-fraunces);
   --font-body: var(--font-geist);
   --font-mono: var(--font-jetbrains);
+
+  /* VIOLET → rouge (override Tailwind palette) */
+  --color-violet-300: #f07070;
+  --color-violet-400: #e84040;
+  --color-violet-500: #E31818;
 
   /* BORDERS */
   --radius-xl: 10px;
@@ -86,7 +91,7 @@
   }
 
   .shadow-glow-blood {
-    box-shadow: 0 16px 40px rgba(98, 87, 255, 0.14);
+    box-shadow: 0 16px 40px rgba(227, 24, 24, 0.14);
   }
 
   .glass-header {

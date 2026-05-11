@@ -10,6 +10,7 @@ import {
   Megaphone,
   Settings,
   ShieldCheck,
+  FileText,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -22,6 +23,7 @@ const baseItems = [
   { href: "/dashboard/profil-pro", label: "Ma fiche pro", icon: IdCard },
   { href: "/dashboard/planning", label: "Planning", icon: CalendarCheck },
   { href: "/dashboard/stats", label: "Stats", icon: BarChart3 },
+  { href: "/dashboard/fiscalite", label: "Fiscalité", icon: FileText },
   { href: "/dashboard/parametres", label: "Paramètres", icon: Settings },
 ] as const;
 

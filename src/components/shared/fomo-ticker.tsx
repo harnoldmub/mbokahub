@@ -104,7 +104,7 @@ const ACCENT_CLASS: Record<Message["accent"], string> = {
   blood: "border-blood/40 shadow-[0_0_24px_-8px_rgba(229,9,20,0.6)]",
   gold: "border-gold/40 shadow-[0_0_24px_-8px_rgba(212,175,55,0.6)]",
   cyan: "border-cyan-400/40 shadow-[0_0_24px_-8px_rgba(34,211,238,0.5)]",
-  violet: "border-violet-400/40 shadow-[0_0_24px_-8px_rgba(167,139,250,0.5)]",
+  violet: "border-blood/40 shadow-[0_0_24px_-8px_rgba(227,24,24,0.5)]",
 };
 
 export function FomoTicker() {
