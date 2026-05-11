@@ -1,49 +1,49 @@
-/* MBOKA HUB - NIGHT POSTER SYSTEM */
+/* MBOKA HUB - SERVICE MARKETPLACE SYSTEM */
 @import "tailwindcss/index.css";
 
 @theme {
-  /* BACKGROUNDS — profondeur noire stratifiée */
-  --color-ink: #0a0808;
-  --color-coal: #13100f;
-  --color-smoke: #1c1816;
-  --color-ash: #26201d;
+  /* BACKGROUNDS — marketplace clair, premium mais sobre */
+  --color-ink: #f6f3ec;
+  --color-coal: #fffdf8;
+  --color-smoke: #ece7dc;
+  --color-ash: #d9d1c2;
 
-  /* ACCENTS — le feu */
-  --color-blood: #E50914;
-  --color-blood-deep: #B00610;
-  --color-ember: #ff6b35;
-  --color-flame: #ff9142;
+  /* ACCENTS — confiance, visibilité, action */
+  --color-blood: #12715b;
+  --color-blood-deep: #0d5748;
+  --color-ember: #c86442;
+  --color-flame: #df7d55;
 
-  /* OR — le premium, le VIP */
-  --color-gold: #f2b705;
-  --color-gold-soft: #e3a40d;
-  --color-vip: #f2b705;
-  --color-vip-soft: #e3a40d;
+  /* SPONSORING — boost / placement */
+  --color-gold: #d59f2f;
+  --color-gold-soft: #bd8622;
+  --color-vip: #d59f2f;
+  --color-vip-soft: #bd8622;
 
-  /* TEXTE — crème, pas blanc pur */
-  --color-paper: #f5efe4;
-  --color-paper-dim: #b8b0a3;
-  --color-paper-mute: #6b6560;
+  /* TEXTE */
+  --color-paper: #18211d;
+  --color-paper-dim: #59645d;
+  --color-paper-mute: #879088;
 
   /* UTILITAIRES */
-  --color-success: #00c896;
-  --color-warning: #f2b705;
-  --color-error: #E50914;
+  --color-success: #12845f;
+  --color-warning: #d59f2f;
+  --color-error: #b83c36;
 
   /* ALIAS shadcn-style — pour que bg-primary / text-foreground / etc. fonctionnent */
-  --color-primary: #E50914;
-  --color-primary-foreground: #f5efe4;
-  --color-foreground: #f5efe4;
-  --color-background: #0a0808;
-  --color-muted: #1c1816;
-  --color-muted-foreground: #b8b0a3;
-  --color-accent: #f2b705;
-  --color-accent-foreground: #0a0808;
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-card: #13100f;
-  --color-card-foreground: #f5efe4;
-  --color-destructive: #E50914;
-  --color-destructive-foreground: #f5efe4;
+  --color-primary: #12715b;
+  --color-primary-foreground: #fffdf8;
+  --color-foreground: #18211d;
+  --color-background: #f6f3ec;
+  --color-muted: #ece7dc;
+  --color-muted-foreground: #59645d;
+  --color-accent: #d59f2f;
+  --color-accent-foreground: #18211d;
+  --color-border: rgba(24, 33, 29, 0.1);
+  --color-card: #fffdf8;
+  --color-card-foreground: #18211d;
+  --color-destructive: #b83c36;
+  --color-destructive-foreground: #fffdf8;
 
   /* TYPOGRAPHY */
   --font-display: var(--font-anton);
@@ -69,26 +69,26 @@
   }
 
   body {
-    @apply bg-ink text-paper selection:bg-blood/30 selection:text-paper;
+    @apply bg-ink text-paper selection:bg-blood/20 selection:text-paper;
     background:
       radial-gradient(
-        circle at 20% 30%,
-        rgba(230, 57, 70, 0.08) 0%,
+        circle at 18% 20%,
+        rgba(18, 113, 91, 0.12) 0%,
         transparent 50%
       ),
       radial-gradient(
-        circle at 80% 70%,
-        rgba(255, 107, 53, 0.05) 0%,
+        circle at 82% 12%,
+        rgba(213, 159, 47, 0.11) 0%,
         transparent 50%
-      ), #0a0808;
+      ), #f6f3ec;
   }
 
   /* Layer 2 — Grain Noise Overlay */
   body::before {
     content: "";
-    @apply fixed inset-0 z-[100] pointer-events-none opacity-[0.06];
+    @apply fixed inset-0 z-[100] pointer-events-none opacity-[0.035];
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    mix-blend-mode: overlay;
+    mix-blend-mode: multiply;
   }
 }
 
@@ -100,12 +100,27 @@
   }
 
   .shadow-glow-blood {
-    box-shadow: 0 0 40px rgba(230, 57, 70, 0.25);
+    box-shadow: 0 18px 40px rgba(18, 113, 91, 0.18);
   }
 
   .glass-header {
-    @apply sticky top-0 z-50 backdrop-blur-xl border-b border-white/5;
-    background: rgba(10, 8, 8, 0.72);
+    @apply sticky top-0 z-50 backdrop-blur-xl border-b;
+    background: rgba(255, 253, 248, 0.82);
+    border-color: rgba(24, 33, 29, 0.1);
+  }
+
+  .border-white\/5,
+  .border-white\/10,
+  .border-white\/15 {
+    border-color: rgba(24, 33, 29, 0.1);
+  }
+
+  .bg-white\/5 {
+    background-color: rgba(24, 33, 29, 0.04);
+  }
+
+  .bg-white\/10 {
+    background-color: rgba(24, 33, 29, 0.08);
   }
 
   @keyframes marquee {

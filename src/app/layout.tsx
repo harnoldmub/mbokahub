@@ -1,5 +1,5 @@
-import { ClerkProvider } from "@clerk/nextjs";
 import { frFR } from "@clerk/localizations";
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import Script from "next/script";
 import { Suspense } from "react";
@@ -10,7 +10,6 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { AppProviders } from "@/components/providers/app-providers";
 import { CookieConsent } from "@/components/shared/cookie-consent";
 import { FomoTicker } from "@/components/shared/fomo-ticker";
-import { EVENT_CONTEXT } from "@/lib/constants";
 import { fontBody, fontDisplay, fontMono, fontSerif } from "./fonts";
 
 import "./globals.css";
@@ -22,11 +21,11 @@ const GA_ID = "G-YS8CL4ZE62";
 export const metadata: Metadata = {
   applicationName: "Mboka Hub",
   title: {
-    default: "Mboka Hub | Concert diaspora Paris 2026",
+    default: "Mboka Hub | Services, prestataires et réservations",
     template: "%s | Mboka Hub",
   },
   description:
-    "Trajets, pros beauté, afters externes, merch, jeu et bons plans pour le concert diaspora Paris 2026 au Stade de France, les 2 et 3 mai 2026.",
+    "Plateforme gratuite de mise en relation entre clients et prestataires : services locaux, planning, réservation, médias, boosts et placements sponsorisés.",
   icons: {
     apple: [{ url: "/apple-icon.svg", type: "image/svg+xml" }],
     icon: [{ url: "/logo.svg", type: "image/svg+xml" }],
@@ -34,13 +33,16 @@ export const metadata: Metadata = {
   },
   keywords: [
     "concert diaspora Paris 2026",
-    "Stade de France 2 et 3 mai 2026",
-    "concert Stade de France mai 2026",
-    "covoiturage concert Paris",
+    "prestataires diaspora",
+    "réservation prestataire",
+    "annuaire prestataires",
+    "plateforme services",
+    "boost prestataire",
+    "publicité locale",
     "maquilleuse afro Paris",
     "coiffeur afro Paris",
-    "afters afro Paris",
-    "bons plans Paris diaspora",
+    "photographe afro Paris",
+    "services diaspora",
   ],
   metadataBase: new URL(appUrl),
   alternates: {
@@ -53,7 +55,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    description: `Services pratiques autour du ${EVENT_CONTEXT.seoLabel} : trajets, beauté, afters externes, merch et Paris pratique.`,
+    description:
+      "Annuaire gratuit, réservation directe et visibilité sponsorisée pour les prestataires.",
     images: [
       {
         alt: "Logo Mboka Hub",
@@ -64,7 +67,7 @@ export const metadata: Metadata = {
     ],
     locale: "fr_FR",
     siteName: "Mboka Hub",
-    title: "Mboka Hub | Concert diaspora Paris 2026",
+    title: "Mboka Hub | Services, prestataires et réservations",
     type: "website",
     url: "/",
   },
@@ -81,7 +84,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    description: `Prépare ton week-end autour du ${EVENT_CONTEXT.seoLabel}.`,
+    description:
+      "Trouve un prestataire, réserve un créneau et booste ta visibilité locale.",
     images: ["/logo.svg"],
     title: "Mboka Hub",
   },
@@ -94,7 +98,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider localization={frFR}>
-      <html lang="fr" className="dark" suppressHydrationWarning>
+      <html lang="fr" suppressHydrationWarning>
         <body
           className={`${fontVariables} min-h-screen bg-ink font-body text-paper antialiased`}
         >

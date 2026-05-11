@@ -5,10 +5,8 @@ import { ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-
-import { LEGAL_DISCLAIMER, PHOTO_CREDITS } from "@/lib/constants";
-import { getLocale, localizedHref, nls } from "@/lib/nls";
 import { NewsletterForm } from "@/components/shared/newsletter-form";
+import { getLocale, localizedHref, nls } from "@/lib/nls";
 
 export function SiteFooter() {
   const locale = getLocale(useSearchParams().get("lang"));
@@ -47,13 +45,12 @@ export function SiteFooter() {
         {/* EDITORIAL PHRASE */}
         <div className="mb-20">
           <h2 className="font-display text-5xl sm:text-7xl lg:text-8xl text-paper uppercase leading-[0.9] text-tight">
-            {copy.headlineStart}{" "}
+            La plateforme{" "}
             <span className="text-blood font-serif italic font-black">
-              9 000
+              gratuite
             </span>{" "}
             <br />
-            {copy.headlineMiddle}{" "}
-            <span className="text-gold">{copy.headlineEnd}</span>
+            des services, réservations et boosts.
           </h2>
         </div>
 
@@ -165,10 +162,11 @@ export function SiteFooter() {
             Newsletter
           </p>
           <h3 className="mt-2 font-display text-2xl text-paper sm:text-3xl">
-            Reçois les bons plans avant tout le monde
+            Reçois les nouveaux services et opportunités
           </h3>
           <p className="mt-2 text-paper-dim text-sm">
-            Trajets dispo, codes promo, afters secrets : un email court, jamais de spam.
+            Nouveaux prestataires, boosts, offres partenaires : un email court,
+            jamais de spam.
           </p>
           <div className="mt-5 max-w-xl">
             <NewsletterForm source="footer" />
@@ -176,34 +174,15 @@ export function SiteFooter() {
         </div>
 
         <div className="border-t border-white/5 pt-10 space-y-6">
-          {/* Disclaimer */}
           <div className="rounded-2xl border border-white/5 bg-smoke/20 px-6 py-5">
             <p className="mb-1 font-mono text-[9px] uppercase tracking-[0.3em] text-blood">
-              Site indépendant — Non officiel
+              Modèle ouvert
             </p>
             <p className="font-mono text-[10px] text-paper-mute leading-relaxed">
-              {LEGAL_DISCLAIMER}
+              Mboka Hub est gratuit pour les clients et les prestataires. Les
+              options payantes concernent uniquement la visibilité sponsorisée,
+              les boosts, les placements et les campagnes partenaires.
             </p>
-          </div>
-
-          {/* Photo credits */}
-          <div>
-            <p className="mb-3 font-mono text-[9px] uppercase tracking-[0.3em] text-paper-mute">
-              Crédits photographiques (Wikimedia Commons)
-            </p>
-            <div className="flex flex-wrap gap-x-6 gap-y-1">
-              {PHOTO_CREDITS.map((credit) => (
-                <a
-                  key={credit.file}
-                  href={credit.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-mono text-[9px] text-paper-mute hover:text-paper transition-colors"
-                >
-                  © {credit.author} — {credit.license}
-                </a>
-              ))}
-            </div>
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-3">

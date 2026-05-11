@@ -2,13 +2,9 @@ import { Suspense } from "react";
 
 import { GuaranteeStrip } from "@/components/marketing/guarantee-strip";
 import { VipMemberBanner } from "@/components/marketing/vip-member-banner";
-import { prisma } from "@/lib/db/prisma";
 import { PrestatairesListClient } from "@/components/pros/prestataires-list-client";
-import {
-  getLocaleFromSearchParams,
-  nls,
-  type SearchParams,
-} from "@/lib/nls";
+import { prisma } from "@/lib/db/prisma";
+import { getLocaleFromSearchParams, nls, type SearchParams } from "@/lib/nls";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -17,10 +13,16 @@ export const metadata = {
     "Trouve un prestataire de confiance pour ton week-end Stade de France : beauté, événementiel, sécurité, transport, garde d'enfants…",
 };
 
-type Props = { searchParams?: Promise<SearchParams> };
+type PrestatairesSearchParams = SearchParams & {
+  q?: string | string[];
+};
+
+type Props = { searchParams?: Promise<PrestatairesSearchParams> };
 
 export default async function PrestatairesPage({ searchParams }: Props) {
-  const locale = getLocaleFromSearchParams(await searchParams);
+  const sp = await searchParams;
+  const locale = getLocaleFromSearchParams(sp);
+  const initialSearch = Array.isArray(sp?.q) ? (sp.q[0] ?? "") : (sp?.q ?? "");
   const copy = nls[locale].prestatairesPage;
 
   // Plateforme 100% gratuite pour les fans : on expose les noms et handles
@@ -79,7 +81,11 @@ export default async function PrestatairesPage({ searchParams }: Props) {
           </div>
         }
       >
-        <PrestatairesListClient pros={pros} unlocked />
+        <PrestatairesListClient
+          pros={pros}
+          unlocked
+          initialSearch={initialSearch}
+        />
       </Suspense>
 
       <section className="relative z-10 mx-auto max-w-7xl px-6 pb-24 lg:px-8">

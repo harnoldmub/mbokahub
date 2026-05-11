@@ -1,3 +1,7 @@
+import { createReadStream } from "node:fs";
+import { mkdir, stat, writeFile } from "node:fs/promises";
+import path from "node:path";
+
 import { Client } from "@replit/object-storage";
 
 let cached: Client | null = null;
@@ -8,6 +12,48 @@ export function getStorageClient(): Client {
     cached = bucketId ? new Client({ bucketId }) : new Client();
   }
   return cached;
+}
+
+export type MediaStorageMode = "local" | "object";
+
+export function getMediaStorageMode(): MediaStorageMode {
+  const configured = process.env.MEDIA_STORAGE_DRIVER;
+  if (configured === "object" || configured === "local") return configured;
+  if (process.env.MEDIA_UPLOAD_DIR) return "local";
+  if (!process.env.DEFAULT_OBJECT_STORAGE_BUCKET_ID) return "local";
+  return "object";
+}
+
+export function getLocalMediaRoot(): string {
+  return path.resolve(process.env.MEDIA_UPLOAD_DIR ?? ".media/uploads");
+}
+
+export function localPathForKey(key: string): string {
+  const root = getLocalMediaRoot();
+  const target = path.resolve(root, key);
+  if (target !== root && !target.startsWith(`${root}${path.sep}`)) {
+    throw new Error("Clé média invalide");
+  }
+  return target;
+}
+
+export async function writeLocalMedia(key: string, buffer: Buffer) {
+  const target = localPathForKey(key);
+  await mkdir(path.dirname(target), { recursive: true });
+  await writeFile(target, buffer);
+}
+
+export async function localMediaExists(key: string): Promise<boolean> {
+  try {
+    const s = await stat(localPathForKey(key));
+    return s.isFile();
+  } catch {
+    return false;
+  }
+}
+
+export function createLocalMediaReadStream(key: string) {
+  return createReadStream(localPathForKey(key));
 }
 
 export const ALLOWED_IMAGE_TYPES = [

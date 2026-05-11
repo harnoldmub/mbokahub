@@ -20,6 +20,9 @@
 # production
 /build
 
+# local mounted media fallback
+/.media/
+
 # misc
 .DS_Store
 *.pem

@@ -1,23 +1,27 @@
 "use server";
 
 import { auth, currentUser } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
+import type { ProBookingStatus, ProCategory } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { after } from "next/server";
-import { prisma } from "@/lib/db/prisma";
-import type { ProCategory } from "@prisma/client";
-
-import { PRO_CATEGORY_IDS } from "@/lib/pro-categories";
 import { findCity, suggestPrice } from "@/lib/data/cities";
+import { prisma } from "@/lib/db/prisma";
 import { sendTrajetPriceSuggestionEmail } from "@/lib/email";
-import { detectContactInBio, normalizePriceRangeInput } from "@/lib/pro-display";
+import { PRO_CATEGORY_IDS } from "@/lib/pro-categories";
+import {
+  detectContactInBio,
+  normalizePriceRangeInput,
+} from "@/lib/pro-display";
 
 const VALID_PRO_CATEGORIES: ProCategory[] = PRO_CATEGORY_IDS;
 
 async function ensureUser(redirectAfterSignIn: string) {
   const { userId } = await auth();
   if (!userId) {
-    redirect(`/sign-in?redirect_url=${encodeURIComponent(redirectAfterSignIn)}`);
+    redirect(
+      `/sign-in?redirect_url=${encodeURIComponent(redirectAfterSignIn)}`,
+    );
   }
 
   const user = await currentUser();
@@ -46,7 +50,9 @@ export async function createTrajetAction(form: FormData) {
   const heureDepart = String(form.get("heureDepart") || "").trim();
   const placesTotal = Number(form.get("placesTotal") || 0);
   const placesDispoRaw = Number(form.get("placesDispo") || placesTotal);
-  const placesDispo = Number.isFinite(placesDispoRaw) ? placesDispoRaw : placesTotal;
+  const placesDispo = Number.isFinite(placesDispoRaw)
+    ? placesDispoRaw
+    : placesTotal;
   const prix = Number(form.get("prix") || 0);
   const vehiculeModel = String(form.get("vehiculeModel") || "").trim() || null;
   const vehiculeColor = String(form.get("vehiculeColor") || "").trim() || null;
@@ -230,12 +236,18 @@ export async function createProProfileAction(form: FormData) {
   const country = String(form.get("country") || "Belgique").trim();
   const bio = String(form.get("bio") || "").trim() || null;
   const whatsapp = String(form.get("whatsapp") || "").trim();
-  const instagramHandle = String(form.get("instagramHandle") || "").trim() || null;
+  const instagramHandle =
+    String(form.get("instagramHandle") || "").trim() || null;
   const tiktokHandle = String(form.get("tiktokHandle") || "").trim() || null;
-  const priceRange = normalizePriceRangeInput(String(form.get("priceRange") || ""));
+  const priceRange = normalizePriceRangeInput(
+    String(form.get("priceRange") || ""),
+  );
   const specialitiesRaw = String(form.get("specialities") || "").trim();
   const specialities = specialitiesRaw
-    ? specialitiesRaw.split(",").map((s) => s.trim()).filter(Boolean)
+    ? specialitiesRaw
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
     : [];
 
   if (!category || !displayName || !city || !whatsapp) {
@@ -246,7 +258,9 @@ export async function createProProfileAction(form: FormData) {
     redirect("/pro/inscrire?error=contact-in-bio");
   }
 
-  const existing = await prisma.proProfile.findUnique({ where: { userId: user.id } });
+  const existing = await prisma.proProfile.findUnique({
+    where: { userId: user.id },
+  });
   if (existing) {
     redirect("/dashboard/annonces?error=profile-exists");
   }
@@ -304,10 +318,16 @@ export async function updateProProfileAction(form: FormData) {
   const bio = String(form.get("bio") || "").trim() || null;
   const whatsapp = String(form.get("whatsapp") || "").trim();
   const instagramHandle =
-    String(form.get("instagramHandle") || "").trim().replace(/^@/, "") || null;
+    String(form.get("instagramHandle") || "")
+      .trim()
+      .replace(/^@/, "") || null;
   const tiktokHandle =
-    String(form.get("tiktokHandle") || "").trim().replace(/^@/, "") || null;
-  const priceRange = normalizePriceRangeInput(String(form.get("priceRange") || ""));
+    String(form.get("tiktokHandle") || "")
+      .trim()
+      .replace(/^@/, "") || null;
+  const priceRange = normalizePriceRangeInput(
+    String(form.get("priceRange") || ""),
+  );
   const specialitiesRaw = String(form.get("specialities") || "").trim();
   const specialities = specialitiesRaw
     ? specialitiesRaw
@@ -320,10 +340,7 @@ export async function updateProProfileAction(form: FormData) {
   const photos = photosRaw
     .split("\n")
     .map((s) => s.trim())
-    .filter(
-      (s) =>
-        /^https?:\/\//i.test(s) || s.startsWith("/api/files/"),
-    )
+    .filter((s) => /^https?:\/\//i.test(s) || s.startsWith("/api/files/"))
     .slice(0, 12);
 
   if (!displayName || !city || !whatsapp) {
@@ -355,6 +372,85 @@ export async function updateProProfileAction(form: FormData) {
   revalidatePath("/prestataires");
   revalidatePath(`/pro/${existing.id}`);
   redirect("/dashboard/profil-pro?saved=1");
+}
+
+export async function createProBookingAction(form: FormData) {
+  const proProfileId = String(form.get("proProfileId") || "").trim();
+  const clientName = String(form.get("clientName") || "").trim();
+  const clientEmail = String(form.get("clientEmail") || "").trim() || null;
+  const clientPhone = String(form.get("clientPhone") || "").trim();
+  const requestedAtRaw = String(form.get("requestedAt") || "").trim();
+  const note = String(form.get("note") || "").trim() || null;
+
+  const failHref = proProfileId
+    ? `/pro/${proProfileId}?booking=missing`
+    : "/prestataires";
+
+  if (!proProfileId || !clientName || !clientPhone || !requestedAtRaw) {
+    redirect(failHref);
+  }
+
+  const pro = await prisma.proProfile.findUnique({
+    where: { id: proProfileId },
+    select: { id: true },
+  });
+  if (!pro) redirect("/prestataires");
+
+  const requestedAt = new Date(requestedAtRaw);
+  if (Number.isNaN(requestedAt.getTime())) {
+    redirect(`/pro/${proProfileId}?booking=date`);
+  }
+
+  await prisma.proBooking.create({
+    data: {
+      proProfileId,
+      clientName,
+      clientEmail,
+      clientPhone,
+      requestedAt,
+      note,
+    },
+  });
+
+  revalidatePath(`/pro/${proProfileId}`);
+  revalidatePath("/dashboard/planning");
+  redirect(`/pro/${proProfileId}?booking=requested`);
+}
+
+export async function updateProBookingStatusAction(form: FormData) {
+  const user = await ensureUser("/dashboard/planning");
+  const bookingId = String(form.get("bookingId") || "").trim();
+  const statusRaw = String(form.get("status") || "").trim();
+  const validStatuses: ProBookingStatus[] = [
+    "PENDING",
+    "CONFIRMED",
+    "CANCELLED",
+    "COMPLETED",
+  ];
+
+  if (!bookingId || !validStatuses.includes(statusRaw as ProBookingStatus)) {
+    redirect("/dashboard/planning?error=missing");
+  }
+
+  const booking = await prisma.proBooking.findUnique({
+    where: { id: bookingId },
+    select: {
+      id: true,
+      proProfile: { select: { userId: true } },
+    },
+  });
+
+  if (!booking || booking.proProfile.userId !== user.id) {
+    redirect("/dashboard/planning?error=forbidden");
+  }
+
+  await prisma.proBooking.update({
+    where: { id: bookingId },
+    data: { status: statusRaw as ProBookingStatus },
+  });
+
+  revalidatePath("/dashboard/planning");
+  redirect("/dashboard/planning?updated=1");
 }
 
 export async function applyAsModeratorAction(form: FormData) {

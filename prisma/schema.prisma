@@ -103,6 +103,8 @@ model ProProfile {
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
 
+  bookings ProBooking[]
+
   @@index([category, city])
   @@index([isBoosted, rating])
 }
@@ -130,6 +132,30 @@ enum ProCategory {
   BIJOUTIER
   BABYSITTER
   AUTRE
+}
+
+model ProBooking {
+  id           String           @id @default(cuid())
+  proProfileId String
+  proProfile   ProProfile       @relation(fields: [proProfileId], references: [id], onDelete: Cascade)
+  clientName   String
+  clientEmail  String?
+  clientPhone  String
+  requestedAt  DateTime
+  note         String?          @db.Text
+  status       ProBookingStatus @default(PENDING)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@index([proProfileId, requestedAt])
+  @@index([status, createdAt])
+}
+
+enum ProBookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
 }
 
 model UnlockedContact {

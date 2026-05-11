@@ -3,10 +3,10 @@ import { ArrowRight, Check, ShieldCheck, UserPlus } from "lucide-react";
 import Link from "next/link";
 
 import { SectionHeading } from "@/components/marketing/section-heading";
-import { prisma } from "@/lib/db/prisma";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { prisma } from "@/lib/db/prisma";
 import { proOffer, proProofPoints } from "@/lib/marketing-data";
 
 export default async function ProPage() {
@@ -45,16 +45,18 @@ export default async function ProPage() {
             className="border-primary/40 bg-primary/15 text-white"
             variant="outline"
           >
-            Espace professionnels
+            Espace professionnels gratuit
           </Badge>
           <h1 className="mt-6 max-w-4xl font-display text-5xl text-foreground uppercase leading-none sm:text-7xl">
-            Vends ta <span className="text-primary italic">visibilité</span>,
-            pas ton temps dans le vide
+            Crée ta fiche, gère tes{" "}
+            <span className="text-primary italic">demandes</span>, booste quand
+            tu veux
           </h1>
           <p className="mt-6 max-w-2xl text-muted-foreground text-xl leading-8">
-            Mboka Hub connecte les fans à des pros utiles pour le week-end :
-            beauté, merch et afters. Les paiements premium vont uniquement à
-            Mboka Hub.
+            Mboka Hub connecte les clients aux prestataires utiles : beauté,
+            photo, transport, événementiel, restauration et services locaux.
+            L&apos;inscription est gratuite. Tu payes uniquement si tu veux plus
+            de visibilité.
           </p>
           {userId && (
             <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 font-mono text-[11px] text-paper-dim uppercase tracking-widest">
@@ -80,7 +82,8 @@ export default async function ProPage() {
           </div>
           {userId && !alreadyPro && (
             <p className="mt-3 text-muted-foreground text-xs">
-              Tu es déjà connecté — un clic et tu accèdes au formulaire d'inscription.
+              Tu es déjà connecté — un clic et tu accèdes au formulaire
+              d'inscription.
             </p>
           )}
           {!userId && (
@@ -122,8 +125,8 @@ export default async function ProPage() {
           <SectionHeading
             number="PRO"
             description={proOffer.description}
-            eyebrow="Pricing"
-            title="Une seule inscription — tous les pros"
+            eyebrow="Modèle"
+            title="Inscription gratuite — boost optionnel"
           />
           <div className="mt-10 mx-auto max-w-3xl">
             <Card className="rounded-2xl border-primary/30 bg-gradient-to-br from-primary/10 to-transparent shadow-[var(--glow-red)]">
@@ -134,7 +137,8 @@ export default async function ProPage() {
                       {proOffer.title}
                     </CardTitle>
                     <p className="mt-2 text-muted-foreground">
-                      Beauté · Merch · Afters — même tarif pour tout le monde
+                      Beauté · Photo · Transport · Events — même accès pour tout
+                      le monde
                     </p>
                   </div>
                   <div className="text-right">
@@ -142,7 +146,7 @@ export default async function ProPage() {
                       {proOffer.price}
                     </p>
                     <p className="text-muted-foreground text-xs uppercase tracking-widest">
-                      forfait week-end
+                      inscription
                     </p>
                   </div>
                 </div>
@@ -191,7 +195,7 @@ export default async function ProPage() {
                 <p className="text-center text-muted-foreground text-xs">
                   {alreadyPro
                     ? "Tu as déjà un profil pro actif. Gère-le depuis ton tableau de bord."
-                    : "Une seule inscription, valable pour n'importe quel service."}
+                    : "Une seule inscription gratuite, valable pour n'importe quel service."}
                 </p>
               </CardContent>
             </Card>
@@ -210,8 +214,8 @@ export default async function ProPage() {
             </h2>
             <p className="mt-4 max-w-3xl text-muted-foreground text-lg leading-8">
               Les profils pros et afters seront vérifiés par l'admin avant badge
-              public. Les afters restent des liens sortants vers Shotgun,
-              Weezevent, Eventbrite ou une autre billetterie externe.
+              public. Les boosts et placements sponsorisés restent séparés de la
+              fiche gratuite.
             </p>
           </div>
         </div>

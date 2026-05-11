@@ -1,7 +1,12 @@
+import { Readable } from "node:stream";
 import { NextResponse } from "next/server";
-import { Readable } from "stream";
 
-import { getStorageClient } from "@/lib/storage";
+import {
+  createLocalMediaReadStream,
+  getMediaStorageMode,
+  getStorageClient,
+  localMediaExists,
+} from "@/lib/storage";
 
 export const runtime = "nodejs";
 
@@ -32,18 +37,37 @@ export async function GET(
     return NextResponse.json({ error: "Clé invalide" }, { status: 400 });
   }
 
-  const client = getStorageClient();
+  const storageMode = getMediaStorageMode();
 
-  const exists = await client.exists(objectKey);
-  if (!exists.ok || !exists.value) {
-    return NextResponse.json({ error: "Fichier introuvable" }, { status: 404 });
+  let webStream: ReadableStream<Uint8Array>;
+  if (storageMode === "local") {
+    if (!(await localMediaExists(objectKey))) {
+      return NextResponse.json(
+        { error: "Fichier introuvable" },
+        { status: 404 },
+      );
+    }
+    webStream = Readable.toWeb(
+      createLocalMediaReadStream(objectKey),
+    ) as ReadableStream<Uint8Array>;
+  } else {
+    const client = getStorageClient();
+    const exists = await client.exists(objectKey);
+    if (!exists.ok || !exists.value) {
+      return NextResponse.json(
+        { error: "Fichier introuvable" },
+        { status: 404 },
+      );
+    }
+    const objectStream = client.downloadAsStream(objectKey);
+    webStream =
+      objectStream instanceof Readable
+        ? (Readable.toWeb(objectStream) as ReadableStream<Uint8Array>)
+        : (objectStream as ReadableStream<Uint8Array>);
   }
 
   const ext = objectKey.split(".").pop()?.toLowerCase() ?? "";
   const contentType = MIME_BY_EXT[ext] ?? "application/octet-stream";
-
-  const nodeStream = client.downloadAsStream(objectKey);
-  const webStream = Readable.toWeb(nodeStream) as ReadableStream<Uint8Array>;
 
   return new NextResponse(webStream, {
     status: 200,

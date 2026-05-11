@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    background_color: "#0A0808",
+    background_color: "#F6F3EC",
     description:
-      "Services pratiques pour le concert diaspora Paris 2026 au Stade de France, les 2 et 3 mai 2026.",
+      "Plateforme gratuite de mise en relation entre clients et prestataires.",
     display: "standalone",
     icons: [
       {
@@ -16,6 +16,6 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Mboka Hub",
     short_name: "Mboka",
     start_url: "/",
-    theme_color: "#E50914",
+    theme_color: "#12715B",
   };
 }

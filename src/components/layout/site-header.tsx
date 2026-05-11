@@ -57,13 +57,22 @@ export function SiteHeader() {
   const m = copy.megaServices;
   const megaSections = [
     {
-      title: m.sections.annuaire,
+      title: "Découvrir",
       links: [
-        { href: "/prestataires", label: m.links.all, description: m.links.allDesc },
+        {
+          href: "/prestataires",
+          label: "Tous les prestataires",
+          description: "Annuaire gratuit, profils vérifiés",
+        },
+        {
+          href: "/trajets",
+          label: "Trajets",
+          description: "Transport et covoiturage",
+        },
       ],
     },
     {
-      title: m.sections.beaute,
+      title: "Services",
       links: [
         { href: "/beaute/maquilleuses", label: m.links.maquilleuses },
         { href: "/beaute/coiffeurs", label: m.links.coiffeurs },
@@ -72,29 +81,32 @@ export function SiteHeader() {
       ],
     },
     {
-      title: m.sections.shopping,
+      title: "Visibilité",
       links: [
-        { href: "/merch", label: m.links.merch },
-        { href: "/afters", label: m.links.afters },
+        { href: "/ads", label: "Boosts & publicité" },
+        { href: "/partenariat", label: "Partenariats" },
       ],
     },
     {
-      title: m.sections.devenirPro,
-      links: [{ href: "/pro/inscrire", label: m.links.becomePro }],
+      title: "Espace pro",
+      links: [
+        { href: "/pro", label: "Comprendre l'offre pro" },
+        { href: "/pro/inscrire", label: m.links.becomePro },
+      ],
     },
   ];
   const simpleNavItems = [
-    { href: "/concert", label: copy.nav.concert },
-    { href: "/communaute", label: copy.nav.community },
-    { href: "/playlists", label: copy.nav.playlists },
+    { href: "/prestataires", label: "Prestataires" },
+    { href: "/trajets", label: "Trajets" },
+    { href: "/ads", label: "Boost" },
   ] as const;
 
   return (
     <header className="glass-header">
-      {/* Non-official disclaimer bar */}
-      <div className="border-b border-white/5 bg-smoke/60 py-1.5 backdrop-blur-sm">
+      <div className="border-b border-white/5 bg-smoke/70 py-1.5 backdrop-blur-sm">
         <p className="text-center font-mono text-[9px] uppercase tracking-[0.2em] text-paper-mute">
-          Site indépendant · Non affilié à Fally Ipupa ou aux organisateurs · À titre informatif uniquement
+          Annuaire gratuit · Contacts ouverts · Monétisation par boosts et
+          espaces sponsorisés
         </p>
       </div>
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-6 lg:px-8">
@@ -118,7 +130,7 @@ export function SiteHeader() {
               Mboka <span className="text-blood">Hub</span>
             </span>
             <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper-mute">
-              Paris 2026
+              Services & réservations
             </span>
           </span>
         </Link>
@@ -128,26 +140,17 @@ export function SiteHeader() {
           aria-label="Navigation principale"
           className="hidden items-center gap-8 md:flex"
         >
-          <Link
-            className="group/link relative font-body text-sm uppercase tracking-widest text-paper-dim transition-colors hover:text-blood"
-            href={localizedHref("/concert", locale)}
-          >
-            {copy.nav.concert}
-            <span className="absolute -bottom-1 left-0 h-px w-0 bg-blood transition-all group-hover/link:w-full" />
-          </Link>
           <MegaMenu label={m.trigger} locale={locale} sections={megaSections} />
-          {simpleNavItems
-            .filter((it) => it.href !== "/concert")
-            .map((item) => (
-              <Link
-                className="group/link relative font-body text-sm uppercase tracking-widest text-paper-dim transition-colors hover:text-blood"
-                href={localizedHref(item.href, locale)}
-                key={item.href}
-              >
-                {item.label}
-                <span className="absolute -bottom-1 left-0 h-px w-0 bg-blood transition-all group-hover/link:w-full" />
-              </Link>
-            ))}
+          {simpleNavItems.map((item) => (
+            <Link
+              className="group/link relative font-body text-sm uppercase tracking-widest text-paper-dim transition-colors hover:text-blood"
+              href={localizedHref(item.href, locale)}
+              key={item.href}
+            >
+              {item.label}
+              <span className="absolute -bottom-1 left-0 h-px w-0 bg-blood transition-all group-hover/link:w-full" />
+            </Link>
+          ))}
         </nav>
 
         {/* Right actions */}
@@ -160,7 +163,9 @@ export function SiteHeader() {
               size="sm"
               variant="ghost"
             >
-              <Link href={localizedHref("/sign-in?redirect_url=/dashboard", locale)}>
+              <Link
+                href={localizedHref("/sign-in?redirect_url=/dashboard", locale)}
+              >
                 {signInLabel}
               </Link>
             </Button>
@@ -177,14 +182,13 @@ export function SiteHeader() {
                 locale,
               )}
             >
-              {isSignedIn ? dashboardLabel : copy.vipCta}
+              {isSignedIn ? dashboardLabel : "Devenir pro"}
             </Link>
           </Button>
           {isSignedIn ? (
             <div className="flex items-center gap-2">
               {isFoundingFamily ? (
                 <span
-                  aria-label="Membre Famille Fondatrice"
                   className="hidden items-center gap-1 rounded-full border border-amber-400/50 bg-amber-400/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] text-amber-200 sm:inline-flex"
                   title="Famille Fondatrice — badge à vie"
                 >

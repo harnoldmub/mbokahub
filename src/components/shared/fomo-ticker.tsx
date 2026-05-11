@@ -91,8 +91,8 @@ function buildMessages(data: FomoData): Message[] {
   if (out.length === 0) {
     out.push({
       key: "fallback",
-      emoji: "🇨🇩",
-      text: `Stade de France · 2 & 3 mai 2026 · prépare ton week-end`,
+      emoji: "•",
+      text: "Prestataires gratuits · réservations directes · boosts optionnels",
       accent: "blood",
     });
   }
@@ -204,9 +204,8 @@ export function FomoTicker() {
   const current = messages[index];
 
   return (
-    <div
+    <output
       aria-live="polite"
-      role="status"
       className="pointer-events-none fixed bottom-3 left-3 z-40 max-w-[calc(100vw-1.5rem)] sm:bottom-6 sm:left-6"
     >
       <div
@@ -234,6 +233,6 @@ export function FomoTicker() {
           </span>
         </button>
       </div>
-    </div>
+    </output>
   );
 }

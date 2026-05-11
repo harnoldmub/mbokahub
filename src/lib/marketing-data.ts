@@ -13,9 +13,9 @@ import {
 } from "lucide-react";
 
 export const landingStats = [
-  { label: "spectateurs cumulés", value: "160k+" },
-  { label: "ans de carrière", value: "20+" },
-  { label: "albums studio", value: "10+" },
+  { label: "catégories de services", value: "20+" },
+  { label: "modèle fan", value: "gratuit" },
+  { label: "revenu", value: "boosts" },
 ] as const;
 
 export const fanModules = [
@@ -67,24 +67,24 @@ export const trustItems = [
   {
     title: "Indépendant",
     description:
-      "Aucune affiliation à un artiste, label ou organisateur officiel. La communication reste générique.",
+      "Une plateforme de mise en relation ouverte, sans dépendre d'un artiste ou d'un événement unique.",
     icon: ShieldCheck,
   },
   {
-    title: "Sans intermédiation",
+    title: "Gratuit pour tous",
     description:
-      "Mboka Hub vend ses propres accès et options. Aucun paiement n'est traité entre utilisateurs.",
+      "Clients et prestataires peuvent se trouver sans pass fan ni abonnement obligatoire.",
     icon: BadgeEuro,
   },
   {
-    title: "Contacts protégés",
+    title: "Visibilité monétisable",
     description:
-      "Les numéros et réseaux sont floutés avant déblocage pour limiter le spam et qualifier les demandes.",
+      "La plateforme gagne sur les boosts, placements sponsorisés et campagnes partenaires.",
     icon: CheckCircle2,
   },
 ] as const;
 
-export const PRICE_VIP_EUR = 9.99;
+export const PRICE_VIP_EUR = 0;
 export const PRICE_PRO_EUR = 19.99;
 export const PRICE_BOOST_EUR = 8.99;
 
@@ -102,42 +102,61 @@ export function formatEuroAmount(amount: number): string {
 }
 
 export const proOffer = {
-  title: "Inscription pro",
-  price: "19,99 EUR",
+  title: "Fiche pro gratuite",
+  price: "0 EUR",
   description:
-    "Tarif unique pour tous les pros — quel que soit ton service. Aucune commission, aucun abonnement, aucun frais caché.",
+    "Inscription gratuite pour tous les prestataires. La visibilité payante reste optionnelle : boost, placement sponsorisé, campagne locale.",
   audiences: [
-    { label: "Beauté", detail: "maquilleuses, esthéticiennes, ongles, cils, coiffeurs, barbers, photographes, vidéastes" },
-    { label: "Merch & mode", detail: "vendeurs mode, accessoires, pagne, bijoux, couture" },
-    { label: "Afters & soirées", detail: "organisateurs, DJ, animateurs, décorateurs" },
-    { label: "Restauration", detail: "cuisiniers, traiteurs congolais, food trucks" },
-    { label: "Mobilité & sécurité", detail: "chauffeurs VTC, agents de sécurité" },
-    { label: "Autres services", detail: "babysitters et tout autre métier utile au week-end" },
+    {
+      label: "Beauté",
+      detail:
+        "maquilleuses, esthéticiennes, ongles, cils, coiffeurs, barbers, photographes, vidéastes",
+    },
+    {
+      label: "Merch & mode",
+      detail: "vendeurs mode, accessoires, pagne, bijoux, couture",
+    },
+    {
+      label: "Afters & soirées",
+      detail: "organisateurs, DJ, animateurs, décorateurs",
+    },
+    {
+      label: "Restauration",
+      detail: "cuisiniers, traiteurs congolais, food trucks",
+    },
+    {
+      label: "Mobilité & sécurité",
+      detail: "chauffeurs VTC, agents de sécurité",
+    },
+    {
+      label: "Autres services",
+      detail: "babysitters et tout autre métier utile au week-end",
+    },
   ],
   benefits: [
-    "profil ou fiche vérifié",
-    "contact mis en avant",
-    "vitrine ou billetterie externe",
-    "statistiques de vues & clics",
-    "badge premium",
-    "validation admin",
+    "profil public vérifié",
+    "photo principale et galerie",
+    "contact visible gratuitement",
+    "lien Instagram, TikTok et WhatsApp",
+    "demandes de rendez-vous directes",
+    "boost optionnel pour apparaître plus haut",
   ],
 } as const;
 
 export const proProofPoints = [
   {
-    label: "Fans qualifiés",
-    value: "diaspora Europe",
+    label: "Accès",
+    value: "gratuit",
     icon: Users,
   },
   {
-    label: "Visibilité courte",
-    value: "pic événementiel",
+    label: "Visibilité",
+    value: "boostable",
     icon: Sparkles,
   },
   {
-    label: "Paiement clair",
-    value: "à Mboka Hub",
+    label: "Revenus",
+    value: "pubs",
     icon: BadgeEuro,
   },
 ] as const;

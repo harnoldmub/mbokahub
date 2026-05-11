@@ -1,5 +1,7 @@
 "use client";
 
+import { Camera, Upload, X } from "lucide-react";
+import Image from "next/image";
 import { useCallback, useId, useRef, useState } from "react";
 
 type PhotoUploaderProps = {
@@ -98,9 +100,7 @@ export function PhotoUploader({
 
   return (
     <div className="flex flex-col gap-2">
-      {label && (
-        <span className="text-xs text-muted-foreground">{label}</span>
-      )}
+      {label && <span className="text-xs text-muted-foreground">{label}</span>}
 
       {/* Hidden input that carries the URLs to the server action */}
       {multiple ? (
@@ -114,23 +114,25 @@ export function PhotoUploader({
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {urls.map((url, i) => (
             <div
-              key={`${url}-${i}`}
+              key={url}
               className={`group relative aspect-square overflow-hidden rounded-lg border bg-black/40 ${
                 enableCoverActions && i === 0
                   ? "border-red-500/60 ring-2 ring-red-500/40"
                   : "border-white/10"
               }`}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={url}
+              <Image
                 alt={`upload ${i + 1}`}
-                className="h-full w-full object-cover"
+                className="object-cover"
+                fill
+                sizes="(max-width: 640px) 50vw, 33vw"
+                src={url}
+                unoptimized
               />
 
               {enableCoverActions && i === 0 && (
                 <span className="absolute left-1 top-1 rounded-full bg-red-500 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-white shadow">
-                  Couverture
+                  Photo principale
                 </span>
               )}
 
@@ -139,9 +141,9 @@ export function PhotoUploader({
                   type="button"
                   onClick={() => makeCover(i)}
                   aria-label={`Faire de la photo ${i + 1} la couverture`}
-                  className="absolute bottom-1 left-1 rounded-full bg-black/70 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-white opacity-0 transition focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 group-hover:opacity-100 hover:bg-red-500"
+                  className="absolute bottom-1 left-1 rounded-full bg-black/70 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-white opacity-0 transition focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blood group-hover:opacity-100 hover:bg-blood"
                 >
-                  Faire la couverture
+                  Définir principale
                 </button>
               )}
 
@@ -149,9 +151,9 @@ export function PhotoUploader({
                 type="button"
                 onClick={() => removeAt(i)}
                 aria-label="Retirer cette photo"
-                className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-black/70 text-white text-xs opacity-0 transition group-hover:opacity-100 hover:bg-red-500"
+                className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-black/70 text-white text-xs opacity-0 transition group-hover:opacity-100 hover:bg-blood"
               >
-                ✕
+                <X className="size-3.5" />
               </button>
             </div>
           ))}
@@ -164,11 +166,17 @@ export function PhotoUploader({
           htmlFor={inputId}
           onDragOver={(e) => e.preventDefault()}
           onDrop={onDrop}
-          className={`flex cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-white/15 bg-black/20 px-4 py-6 text-center transition hover:border-red-500/50 hover:bg-red-500/5 ${
+          className={`flex cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-white/15 bg-smoke px-4 py-6 text-center transition hover:border-blood/50 hover:bg-blood/5 ${
             busy ? "opacity-50" : ""
           }`}
         >
-          <span className="text-2xl">📸</span>
+          <span className="grid size-10 place-items-center rounded-xl bg-blood/10 text-blood">
+            {busy ? (
+              <Upload className="size-5" />
+            ) : (
+              <Camera className="size-5" />
+            )}
+          </span>
           <span className="text-foreground text-sm font-medium">
             {busy
               ? "Envoi en cours…"
@@ -177,7 +185,8 @@ export function PhotoUploader({
                 : "Glisse une photo ou clique"}
           </span>
           <span className="text-[11px] text-muted-foreground">
-            JPG, PNG, WebP, GIF ou HEIC (iPhone) · 15 Mo max{multiple ? ` · jusqu'à ${maxFiles} photos` : ""}
+            JPG, PNG, WebP, GIF ou HEIC (iPhone) · 15 Mo max
+            {multiple ? ` · jusqu'à ${maxFiles} photos` : ""}
           </span>
           <input
             ref={fileInputRef}
@@ -196,7 +205,8 @@ export function PhotoUploader({
 
       {reachedMax && (
         <p className="text-[11px] text-amber-300">
-          Limite atteinte ({maxFiles}). Retire une photo pour en ajouter une autre.
+          Limite atteinte ({maxFiles}). Retire une photo pour en ajouter une
+          autre.
         </p>
       )}
 
@@ -211,8 +221,8 @@ export function PhotoUploader({
       )}
       {warnings.length > 0 && (
         <ul className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-amber-200 text-xs">
-          {warnings.map((w, i) => (
-            <li key={i}>· {w}</li>
+          {warnings.map((w) => (
+            <li key={w}>· {w}</li>
           ))}
         </ul>
       )}

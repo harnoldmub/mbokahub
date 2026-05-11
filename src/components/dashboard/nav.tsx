@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import {
   BarChart3,
+  CalendarCheck,
   Contact,
   IdCard,
   LayoutDashboard,
@@ -19,6 +20,7 @@ const baseItems = [
   { href: "/dashboard/contacts", label: "Contacts", icon: Contact },
   { href: "/dashboard/annonces", label: "Annonces", icon: Megaphone },
   { href: "/dashboard/profil-pro", label: "Ma fiche pro", icon: IdCard },
+  { href: "/dashboard/planning", label: "Planning", icon: CalendarCheck },
   { href: "/dashboard/stats", label: "Stats", icon: BarChart3 },
   { href: "/dashboard/parametres", label: "Paramètres", icon: Settings },
 ] as const;
@@ -44,7 +46,7 @@ export function DashboardNav({ isAdmin = false }: { isAdmin?: boolean }) {
         const isActive =
           item.href === "/dashboard"
             ? pathname === "/dashboard"
-            : pathname === item.href || pathname.startsWith(item.href + "/");
+            : pathname === item.href || pathname.startsWith(`${item.href}/`);
         const isHighlight = "highlight" in item && item.highlight;
 
         return (

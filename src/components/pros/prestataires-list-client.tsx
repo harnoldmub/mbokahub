@@ -1,5 +1,6 @@
 "use client";
 
+import type { ProCategory } from "@prisma/client";
 import {
   ArrowRight,
   ChevronLeft,
@@ -10,18 +11,14 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
-
+import { useMemo, useRef, useState } from "react";
 import { PhotoLightbox } from "@/components/pros/photo-lightbox";
-import {
-  PRO_CATEGORIES,
-  PRO_CATEGORY_BY_ID,
-} from "@/lib/pro-categories";
+import { MultiSelect } from "@/components/ui/multi-select";
+import { PRO_CATEGORIES, PRO_CATEGORY_BY_ID } from "@/lib/pro-categories";
 import { formatPriceRange } from "@/lib/pro-display";
 import { cn } from "@/lib/utils";
-import { MultiSelect } from "@/components/ui/multi-select";
-import type { ProCategory } from "@prisma/client";
 
 type ProListItem = {
   id: string;
@@ -44,6 +41,7 @@ type ProListItem = {
 
 type Props = {
   pros: ProListItem[];
+  initialSearch?: string;
   /**
    * Conservé pour compat. — Mboka Hub est désormais 100% gratuit pour les
    * fans. Toujours considéré comme `true` côté rendu.
@@ -53,8 +51,8 @@ type Props = {
 
 const PAGE_SIZE = 20;
 
-export function PrestatairesListClient({ pros }: Props) {
-  const [search, setSearch] = useState("");
+export function PrestatairesListClient({ pros, initialSearch = "" }: Props) {
+  const [search, setSearch] = useState(initialSearch);
   const [activeCategories, setActiveCategories] = useState<ProCategory[]>([]);
   const [activeCities, setActiveCities] = useState<string[]>([]);
   const [premiumOnly, setPremiumOnly] = useState(false);
@@ -66,7 +64,9 @@ export function PrestatairesListClient({ pros }: Props) {
 
   const cities = useMemo(
     () =>
-      Array.from(new Set(pros.map((p) => p.city.trim()).filter(Boolean))).sort(),
+      Array.from(
+        new Set(pros.map((p) => p.city.trim()).filter(Boolean)),
+      ).sort(),
     [pros],
   );
 
@@ -105,6 +105,7 @@ export function PrestatairesListClient({ pros }: Props) {
     setActiveCategories([]);
     setActiveCities([]);
     setPremiumOnly(false);
+    setPage(1);
   };
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -112,16 +113,14 @@ export function PrestatairesListClient({ pros }: Props) {
   const pageStart = (currentPage - 1) * PAGE_SIZE;
   const paginated = filtered.slice(pageStart, pageStart + PAGE_SIZE);
 
-  // Reset to page 1 whenever filters/search change
-  useEffect(() => {
-    setPage(1);
-  }, [search, activeCategories, activeCities, premiumOnly]);
-
   const goToPage = (p: number) => {
     const next = Math.max(1, Math.min(totalPages, p));
     setPage(next);
     if (typeof window !== "undefined") {
-      listTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      listTopRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }
   };
 
@@ -169,7 +168,10 @@ export function PrestatairesListClient({ pros }: Props) {
             <input
               type="text"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
               placeholder="Nom, ville, spécialité…"
               aria-label="Rechercher un prestataire"
               className="h-10 w-full rounded-xl border border-white/10 bg-smoke pl-9 pr-9 text-sm text-paper placeholder:text-paper-mute focus:border-blood focus:outline-none"
@@ -177,7 +179,10 @@ export function PrestatairesListClient({ pros }: Props) {
             {search && (
               <button
                 type="button"
-                onClick={() => setSearch("")}
+                onClick={() => {
+                  setSearch("");
+                  setPage(1);
+                }}
                 aria-label="Effacer la recherche"
                 className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-paper-mute hover:bg-white/10 hover:text-paper"
               >
@@ -188,7 +193,10 @@ export function PrestatairesListClient({ pros }: Props) {
 
           <MultiSelect
             values={activeCategories}
-            onChange={(v) => setActiveCategories(v as ProCategory[])}
+            onChange={(v) => {
+              setActiveCategories(v as ProCategory[]);
+              setPage(1);
+            }}
             placeholder="Toutes les catégories"
             itemNounSingular="catégorie"
             itemNounPlural="catégories"
@@ -204,7 +212,10 @@ export function PrestatairesListClient({ pros }: Props) {
           {cities.length > 0 && (
             <MultiSelect
               values={activeCities}
-              onChange={setActiveCities}
+              onChange={(v) => {
+                setActiveCities(v);
+                setPage(1);
+              }}
               placeholder="Toutes les villes"
               itemNounSingular="ville"
               itemNounPlural="villes"
@@ -217,7 +228,10 @@ export function PrestatairesListClient({ pros }: Props) {
 
           <button
             type="button"
-            onClick={() => setPremiumOnly((v) => !v)}
+            onClick={() => {
+              setPremiumOnly((v) => !v);
+              setPage(1);
+            }}
             aria-pressed={premiumOnly}
             className={cn(
               "flex h-10 shrink-0 items-center gap-1.5 rounded-xl px-3 font-mono text-[10px] uppercase tracking-widest transition",
@@ -227,13 +241,12 @@ export function PrestatairesListClient({ pros }: Props) {
             )}
           >
             <Sparkles className="size-3" />
-            Certifiés
+            Mis en avant
           </button>
 
           <div className="flex h-10 shrink-0 items-center gap-2 px-2 font-mono text-[10px] uppercase tracking-widest text-paper-mute">
             <span>
-              {filtered.length}{" "}
-              {filtered.length > 1 ? "résultats" : "résultat"}
+              {filtered.length} {filtered.length > 1 ? "résultats" : "résultat"}
             </span>
             {hasActiveFilters && (
               <button
@@ -267,159 +280,164 @@ export function PrestatairesListClient({ pros }: Props) {
         </div>
       ) : (
         <>
-        <div ref={listTopRef} className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 scroll-mt-24">
-          {paginated.map((p) => {
-            const meta = PRO_CATEGORY_BY_ID[p.category];
-            const cover = p.photos?.[0];
-            return (
-              <article
-                key={p.id}
-                className="group relative flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-coal/60 transition hover:-translate-y-1 hover:border-blood/40 hover:shadow-[0_30px_60px_-30px_rgba(230,57,70,0.4)]"
-              >
-                <div className="relative aspect-[4/3] w-full overflow-hidden bg-smoke">
-                  {cover ? (
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setLightbox({ src: cover, alt: p.displayName })
-                      }
-                      aria-label={`Agrandir la photo de ${p.displayName}`}
-                      className="block h-full w-full cursor-zoom-in"
-                    >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={cover}
-                        alt={p.displayName}
-                        className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
-                      />
-                    </button>
-                  ) : (
-                    <div className="flex h-full items-center justify-center text-6xl opacity-40">
-                      {meta?.icon ?? "✨"}
-                    </div>
-                  )}
-                  {p.isVerified && (
-                    <span className="pointer-events-none absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-vip px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-coal">
-                      <ShieldCheck className="size-3" /> Vérifié
-                    </span>
-                  )}
-                  {p.isBoosted && (
-                    <span className="pointer-events-none absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-blood/90 px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-paper backdrop-blur">
-                      <Flame className="size-3" /> Boosté
-                    </span>
-                  )}
-                </div>
-                <div className="flex flex-1 flex-col gap-3 p-5">
-                  <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-blood">
-                    <span>{meta?.icon}</span>
-                    <span>{meta?.shortLabel}</span>
+          <div
+            ref={listTopRef}
+            className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 scroll-mt-24"
+          >
+            {paginated.map((p) => {
+              const meta = PRO_CATEGORY_BY_ID[p.category];
+              const cover = p.photos?.[0];
+              return (
+                <article
+                  key={p.id}
+                  className="group relative flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-coal/60 transition hover:-translate-y-1 hover:border-blood/40 hover:shadow-[0_30px_60px_-30px_rgba(230,57,70,0.4)]"
+                >
+                  <div className="relative aspect-[4/3] w-full overflow-hidden bg-smoke">
+                    {cover ? (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setLightbox({ src: cover, alt: p.displayName })
+                        }
+                        aria-label={`Agrandir la photo de ${p.displayName}`}
+                        className="relative block h-full w-full cursor-zoom-in"
+                      >
+                        <Image
+                          alt={p.displayName}
+                          className="object-cover transition duration-700 group-hover:scale-110"
+                          fill
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          src={cover}
+                          unoptimized
+                        />
+                      </button>
+                    ) : (
+                      <div className="flex h-full items-center justify-center text-6xl opacity-40">
+                        {meta?.icon ?? "✨"}
+                      </div>
+                    )}
+                    {p.isVerified && (
+                      <span className="pointer-events-none absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-vip px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-coal">
+                        <ShieldCheck className="size-3" /> Vérifié
+                      </span>
+                    )}
+                    {p.isBoosted && (
+                      <span className="pointer-events-none absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-blood/90 px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-paper backdrop-blur">
+                        <Flame className="size-3" /> Boosté
+                      </span>
+                    )}
                   </div>
-                  <h3 className="font-display text-2xl text-paper">
+                  <div className="flex flex-1 flex-col gap-3 p-5">
+                    <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-blood">
+                      <span>{meta?.icon}</span>
+                      <span>{meta?.shortLabel}</span>
+                    </div>
+                    <h3 className="font-display text-2xl text-paper">
+                      <Link
+                        href={`/pro/${p.id}`}
+                        className="transition hover:text-blood"
+                      >
+                        {p.displayName}
+                      </Link>
+                    </h3>
+                    <p className="text-sm text-paper-dim">
+                      {p.city}, {p.country}
+                    </p>
+                    {p.bio && (
+                      <p className="line-clamp-2 text-sm text-paper-mute">
+                        {p.bio}
+                      </p>
+                    )}
+                    <div className="mt-auto flex items-center justify-between border-t border-white/5 pt-4">
+                      <span className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
+                        {formatPriceRange(p.priceRange)}
+                      </span>
+                      {p.rating > 0 && (
+                        <span className="flex items-center gap-1 font-mono text-xs text-vip">
+                          ★ {p.rating.toFixed(1)}
+                          <span className="text-paper-mute">
+                            ({p.reviewsCount})
+                          </span>
+                        </span>
+                      )}
+                    </div>
+
                     <Link
                       href={`/pro/${p.id}`}
-                      className="transition hover:text-blood"
+                      className="mt-2 flex items-center justify-center gap-2 rounded-xl border border-blood/40 bg-blood/10 px-4 py-2.5 font-mono text-[10px] uppercase tracking-widest text-blood transition hover:bg-blood/20"
                     >
-                      {p.displayName}
+                      Voir la fiche
+                      <ArrowRight className="size-3.5" />
                     </Link>
-                  </h3>
-                  <p className="text-sm text-paper-dim">
-                    {p.city}, {p.country}
-                  </p>
-                  {p.bio && (
-                    <p className="line-clamp-2 text-sm text-paper-mute">
-                      {p.bio}
-                    </p>
-                  )}
-                  <div className="mt-auto flex items-center justify-between border-t border-white/5 pt-4">
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
-                      {formatPriceRange(p.priceRange)}
-                    </span>
-                    {p.rating > 0 && (
-                      <span className="flex items-center gap-1 font-mono text-xs text-vip">
-                        ★ {p.rating.toFixed(1)}
-                        <span className="text-paper-mute">
-                          ({p.reviewsCount})
-                        </span>
-                      </span>
-                    )}
                   </div>
+                </article>
+              );
+            })}
+          </div>
 
-                  <Link
-                    href={`/pro/${p.id}`}
-                    className="mt-2 flex items-center justify-center gap-2 rounded-xl border border-blood/40 bg-blood/10 px-4 py-2.5 font-mono text-[10px] uppercase tracking-widest text-blood transition hover:bg-blood/20"
-                  >
-                    Voir la fiche
-                    <ArrowRight className="size-3.5" />
-                  </Link>
-                </div>
-              </article>
-            );
-          })}
-        </div>
+          {totalPages > 1 && (
+            <nav
+              aria-label="Pagination des prestataires"
+              className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-white/5 pt-6"
+            >
+              <p className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
+                Page {currentPage} sur {totalPages} · {filtered.length}{" "}
+                {filtered.length > 1 ? "prestataires" : "prestataire"}
+              </p>
 
-        {totalPages > 1 && (
-          <nav
-            aria-label="Pagination des prestataires"
-            className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-white/5 pt-6"
-          >
-            <p className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
-              Page {currentPage} sur {totalPages} · {filtered.length}{" "}
-              {filtered.length > 1 ? "prestataires" : "prestataire"}
-            </p>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => goToPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  aria-label="Page précédente"
+                  className="flex h-9 items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-3 font-mono text-[10px] uppercase tracking-widest text-paper-dim transition hover:border-blood/40 hover:text-paper disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-white/10 disabled:hover:text-paper-dim"
+                >
+                  <ChevronLeft className="size-3.5" />
+                  Préc.
+                </button>
 
-            <div className="flex items-center gap-1">
-              <button
-                type="button"
-                onClick={() => goToPage(currentPage - 1)}
-                disabled={currentPage === 1}
-                aria-label="Page précédente"
-                className="flex h-9 items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-3 font-mono text-[10px] uppercase tracking-widest text-paper-dim transition hover:border-blood/40 hover:text-paper disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-white/10 disabled:hover:text-paper-dim"
-              >
-                <ChevronLeft className="size-3.5" />
-                Préc.
-              </button>
-
-              {pageNumbers.map((p, idx) => {
-                const prev = pageNumbers[idx - 1];
-                const showGap = prev !== undefined && p - prev > 1;
-                return (
-                  <span key={p} className="flex items-center gap-1">
-                    {showGap && (
-                      <span className="px-1 font-mono text-[10px] text-paper-mute">
-                        …
-                      </span>
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => goToPage(p)}
-                      aria-label={`Aller à la page ${p}`}
-                      aria-current={p === currentPage ? "page" : undefined}
-                      className={cn(
-                        "h-9 min-w-9 rounded-lg border px-3 font-mono text-[10px] uppercase tracking-widest transition",
-                        p === currentPage
-                          ? "border-blood bg-blood text-paper"
-                          : "border-white/10 bg-white/5 text-paper-dim hover:border-blood/40 hover:text-paper",
+                {pageNumbers.map((p, idx) => {
+                  const prev = pageNumbers[idx - 1];
+                  const showGap = prev !== undefined && p - prev > 1;
+                  return (
+                    <span key={p} className="flex items-center gap-1">
+                      {showGap && (
+                        <span className="px-1 font-mono text-[10px] text-paper-mute">
+                          …
+                        </span>
                       )}
-                    >
-                      {p}
-                    </button>
-                  </span>
-                );
-              })}
+                      <button
+                        type="button"
+                        onClick={() => goToPage(p)}
+                        aria-label={`Aller à la page ${p}`}
+                        aria-current={p === currentPage ? "page" : undefined}
+                        className={cn(
+                          "h-9 min-w-9 rounded-lg border px-3 font-mono text-[10px] uppercase tracking-widest transition",
+                          p === currentPage
+                            ? "border-blood bg-blood text-paper"
+                            : "border-white/10 bg-white/5 text-paper-dim hover:border-blood/40 hover:text-paper",
+                        )}
+                      >
+                        {p}
+                      </button>
+                    </span>
+                  );
+                })}
 
-              <button
-                type="button"
-                onClick={() => goToPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                aria-label="Page suivante"
-                className="flex h-9 items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-3 font-mono text-[10px] uppercase tracking-widest text-paper-dim transition hover:border-blood/40 hover:text-paper disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-white/10 disabled:hover:text-paper-dim"
-              >
-                Suiv.
-                <ChevronRight className="size-3.5" />
-              </button>
-            </div>
-          </nav>
-        )}
+                <button
+                  type="button"
+                  onClick={() => goToPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  aria-label="Page suivante"
+                  className="flex h-9 items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-3 font-mono text-[10px] uppercase tracking-widest text-paper-dim transition hover:border-blood/40 hover:text-paper disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-white/10 disabled:hover:text-paper-dim"
+                >
+                  Suiv.
+                  <ChevronRight className="size-3.5" />
+                </button>
+              </div>
+            </nav>
+          )}
         </>
       )}
 

@@ -1,51 +1,35 @@
 "use client";
 
 import {
+  BadgePlus,
   Car,
-  Gamepad2,
   Home,
-  ListMusic,
-  MapPin,
-  Package,
+  Megaphone,
   PartyPopper,
   Scissors,
-  Sparkles,
-  Users,
+  Search,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { type ComponentType } from "react";
+import type { ComponentType } from "react";
 
 import { getLocale, localizedHref, nls } from "@/lib/nls";
 import { cn } from "@/lib/utils";
 
 type QuickNavItem = {
   href: string;
-  labelKey:
-    | "home"
-    | "trajets"
-    | "afters"
-    | "merch"
-    | "beaute"
-    | "paris"
-    | "quiz"
-    | "game"
-    | "playlists"
-    | "community";
+  label: string;
   icon: ComponentType<{ className?: string; "aria-hidden"?: boolean }>;
 };
 
 const items: QuickNavItem[] = [
-  { href: "/", labelKey: "home", icon: Home },
-  { href: "/trajets", labelKey: "trajets", icon: Car },
-  { href: "/afters", labelKey: "afters", icon: PartyPopper },
-  { href: "/merch", labelKey: "merch", icon: Package },
-  { href: "/beaute", labelKey: "beaute", icon: Scissors },
-  { href: "/classiques-paris", labelKey: "paris", icon: MapPin },
-  { href: "/quiz", labelKey: "quiz", icon: Sparkles },
-  { href: "/jeu", labelKey: "game", icon: Gamepad2 },
-  { href: "/playlists", labelKey: "playlists", icon: ListMusic },
-  { href: "/communaute", labelKey: "community", icon: Users },
+  { href: "/", label: "Accueil", icon: Home },
+  { href: "/prestataires", label: "Prestataires", icon: Search },
+  { href: "/beaute", label: "Beauté", icon: Scissors },
+  { href: "/trajets", label: "Trajets", icon: Car },
+  { href: "/afters", label: "Events", icon: PartyPopper },
+  { href: "/pro", label: "Espace pro", icon: BadgePlus },
+  { href: "/ads", label: "Boost", icon: Megaphone },
 ];
 
 export function QuickNav() {
@@ -68,7 +52,8 @@ export function QuickNav() {
             const isActive =
               item.href === "/"
                 ? false
-                : pathname === item.href || pathname.startsWith(`${item.href}/`);
+                : pathname === item.href ||
+                  pathname.startsWith(`${item.href}/`);
             return (
               <li className="shrink-0" key={item.href}>
                 <Link
@@ -77,12 +62,13 @@ export function QuickNav() {
                     isActive
                       ? "border-blood/60 bg-blood/15 text-paper"
                       : "border-white/10 bg-coal/40 text-paper-dim hover:border-blood/30 hover:text-paper",
-                    item.href === "/" && "border-blood/40 bg-blood/10 text-blood",
+                    item.href === "/" &&
+                      "border-blood/40 bg-blood/10 text-blood",
                   )}
                   href={localizedHref(item.href, locale)}
                 >
                   <Icon aria-hidden className="size-3.5" />
-                  {labels[item.labelKey]}
+                  {item.label}
                 </Link>
               </li>
             );

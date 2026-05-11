@@ -10,14 +10,14 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-blood text-paper font-display uppercase tracking-tight hover:bg-flame hover:shadow-glow-blood",
+          "bg-blood text-primary-foreground font-display uppercase tracking-tight hover:bg-blood-deep hover:shadow-glow-blood",
         outline: "border-white/10 bg-transparent text-paper hover:bg-smoke",
         secondary:
           "bg-smoke text-paper hover:bg-ash rounded-xl font-body font-semibold",
         ghost: "text-paper-dim hover:bg-smoke hover:text-paper",
         destructive: "bg-error/10 text-error hover:bg-error/20",
         link: "text-blood underline-offset-4 hover:underline",
-        vip: "bg-gold text-ink font-display uppercase tracking-tight hover:bg-gold-soft hover:shadow-[0_0_30px_rgba(242,183,5,0.3)]",
+        vip: "bg-gold text-paper font-display uppercase tracking-tight hover:bg-gold-soft hover:shadow-[0_18px_35px_rgba(213,159,47,0.24)]",
       },
       size: {
         default: "h-12 px-8 py-3 rounded-full text-base",

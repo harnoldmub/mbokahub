@@ -17,7 +17,9 @@ const SECRET = process.env.STRIPE_SECRET_KEY;
 const APP_URL = (process.env.APP_URL || "").replace(/\/$/, "");
 
 if (!SECRET || !SECRET.startsWith("sk_")) {
-  console.error("ERROR: STRIPE_SECRET_KEY env var must be a valid Stripe secret key (sk_live_... for prod).");
+  console.error(
+    "ERROR: STRIPE_SECRET_KEY env var must be a valid Stripe secret key (sk_live_... for prod).",
+  );
   process.exit(1);
 }
 if (!APP_URL) {
@@ -34,18 +36,10 @@ console.log(`\n>>> Configuring Stripe (${mode}) for ${APP_URL}\n`);
 const LOGO_URL = `${APP_URL}/logo.png`;
 
 const PRODUCTS = {
-  vip: {
-    name: "VIP Famille Mboka Hub",
-    description:
-      "Pass VIP fan : Famille privée, déblocage contacts pros, covoiturages prioritaires, tirage meet & greet. Valide jusqu'au 31 mai 2026.",
-    statement_descriptor: "MBOKAHUB VIP",
-    images: [LOGO_URL],
-    metadata: { type: "vip", brand: "Mboka Hub" },
-  },
   pro: {
-    name: "Inscription Pro Mboka Hub",
+    name: "Placement Pro Premium Mboka Hub",
     description:
-      "Inscription unique forfait week-end pour tous les prestataires : beauté, merch, afters, restauration, mobilité, sécurité. Profil vérifié + statistiques.",
+      "Option payante de visibilité pour prestataires : mise en avant, badge sponsorisé et statistiques. L'inscription pro reste gratuite.",
     statement_descriptor: "MBOKAHUB PRO",
     images: [LOGO_URL],
     metadata: { type: "pro", brand: "Mboka Hub" },
@@ -91,7 +85,9 @@ async function ensurePrice(productId, lookupKey, amountCents, label) {
     active: true,
   });
   if (list.data[0]) {
-    console.log(`  ✓ Price exists: ${label} = ${amountCents / 100}€ (${list.data[0].id})`);
+    console.log(
+      `  ✓ Price exists: ${label} = ${amountCents / 100}€ (${list.data[0].id})`,
+    );
     return list.data[0];
   }
   const p = await stripe.prices.create({
@@ -115,13 +111,16 @@ async function ensureWebhook(url) {
   const existing = all.data.find((w) => w.url === url);
   if (existing) {
     console.log(`  ✓ Webhook exists: ${url} (${existing.id})`);
-    console.log("     (secret can only be retrieved once at creation; rotate if lost)");
+    console.log(
+      "     (secret can only be retrieved once at creation; rotate if lost)",
+    );
     return { endpoint: existing, secret: null };
   }
   const w = await stripe.webhookEndpoints.create({
     url,
     enabled_events: events,
-    description: "Mboka Hub — Production webhook (paiements VIP, Pro, Boost)",
+    description:
+      "Mboka Hub — Production webhook (paiements Pro Premium, Boost)",
   });
   console.log(`  + Webhook created: ${url} (${w.id})`);
   return { endpoint: w, secret: w.secret };
@@ -129,40 +128,51 @@ async function ensureWebhook(url) {
 
 (async () => {
   console.log("--- Products & Prices ---");
-  const vipProduct = await ensureProduct(PRODUCTS.vip);
-  const vipPrice = await ensurePrice(vipProduct.id, "mbokahub_vip_999", 999, "Pass VIP Famille");
-  const vipEarlyPrice = await ensurePrice(
-    vipProduct.id,
-    "mbokahub_vip_early_699",
-    699,
-    "VIP Famille — Early Bird (jusqu'au 30 avril 2026)",
+  const proProduct = await ensureProduct(PRODUCTS.pro);
+  const proPrice = await ensurePrice(
+    proProduct.id,
+    "mbokahub_pro_1999",
+    1999,
+    "Placement Pro Premium",
   );
 
-  const proProduct = await ensureProduct(PRODUCTS.pro);
-  const proPrice = await ensurePrice(proProduct.id, "mbokahub_pro_1999", 1999, "Fiche Pro Premium");
-
   const boostProduct = await ensureProduct(PRODUCTS.boost);
-  const boostPrice = await ensurePrice(boostProduct.id, "mbokahub_boost_899", 899, "Boost Vedette");
+  const boostPrice = await ensurePrice(
+    boostProduct.id,
+    "mbokahub_boost_899",
+    899,
+    "Boost Vedette",
+  );
 
   console.log("\n--- Webhook ---");
   const webhookUrl = `${APP_URL}/api/webhooks/stripe`;
   const { secret: webhookSecret } = await ensureWebhook(webhookUrl);
 
-  console.log("\n=================================================================");
-  console.log(`✅ Stripe ${mode} ready. Set these as PRODUCTION secrets in Replit:`);
-  console.log("=================================================================\n");
-  console.log(`STRIPE_VIP_PRICE_ID=${vipPrice.id}`);
-  console.log(`STRIPE_VIP_EARLY_BIRD_PRICE_ID=${vipEarlyPrice.id}`);
+  console.log(
+    "\n=================================================================",
+  );
+  console.log(
+    `✅ Stripe ${mode} ready. Set these as PRODUCTION secrets in Replit:`,
+  );
+  console.log(
+    "=================================================================\n",
+  );
   console.log(`STRIPE_PRO_PRICE_ID=${proPrice.id}`);
   console.log(`STRIPE_BOOST_PRICE_ID=${boostPrice.id}`);
   if (webhookSecret) {
     console.log(`STRIPE_WEBHOOK_SECRET=${webhookSecret}`);
   } else {
-    console.log("STRIPE_WEBHOOK_SECRET=<existing — rotate via Stripe dashboard if you don't have it>");
+    console.log(
+      "STRIPE_WEBHOOK_SECRET=<existing — rotate via Stripe dashboard if you don't have it>",
+    );
   }
   if (isLive) {
-    console.log("STRIPE_SECRET_KEY=<keep your existing sk_live_... secret — never print it>");
-    console.log("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_... (from your Stripe dashboard)");
+    console.log(
+      "STRIPE_SECRET_KEY=<keep your existing sk_live_... secret — never print it>",
+    );
+    console.log(
+      "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_... (from your Stripe dashboard)",
+    );
   }
   console.log(
     "\n👉 N'oublie pas dans Stripe Dashboard → Settings → Business :",
@@ -170,7 +180,9 @@ async function ensureWebhook(url) {
   console.log("   • Public business name : Mboka Hub");
   console.log("   • Support email       : admin@mbokahub.com");
   console.log("   • Support URL         : https://mbokahub.com");
-  console.log("   • Statement descriptor: MBOKA HUB (sera préfixé aux noms produits)");
+  console.log(
+    "   • Statement descriptor: MBOKA HUB (sera préfixé aux noms produits)",
+  );
   console.log("\nDone.\n");
 })().catch((err) => {
   console.error("\nFAILED:", err.message);

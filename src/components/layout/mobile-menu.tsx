@@ -1,11 +1,18 @@
 "use client";
 
 import { SignOutButton, useUser } from "@clerk/nextjs";
-import { ArrowRight, Home, LayoutDashboard, LogIn, LogOut, Menu, UserPlus } from "lucide-react";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
+import {
+  ArrowRight,
+  Home,
+  LayoutDashboard,
+  LogIn,
+  LogOut,
+  Menu,
+  UserPlus,
+} from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-
-import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,26 +32,39 @@ export function MobileMenu({ locale }: MobileMenuProps) {
   const copy = nls[locale].common;
   const { isSignedIn, user } = useUser();
   const signInLabel =
-    locale === "en" ? "Sign in" : locale === "de" ? "Anmelden" : locale === "nl" ? "Inloggen" : "Se connecter";
+    locale === "en"
+      ? "Sign in"
+      : locale === "de"
+        ? "Anmelden"
+        : locale === "nl"
+          ? "Inloggen"
+          : "Se connecter";
   const signUpLabel =
-    locale === "en" ? "Create account" : locale === "de" ? "Konto erstellen" : locale === "nl" ? "Account aanmaken" : "Créer un compte";
+    locale === "en"
+      ? "Create account"
+      : locale === "de"
+        ? "Konto erstellen"
+        : locale === "nl"
+          ? "Account aanmaken"
+          : "Créer un compte";
   const signOutLabel =
-    locale === "en" ? "Sign out" : locale === "de" ? "Abmelden" : locale === "nl" ? "Uitloggen" : "Se déconnecter";
-  const dashboardLabel =
-    locale === "fr" ? "Tableau de bord" : "Dashboard";
+    locale === "en"
+      ? "Sign out"
+      : locale === "de"
+        ? "Abmelden"
+        : locale === "nl"
+          ? "Uitloggen"
+          : "Se déconnecter";
+  const dashboardLabel = locale === "fr" ? "Tableau de bord" : "Dashboard";
   const navItems = [
     { href: "/", label: copy.quickNav.home },
-    { href: "/concert", label: copy.nav.concert },
-    { href: "/prestataires", label: copy.nav.services },
+    { href: "/prestataires", label: "Prestataires" },
     { href: "/trajets", label: copy.quickNav.trajets },
     { href: "/afters", label: copy.quickNav.afters },
-    { href: "/merch", label: copy.quickNav.merch },
     { href: "/beaute", label: copy.quickNav.beaute },
-    { href: "/classiques-paris", label: copy.quickNav.paris },
-    { href: "/communaute", label: copy.nav.community },
-    { href: "/playlists", label: copy.nav.playlists },
-    { href: "/quiz", label: copy.quickNav.quiz },
-    { href: "/jeu", label: copy.quickNav.game },
+    { href: "/pro", label: "Espace pro" },
+    { href: "/ads", label: "Boost & pub" },
+    { href: "/contact", label: copy.nav.contact },
   ] as const;
 
   return (
@@ -80,7 +100,9 @@ export function MobileMenu({ locale }: MobileMenuProps) {
               onClick={() => setOpen(false)}
             >
               <span className="flex items-center gap-2 font-display text-xl uppercase text-paper transition-colors group-hover:text-blood">
-                {item.href === "/" && <Home aria-hidden className="size-5 text-blood" />}
+                {item.href === "/" && (
+                  <Home aria-hidden className="size-5 text-blood" />
+                )}
                 {item.label}
               </span>
               <ArrowRight className="size-4 text-blood opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
@@ -95,14 +117,20 @@ export function MobileMenu({ locale }: MobileMenuProps) {
             <div className="mb-4 space-y-2">
               <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
                 <div className="flex size-9 items-center justify-center rounded-full bg-blood/20 font-display text-sm uppercase text-blood">
-                  {(user?.firstName?.[0] ?? user?.primaryEmailAddress?.emailAddress?.[0] ?? "M").toUpperCase()}
+                  {(
+                    user?.firstName?.[0] ??
+                    user?.primaryEmailAddress?.emailAddress?.[0] ??
+                    "M"
+                  ).toUpperCase()}
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-mono text-[10px] uppercase tracking-[0.2em] text-paper-mute">
                     {locale === "fr" ? "Connecté" : "Signed in"}
                   </p>
                   <p className="truncate text-sm text-paper">
-                    {user?.firstName ?? user?.primaryEmailAddress?.emailAddress ?? ""}
+                    {user?.firstName ??
+                      user?.primaryEmailAddress?.emailAddress ??
+                      ""}
                   </p>
                 </div>
               </div>
@@ -140,7 +168,10 @@ export function MobileMenu({ locale }: MobileMenuProps) {
                 variant="outline"
               >
                 <Link
-                  href={localizedHref("/sign-in?redirect_url=/dashboard", locale)}
+                  href={localizedHref(
+                    "/sign-in?redirect_url=/dashboard",
+                    locale,
+                  )}
                   onClick={() => setOpen(false)}
                 >
                   <LogIn className="size-4" />
@@ -154,7 +185,10 @@ export function MobileMenu({ locale }: MobileMenuProps) {
                 variant="ghost"
               >
                 <Link
-                  href={localizedHref("/sign-up?redirect_url=/dashboard", locale)}
+                  href={localizedHref(
+                    "/sign-up?redirect_url=/dashboard",
+                    locale,
+                  )}
                   onClick={() => setOpen(false)}
                 >
                   <UserPlus className="size-4" />
@@ -174,7 +208,7 @@ export function MobileMenu({ locale }: MobileMenuProps) {
               href={localizedHref("/pro/inscrire", locale)}
               onClick={() => setOpen(false)}
             >
-              {copy.vipCta}
+              Devenir prestataire
             </Link>
           </Button>
         </div>

@@ -1,16 +1,18 @@
-import { auth } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
 import { Readable } from "node:stream";
+import { auth } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
 import { requireAdmin } from "@/lib/admin";
 import {
   ALLOWED_IMAGE_TYPES,
-  MAX_IMAGE_BYTES,
   extForMime,
+  getMediaStorageMode,
   getStorageClient,
+  MAX_IMAGE_BYTES,
   publicUrlForKey,
   resolveImageMime,
+  writeLocalMedia,
 } from "@/lib/storage";
 
 export const runtime = "nodejs";
@@ -42,12 +44,11 @@ export async function POST(req: Request) {
     );
   }
 
-  const files = formData.getAll("files").filter((v): v is File => v instanceof File);
+  const files = formData
+    .getAll("files")
+    .filter((v): v is File => v instanceof File);
   if (files.length === 0) {
-    return NextResponse.json(
-      { error: "Aucun fichier reçu" },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "Aucun fichier reçu" }, { status: 400 });
   }
   if (files.length > 12) {
     return NextResponse.json(
@@ -56,14 +57,19 @@ export async function POST(req: Request) {
     );
   }
 
-  const client = getStorageClient();
+  const storageMode = getMediaStorageMode();
+  const client = storageMode === "object" ? getStorageClient() : null;
   const uploaded: UploadedFile[] = [];
   const errors: string[] = [];
 
   const maxMb = Math.round(MAX_IMAGE_BYTES / 1024 / 1024);
   for (const file of files) {
     const mime = resolveImageMime(file);
-    if (!ALLOWED_IMAGE_TYPES.includes(mime as (typeof ALLOWED_IMAGE_TYPES)[number])) {
+    if (
+      !ALLOWED_IMAGE_TYPES.includes(
+        mime as (typeof ALLOWED_IMAGE_TYPES)[number],
+      )
+    ) {
       errors.push(
         `${file.name}: format non supporté (${file.type || "inconnu"}). Formats acceptés : JPG, PNG, WebP, GIF, HEIC.`,
       );
@@ -85,26 +91,32 @@ export async function POST(req: Request) {
     const buffer = Buffer.from(await file.arrayBuffer());
 
     try {
-      const result = await client.uploadFromBytes(key, buffer);
-      if (!result.ok) {
-        const msg = result.error?.message ?? "échec de l'upload";
-        console.error("[api/upload] uploadFromBytes failed", {
-          key,
-          file: file.name,
-          err: msg,
-        });
-        // Fallback: try the streaming path (forces resumable:false internally).
-        try {
-          await client.uploadFromStream(key, Readable.from(buffer));
-        } catch (streamErr) {
-          const streamMsg =
-            streamErr instanceof Error ? streamErr.message : String(streamErr);
-          console.error("[api/upload] uploadFromStream fallback failed", {
+      if (storageMode === "local") {
+        await writeLocalMedia(key, buffer);
+      } else if (client) {
+        const result = await client.uploadFromBytes(key, buffer);
+        if (!result.ok) {
+          const msg = result.error?.message ?? "échec de l'upload";
+          console.error("[api/upload] uploadFromBytes failed", {
             key,
-            err: streamMsg,
+            file: file.name,
+            err: msg,
           });
-          errors.push(`${file.name}: ${msg} (stream: ${streamMsg})`);
-          continue;
+          // Fallback: try the streaming path (forces resumable:false internally).
+          try {
+            await client.uploadFromStream(key, Readable.from(buffer));
+          } catch (streamErr) {
+            const streamMsg =
+              streamErr instanceof Error
+                ? streamErr.message
+                : String(streamErr);
+            console.error("[api/upload] uploadFromStream fallback failed", {
+              key,
+              err: streamMsg,
+            });
+            errors.push(`${file.name}: ${msg} (stream: ${streamMsg})`);
+            continue;
+          }
         }
       }
       uploaded.push({

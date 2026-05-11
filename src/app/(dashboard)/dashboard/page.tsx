@@ -1,7 +1,7 @@
 import {
   BadgeEuro,
-  Camera,
   CalendarDays,
+  Camera,
   Contact,
   Megaphone,
   Star,
@@ -45,7 +45,8 @@ export default async function DashboardPage() {
           Salut la Famille Mboka, {user.name?.split(" ")[0] ?? ""}
         </h1>
         <p className="mt-3 max-w-2xl text-paper-dim leading-7">
-          Ici tu gères ton profil de fan, tes accès Tokooos et tes annonces pour le concert de l&apos;Aigle.
+          Ici tu gères ton compte, tes annonces, ta fiche pro et tes demandes de
+          rendez-vous.
         </p>
       </div>
 
@@ -63,7 +64,9 @@ export default async function DashboardPage() {
             </p>
             <p className="mt-1 text-sm text-yellow-100/80 leading-6">
               Ta fiche{" "}
-              <strong className="text-yellow-50">{proProfile.displayName}</strong>{" "}
+              <strong className="text-yellow-50">
+                {proProfile.displayName}
+              </strong>{" "}
               n&apos;a pas encore de photo. Les fans cliquent 3 à 5 fois plus
               sur les profils avec une vraie couverture et une petite galerie.
             </p>
@@ -124,6 +127,9 @@ export default async function DashboardPage() {
               <Link href="/pro/inscrire">Inscrire mon service</Link>
             </Button>
             <Button asChild variant="outline">
+              <Link href="/dashboard/planning">Gérer mon planning</Link>
+            </Button>
+            <Button asChild variant="outline">
               <Link href="/afters/organiser">Organiser un After</Link>
             </Button>
           </CardContent>
@@ -144,7 +150,9 @@ export default async function DashboardPage() {
                     <div>
                       <p className="font-heading text-paper">{payment.type}</p>
                       <p className="text-paper-dim text-sm">
-                        {(payment.completedAt ?? payment.createdAt).toLocaleDateString("fr-FR")}
+                        {(
+                          payment.completedAt ?? payment.createdAt
+                        ).toLocaleDateString("fr-FR")}
                       </p>
                     </div>
                     <Badge>{formatMoney(payment.amount)}</Badge>
