@@ -2,48 +2,48 @@
 @import "tailwindcss/index.css";
 
 @theme {
-  /* BACKGROUNDS — marketplace clair, premium mais sobre */
-  --color-ink: #f6f3ec;
-  --color-coal: #fffdf8;
-  --color-smoke: #ece7dc;
-  --color-ash: #d9d1c2;
+  /* BACKGROUNDS — inspiration Planity : blanc, gris froid, lisible */
+  --color-ink: #ffffff;
+  --color-coal: #ffffff;
+  --color-smoke: #f4f5f7;
+  --color-ash: #d7dbe2;
 
-  /* ACCENTS — confiance, visibilité, action */
-  --color-blood: #12715b;
-  --color-blood-deep: #0d5748;
-  --color-ember: #c86442;
-  --color-flame: #df7d55;
+  /* ACCENTS — violet fonctionnel + noir CTA */
+  --color-blood: #6257ff;
+  --color-blood-deep: #4f46e5;
+  --color-ember: #2f80ed;
+  --color-flame: #1d4ed8;
 
-  /* SPONSORING — boost / placement */
-  --color-gold: #d59f2f;
-  --color-gold-soft: #bd8622;
-  --color-vip: #d59f2f;
-  --color-vip-soft: #bd8622;
+  /* SPONSORING — discret, pas premium bling */
+  --color-gold: #202124;
+  --color-gold-soft: #3f4247;
+  --color-vip: #202124;
+  --color-vip-soft: #3f4247;
 
   /* TEXTE */
-  --color-paper: #18211d;
-  --color-paper-dim: #59645d;
-  --color-paper-mute: #879088;
+  --color-paper: #171717;
+  --color-paper-dim: #4d5157;
+  --color-paper-mute: #7a7f87;
 
   /* UTILITAIRES */
-  --color-success: #12845f;
-  --color-warning: #d59f2f;
-  --color-error: #b83c36;
+  --color-success: #0f8f6f;
+  --color-warning: #b7791f;
+  --color-error: #d93025;
 
   /* ALIAS shadcn-style — pour que bg-primary / text-foreground / etc. fonctionnent */
-  --color-primary: #12715b;
-  --color-primary-foreground: #fffdf8;
-  --color-foreground: #18211d;
-  --color-background: #f6f3ec;
-  --color-muted: #ece7dc;
-  --color-muted-foreground: #59645d;
-  --color-accent: #d59f2f;
-  --color-accent-foreground: #18211d;
-  --color-border: rgba(24, 33, 29, 0.1);
-  --color-card: #fffdf8;
-  --color-card-foreground: #18211d;
-  --color-destructive: #b83c36;
-  --color-destructive-foreground: #fffdf8;
+  --color-primary: #202124;
+  --color-primary-foreground: #ffffff;
+  --color-foreground: #171717;
+  --color-background: #ffffff;
+  --color-muted: #f4f5f7;
+  --color-muted-foreground: #4d5157;
+  --color-accent: #6257ff;
+  --color-accent-foreground: #ffffff;
+  --color-border: #d7dbe2;
+  --color-card: #ffffff;
+  --color-card-foreground: #171717;
+  --color-destructive: #d93025;
+  --color-destructive-foreground: #ffffff;
 
   /* TYPOGRAPHY */
   --font-display: var(--font-anton);
@@ -52,9 +52,9 @@
   --font-mono: var(--font-jetbrains);
 
   /* BORDERS */
-  --radius-xl: 20px;
-  --radius-2xl: 24px;
-  --radius-3xl: 28px;
+  --radius-xl: 10px;
+  --radius-2xl: 12px;
+  --radius-3xl: 16px;
 }
 
 /* BASE STYLES */
@@ -70,25 +70,11 @@
 
   body {
     @apply bg-ink text-paper selection:bg-blood/20 selection:text-paper;
-    background:
-      radial-gradient(
-        circle at 18% 20%,
-        rgba(18, 113, 91, 0.12) 0%,
-        transparent 50%
-      ),
-      radial-gradient(
-        circle at 82% 12%,
-        rgba(213, 159, 47, 0.11) 0%,
-        transparent 50%
-      ), #f6f3ec;
+    background: #ffffff;
   }
 
-  /* Layer 2 — Grain Noise Overlay */
   body::before {
-    content: "";
-    @apply fixed inset-0 z-[100] pointer-events-none opacity-[0.035];
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    mix-blend-mode: multiply;
+    content: none;
   }
 }
 
@@ -100,27 +86,26 @@
   }
 
   .shadow-glow-blood {
-    box-shadow: 0 18px 40px rgba(18, 113, 91, 0.18);
+    box-shadow: 0 16px 40px rgba(98, 87, 255, 0.14);
   }
 
   .glass-header {
-    @apply sticky top-0 z-50 backdrop-blur-xl border-b;
-    background: rgba(255, 253, 248, 0.82);
-    border-color: rgba(24, 33, 29, 0.1);
+    @apply sticky top-0 z-50 border-b bg-coal;
+    border-color: #e6e8ed;
   }
 
   .border-white\/5,
   .border-white\/10,
   .border-white\/15 {
-    border-color: rgba(24, 33, 29, 0.1);
+    border-color: #dfe3ea;
   }
 
   .bg-white\/5 {
-    background-color: rgba(24, 33, 29, 0.04);
+    background-color: #f4f5f7;
   }
 
   .bg-white\/10 {
-    background-color: rgba(24, 33, 29, 0.08);
+    background-color: #eceff3;
   }
 
   @keyframes marquee {

@@ -99,7 +99,7 @@ export function MobileMenu({ locale }: MobileMenuProps) {
               key={item.href}
               onClick={() => setOpen(false)}
             >
-              <span className="flex items-center gap-2 font-display text-xl uppercase text-paper transition-colors group-hover:text-blood">
+              <span className="flex items-center gap-2 text-lg font-semibold text-paper transition-colors group-hover:text-blood">
                 {item.href === "/" && (
                   <Home aria-hidden className="size-5 text-blood" />
                 )}
@@ -116,7 +116,7 @@ export function MobileMenu({ locale }: MobileMenuProps) {
           {isSignedIn ? (
             <div className="mb-4 space-y-2">
               <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
-                <div className="flex size-9 items-center justify-center rounded-full bg-blood/20 font-display text-sm uppercase text-blood">
+                <div className="flex size-9 items-center justify-center rounded-full bg-blood/15 text-sm font-semibold uppercase text-blood">
                   {(
                     user?.firstName?.[0] ??
                     user?.primaryEmailAddress?.emailAddress?.[0] ??

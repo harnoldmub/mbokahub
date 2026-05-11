@@ -1,8 +1,7 @@
 "use client";
 
 import { UserButton, useUser } from "@clerk/nextjs";
-import { Star } from "lucide-react";
-import Image from "next/image";
+import { Star, UserRound } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -46,14 +45,6 @@ export function SiteHeader() {
         : locale === "nl"
           ? "Dashboard"
           : "Tableau de bord";
-  const signInLabel =
-    locale === "en"
-      ? "Sign in"
-      : locale === "de"
-        ? "Anmelden"
-        : locale === "nl"
-          ? "Inloggen"
-          : "Se connecter";
   const m = copy.megaServices;
   const megaSections = [
     {
@@ -103,73 +94,35 @@ export function SiteHeader() {
 
   return (
     <header className="glass-header">
-      <div className="border-b border-white/5 bg-smoke/70 py-1.5 backdrop-blur-sm">
-        <p className="text-center font-mono text-[9px] uppercase tracking-[0.2em] text-paper-mute">
-          Annuaire gratuit · Contacts ouverts · Monétisation par boosts et
-          espaces sponsorisés
-        </p>
-      </div>
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-6 lg:px-8">
-        {/* Logo */}
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-5 sm:px-6 lg:px-8">
         <Link
           aria-label="Mboka Hub"
-          className="group flex items-center gap-3"
+          className="group flex items-center"
           href={localizedHref("/", locale)}
         >
-          <Image
-            alt=""
-            aria-hidden
-            className="size-11"
-            height={44}
-            priority
-            src="/logo.svg"
-            width={44}
-          />
-          <span className="flex flex-col">
-            <span className="font-display text-3xl uppercase leading-none tracking-normal text-paper">
-              Mboka <span className="text-blood">Hub</span>
-            </span>
-            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper-mute">
-              Services & réservations
-            </span>
+          <span className="text-2xl font-black uppercase tracking-[0.22em] text-paper">
+            MbokaHub
           </span>
         </Link>
 
-        {/* Desktop nav */}
         <nav
           aria-label="Navigation principale"
-          className="hidden items-center gap-8 md:flex"
+          className="hidden items-center gap-7 md:flex"
         >
-          <MegaMenu label={m.trigger} locale={locale} sections={megaSections} />
+          <MegaMenu label="Services" locale={locale} sections={megaSections} />
           {simpleNavItems.map((item) => (
             <Link
-              className="group/link relative font-body text-sm uppercase tracking-widest text-paper-dim transition-colors hover:text-blood"
+              className="text-sm font-medium text-paper transition-colors hover:text-blood"
               href={localizedHref(item.href, locale)}
               key={item.href}
             >
               {item.label}
-              <span className="absolute -bottom-1 left-0 h-px w-0 bg-blood transition-all group-hover/link:w-full" />
             </Link>
           ))}
         </nav>
 
-        {/* Right actions */}
         <div className="flex items-center gap-2 sm:gap-3">
           <LanguageSwitcher />
-          {!isSignedIn ? (
-            <Button
-              asChild
-              className="hidden sm:inline-flex"
-              size="sm"
-              variant="ghost"
-            >
-              <Link
-                href={localizedHref("/sign-in?redirect_url=/dashboard", locale)}
-              >
-                {signInLabel}
-              </Link>
-            </Button>
-          ) : null}
           <Button
             asChild
             className="hidden sm:inline-flex"
@@ -206,7 +159,16 @@ export function SiteHeader() {
                 }}
               />
             </div>
-          ) : null}
+          ) : (
+            <Button asChild className="hidden sm:inline-flex" size="sm">
+              <Link
+                href={localizedHref("/sign-in?redirect_url=/dashboard", locale)}
+              >
+                <UserRound className="size-4" />
+                Mon compte
+              </Link>
+            </Button>
+          )}
           <MobileMenu locale={locale} />
         </div>
       </div>

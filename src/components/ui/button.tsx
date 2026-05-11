@@ -10,20 +10,20 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-blood text-primary-foreground font-display uppercase tracking-tight hover:bg-blood-deep hover:shadow-glow-blood",
-        outline: "border-white/10 bg-transparent text-paper hover:bg-smoke",
+          "bg-[#202124] text-white font-body font-semibold hover:bg-black",
+        outline: "border-[#d7dbe2] bg-white text-paper hover:bg-smoke",
         secondary:
           "bg-smoke text-paper hover:bg-ash rounded-xl font-body font-semibold",
         ghost: "text-paper-dim hover:bg-smoke hover:text-paper",
         destructive: "bg-error/10 text-error hover:bg-error/20",
         link: "text-blood underline-offset-4 hover:underline",
-        vip: "bg-gold text-paper font-display uppercase tracking-tight hover:bg-gold-soft hover:shadow-[0_18px_35px_rgba(213,159,47,0.24)]",
+        vip: "bg-smoke text-paper font-body font-semibold hover:bg-ash",
       },
       size: {
-        default: "h-12 px-8 py-3 rounded-full text-base",
-        sm: "h-9 px-4 rounded-full text-sm",
-        lg: "h-14 px-10 rounded-full text-lg",
-        icon: "size-10 rounded-full",
+        default: "h-11 px-6 py-3 rounded-md text-sm",
+        sm: "h-9 px-4 rounded-md text-sm",
+        lg: "h-[52px] px-8 rounded-md text-base",
+        icon: "size-10 rounded-md",
       },
     },
     defaultVariants: {
