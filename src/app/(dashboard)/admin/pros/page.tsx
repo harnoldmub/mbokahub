@@ -205,7 +205,7 @@ export default async function AdminProsPage({
                   <div className="flex flex-wrap justify-end gap-2">
                     <Link
                       href={`/pro/${p.id}?from=admin`}
-                      className="rounded-md bg-blue-500/20 px-2 py-1 text-blue-300 text-xs hover:bg-blue-500/30"
+                      className="inline-flex items-center rounded-md border border-white/15 bg-white/5 px-3 py-1.5 font-medium text-foreground text-xs shadow-sm transition hover:bg-white/15"
                     >
                       Voir la fiche
                     </Link>
