@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { AdminAsProBanner } from "@/components/admin/admin-as-pro-banner";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
@@ -9,19 +10,19 @@ import {
   updateServiceAction,
 } from "@/lib/actions/booking";
 import { formatPriceCents } from "@/lib/booking-slots";
-import { getDashboardUser } from "@/lib/dashboard";
 import { prisma } from "@/lib/db/prisma";
+import { resolveProTarget } from "@/lib/pro-context";
 import { ProfilProTabs } from "../_nav";
 
 export default async function PrestationsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ saved?: string; error?: string }>;
+  searchParams: Promise<{ saved?: string; error?: string; as?: string }>;
 }) {
   const sp = await searchParams;
-  const user = await getDashboardUser();
+  const ctx = await resolveProTarget(sp.as);
   const pro = await prisma.proProfile.findUnique({
-    where: { userId: user.id },
+    where: { userId: ctx.proUserId },
     include: {
       services: {
         orderBy: { position: "asc" },
@@ -43,6 +44,14 @@ export default async function PrestationsPage({
 
   return (
     <div className="grid gap-6">
+      {ctx.isAdminActingAs ? (
+        <AdminAsProBanner
+          proId={pro.id}
+          proDisplayName={pro.displayName}
+          ownerEmail={ctx.ownerEmail}
+        />
+      ) : null}
+
       <div>
         <p className="font-mono text-blood text-xs uppercase tracking-[0.3em]">
           Profil pro
@@ -55,7 +64,10 @@ export default async function PrestationsPage({
         </p>
       </div>
 
-      <ProfilProTabs active="/dashboard/profil-pro/prestations" />
+      <ProfilProTabs
+        active="/dashboard/profil-pro/prestations"
+        actingAs={ctx.actingAsProId}
+      />
 
       {sp.saved ? (
         <div className="rounded-2xl border border-success/30 bg-success/10 p-4 text-success text-sm">
@@ -72,6 +84,9 @@ export default async function PrestationsPage({
         action={createServiceAction}
         className="grid gap-4 rounded-3xl border border-white/10 bg-coal p-6"
       >
+        {ctx.actingAsProId ? (
+          <input type="hidden" name="_actingAs" value={ctx.actingAsProId} />
+        ) : null}
         <h2 className="font-display text-xl uppercase text-paper">
           Ajouter une prestation
         </h2>
@@ -142,6 +157,13 @@ export default async function PrestationsPage({
               key={s.id}
               className="grid gap-4 rounded-3xl border border-white/10 bg-coal p-5"
             >
+              {ctx.actingAsProId ? (
+                <input
+                  type="hidden"
+                  name="_actingAs"
+                  value={ctx.actingAsProId}
+                />
+              ) : null}
               <input type="hidden" name="id" value={s.id} />
               <div className="flex items-start justify-between gap-4">
                 <div>

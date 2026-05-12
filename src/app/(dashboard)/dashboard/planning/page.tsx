@@ -1,10 +1,11 @@
 import { CalendarCheck, Clock, Mail, MessageCircle, User } from "lucide-react";
 import Link from "next/link";
 
+import { AdminAsProBanner } from "@/components/admin/admin-as-pro-banner";
 import { Button } from "@/components/ui/button";
 import { updateProBookingStatusAction } from "@/lib/actions/public";
-import { getDashboardUser } from "@/lib/dashboard";
 import { prisma } from "@/lib/db/prisma";
+import { resolveProTarget, withAs } from "@/lib/pro-context";
 
 const statusLabel = {
   PENDING: "À confirmer",
@@ -30,12 +31,12 @@ function formatSlot(date: Date) {
 export default async function PlanningPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ updated?: string; error?: string }>;
+  searchParams?: Promise<{ updated?: string; error?: string; as?: string }>;
 }) {
-  const sp = await searchParams;
-  const user = await getDashboardUser();
+  const sp = (await searchParams) ?? {};
+  const ctx = await resolveProTarget(sp.as);
   const pro = await prisma.proProfile.findUnique({
-    where: { userId: user.id },
+    where: { userId: ctx.proUserId },
     include: {
       bookings: {
         orderBy: [{ status: "asc" }, { requestedAt: "asc" }],
@@ -71,6 +72,14 @@ export default async function PlanningPage({
 
   return (
     <div className="grid gap-8">
+      {ctx.isAdminActingAs ? (
+        <AdminAsProBanner
+          proId={pro.id}
+          proDisplayName={pro.displayName}
+          ownerEmail={ctx.ownerEmail}
+        />
+      ) : null}
+
       <div>
         <p className="font-mono text-blood text-xs uppercase tracking-[0.3em]">
           Planning
@@ -112,9 +121,41 @@ export default async function PlanningPage({
               {pro.bookings.length} demande{pro.bookings.length > 1 ? "s" : ""}
             </p>
           </div>
-          <Button asChild variant="outline">
-            <Link href={`/pro/${pro.id}`}>Voir ma fiche publique</Link>
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button asChild variant="outline" size="sm">
+              <Link
+                href={withAs(
+                  "/dashboard/profil-pro/prestations",
+                  ctx.actingAsProId,
+                )}
+              >
+                Prestations
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link
+                href={withAs(
+                  "/dashboard/profil-pro/equipe",
+                  ctx.actingAsProId,
+                )}
+              >
+                Équipe
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link
+                href={withAs(
+                  "/dashboard/profil-pro/horaires",
+                  ctx.actingAsProId,
+                )}
+              >
+                Horaires
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link href={`/pro/${pro.id}`}>Voir la fiche publique</Link>
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -173,6 +214,13 @@ export default async function PlanningPage({
                 <div className="flex flex-wrap gap-2">
                   {booking.status !== "CONFIRMED" ? (
                     <form action={updateProBookingStatusAction}>
+                      {ctx.actingAsProId ? (
+                        <input
+                          name="_actingAs"
+                          type="hidden"
+                          value={ctx.actingAsProId}
+                        />
+                      ) : null}
                       <input
                         name="bookingId"
                         type="hidden"
@@ -186,6 +234,13 @@ export default async function PlanningPage({
                   ) : null}
                   {booking.status !== "COMPLETED" ? (
                     <form action={updateProBookingStatusAction}>
+                      {ctx.actingAsProId ? (
+                        <input
+                          name="_actingAs"
+                          type="hidden"
+                          value={ctx.actingAsProId}
+                        />
+                      ) : null}
                       <input
                         name="bookingId"
                         type="hidden"
@@ -199,6 +254,13 @@ export default async function PlanningPage({
                   ) : null}
                   {booking.status !== "CANCELLED" ? (
                     <form action={updateProBookingStatusAction}>
+                      {ctx.actingAsProId ? (
+                        <input
+                          name="_actingAs"
+                          type="hidden"
+                          value={ctx.actingAsProId}
+                        />
+                      ) : null}
                       <input
                         name="bookingId"
                         type="hidden"
