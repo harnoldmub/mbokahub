@@ -5,10 +5,8 @@ import {
   Check,
   ChevronRight,
   Clock3,
-  MapPin,
   Megaphone,
   Scissors,
-  Search,
   ShieldCheck,
   Sparkles,
   Star,
@@ -17,6 +15,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+import { HeroSearch } from "@/components/marketing/hero-search";
 import { Button } from "@/components/ui/button";
 import {
   localizedHref,
@@ -76,49 +75,22 @@ export default async function HomePage({ params, searchParams }: HomePageProps) 
       </section>
 
       <section className="bg-white">
-        <div className="mx-auto grid max-w-7xl gap-10 px-5 pb-16 pt-14 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:pb-24 lg:pt-20">
+        <div className="mx-auto grid max-w-7xl gap-10 px-5 pb-16 pt-8 sm:px-6 sm:pt-10 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:pb-24 lg:pt-12">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-blood">
               Réservation de services
             </p>
-            <h1 className="mt-5 max-w-4xl text-5xl font-semibold leading-[1.02] tracking-normal text-paper sm:text-6xl lg:text-7xl">
+            <h1 className="mt-3 max-w-4xl text-3xl font-semibold leading-[1.05] tracking-normal text-paper sm:mt-4 sm:text-4xl lg:text-5xl">
               Trouvez un prestataire et réservez un rendez-vous.
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-paper-dim">
+
+            <HeroSearch locale={locale} />
+
+            <p className="mt-6 max-w-2xl text-base leading-7 text-paper-dim">
               Nevent connecte les clients aux professionnels : beauté,
               coiffure, photo, transport et services événementiels. Gratuit pour
               chercher, publier et gérer ses demandes.
             </p>
-
-            <form
-              action={localizedHref("/prestataires", locale)}
-              className="mt-8 grid gap-2 rounded-xl border border-[#d7dbe2] bg-white p-2 shadow-[0_24px_60px_-42px_rgba(20,20,20,0.35)] sm:grid-cols-[1fr_0.8fr_auto]"
-            >
-              {locale !== "fr" ? (
-                <input name="lang" type="hidden" value={locale} />
-              ) : null}
-              <label className="relative block">
-                <Search className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-paper-mute" />
-                <input
-                  className="h-12 w-full rounded-lg border border-transparent bg-smoke py-3 pl-12 pr-4 text-sm text-paper outline-none transition placeholder:text-paper-mute focus:border-blood/50 focus:bg-white"
-                  name="q"
-                  placeholder="Coiffeur, maquilleuse, photographe..."
-                  type="search"
-                />
-              </label>
-              <label className="relative block">
-                <MapPin className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-paper-mute" />
-                <input
-                  className="h-12 w-full rounded-lg border border-transparent bg-smoke py-3 pl-12 pr-4 text-sm text-paper outline-none transition placeholder:text-paper-mute focus:border-blood/50 focus:bg-white"
-                  name="city"
-                  placeholder="Ville ou quartier"
-                  type="search"
-                />
-              </label>
-              <Button className="h-12 rounded-lg px-6" type="submit">
-                Rechercher
-              </Button>
-            </form>
 
             <div className="mt-6 flex flex-wrap gap-2">
               {categories.slice(0, 5).map((category) => {

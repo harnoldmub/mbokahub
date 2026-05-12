@@ -27,7 +27,11 @@ export function MessageThreadClient({
   const [body, setBody] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const lastCountRef = useRef<number>(initialMessages.length);
+  const lastIdRef = useRef<string | null>(
+    initialMessages[initialMessages.length - 1]?.id ?? null,
+  );
 
   const poll = useCallback(async () => {
     try {
@@ -40,9 +44,20 @@ export function MessageThreadClient({
     } catch {}
   }, [conversationId]);
 
-  // Scroll to bottom on new messages
+  // Scroll the inner chat container (NOT the page) only when a new message
+  // arrives. Skip the very first render so the page doesn't jump on mount.
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    const lastId = messages[messages.length - 1]?.id ?? null;
+    const isInitial =
+      lastCountRef.current === messages.length && lastIdRef.current === lastId;
+    if (!isInitial) {
+      const el = containerRef.current;
+      if (el) {
+        el.scrollTop = el.scrollHeight;
+      }
+    }
+    lastCountRef.current = messages.length;
+    lastIdRef.current = lastId;
   }, [messages]);
 
   // Poll every 5 seconds
@@ -68,7 +83,10 @@ export function MessageThreadClient({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-2 overflow-y-auto rounded-2xl border border-white/10 bg-coal p-4 min-h-[320px] max-h-[60vh]">
+      <div
+        ref={containerRef}
+        className="flex flex-col gap-2 overflow-y-auto overscroll-contain rounded-2xl border border-white/10 bg-coal p-4 min-h-[320px] max-h-[60vh]"
+      >
         {messages.length === 0 && (
           <p className="m-auto text-sm text-paper-mute">
             Commencez la conversation avec {otherName}.
@@ -101,7 +119,6 @@ export function MessageThreadClient({
             </div>
           );
         })}
-        <div ref={bottomRef} />
       </div>
 
       <form onSubmit={handleSend} className="flex gap-2">
