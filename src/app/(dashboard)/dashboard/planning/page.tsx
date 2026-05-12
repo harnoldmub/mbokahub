@@ -108,7 +108,7 @@ export default async function PlanningPage({
           confirmes, annules ou marques terminé depuis cet espace.
         </p>
         <div className="mt-5 rounded-2xl border border-warning/30 bg-warning/10 p-4 text-sm text-paper-dim max-w-2xl">
-          <strong className="text-warning">Règle sur les acomptes :</strong> Si tu demandes un acompte pour valider une réservation, celui-ci ne doit <strong>jamais dépasser 20€</strong>. Le paiement se fait directement avec le client via PayPal, Paylib, etc. Tout abus (acompte abusif, arnaque) entraînera le bannissement de la plateforme.
+          <strong className="text-warning">Acomptes :</strong> Tu peux exiger un acompte pour confirmer une réservation. Celui-ci ne doit <strong>pas dépasser 20 €</strong> et se règle hors plateforme via le moyen convenu avec ton client (PayPal, Paylib, virement…). Tout abus entraînera le bannissement de la plateforme.
         </div>
       </div>
 
@@ -280,7 +280,7 @@ export default async function PlanningPage({
               <div>
                 <h2 className="font-display text-xl uppercase text-paper">Mes disponibilités</h2>
                 <p className="text-xs text-paper-dim mt-0.5">
-                  Indique tes jours et horaires de travail. Les créneaux visibles sur ta fiche sont calculés automatiquement.
+                  Optionnel — si tu as des créneaux récurrents, indique-les ici. Sinon, laisse vide et les clients te contactent directement pour convenir.
                 </p>
               </div>
             </div>

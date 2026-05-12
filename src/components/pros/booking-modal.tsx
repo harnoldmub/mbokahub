@@ -471,7 +471,7 @@ export function BookingModal({
                   </div>
 
                   <p className="rounded-xl border border-warning/30 bg-warning/10 px-3 py-2 text-xs text-paper-dim">
-                    <strong className="text-warning">Acomptes :</strong> max. 20€ via PayPal/Paylib.
+                    <strong className="text-warning">Acompte :</strong> Le prestataire peut demander un acompte ne dépassant pas 20 €. Le paiement se règle directement avec lui hors plateforme (PayPal, Paylib, virement…).
                   </p>
 
                   {formError && (
