@@ -94,6 +94,16 @@ The `postcss.config.mjs` sets `base: "./src"` for `@tailwindcss/postcss` to prev
 - Duplicate route conflict resolved: removed `(legal)/disclaimer/page.tsx` (kept `(marketing)/disclaimer/page.tsx`)
 - `/api/health` returns `{ ok, db, latencyMs }` for uptime monitoring (no auth, no-cache).
 
+### Post-merge setup
+`scripts/post-merge.sh` runs automatically after every project task merge: `pnpm install`, `prisma generate`, then `prisma migrate deploy` (skipped if `DATABASE_URL` unset). Configured in `.replit` `[postMerge]`, 180s timeout. Idempotent and non-interactive.
+
+### Booking system (Treatwell-style)
+- Schema: `Service`, `TeamMember`, `ServiceMember`, `WorkingHours`, `TimeOff` + `ProBooking` extended with `serviceId?`, `teamMemberId?`, `durationMin?`. Migration `20260512000000_add_booking_slots`.
+- Slots calculated on-the-fly via `src/lib/booking-slots.ts` (`computeAvailableSlots` / `isSlotStillAvailable`), 28-day window, 15-minute granularity, no `Slot` table.
+- Public flow `/[locale]/pro/[id]`: prestation → membre → grille semaine. Falls back to free-form date/time form when the pro has no online-bookable service or category is `VENDEUR_MERCH` / `BABYSITTER`.
+- Dashboard: `/dashboard/profil-pro/{prestations,equipe,horaires}` with shared `ProfilProTabs`.
+- Concurrency: `createSlotBookingAction` uses Prisma Serializable transaction with P2034 (40001) retry to prevent double-booking; `updateServiceAction` whitelists submitted `memberId`s against TeamMembers actually owned by the current pro to prevent multi-tenant leak.
+
 ### Error & loading boundaries
 - `src/app/error.tsx` — friendly error UI for any route failure (with `reset()`).
 - `src/app/global-error.tsx` — fallback when even the root layout crashes.
