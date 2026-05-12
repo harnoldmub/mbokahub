@@ -215,12 +215,12 @@ export function PhotoUploader({
       )}
 
       {error && (
-        <p className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-red-300 text-xs">
+        <p className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-red-600 text-xs">
           {error}
         </p>
       )}
       {warnings.length > 0 && (
-        <ul className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-amber-200 text-xs">
+        <ul className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-amber-700 text-xs">
           {warnings.map((w) => (
             <li key={w}>· {w}</li>
           ))}

@@ -11,15 +11,15 @@ export const dynamic = "force-dynamic";
 const STATUS_LABEL: Record<string, { text: string; cls: string }> = {
   PENDING: {
     text: "En attente",
-    cls: "bg-yellow-500/20 text-yellow-300",
+    cls: "bg-yellow-500/20 text-yellow-700",
   },
   APPROVED: {
     text: "Approuvé",
-    cls: "bg-green-500/20 text-green-300",
+    cls: "bg-green-500/20 text-green-700",
   },
   SUSPENDED: {
     text: "Suspendu",
-    cls: "bg-red-500/20 text-red-300",
+    cls: "bg-red-500/20 text-red-600",
   },
 };
 
@@ -65,19 +65,19 @@ export default async function AdminModerateursPage({
           </a>
           <a
             href="/admin/moderateurs?status=pending"
-            className="rounded-full border border-yellow-500/40 bg-yellow-500/10 px-3 py-1 text-yellow-300 text-xs hover:bg-yellow-500/20"
+            className="rounded-full border border-yellow-500/40 bg-yellow-500/10 px-3 py-1 text-yellow-700 text-xs hover:bg-yellow-500/20"
           >
             En attente
           </a>
           <a
             href="/admin/moderateurs?status=approved"
-            className="rounded-full border border-green-500/40 bg-green-500/10 px-3 py-1 text-green-300 text-xs hover:bg-green-500/20"
+            className="rounded-full border border-green-500/40 bg-green-500/10 px-3 py-1 text-green-700 text-xs hover:bg-green-500/20"
           >
             Approuvés
           </a>
           <a
             href="/admin/moderateurs?status=suspended"
-            className="rounded-full border border-red-500/40 bg-red-500/10 px-3 py-1 text-red-300 text-xs hover:bg-red-500/20"
+            className="rounded-full border border-red-500/40 bg-red-500/10 px-3 py-1 text-red-600 text-xs hover:bg-red-500/20"
           >
             Suspendus
           </a>
@@ -149,7 +149,7 @@ export default async function AdminModerateursPage({
                         <form action={approveModerator.bind(null, m.id)}>
                           <button
                             type="submit"
-                            className="rounded-md bg-green-500/20 px-2 py-1 text-green-300 text-xs hover:bg-green-500/30"
+                            className="rounded-md bg-green-500/20 px-2 py-1 text-green-700 text-xs hover:bg-green-500/30"
                           >
                             Approuver
                           </button>
@@ -159,7 +159,7 @@ export default async function AdminModerateursPage({
                         <ConfirmActionForm
                           action={suspendModerator.bind(null, m.id)}
                           triggerLabel="Suspendre"
-                          triggerClassName="rounded-md bg-yellow-500/20 px-2 py-1 text-yellow-300 text-xs hover:bg-yellow-500/30"
+                          triggerClassName="rounded-md bg-yellow-500/20 px-2 py-1 text-yellow-700 text-xs hover:bg-yellow-500/30"
                           title="Suspendre ce modérateur ?"
                           description="Le modérateur perdra immédiatement son accès. Tu pourras le réactiver plus tard."
                           confirmLabel="Suspendre"
@@ -169,7 +169,7 @@ export default async function AdminModerateursPage({
                       <ConfirmActionForm
                         action={deleteModerator.bind(null, m.id)}
                         triggerLabel="Supprimer"
-                        triggerClassName="text-red-400 text-xs hover:text-red-300"
+                        triggerClassName="text-red-600 text-xs hover:text-red-600"
                         title="Supprimer ce modérateur ?"
                         description="Suppression définitive du rôle de modérateur. Le compte utilisateur reste."
                         confirmLabel="Supprimer"

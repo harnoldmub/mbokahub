@@ -33,7 +33,7 @@ function StatBox({
         <p className="font-mono text-muted-foreground text-xs uppercase tracking-widest">
           {label}
         </p>
-        <Icon aria-hidden className="size-4 text-red-400" />
+        <Icon aria-hidden className="size-4 text-red-600" />
       </div>
       <p className="mt-3 font-heading text-3xl text-foreground">{value}</p>
       {hint && <p className="mt-1 text-muted-foreground text-xs">{hint}</p>}
@@ -201,7 +201,7 @@ export default async function AdminStatsPage() {
                         {views.toLocaleString("fr-FR")} vues · {contacts.toLocaleString("fr-FR")} contacts
                       </p>
                     </div>
-                    <span className="rounded-full bg-red-500/10 px-3 py-1 font-mono text-red-300 text-xs">
+                    <span className="rounded-full bg-red-500/10 px-3 py-1 font-mono text-red-600 text-xs">
                       {row._count._all}
                     </span>
                   </div>
@@ -247,7 +247,7 @@ export default async function AdminStatsPage() {
               ))}
             </div>
             <div className="border-white/10 border-t px-5 py-3">
-              <Link href="/admin/pros" className="text-red-400 text-xs hover:text-red-300">
+              <Link href="/admin/pros" className="text-red-600 text-xs hover:text-red-600">
                 Voir tous les prestataires →
               </Link>
             </div>

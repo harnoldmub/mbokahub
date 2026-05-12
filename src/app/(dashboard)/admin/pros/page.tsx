@@ -60,8 +60,8 @@ export default async function AdminProsPage({
         </p>
         <div className="mt-4 flex gap-2">
           <a href="/admin/pros" className="rounded-full border border-white/20 px-3 py-1 text-foreground text-xs hover:bg-white/10">Tous</a>
-          <a href="/admin/pros?status=pending" className="rounded-full border border-yellow-500/40 bg-yellow-500/10 px-3 py-1 text-yellow-300 text-xs hover:bg-yellow-500/20">En attente</a>
-          <a href="/admin/pros?status=verified" className="rounded-full border border-green-500/40 bg-green-500/10 px-3 py-1 text-green-300 text-xs hover:bg-green-500/20">Validés</a>
+          <a href="/admin/pros?status=pending" className="rounded-full border border-yellow-500/40 bg-yellow-500/10 px-3 py-1 text-yellow-700 text-xs hover:bg-yellow-500/20">En attente</a>
+          <a href="/admin/pros?status=verified" className="rounded-full border border-green-500/40 bg-green-500/10 px-3 py-1 text-green-700 text-xs hover:bg-green-500/20">Validés</a>
         </div>
       </div>
 
@@ -78,19 +78,19 @@ export default async function AdminProsPage({
             type="email"
             required
             placeholder="Email du pro (existant ou nouveau)"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="displayName"
             required
             placeholder="Nom affiché (ex: Studio Mboka)"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <select
             name="category"
             required
             defaultValue=""
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm"
           >
             <option value="" disabled>— Catégorie —</option>
             {CATEGORIES.map((c) => (
@@ -101,40 +101,40 @@ export default async function AdminProsPage({
             name="city"
             required
             placeholder="Ville (ex: Paris)"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="country"
             defaultValue="France"
             placeholder="Pays"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <PhoneInput name="whatsapp" required />
           <input
             name="instagramHandle"
             placeholder="Instagram (@handle)"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="tiktokHandle"
             placeholder="TikTok (@handle)"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="priceRange"
             placeholder="Tarif (ex: 80-150€)"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="specialities"
             placeholder="Spécialités (séparées par virgule)"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <textarea
             name="bio"
             rows={3}
             placeholder="Bio / présentation"
-            className="sm:col-span-2 rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="sm:col-span-2 rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <div className="sm:col-span-2">
             <PhotoUploader
@@ -196,16 +196,16 @@ export default async function AdminProsPage({
                 </td>
                 <td className="px-4 py-3">
                   {p.isVerified ? (
-                    <span className="rounded-full bg-green-500/20 px-2 py-1 text-green-300 text-xs">Validé</span>
+                    <span className="rounded-full bg-green-500/20 px-2 py-1 text-green-700 text-xs">Validé</span>
                   ) : (
-                    <span className="rounded-full bg-yellow-500/20 px-2 py-1 text-yellow-300 text-xs">En attente</span>
+                    <span className="rounded-full bg-yellow-500/20 px-2 py-1 text-yellow-700 text-xs">En attente</span>
                   )}
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex flex-wrap justify-end gap-2">
                     <Link
                       href={`/pro/${p.id}?from=admin`}
-                      className="rounded-md bg-blue-500/20 px-2 py-1 text-blue-300 text-xs hover:bg-blue-500/30"
+                      className="rounded-md bg-blue-500/20 px-2 py-1 text-blue-700 text-xs hover:bg-blue-500/30"
                     >
                       Voir la fiche
                     </Link>

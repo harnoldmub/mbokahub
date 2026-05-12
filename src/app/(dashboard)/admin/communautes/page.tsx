@@ -137,7 +137,7 @@ export default async function AdminCommunautesPage() {
                 <td className="px-4 py-3 text-foreground">
                   {c.name}
                   {c.isFeatured && (
-                    <span className="ml-2 rounded-full bg-yellow-500/20 px-2 py-0.5 text-yellow-300 text-[10px]">
+                    <span className="ml-2 rounded-full bg-yellow-500/20 px-2 py-0.5 text-yellow-700 text-[10px]">
                       ★ Officielle
                     </span>
                   )}
@@ -159,7 +159,7 @@ export default async function AdminCommunautesPage() {
                 </td>
                 <td className="px-4 py-3">
                   {c.isActive ? (
-                    <span className="rounded-full bg-green-500/20 px-2 py-1 text-green-300 text-xs">
+                    <span className="rounded-full bg-green-500/20 px-2 py-1 text-green-700 text-xs">
                       Active
                     </span>
                   ) : (
@@ -181,7 +181,7 @@ export default async function AdminCommunautesPage() {
                     <form action={toggleCommunityFeatured.bind(null, c.id, !c.isFeatured)}>
                       <button
                         type="submit"
-                        className="rounded-md bg-yellow-500/20 px-2 py-1 text-yellow-300 text-xs hover:bg-yellow-500/30"
+                        className="rounded-md bg-yellow-500/20 px-2 py-1 text-yellow-700 text-xs hover:bg-yellow-500/30"
                       >
                         {c.isFeatured ? "★ Retirer" : "☆ Mettre en avant"}
                       </button>
@@ -189,7 +189,7 @@ export default async function AdminCommunautesPage() {
                     <ConfirmActionForm
                       action={deleteCommunity.bind(null, c.id)}
                       triggerLabel="Supprimer"
-                      triggerClassName="text-red-400 text-xs hover:text-red-300"
+                      triggerClassName="text-red-600 text-xs hover:text-red-600"
                       title="Supprimer cette communauté ?"
                       description={
                         <>

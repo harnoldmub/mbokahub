@@ -2,10 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import {
   ArrowLeft,
   AtSign,
-  CalendarCheck,
-  Clock,
   MapPin,
-  MessageCircle,
   Pencil,
   Sparkles,
   Star,
@@ -15,18 +12,18 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { AdminProActionsBar } from "@/components/admin/admin-pro-actions-bar";
+import { BookingModal } from "@/components/pros/booking-modal";
+import { ContactProButton } from "@/components/pros/contact-pro-button";
 import { ProGalleryClient } from "@/components/pros/pro-gallery-client";
-import { ContactLock } from "@/components/shared/contact-lock";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { createProBookingAction } from "@/lib/actions/public";
 import { isCurrentUserAdmin } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/db/prisma";
 import { PRO_CATEGORY_BY_ID } from "@/lib/pro-categories";
 
 type ProDetailsPageProps = {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ booking?: string; from?: string }>;
+  searchParams: Promise<{ from?: string }>;
 };
 
 export default async function ProDetailsPage({
@@ -34,12 +31,18 @@ export default async function ProDetailsPage({
   searchParams,
 }: ProDetailsPageProps) {
   const { id } = await params;
-  // `from` était utilisé pour piloter le retour vers /admin/pros — on le
-  // garde pour compat. URL.
-  const { booking, from } = await searchParams;
+  const { from } = await searchParams;
   const { userId: clerkId } = await auth();
   const [pro, isAdmin, dbUser] = await Promise.all([
-    prisma.proProfile.findUnique({ where: { id } }),
+    prisma.proProfile.findUnique({
+      where: { id },
+      include: {
+        services: {
+          where: { isActive: true },
+          orderBy: [{ order: "asc" }, { createdAt: "asc" }],
+        },
+      },
+    }),
     isCurrentUserAdmin(),
     clerkId
       ? prisma.user.findUnique({
@@ -59,10 +62,6 @@ export default async function ProDetailsPage({
   const cover = pro.photos?.[0];
   const galleryPhotos = (pro.photos ?? []).slice(1);
   const displayedName = pro.displayName;
-  const whatsappDigits = pro.whatsapp.replace(/[^\d]/g, "");
-  const bookingMessage = encodeURIComponent(
-    `Bonjour ${displayedName}, je viens de Mboka Hub et je veux réserver un créneau.`,
-  );
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
@@ -230,101 +229,38 @@ export default async function ProDetailsPage({
             </a>
           ) : null}
 
-          <form
-            action={createProBookingAction}
-            className="grid gap-5 rounded-2xl border border-blood/20 bg-blood/10 p-5"
-          >
-            <input name="proProfileId" type="hidden" value={pro.id} />
-            <div className="grid gap-4 sm:grid-cols-[auto_1fr] sm:items-start">
-              <div className="grid size-11 place-items-center rounded-xl bg-coal text-blood">
-                <CalendarCheck className="size-5" />
-              </div>
-              <div>
-                <p className="font-display text-xl uppercase text-paper">
-                  Réserver un créneau
-                </p>
-                <p className="mt-1 text-sm text-paper-dim">
-                  Envoie une demande de rendez-vous au prestataire. Elle arrive
-                  dans son espace Planning et tu peux aussi ouvrir WhatsApp.
-                </p>
-                <div className="mt-3 rounded-xl border border-warning/30 bg-warning/10 px-3 py-2 text-xs text-paper-dim">
-                  <strong className="text-warning">Acomptes :</strong> Un prestataire peut demander un acompte. Celui-ci ne doit <strong>jamais dépasser 20€</strong>. Géré via PayPal/Paylib, etc.
-                </div>
-                {booking === "requested" ? (
-                  <p className="mt-3 rounded-xl border border-success/30 bg-success/10 px-3 py-2 text-sm text-success">
-                    Demande envoyée. Le prestataire peut maintenant la
-                    confirmer.
-                  </p>
-                ) : null}
-                {booking === "missing" || booking === "date" ? (
-                  <p className="mt-3 rounded-xl border border-warning/40 bg-warning/10 px-3 py-2 text-sm text-paper">
-                    Vérifie ton nom, ton téléphone et le créneau demandé.
-                  </p>
-                ) : null}
-              </div>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-2">
-              <input
-                className="h-11 rounded-xl border border-white/10 bg-coal px-3 text-sm text-paper outline-none focus:border-blood/40"
-                name="clientName"
-                placeholder="Ton nom"
-                required
-              />
-              <input
-                className="h-11 rounded-xl border border-white/10 bg-coal px-3 text-sm text-paper outline-none focus:border-blood/40"
-                name="clientPhone"
-                placeholder="Téléphone / WhatsApp"
-                required
-              />
-              <input
-                className="h-11 rounded-xl border border-white/10 bg-coal px-3 text-sm text-paper outline-none focus:border-blood/40"
-                name="clientEmail"
-                placeholder="Email optionnel"
-                type="email"
-              />
-              <input
-                className="h-11 rounded-xl border border-white/10 bg-coal px-3 text-sm text-paper outline-none focus:border-blood/40"
-                name="requestedAt"
-                required
-                type="datetime-local"
-              />
-            </div>
-            <textarea
-              className="min-h-24 rounded-xl border border-white/10 bg-coal px-3 py-3 text-sm text-paper outline-none focus:border-blood/40"
-              name="note"
-              placeholder="Message optionnel : service souhaité, lieu, nombre de personnes..."
+          <div className="rounded-2xl border border-blood/20 bg-blood/10 p-5">
+            <p className="font-display text-xl uppercase text-paper mb-1">
+              Réserver un créneau
+            </p>
+            <p className="text-sm text-paper-dim mb-4">
+              Choisis ta prestation et un créneau disponible directement en ligne.
+            </p>
+            <BookingModal
+              proProfileId={pro.id}
+              proName={pro.displayName}
+              services={pro.services.map((s) => ({
+                id: s.id,
+                name: s.name,
+                durationMinutes: s.durationMinutes,
+                price: s.price,
+              }))}
             />
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <p className="inline-flex items-center gap-2 text-xs text-paper-mute">
-                <Clock className="size-3.5" />
-                Demande gratuite, confirmation par le prestataire.
-              </p>
-              <div className="flex flex-col gap-2 sm:flex-row">
-                <Button asChild variant="outline">
-                  <a
-                    href={`https://wa.me/${whatsappDigits}?text=${bookingMessage}`}
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    <MessageCircle className="size-4" />
-                    WhatsApp
-                  </a>
-                </Button>
-                <Button type="submit">Envoyer la demande</Button>
-              </div>
-            </div>
-          </form>
+          </div>
 
           <div className="border-t border-white/10 pt-6">
             <p className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
-              Contact WhatsApp
+              Contact direct
             </p>
-            <div className="mt-2">
-              <ContactLock value={pro.whatsapp} rawValue={pro.whatsapp} />
+            <div className="mt-3">
+              <ContactProButton
+                proUserId={pro.userId}
+                isSignedIn={!!clerkId}
+                label="Écrire un message"
+              />
             </div>
             <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-300">
-              Contact gratuit pour tous les clients
+              Messagerie sécurisée · gratuit pour tous
             </p>
           </div>
         </div>

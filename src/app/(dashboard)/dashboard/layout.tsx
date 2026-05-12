@@ -5,6 +5,7 @@ import { DashboardNav } from "@/components/dashboard/nav";
 import { Badge } from "@/components/ui/badge";
 import { isAdminEmail } from "@/lib/admin";
 import { getDashboardUser } from "@/lib/dashboard";
+import { prisma } from "@/lib/db/prisma";
 
 export default async function DashboardLayout({
   children,
@@ -13,6 +14,17 @@ export default async function DashboardLayout({
 }>) {
   const user = await getDashboardUser();
   const isAdmin = user.role === "ADMIN" || (await isAdminEmail(user.email));
+
+  const unreadAgg = await prisma.conversation.aggregate({
+    where: { clientId: user.id },
+    _sum: { clientUnread: true },
+  });
+  const unreadAggPro = await prisma.conversation.aggregate({
+    where: { proId: user.id },
+    _sum: { proUnread: true },
+  });
+  const unreadMessages =
+    (unreadAgg._sum.clientUnread ?? 0) + (unreadAggPro._sum.proUnread ?? 0);
 
   return (
     <div className="mx-auto grid max-w-7xl gap-8 px-6 py-10 lg:grid-cols-[280px_1fr] lg:px-8">
@@ -44,7 +56,7 @@ export default async function DashboardLayout({
             </Badge>
           </div>
 
-          <DashboardNav isAdmin={isAdmin} />
+          <DashboardNav isAdmin={isAdmin} unreadMessages={unreadMessages} />
         </div>
 
         {isAdmin ? (

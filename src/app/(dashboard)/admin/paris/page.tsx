@@ -37,19 +37,19 @@ export default async function AdminParisPage() {
             name="name"
             required
             placeholder="Nom de l'adresse"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="category"
             required
             placeholder="Catégorie (Restaurant, Monument…)"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="address"
             required
             placeholder="Adresse complète"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground sm:col-span-2"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground sm:col-span-2"
           />
           <input
             name="arrondissement"
@@ -57,12 +57,12 @@ export default async function AdminParisPage() {
             min={1}
             max={20}
             placeholder="Arrondissement (1-20)"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <select
             name="priceLevel"
             defaultValue="2"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm"
           >
             <option value="1">€ — Économique</option>
             <option value="2">€€ — Moyen</option>
@@ -72,44 +72,44 @@ export default async function AdminParisPage() {
           <input
             name="phone"
             placeholder="Téléphone"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="order"
             type="number"
             defaultValue="0"
             placeholder="Ordre (0 = premier)"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="externalUrl"
             type="url"
             placeholder="Site web"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="googleMapsUrl"
             type="url"
             placeholder="URL Google Maps"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="imageUrl"
             type="url"
             placeholder="URL image"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground sm:col-span-2"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground sm:col-span-2"
           />
           <input
             name="tags"
             placeholder="Tags (séparés par virgule)"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground sm:col-span-2"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground sm:col-span-2"
           />
           <textarea
             name="description"
             required
             rows={3}
             placeholder="Description"
-            className="sm:col-span-2 rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="sm:col-span-2 rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <label className="flex items-center gap-2 text-foreground text-sm">
             <input type="checkbox" name="isSponsored" />
@@ -149,7 +149,7 @@ export default async function AdminParisPage() {
                 <td className="px-4 py-3 text-muted-foreground text-xs">{p.address}</td>
                 <td className="px-4 py-3">
                   {p.isSponsored ? (
-                    <span className="rounded-full bg-amber-500/20 px-2 py-1 text-amber-200 text-xs">Sponsorisé</span>
+                    <span className="rounded-full bg-amber-500/20 px-2 py-1 text-amber-700 text-xs">Sponsorisé</span>
                   ) : (
                     <span className="rounded-full bg-white/10 px-2 py-1 text-muted-foreground text-xs">Standard</span>
                   )}
@@ -157,14 +157,14 @@ export default async function AdminParisPage() {
                 <td className="px-4 py-3 text-right">
                   <div className="flex justify-end gap-2">
                     <form action={toggleParisSponsored.bind(null, p.id, !p.isSponsored)}>
-                      <button type="submit" className="rounded-md bg-amber-500/20 px-2 py-1 text-amber-200 text-xs hover:bg-amber-500/30">
+                      <button type="submit" className="rounded-md bg-amber-500/20 px-2 py-1 text-amber-700 text-xs hover:bg-amber-500/30">
                         {p.isSponsored ? "Retirer" : "Sponsoriser"}
                       </button>
                     </form>
                     <ConfirmActionForm
                       action={deleteParis.bind(null, p.id)}
                       triggerLabel="Supprimer"
-                      triggerClassName="text-red-400 text-xs hover:text-red-300"
+                      triggerClassName="text-red-600 text-xs hover:text-red-600"
                       title="Supprimer ce lieu ?"
                       description={
                         <>

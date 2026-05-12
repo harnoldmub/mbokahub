@@ -2,7 +2,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { ContactLock } from "@/components/shared/contact-lock";
+import { ContactProButton } from "@/components/pros/contact-pro-button";
 import { ReportButton } from "@/components/shared/report-button";
 import { PriceOfferDialog } from "@/components/trajets/price-offer-dialog";
 import { RulesDialog } from "@/components/trajets/rules-dialog";
@@ -117,11 +117,15 @@ export default async function TrajetDetailsPage({
           </div>
           <div className="border border-white/10 bg-background/70 p-4">
             <dt className="text-muted-foreground text-sm">Contact</dt>
-            <dd className="mt-1">
-              <ContactLock
-                value={trajet.whatsapp}
-                rawValue={trajet.whatsapp}
+            <dd className="mt-3">
+              <ContactProButton
+                proUserId={trajet.userId}
+                isSignedIn={!!clerkId}
+                label="Écrire au conducteur"
               />
+              <p className="mt-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                Messagerie sécurisée · gratuit
+              </p>
             </dd>
           </div>
         </dl>

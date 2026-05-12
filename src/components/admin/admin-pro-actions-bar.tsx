@@ -50,7 +50,7 @@ export function AdminProActionsBar({ pro, className }: AdminProActionsBarProps) 
       <ConfirmActionForm
         action={verifyProProfile.bind(null, pro.id, !pro.isVerified)}
         triggerLabel={pro.isVerified ? "Dévalider" : "Valider"}
-        triggerClassName="rounded-md bg-green-500/20 px-2 py-1 text-green-300 text-xs hover:bg-green-500/30"
+        triggerClassName="rounded-md bg-green-500/15 px-2 py-1 text-green-700 text-xs hover:bg-green-500/25"
         title={
           pro.isVerified
             ? "Dévalider ce profil ?"
@@ -82,7 +82,7 @@ export function AdminProActionsBar({ pro, className }: AdminProActionsBarProps) 
       <ConfirmActionForm
         action={certifyProProfile.bind(null, pro.id, !pro.isPremium)}
         triggerLabel={pro.isPremium ? "Retirer premium" : "Premium"}
-        triggerClassName="rounded-md bg-amber-500/20 px-2 py-1 text-amber-200 text-xs hover:bg-amber-500/30"
+        triggerClassName="rounded-md bg-amber-500/15 px-2 py-1 text-amber-700 text-xs hover:bg-amber-500/25"
         title={
           pro.isPremium
             ? "Retirer le statut Premium ?"
@@ -112,7 +112,7 @@ export function AdminProActionsBar({ pro, className }: AdminProActionsBarProps) 
       <ConfirmActionForm
         action={deleteProProfile.bind(null, pro.id)}
         triggerLabel="Supprimer"
-        triggerClassName="rounded-md bg-red-500/20 px-2 py-1 text-red-300 text-xs hover:bg-red-500/30"
+        triggerClassName="rounded-md bg-red-500/15 px-2 py-1 text-red-700 text-xs hover:bg-red-500/25"
         title="Supprimer ce profil pro ?"
         description={
           <>

@@ -1,4 +1,5 @@
-import { Contact, LockKeyhole } from "lucide-react";
+import { Contact, LockKeyhole, MessageSquare } from "lucide-react";
+import Link from "next/link";
 
 import { EmptyState } from "@/components/dashboard/empty-state";
 import { Badge } from "@/components/ui/badge";
@@ -41,9 +42,23 @@ export default async function ContactsPage() {
           Contacts débloqués
         </h1>
         <p className="mt-3 max-w-2xl text-paper-dim leading-7">
-          Les numéros WhatsApp débloqués restent ici pour les retrouver vite.
+          Historique des contacts débloqués. Pour les échanges avec les prestataires, utilisez la messagerie intégrée.
         </p>
       </div>
+
+      <Link
+        href="/dashboard/messages"
+        className="flex items-center gap-4 rounded-2xl border border-blood/30 bg-blood/5 p-4 transition hover:border-blood/50 hover:bg-blood/10"
+      >
+        <MessageSquare aria-hidden className="size-6 shrink-0 text-blood" />
+        <div>
+          <p className="font-heading text-paper">Messagerie sécurisée</p>
+          <p className="text-sm text-paper-dim">
+            Échangez directement avec les prestataires depuis la plateforme.
+          </p>
+        </div>
+        <span className="ml-auto font-mono text-xs text-blood">Voir →</span>
+      </Link>
 
       {unlockedContacts.length === 0 ? (
         <EmptyState

@@ -25,8 +25,8 @@ export default async function AdminPaymentsPage() {
           </p>
         </div>
         <div className="rounded-2xl border border-green-500/40 bg-green-500/10 px-5 py-3">
-          <p className="font-mono text-green-300/80 text-xs uppercase">Total encaissé</p>
-          <p className="font-heading text-2xl text-green-300">{totalCompleted.toFixed(2)} €</p>
+          <p className="font-mono text-green-700/80 text-xs uppercase">Total encaissé</p>
+          <p className="font-heading text-2xl text-green-700">{totalCompleted.toFixed(2)} €</p>
         </div>
       </div>
 
@@ -53,9 +53,9 @@ export default async function AdminPaymentsPage() {
                 <td className="px-4 py-3 text-foreground">{p.amount} {p.currency.toUpperCase()}</td>
                 <td className="px-4 py-3">
                   <span className={`rounded-full px-2 py-1 text-xs ${
-                    p.status === "COMPLETED" ? "bg-green-500/20 text-green-300" :
-                    p.status === "PENDING" ? "bg-yellow-500/20 text-yellow-300" :
-                    p.status === "FAILED" ? "bg-red-500/20 text-red-300" :
+                    p.status === "COMPLETED" ? "bg-green-500/20 text-green-700" :
+                    p.status === "PENDING" ? "bg-yellow-500/20 text-yellow-700" :
+                    p.status === "FAILED" ? "bg-red-500/20 text-red-600" :
                     "bg-white/10 text-muted-foreground"
                   }`}>{p.status}</span>
                 </td>

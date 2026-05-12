@@ -8,6 +8,7 @@ import {
   IdCard,
   LayoutDashboard,
   Megaphone,
+  MessageSquare,
   Settings,
   ShieldCheck,
   FileText,
@@ -18,6 +19,7 @@ import { cn } from "@/lib/utils";
 
 const baseItems = [
   { href: "/dashboard", label: "Vue d'ensemble", icon: LayoutDashboard },
+  { href: "/dashboard/messages", label: "Messages", icon: MessageSquare },
   { href: "/dashboard/contacts", label: "Contacts", icon: Contact },
   { href: "/dashboard/annonces", label: "Annonces", icon: Megaphone },
   { href: "/dashboard/profil-pro", label: "Ma fiche pro", icon: IdCard },
@@ -27,7 +29,13 @@ const baseItems = [
   { href: "/dashboard/parametres", label: "Paramètres", icon: Settings },
 ] as const;
 
-export function DashboardNav({ isAdmin = false }: { isAdmin?: boolean }) {
+export function DashboardNav({
+  isAdmin = false,
+  unreadMessages = 0,
+}: {
+  isAdmin?: boolean;
+  unreadMessages?: number;
+}) {
   const pathname = usePathname();
   const items = isAdmin
     ? [
@@ -78,10 +86,17 @@ export function DashboardNav({ isAdmin = false }: { isAdmin?: boolean }) {
             <span
               className={cn(
                 isActive ? "font-display tracking-tight" : "font-body",
+                "flex-1",
               )}
             >
               {item.label}
             </span>
+
+            {item.href === "/dashboard/messages" && unreadMessages > 0 && (
+              <span className="flex size-5 items-center justify-center rounded-full bg-blood font-mono text-[10px] text-white">
+                {unreadMessages > 9 ? "9+" : unreadMessages}
+              </span>
+            )}
 
             {isActive && (
               <motion.div

@@ -2,6 +2,7 @@ import {
   ArrowRight,
   AtSign,
   Flame,
+  MessageSquare,
   ShieldCheck,
   Sparkles,
   Star,
@@ -9,7 +10,6 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-import { ContactLock } from "@/components/shared/contact-lock";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,11 +23,7 @@ type ProCardData = ProDemo & {
 };
 
 type ProCardProps = {
-  pro: ProCardData & { whatsappRaw?: string | null };
-  /**
-   * Conservé pour compat. — Mboka Hub est désormais 100% gratuit pour les
-   * fans, le contact est toujours révélé.
-   */
+  pro: ProCardData;
   unlocked?: boolean;
 };
 
@@ -137,10 +133,13 @@ export function ProCard({ pro, unlocked: _unlocked }: ProCardProps) {
         </div>
 
         <div className="space-y-3">
-          <ContactLock
-            value={pro.whatsappRaw ?? pro.whatsappMasked}
-            rawValue={pro.whatsappRaw ?? undefined}
-          />
+          <Link
+            href={`/beaute/${pro.id}`}
+            className="flex items-center gap-2 rounded-xl border border-blood/30 bg-blood/5 px-4 py-2.5 text-sm font-medium text-blood transition hover:border-blood/60 hover:bg-blood/10"
+          >
+            <MessageSquare aria-hidden className="size-4 shrink-0" />
+            Contacter via messagerie
+          </Link>
           <Button
             asChild
             className="w-full h-12 bg-smoke border-white/5 hover:bg-gold hover:text-ink group/btn transition-all duration-500 rounded-xl"

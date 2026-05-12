@@ -55,7 +55,7 @@ export default async function AdminNewsletterPage() {
                   <ConfirmActionForm
                     action={deleteNewsletterSubscriber.bind(null, s.id)}
                     triggerLabel="Supprimer"
-                    triggerClassName="text-red-400 text-xs hover:text-red-300"
+                    triggerClassName="text-red-600 text-xs hover:text-red-600"
                     title="Désinscrire cet abonné ?"
                     description={
                       <>

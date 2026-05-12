@@ -33,7 +33,7 @@ export default async function AdminAftersPage() {
       </div>
 
       {pendingCount > 0 && (
-        <div className="rounded-2xl border border-amber-500/40 bg-amber-500/10 px-5 py-4 text-amber-200 text-sm">
+        <div className="rounded-2xl border border-amber-500/40 bg-amber-500/10 px-5 py-4 text-amber-700 text-sm">
           <span className="font-semibold">
             ⏱ {pendingCount} after{pendingCount > 1 ? "s" : ""}
           </span>{" "}
@@ -54,38 +54,38 @@ export default async function AdminAftersPage() {
             name="name"
             required
             placeholder="Nom de l'after"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground sm:col-span-2"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground sm:col-span-2"
           />
           <input
             name="venue"
             required
             placeholder="Lieu (ex: Le Cabaret Sauvage)"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="address"
             required
             placeholder="Adresse complète"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="city"
             defaultValue="Paris"
             placeholder="Ville"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="date"
             type="datetime-local"
             required
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm"
           />
           <input
             name="capacity"
             type="number"
             min={0}
             placeholder="Capacité"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="priceFrom"
@@ -94,27 +94,27 @@ export default async function AdminAftersPage() {
             min={0}
             required
             placeholder="Prix à partir de (€)"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="ticketUrl"
             type="url"
             required
             placeholder="URL billetterie"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground sm:col-span-2"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground sm:col-span-2"
           />
           <input
             name="flyerUrl"
             type="url"
             placeholder="URL du flyer (optionnel)"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground sm:col-span-2"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground sm:col-span-2"
           />
           <textarea
             name="description"
             required
             rows={3}
             placeholder="Description"
-            className="sm:col-span-2 rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="sm:col-span-2 rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <label className="flex items-center gap-2 text-foreground text-sm">
             <input type="checkbox" name="isVerified" defaultChecked />
@@ -188,12 +188,12 @@ export default async function AdminAftersPage() {
                         ✓ Validé
                       </span>
                     ) : (
-                      <span className="rounded-full bg-amber-500/30 px-2 py-1 font-semibold text-amber-200 text-xs">
+                      <span className="rounded-full bg-amber-500/30 px-2 py-1 font-semibold text-amber-700 text-xs">
                         ⏱ En attente
                       </span>
                     )}
                     {a.isActive ? (
-                      <span className="rounded-full bg-green-500/20 px-2 py-1 text-green-300 text-xs">
+                      <span className="rounded-full bg-green-500/20 px-2 py-1 text-green-700 text-xs">
                         Actif
                       </span>
                     ) : (
@@ -202,12 +202,12 @@ export default async function AdminAftersPage() {
                       </span>
                     )}
                     {a.isBoosted && (
-                      <span className="rounded-full bg-amber-500/20 px-2 py-1 text-amber-200 text-xs">
+                      <span className="rounded-full bg-amber-500/20 px-2 py-1 text-amber-700 text-xs">
                         Vedette
                       </span>
                     )}
                     {a.isVerified && (
-                      <span className="rounded-full bg-blue-500/20 px-2 py-1 text-blue-300 text-xs">
+                      <span className="rounded-full bg-blue-500/20 px-2 py-1 text-blue-700 text-xs">
                         Vérifié
                       </span>
                     )}
@@ -219,7 +219,7 @@ export default async function AdminAftersPage() {
                       href={`/afters/${a.slug}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-md bg-blue-500/20 px-2 py-1 text-blue-300 text-xs hover:bg-blue-500/30"
+                      className="rounded-md bg-blue-500/20 px-2 py-1 text-blue-700 text-xs hover:bg-blue-500/30"
                     >
                       Voir la fiche
                     </a>
@@ -227,7 +227,7 @@ export default async function AdminAftersPage() {
                       <ConfirmActionForm
                         action={setAfterApproval.bind(null, a.id, false)}
                         triggerLabel="Dévalider"
-                        triggerClassName="rounded-md bg-amber-500/20 px-2 py-1 text-amber-200 text-xs hover:bg-amber-500/30"
+                        triggerClassName="rounded-md bg-amber-500/20 px-2 py-1 text-amber-700 text-xs hover:bg-amber-500/30"
                         title="Retirer la validation ?"
                         description={
                           <>
@@ -269,7 +269,7 @@ export default async function AdminAftersPage() {
                     >
                       <button
                         type="submit"
-                        className="rounded-md bg-amber-500/20 px-2 py-1 text-amber-200 text-xs hover:bg-amber-500/30"
+                        className="rounded-md bg-amber-500/20 px-2 py-1 text-amber-700 text-xs hover:bg-amber-500/30"
                       >
                         {a.isBoosted ? "Débooster" : "Booster"}
                       </button>
@@ -277,7 +277,7 @@ export default async function AdminAftersPage() {
                     <ConfirmActionForm
                       action={deleteAfter.bind(null, a.id)}
                       triggerLabel="Supprimer"
-                      triggerClassName="rounded-md bg-red-500/20 px-2 py-1 text-red-300 text-xs hover:bg-red-500/30"
+                      triggerClassName="rounded-md bg-red-500/20 px-2 py-1 text-red-600 text-xs hover:bg-red-500/30"
                       title="Supprimer cet after ?"
                       description={
                         <>

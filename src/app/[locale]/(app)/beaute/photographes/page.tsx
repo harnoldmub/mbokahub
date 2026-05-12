@@ -64,7 +64,7 @@ export default async function PhotographesPage() {
         </Link>
         <SectionHeading
           number="04"
-          description="Photographes et vidéastes vérifiés pour capturer le week-end. Noms et contacts WhatsApp visibles, gratuit pour la famille."
+          description="Photographes et vidéastes vérifiés pour capturer le week-end. Profils vérifiés, messagerie intégrée, gratuit pour la famille."
           eyebrow="Photographes & Vidéastes"
           title="Capturez l'Instant"
         />

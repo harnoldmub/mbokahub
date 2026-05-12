@@ -381,6 +381,7 @@ export async function createProBookingAction(form: FormData) {
   const clientPhone = String(form.get("clientPhone") || "").trim();
   const requestedAtRaw = String(form.get("requestedAt") || "").trim();
   const note = String(form.get("note") || "").trim() || null;
+  const serviceId = String(form.get("serviceId") || "").trim() || null;
 
   const failHref = proProfileId
     ? `/pro/${proProfileId}?booking=missing`
@@ -401,6 +402,20 @@ export async function createProBookingAction(form: FormData) {
     redirect(`/pro/${proProfileId}?booking=date`);
   }
 
+  let serviceName: string | null = null;
+  let durationMinutes: number | null = null;
+
+  if (serviceId) {
+    const svc = await prisma.proService.findUnique({
+      where: { id: serviceId },
+      select: { name: true, durationMinutes: true },
+    });
+    if (svc) {
+      serviceName = svc.name;
+      durationMinutes = svc.durationMinutes;
+    }
+  }
+
   await prisma.proBooking.create({
     data: {
       proProfileId,
@@ -409,6 +424,9 @@ export async function createProBookingAction(form: FormData) {
       clientPhone,
       requestedAt,
       note,
+      serviceId,
+      serviceName,
+      durationMinutes,
     },
   });
 
@@ -499,4 +517,140 @@ export async function applyAsModeratorAction(form: FormData) {
   revalidatePath("/communaute/devenir-moderateur");
   revalidatePath("/dashboard");
   redirect("/communaute/devenir-moderateur?success=1");
+}
+
+// ──────────────────────────────────────────────
+// Services du prestataire
+// ──────────────────────────────────────────────
+
+export async function createProServiceAction(form: FormData) {
+  const user = await ensureUser("/dashboard/planning");
+  const pro = await prisma.proProfile.findUnique({
+    where: { userId: user.id },
+    select: { id: true },
+  });
+  if (!pro) redirect("/dashboard/planning");
+
+  const name = String(form.get("name") || "").trim();
+  const durationRaw = Number(form.get("durationMinutes"));
+  const priceRaw = String(form.get("price") || "").trim();
+  const description = String(form.get("description") || "").trim() || null;
+
+  if (!name || !durationRaw || durationRaw < 5) {
+    redirect("/dashboard/planning?serviceError=missing");
+  }
+
+  const price = priceRaw ? parseFloat(priceRaw) : null;
+
+  const count = await prisma.proService.count({
+    where: { proProfileId: pro.id },
+  });
+
+  await prisma.proService.create({
+    data: {
+      proProfileId: pro.id,
+      name,
+      durationMinutes: durationRaw,
+      price: price && !Number.isNaN(price) ? price : null,
+      description,
+      order: count,
+    },
+  });
+
+  revalidatePath("/dashboard/planning");
+  redirect("/dashboard/planning?serviceSaved=1");
+}
+
+export async function updateProServiceAction(form: FormData) {
+  const user = await ensureUser("/dashboard/planning");
+  const id = String(form.get("id") || "").trim();
+  const name = String(form.get("name") || "").trim();
+  const durationRaw = Number(form.get("durationMinutes"));
+  const priceRaw = String(form.get("price") || "").trim();
+  const description = String(form.get("description") || "").trim() || null;
+  const isActive = form.get("isActive") !== "false";
+
+  if (!id || !name || !durationRaw) {
+    redirect("/dashboard/planning?serviceError=missing");
+  }
+
+  const svc = await prisma.proService.findUnique({
+    where: { id },
+    select: { proProfile: { select: { userId: true } } },
+  });
+  if (!svc || svc.proProfile.userId !== user.id) {
+    redirect("/dashboard/planning?serviceError=forbidden");
+  }
+
+  const price = priceRaw ? parseFloat(priceRaw) : null;
+
+  await prisma.proService.update({
+    where: { id },
+    data: {
+      name,
+      durationMinutes: durationRaw,
+      price: price && !Number.isNaN(price) ? price : null,
+      description,
+      isActive,
+    },
+  });
+
+  revalidatePath("/dashboard/planning");
+  redirect("/dashboard/planning?serviceSaved=1");
+}
+
+export async function deleteProServiceAction(form: FormData) {
+  const user = await ensureUser("/dashboard/planning");
+  const id = String(form.get("id") || "").trim();
+
+  if (!id) redirect("/dashboard/planning");
+
+  const svc = await prisma.proService.findUnique({
+    where: { id },
+    select: { proProfile: { select: { userId: true } } },
+  });
+  if (!svc || svc.proProfile.userId !== user.id) {
+    redirect("/dashboard/planning?serviceError=forbidden");
+  }
+
+  await prisma.proService.delete({ where: { id } });
+
+  revalidatePath("/dashboard/planning");
+  redirect("/dashboard/planning?serviceDeleted=1");
+}
+
+// ──────────────────────────────────────────────
+// Disponibilités du prestataire
+// ──────────────────────────────────────────────
+
+export async function saveProAvailabilityAction(form: FormData) {
+  const user = await ensureUser("/dashboard/planning");
+  const pro = await prisma.proProfile.findUnique({
+    where: { userId: user.id },
+    select: { id: true },
+  });
+  if (!pro) redirect("/dashboard/planning");
+
+  const DAYS = [0, 1, 2, 3, 4, 5, 6];
+
+  // Each day sends: avail_active_N, avail_start_N, avail_end_N
+  const upserts = DAYS.map((d) => {
+    const isActive = form.get(`avail_active_${d}`) === "on";
+    const startTime = String(form.get(`avail_start_${d}`) ?? "09:00").trim() || "09:00";
+    const endTime = String(form.get(`avail_end_${d}`) ?? "19:00").trim() || "19:00";
+    return { dayOfWeek: d, isActive, startTime, endTime };
+  });
+
+  await prisma.$transaction(
+    upserts.map(({ dayOfWeek, isActive, startTime, endTime }) =>
+      prisma.proAvailability.upsert({
+        where: { proProfileId_dayOfWeek: { proProfileId: pro.id, dayOfWeek } },
+        create: { proProfileId: pro.id, dayOfWeek, startTime, endTime, isActive },
+        update: { startTime, endTime, isActive },
+      })
+    )
+  );
+
+  revalidatePath("/dashboard/planning");
+  redirect("/dashboard/planning?availSaved=1");
 }

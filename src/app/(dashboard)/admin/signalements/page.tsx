@@ -21,9 +21,9 @@ const REASON_LABEL: Record<string, string> = {
 };
 
 const STATUS_STYLE: Record<string, string> = {
-  PENDING: "bg-yellow-500/20 text-yellow-300",
-  REVIEWING: "bg-blue-500/20 text-blue-300",
-  RESOLVED: "bg-green-500/20 text-green-300",
+  PENDING: "bg-yellow-500/20 text-yellow-700",
+  REVIEWING: "bg-blue-500/20 text-blue-700",
+  RESOLVED: "bg-green-500/20 text-green-700",
   DISMISSED: "bg-white/10 text-muted-foreground",
 };
 
@@ -98,25 +98,25 @@ export default async function AdminReportsPage({
 
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:max-w-2xl">
           <div className="rounded-xl border border-yellow-500/40 bg-yellow-500/10 p-3">
-            <p className="font-mono text-xs text-yellow-300/80 uppercase">À traiter</p>
-            <p className="mt-1 font-heading text-2xl text-yellow-300">{counts.pending}</p>
+            <p className="font-mono text-xs text-yellow-700/80 uppercase">À traiter</p>
+            <p className="mt-1 font-heading text-2xl text-yellow-700">{counts.pending}</p>
           </div>
           <div className="rounded-xl border border-blue-500/40 bg-blue-500/10 p-3">
-            <p className="font-mono text-xs text-blue-300/80 uppercase">En cours</p>
-            <p className="mt-1 font-heading text-2xl text-blue-300">{counts.reviewing}</p>
+            <p className="font-mono text-xs text-blue-700/80 uppercase">En cours</p>
+            <p className="mt-1 font-heading text-2xl text-blue-700">{counts.reviewing}</p>
           </div>
           <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-3">
-            <p className="font-mono text-xs text-red-300/80 uppercase">🚨 Arnaques</p>
-            <p className="mt-1 font-heading text-2xl text-red-300">{counts.arnaque}</p>
+            <p className="font-mono text-xs text-red-600/80 uppercase">🚨 Arnaques</p>
+            <p className="mt-1 font-heading text-2xl text-red-600">{counts.arnaque}</p>
           </div>
         </div>
 
         <div className="mt-4 flex flex-wrap gap-2">
           <Link href="/admin/signalements" className="rounded-full border border-white/20 px-3 py-1 text-foreground text-xs hover:bg-white/10">Tous</Link>
-          <Link href="/admin/signalements?status=PENDING" className="rounded-full border border-yellow-500/40 bg-yellow-500/10 px-3 py-1 text-yellow-300 text-xs">À traiter</Link>
-          <Link href="/admin/signalements?status=REVIEWING" className="rounded-full border border-blue-500/40 bg-blue-500/10 px-3 py-1 text-blue-300 text-xs">En cours</Link>
-          <Link href="/admin/signalements?status=RESOLVED" className="rounded-full border border-green-500/40 bg-green-500/10 px-3 py-1 text-green-300 text-xs">Résolus</Link>
-          <Link href="/admin/signalements?reason=ARNAQUE" className="rounded-full border border-red-500/40 bg-red-500/10 px-3 py-1 text-red-300 text-xs">🚨 Arnaques uniquement</Link>
+          <Link href="/admin/signalements?status=PENDING" className="rounded-full border border-yellow-500/40 bg-yellow-500/10 px-3 py-1 text-yellow-700 text-xs">À traiter</Link>
+          <Link href="/admin/signalements?status=REVIEWING" className="rounded-full border border-blue-500/40 bg-blue-500/10 px-3 py-1 text-blue-700 text-xs">En cours</Link>
+          <Link href="/admin/signalements?status=RESOLVED" className="rounded-full border border-green-500/40 bg-green-500/10 px-3 py-1 text-green-700 text-xs">Résolus</Link>
+          <Link href="/admin/signalements?reason=ARNAQUE" className="rounded-full border border-red-500/40 bg-red-500/10 px-3 py-1 text-red-600 text-xs">🚨 Arnaques uniquement</Link>
         </div>
       </div>
 
@@ -153,14 +153,14 @@ export default async function AdminReportsPage({
 
             <div className="mt-4 flex flex-wrap gap-2">
               <form action={updateReportStatus.bind(null, r.id, "REVIEWING", undefined)}>
-                <button type="submit" className="rounded-md bg-blue-500/20 px-3 py-1 text-blue-300 text-xs hover:bg-blue-500/30">
+                <button type="submit" className="rounded-md bg-blue-500/20 px-3 py-1 text-blue-700 text-xs hover:bg-blue-500/30">
                   Prendre en charge
                 </button>
               </form>
               <ConfirmActionForm
                 action={updateReportStatus.bind(null, r.id, "RESOLVED", undefined)}
                 triggerLabel="Marquer résolu"
-                triggerClassName="rounded-md bg-green-500/20 px-3 py-1 text-green-300 text-xs hover:bg-green-500/30"
+                triggerClassName="rounded-md bg-green-500/20 px-3 py-1 text-green-700 text-xs hover:bg-green-500/30"
                 title="Marquer ce signalement comme résolu ?"
                 description="Le signalement sera classé comme résolu. Tu pourras toujours consulter l'historique."
                 confirmLabel="Marquer résolu"
@@ -178,7 +178,7 @@ export default async function AdminReportsPage({
               <ConfirmActionForm
                 action={deleteReportedTarget.bind(null, r.id, r.targetType, r.targetId)}
                 triggerLabel="🗑 Supprimer la cible + résoudre"
-                triggerClassName="rounded-md bg-red-500/20 px-3 py-1 text-red-300 text-xs hover:bg-red-500/30"
+                triggerClassName="rounded-md bg-red-500/20 px-3 py-1 text-red-600 text-xs hover:bg-red-500/30"
                 title="Supprimer la cible signalée ?"
                 description={
                   <>
@@ -192,7 +192,7 @@ export default async function AdminReportsPage({
                 <ConfirmActionForm
                   action={deleteReport.bind(null, r.id)}
                   triggerLabel="Supprimer ce signalement"
-                  triggerClassName="text-muted-foreground text-xs hover:text-red-300"
+                  triggerClassName="text-muted-foreground text-xs hover:text-red-600"
                   title="Supprimer ce signalement ?"
                   description="Le signalement disparaît de la liste. La cible n'est pas affectée."
                   confirmLabel="Supprimer le signalement"

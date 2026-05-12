@@ -1,8 +1,7 @@
-import { ArrowRight, Car, Star } from "lucide-react";
+import { ArrowRight, Car, MessageSquare, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { ContactLock } from "@/components/shared/contact-lock";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,12 +12,7 @@ type TrajetCardProps = {
     carPhoto?: string | null;
     vehiculeColor?: string | null;
     vehiculeModel?: string | null;
-    whatsappRaw?: string | null;
   };
-  /**
-   * Conservé pour compat. — Mboka Hub est désormais 100% gratuit pour les
-   * fans, le contact est toujours révélé.
-   */
   unlocked?: boolean;
 };
 
@@ -113,10 +107,13 @@ export function TrajetCard({ trajet, unlocked: _unlocked }: TrajetCardProps) {
               <span className="text-sm ml-1 text-paper-mute">EUR</span>
             </span>
           </div>
-          <ContactLock
-            value={trajet.whatsappRaw ?? trajet.whatsappMasked}
-            rawValue={trajet.whatsappRaw ?? undefined}
-          />
+          <Link
+            href={`/trajets/${trajet.id}`}
+            className="flex items-center gap-1.5 rounded-xl border border-blood/30 bg-blood/5 px-3 py-2 text-xs font-medium text-blood transition hover:border-blood/60 hover:bg-blood/10"
+          >
+            <MessageSquare aria-hidden className="size-3.5" />
+            Contacter
+          </Link>
         </div>
 
         <Button

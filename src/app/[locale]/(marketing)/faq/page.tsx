@@ -10,7 +10,7 @@ const FAQ_SECTIONS = [
     items: [
       {
         q: "Comment réserver un trajet ?",
-        a: "Trouve un trajet sur la page /trajets, clique sur l'annonce, puis contacte le conducteur directement via WhatsApp. Le paiement se fait entre vous, en main propre ou par virement.",
+        a: "Trouve un trajet sur la page /trajets, clique sur l'annonce, puis contacte le conducteur via la messagerie sécurisée de la plateforme. Le paiement se fait entre vous, en main propre ou par virement.",
       },
       {
         q: "Mboka Hub prend-il une commission ?",
@@ -39,7 +39,7 @@ const FAQ_SECTIONS = [
       },
       {
         q: "Comment recevoir des paiements ?",
-        a: "Mboka Hub ne gère pas les paiements pros. Les clients te contactent en direct via WhatsApp et règlent selon tes conditions habituelles.",
+        a: "Mboka Hub ne gère pas les paiements pros. Les clients te contactent via la messagerie intégrée et règlent selon tes conditions habituelles.",
       },
     ],
   },
