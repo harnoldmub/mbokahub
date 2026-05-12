@@ -100,7 +100,7 @@ export function SiteHeader() {
 
   return (
     <header className="glass-header">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-5 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-24 max-w-7xl items-center justify-between gap-3 px-4 sm:h-28 sm:gap-4 sm:px-6 md:h-32 lg:h-36 lg:px-8">
         <Link
           aria-label="Nevent"
           className="group flex items-center"
