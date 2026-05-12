@@ -19,11 +19,14 @@ export function BrandLogo({ className }: BrandLogoProps) {
   return (
     <Image
       alt="Nevent"
-      className={className ?? "h-9 w-9"}
-      height={80}
+      className={
+        className ??
+        "h-10 w-auto object-contain sm:h-12 md:h-14 lg:h-16"
+      }
+      height={160}
       priority
       src={src}
-      width={80}
+      width={160}
     />
   );
 }
