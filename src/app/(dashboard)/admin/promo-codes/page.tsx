@@ -85,7 +85,7 @@ export default async function AdminPromoCodesPage() {
         >
           <label className="space-y-1.5">
             <span className="block text-foreground text-xs font-medium">
-              Code <span className="text-red-400">*</span>
+              Code <span className="text-red-600">*</span>
             </span>
             <input
               name="code"
@@ -100,7 +100,7 @@ export default async function AdminPromoCodesPage() {
 
           <label className="space-y-1.5">
             <span className="block text-foreground text-xs font-medium">
-              Catégorie <span className="text-red-400">*</span>
+              Catégorie <span className="text-red-600">*</span>
             </span>
             <select
               name="category"
@@ -134,7 +134,7 @@ export default async function AdminPromoCodesPage() {
 
           <label className="space-y-1.5">
             <span className="block text-foreground text-xs font-medium">
-              Réduction (%) <span className="text-red-400">*</span>
+              Réduction (%) <span className="text-red-600">*</span>
             </span>
             <div className="relative">
               <input
@@ -156,7 +156,7 @@ export default async function AdminPromoCodesPage() {
 
           <label className="space-y-1.5">
             <span className="block text-foreground text-xs font-medium">
-              Nombre d'utilisations <span className="text-red-400">*</span>
+              Nombre d'utilisations <span className="text-red-600">*</span>
             </span>
             <input
               name="maxUses"
@@ -222,7 +222,7 @@ export default async function AdminPromoCodesPage() {
                     </td>
                     <td className="px-4 py-3">
                       {c.isActive ? (
-                        <span className="rounded-full bg-green-500/20 px-2 py-1 text-green-300 text-xs">Actif</span>
+                        <span className="rounded-full bg-green-500/20 px-2 py-1 text-green-700 text-xs">Actif</span>
                       ) : (
                         <span className="rounded-full bg-white/10 px-2 py-1 text-muted-foreground text-xs">Inactif</span>
                       )}
@@ -237,7 +237,7 @@ export default async function AdminPromoCodesPage() {
                         <ConfirmActionForm
                           action={deletePromoCode.bind(null, c.id)}
                           triggerLabel="Supprimer"
-                          triggerClassName="text-red-400 text-xs hover:text-red-300"
+                          triggerClassName="text-red-600 text-xs hover:text-red-600"
                           title="Supprimer ce code promo ?"
                           description={
                             <>

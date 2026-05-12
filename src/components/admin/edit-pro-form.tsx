@@ -75,7 +75,7 @@ export function EditProForm({ pro }: EditProFormProps) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="rounded-md bg-blue-500/20 px-2 py-1 text-blue-300 text-xs hover:bg-blue-500/30"
+        className="rounded-md bg-blue-500/15 px-2 py-1 text-blue-700 text-xs hover:bg-blue-500/25"
       >
         Modifier
       </button>
@@ -103,7 +103,7 @@ export function EditProForm({ pro }: EditProFormProps) {
                 name="displayName"
                 required
                 defaultValue={pro.displayName}
-                className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm"
+                className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm"
               />
             </label>
 
@@ -113,7 +113,7 @@ export function EditProForm({ pro }: EditProFormProps) {
                 name="category"
                 required
                 defaultValue={pro.category}
-                className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm"
+                className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm"
               >
                 {CATEGORIES.map((c) => (
                   <option key={c} value={c}>
@@ -129,7 +129,7 @@ export function EditProForm({ pro }: EditProFormProps) {
                 name="city"
                 required
                 defaultValue={pro.city}
-                className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm"
+                className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm"
               />
             </label>
 
@@ -138,7 +138,7 @@ export function EditProForm({ pro }: EditProFormProps) {
               <input
                 name="country"
                 defaultValue={pro.country}
-                className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm"
+                className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm"
               />
             </label>
 
@@ -153,7 +153,7 @@ export function EditProForm({ pro }: EditProFormProps) {
                 name="priceRange"
                 defaultValue={pro.priceRange ?? ""}
                 placeholder="ex: 80-150€"
-                className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm"
+                className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm"
               />
             </label>
 
@@ -162,8 +162,8 @@ export function EditProForm({ pro }: EditProFormProps) {
               <input
                 name="instagramHandle"
                 defaultValue={pro.instagramHandle ?? ""}
-                placeholder="@studio_nevent"
-                className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm"
+                placeholder="@studio_mboka"
+                className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm"
               />
             </label>
 
@@ -172,8 +172,8 @@ export function EditProForm({ pro }: EditProFormProps) {
               <input
                 name="tiktokHandle"
                 defaultValue={pro.tiktokHandle ?? ""}
-                placeholder="@studio_nevent"
-                className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm"
+                placeholder="@studio_mboka"
+                className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm"
               />
             </label>
 
@@ -183,7 +183,7 @@ export function EditProForm({ pro }: EditProFormProps) {
                 name="specialities"
                 defaultValue={pro.specialities.join(", ")}
                 placeholder="ex: Box braids, Locks, Twists"
-                className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm"
+                className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm"
               />
             </label>
 
@@ -193,7 +193,7 @@ export function EditProForm({ pro }: EditProFormProps) {
                 name="bio"
                 rows={3}
                 defaultValue={pro.bio ?? ""}
-                className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm"
+                className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm"
               />
             </label>
 
@@ -209,7 +209,7 @@ export function EditProForm({ pro }: EditProFormProps) {
             </div>
 
             {error && (
-              <div className="sm:col-span-2 rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-red-300 text-xs">
+              <div className="sm:col-span-2 rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-red-600 text-xs">
                 {error}
               </div>
             )}

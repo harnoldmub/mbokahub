@@ -31,7 +31,7 @@ export default async function AdminTrajetsPage() {
       </div>
 
       {pendingCount > 0 && (
-        <div className="rounded-2xl border border-amber-500/40 bg-amber-500/10 px-5 py-4 text-amber-200 text-sm">
+        <div className="rounded-2xl border border-amber-500/40 bg-amber-500/10 px-5 py-4 text-amber-700 text-sm">
           <span className="font-semibold">⏱ {pendingCount} trajet{pendingCount > 1 ? "s" : ""}</span>{" "}
           en attente de validation. Les passagers ne les voient pas tant que tu ne les as pas approuvés.
         </div>
@@ -50,42 +50,42 @@ export default async function AdminTrajetsPage() {
             type="email"
             required
             placeholder="Email du conducteur (existant ou nouveau)"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="driverName"
             placeholder="Nom du conducteur"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="villeDepart"
             required
             placeholder="Ville de départ"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="paysDepart"
             required
             placeholder="Pays de départ (FR, BE, NL, DE...)"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="villeArrivee"
             defaultValue="Paris"
             placeholder="Ville d'arrivée"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="date"
             type="date"
             required
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="heureDepart"
             required
             placeholder="Heure (ex 14:30)"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="placesTotal"
@@ -94,7 +94,7 @@ export default async function AdminTrajetsPage() {
             max={9}
             required
             placeholder="Places"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="prix"
@@ -103,29 +103,29 @@ export default async function AdminTrajetsPage() {
             step="0.01"
             required
             placeholder="Prix par place (€)"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <PhoneInput name="whatsapp" required />
           <input
             name="vehicule"
             placeholder="Marque véhicule"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="vehiculeModel"
             placeholder="Modèle"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="vehiculeColor"
             placeholder="Couleur"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <textarea
             name="note"
             rows={2}
             placeholder="Note (optionnel)"
-            className="sm:col-span-2 rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="sm:col-span-2 rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <button
             type="submit"
@@ -165,7 +165,7 @@ export default async function AdminTrajetsPage() {
                 <td className="px-4 py-3 text-foreground text-xs">
                   <a
                     href={`/trajets/${t.id}`}
-                    className="font-medium hover:text-blue-300 hover:underline"
+                    className="font-medium hover:text-blue-700 hover:underline"
                   >
                     {t.user.name ?? "—"}
                   </a>
@@ -191,14 +191,14 @@ export default async function AdminTrajetsPage() {
                       ✓ Validé
                     </span>
                   ) : (
-                    <span className="rounded-full bg-amber-500/25 px-2 py-1 text-amber-200 text-xs">
+                    <span className="rounded-full bg-amber-500/25 px-2 py-1 text-amber-700 text-xs">
                       ⏱ En attente
                     </span>
                   )}
                 </td>
                 <td className="px-4 py-3">
                   {t.isActive ? (
-                    <span className="rounded-full bg-green-500/20 px-2 py-1 text-green-300 text-xs">
+                    <span className="rounded-full bg-green-500/20 px-2 py-1 text-green-700 text-xs">
                       Actif
                     </span>
                   ) : (
@@ -211,7 +211,7 @@ export default async function AdminTrajetsPage() {
                   <div className="flex flex-wrap justify-end gap-2">
                     <a
                       href={`/trajets/${t.id}`}
-                      className="rounded-md bg-blue-500/20 px-2 py-1 text-blue-300 text-xs hover:bg-blue-500/30"
+                      className="rounded-md bg-blue-500/20 px-2 py-1 text-blue-700 text-xs hover:bg-blue-500/30"
                     >
                       Voir la fiche
                     </a>
@@ -239,7 +239,7 @@ export default async function AdminTrajetsPage() {
                       <ConfirmActionForm
                         action={setTrajetApproval.bind(null, t.id, false)}
                         triggerLabel="Dévalider"
-                        triggerClassName="rounded-md bg-amber-500/20 px-2 py-1 text-amber-200 text-xs hover:bg-amber-500/30"
+                        triggerClassName="rounded-md bg-amber-500/20 px-2 py-1 text-amber-700 text-xs hover:bg-amber-500/30"
                         title="Dévalider ce trajet ?"
                         description={
                           <>
@@ -284,7 +284,7 @@ export default async function AdminTrajetsPage() {
                     <ConfirmActionForm
                       action={deleteTrajet.bind(null, t.id)}
                       triggerLabel="Supprimer"
-                      triggerClassName="rounded-md px-2 py-1 text-red-400 text-xs hover:bg-red-500/10 hover:text-red-300"
+                      triggerClassName="rounded-md px-2 py-1 text-red-600 text-xs hover:bg-red-500/10 hover:text-red-600"
                       title="Supprimer ce trajet ?"
                       description={
                         <>

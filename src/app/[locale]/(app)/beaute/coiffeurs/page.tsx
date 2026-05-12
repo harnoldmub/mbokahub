@@ -64,7 +64,7 @@ export default async function CoiffeursPage() {
         </Link>
         <SectionHeading
           number="02"
-          description="Les meilleurs salons et coiffeurs/barbers indés pour être au top. Noms et contacts WhatsApp visibles, gratuit pour la famille."
+          description="Les meilleurs salons et coiffeurs/barbers indés pour être au top. Profils vérifiés, messagerie intégrée, gratuit pour la famille."
           eyebrow="Coiffeurs & Barbers"
           title="Beauté & Style"
         />

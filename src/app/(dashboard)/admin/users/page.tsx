@@ -109,7 +109,7 @@ export default async function AdminUsersPage({
                       type="submit"
                       className={`rounded-full px-3 py-1 text-xs ${
                         u.isVipActive
-                          ? "bg-yellow-500/20 text-yellow-300"
+                          ? "bg-yellow-500/20 text-yellow-700"
                           : "bg-white/5 text-muted-foreground hover:bg-white/10"
                       }`}
                       title="Badge ⭐ Famille Fondatrice (à vie, anciens VIP)"
@@ -126,7 +126,7 @@ export default async function AdminUsersPage({
                         <PhotoReminderButton proId={u.proProfile.id} />
                       ) : (
                         <span
-                          className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] text-emerald-200"
+                          className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] text-emerald-700"
                           title={`${u.proProfile.photos.length} photo(s)`}
                         >
                           📸 {u.proProfile.photos.length}
@@ -146,7 +146,7 @@ export default async function AdminUsersPage({
                   <ConfirmActionForm
                     action={deleteUser.bind(null, u.id)}
                     triggerLabel="Supprimer"
-                    triggerClassName="text-red-400 text-xs hover:text-red-300"
+                    triggerClassName="text-red-600 text-xs hover:text-red-600"
                     title="Supprimer cet utilisateur ?"
                     description={
                       <>

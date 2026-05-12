@@ -10,10 +10,10 @@ const FAQ_SECTIONS = [
     items: [
       {
         q: "Comment réserver un trajet ?",
-        a: "Trouve un trajet sur la page /trajets, clique sur l'annonce, puis contacte le conducteur directement via WhatsApp. Le paiement se fait entre vous, en main propre ou par virement.",
+        a: "Trouve un trajet sur la page /trajets, clique sur l'annonce, puis contacte le conducteur via la messagerie sécurisée de la plateforme. Le paiement se fait entre vous, en main propre ou par virement.",
       },
       {
-        q: "Nevent prend-il une commission ?",
+        q: "Mboka Hub prend-il une commission ?",
         a: "Non. La plateforme est gratuite pour les passagers et les conducteurs. On se finance uniquement via la pub et les partenariats marques.",
       },
       {
@@ -39,7 +39,7 @@ const FAQ_SECTIONS = [
       },
       {
         q: "Comment recevoir des paiements ?",
-        a: "Nevent ne gère pas les paiements pros. Les clients te contactent en direct via WhatsApp et règlent selon tes conditions habituelles.",
+        a: "Mboka Hub ne gère pas les paiements pros. Les clients te contactent via la messagerie intégrée et règlent selon tes conditions habituelles.",
       },
     ],
   },
@@ -68,12 +68,12 @@ const FAQ_SECTIONS = [
         a: "Le 28 mai 2026. Ouverture des portes à 18h, début du concert à 20h.",
       },
       {
-        q: "Nevent vend-il des billets ?",
-        a: "Non. Nevent est une plateforme communautaire indépendante. Les billets s'achètent uniquement chez les revendeurs officiels.",
+        q: "Mboka Hub vend-il des billets ?",
+        a: "Non. Mboka Hub est une plateforme communautaire indépendante. Les billets s'achètent uniquement chez les revendeurs officiels.",
       },
       {
         q: "Êtes-vous affiliés à Fally Ipupa ?",
-        a: "Non. Nevent est un site indépendant non-officiel, créé par et pour la diaspora congolaise.",
+        a: "Non. Mboka Hub est un site indépendant non-officiel, créé par et pour la diaspora congolaise.",
       },
     ],
   },

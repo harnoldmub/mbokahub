@@ -43,7 +43,7 @@ export default async function OnboardingProBookingPage({
   const pro = await prisma.proProfile.findUnique({
     where: { userId: user.id },
     include: {
-      services: { orderBy: { position: "asc" } },
+      services: { orderBy: { order: "asc" } },
       teamMembers: {
         orderBy: { position: "asc" },
         include: { workingHours: true },

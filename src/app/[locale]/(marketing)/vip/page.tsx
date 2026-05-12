@@ -26,7 +26,7 @@ const FREE_FOR_FANS = [
   {
     icon: Users,
     title: "Tous les prestataires",
-    body: "Coiffeurs, maquilleurs, photographes, chauffeurs, sécurité… Le nom et le contact WhatsApp de chaque presta validé, sans paywall.",
+    body: "Coiffeurs, maquilleurs, photographes, chauffeurs, sécurité… Le profil complet et la messagerie de chaque prestataire validé, sans paywall.",
   },
   {
     icon: Car,

@@ -23,14 +23,17 @@ model User {
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 
-  trajets          Trajet[]
-  proProfile       ProProfile?
-  unlockedContacts UnlockedContact[]
-  quizResults      QuizResult[]
-  gameScores       GameScore[]
-  afterOwnerships  After[]           @relation("AfterOrganizer")
-  payments         Payment[]
-  moderator        Moderator?
+  trajets               Trajet[]
+  proProfile            ProProfile?
+  unlockedContacts      UnlockedContact[]
+  quizResults           QuizResult[]
+  gameScores            GameScore[]
+  afterOwnerships       After[]           @relation("AfterOrganizer")
+  payments              Payment[]
+  moderator             Moderator?
+  conversationsAsClient Conversation[]    @relation("ConvClient")
+  conversationsAsPro    Conversation[]    @relation("ConvPro")
+  sentMessages          Message[]         @relation("SentMessages")
 
   @@index([email])
   @@index([clerkId])
@@ -104,12 +107,45 @@ model ProProfile {
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
 
-  bookings    ProBooking[]
-  services    Service[]
-  teamMembers TeamMember[]
+  bookings       ProBooking[]
+  services       ProService[]
+  onlineServices Service[]        @relation("OnlineServices")
+  teamMembers    TeamMember[]
+  availability   ProAvailability[]
 
   @@index([category, city])
   @@index([isBoosted, rating])
+}
+
+model ProAvailability {
+  id           String     @id @default(cuid())
+  proProfileId String
+  proProfile   ProProfile @relation(fields: [proProfileId], references: [id], onDelete: Cascade)
+  dayOfWeek    Int        // 0=Dim, 1=Lun, ..., 6=Sam
+  startTime    String     // "09:00"
+  endTime      String     // "19:00"
+  isActive     Boolean    @default(true)
+
+  @@unique([proProfileId, dayOfWeek])
+  @@index([proProfileId])
+}
+
+model ProService {
+  id              String     @id @default(cuid())
+  proProfileId    String
+  proProfile      ProProfile @relation(fields: [proProfileId], references: [id], onDelete: Cascade)
+  name            String
+  description     String?    @db.Text
+  durationMinutes Int
+  price           Float?
+  isActive        Boolean    @default(true)
+  order           Int        @default(0)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  bookings ProBooking[]
+
+  @@index([proProfileId, isActive, order])
 }
 
 enum ProCategory {
@@ -138,22 +174,23 @@ enum ProCategory {
 }
 
 model ProBooking {
-  id            String           @id @default(cuid())
-  proProfileId  String
-  proProfile    ProProfile       @relation(fields: [proProfileId], references: [id], onDelete: Cascade)
-  serviceId     String?
-  service       Service?         @relation(fields: [serviceId], references: [id], onDelete: SetNull)
-  teamMemberId  String?
-  teamMember    TeamMember?      @relation(fields: [teamMemberId], references: [id], onDelete: SetNull)
-  clientName    String
-  clientEmail   String?
-  clientPhone   String
-  requestedAt   DateTime
-  durationMin   Int?
-  note          String?          @db.Text
-  status        ProBookingStatus @default(PENDING)
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
+  id              String           @id @default(cuid())
+  proProfileId    String
+  proProfile      ProProfile       @relation(fields: [proProfileId], references: [id], onDelete: Cascade)
+  serviceId       String?
+  service         ProService?      @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  serviceName     String?
+  durationMinutes Int?
+  teamMemberId    String?
+  teamMember      TeamMember?      @relation(fields: [teamMemberId], references: [id], onDelete: SetNull)
+  clientName      String
+  clientEmail     String?
+  clientPhone     String
+  requestedAt     DateTime
+  note            String?          @db.Text
+  status          ProBookingStatus @default(PENDING)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 
   @@index([proProfileId, requestedAt])
   @@index([status, createdAt])
@@ -170,7 +207,7 @@ enum ProBookingStatus {
 model Service {
   id               String   @id @default(cuid())
   proProfileId     String
-  proProfile       ProProfile @relation(fields: [proProfileId], references: [id], onDelete: Cascade)
+  proProfile       ProProfile @relation("OnlineServices", fields: [proProfileId], references: [id], onDelete: Cascade)
   name             String
   description      String?  @db.Text
   durationMin      Int
@@ -181,7 +218,6 @@ model Service {
   updatedAt        DateTime @updatedAt
 
   members  ServiceMember[]
-  bookings ProBooking[]
 
   @@index([proProfileId, position])
 }
@@ -500,4 +536,48 @@ model WhatsAppCommunity {
 
   @@index([region, isActive])
   @@index([country, isActive])
+}
+
+// ──────────────────────────────────────────────
+// Messagerie sécurisée
+// ──────────────────────────────────────────────
+
+model Conversation {
+  id            String    @id @default(cuid())
+  // clientId = l'utilisateur qui initie le contact
+  clientId      String
+  client        User      @relation("ConvClient", fields: [clientId], references: [id], onDelete: Cascade)
+  // proId = l'utilisateur (pro) contacté
+  proId         String
+  pro           User      @relation("ConvPro", fields: [proId], references: [id], onDelete: Cascade)
+  // contexte optionnel (ID du profil pro ou du trajet)
+  contextType   String?
+  contextId     String?
+  // compteurs de non-lus
+  clientUnread  Int       @default(0)
+  proUnread     Int       @default(0)
+  lastMessageAt DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  messages Message[]
+
+  // Une seule conversation par paire pour un même contexte
+  @@unique([clientId, proId, contextType, contextId])
+  @@index([clientId, lastMessageAt])
+  @@index([proId, lastMessageAt])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  body           String       @db.Text
+  readAt         DateTime?
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId, createdAt])
+  @@index([senderId])
 }

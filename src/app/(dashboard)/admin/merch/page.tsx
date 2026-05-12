@@ -37,19 +37,19 @@ export default async function AdminMerchPage() {
             name="vendorName"
             required
             placeholder="Nom du vendeur / boutique"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="title"
             required
             placeholder="Titre du produit"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="category"
             required
             placeholder="Catégorie (T-shirt, Casquette…)"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="price"
@@ -58,27 +58,27 @@ export default async function AdminMerchPage() {
             min={0}
             required
             placeholder="Prix (€)"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <input
             name="imageUrl"
             type="url"
             required
             placeholder="URL image"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground sm:col-span-2"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground sm:col-span-2"
           />
           <input
             name="externalUrl"
             type="url"
             required
             placeholder="URL boutique externe"
-            className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground sm:col-span-2"
+            className="rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground sm:col-span-2"
           />
           <textarea
             name="description"
             rows={2}
             placeholder="Description (optionnel)"
-            className="sm:col-span-2 rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
+            className="sm:col-span-2 rounded-md border border-white/10 bg-smoke px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <label className="flex items-center gap-2 text-foreground text-sm">
             <input type="checkbox" name="isFeatured" />
@@ -124,7 +124,7 @@ export default async function AdminMerchPage() {
                 <td className="px-4 py-3 text-muted-foreground text-xs">{p.clicks}</td>
                 <td className="px-4 py-3">
                   {p.isFeatured ? (
-                    <span className="rounded-full bg-amber-500/20 px-2 py-1 text-amber-200 text-xs">À la une</span>
+                    <span className="rounded-full bg-amber-500/20 px-2 py-1 text-amber-700 text-xs">À la une</span>
                   ) : (
                     <span className="rounded-full bg-white/10 px-2 py-1 text-muted-foreground text-xs">Standard</span>
                   )}
@@ -132,14 +132,14 @@ export default async function AdminMerchPage() {
                 <td className="px-4 py-3 text-right">
                   <div className="flex justify-end gap-2">
                     <form action={toggleMerchFeatured.bind(null, p.id, !p.isFeatured)}>
-                      <button type="submit" className="rounded-md bg-amber-500/20 px-2 py-1 text-amber-200 text-xs hover:bg-amber-500/30">
+                      <button type="submit" className="rounded-md bg-amber-500/20 px-2 py-1 text-amber-700 text-xs hover:bg-amber-500/30">
                         {p.isFeatured ? "Retirer" : "Mettre en avant"}
                       </button>
                     </form>
                     <ConfirmActionForm
                       action={deleteMerch.bind(null, p.id)}
                       triggerLabel="Supprimer"
-                      triggerClassName="text-red-400 text-xs hover:text-red-300"
+                      triggerClassName="text-red-600 text-xs hover:text-red-600"
                       title="Supprimer ce produit ?"
                       description={
                         <>

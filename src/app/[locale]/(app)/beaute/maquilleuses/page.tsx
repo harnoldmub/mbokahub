@@ -71,7 +71,7 @@ export default async function MaquilleusesPage() {
 
         <SectionHeading
           number="02"
-          description="Trouve une maquilleuse, esthéticienne, prothésiste ou technicienne cils dispo pour le jour J. Noms et contacts WhatsApp visibles, gratuit pour la famille."
+          description="Trouve une maquilleuse, esthéticienne, prothésiste ou technicienne cils dispo pour le jour J. Profils vérifiés, messagerie intégrée, gratuit pour la famille."
           eyebrow="Maquilleuses & Beauté"
           title="Beauté & Style"
         />

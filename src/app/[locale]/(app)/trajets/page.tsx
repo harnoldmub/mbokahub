@@ -43,9 +43,7 @@ export default async function TrajetsPage() {
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
 
-  // Plateforme 100% gratuite pour les fans : tous les contacts WhatsApp des
-  // conducteurs sont visibles. Ordre : boostés d'abord, puis date la plus
-  // proche.
+  // Ordre : boostés d'abord, puis date la plus proche.
   const trajetsDb = await prisma.trajet
     .findMany({
       where: {
@@ -70,7 +68,6 @@ export default async function TrajetsPage() {
     carPhoto?: string | null;
     vehiculeColor?: string | null;
     vehiculeModel?: string | null;
-    whatsappRaw?: string | null;
   })[] = trajetsDb.map((t) => ({
     id: t.id,
     villeDepart: t.villeDepart,
@@ -88,12 +85,11 @@ export default async function TrajetsPage() {
     carPhoto: t.carPhoto,
     vehiculeColor: t.vehiculeColor,
     vehiculeModel: t.vehiculeModel,
-    whatsappRaw: t.whatsapp,
   }));
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <VipMemberBanner message="Tous les contacts covoiturage WhatsApp sont débloqués." />
+      <VipMemberBanner message="Contactez les conducteurs directement via la messagerie sécurisée de la plateforme." />
       <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.3em] text-blood">
