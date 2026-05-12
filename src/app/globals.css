@@ -93,6 +93,36 @@
   --color-vip-soft: #b3b6bd;
 }
 
+/* FORCE LIGHT — pages designed only for light mode (marketing/homepage)
+   re-declare the variables back to their light values regardless of the
+   `.dark` class set by next-themes. */
+.force-light {
+  --color-ink: #ffffff;
+  --color-coal: #ffffff;
+  --color-smoke: #f4f5f7;
+  --color-ash: #d7dbe2;
+  --color-paper: #171717;
+  --color-paper-dim: #4d5157;
+  --color-paper-mute: #7a7f87;
+  --color-primary: #202124;
+  --color-primary-foreground: #ffffff;
+  --color-foreground: #171717;
+  --color-background: #ffffff;
+  --color-muted: #f4f5f7;
+  --color-muted-foreground: #4d5157;
+  --color-border: #d7dbe2;
+  --color-card: #ffffff;
+  --color-card-foreground: #171717;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #171717;
+  --color-gold: #202124;
+  --color-gold-soft: #3f4247;
+  --color-vip: #202124;
+  --color-vip-soft: #3f4247;
+  background-color: var(--color-ink);
+  color: var(--color-paper);
+}
+
 /* BASE STYLES */
 @layer base {
   * {

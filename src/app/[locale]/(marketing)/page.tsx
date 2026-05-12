@@ -55,7 +55,7 @@ export default async function HomePage({ params, searchParams }: HomePageProps) 
   void searchParams;
 
   return (
-    <main className="min-h-screen bg-ink text-paper">
+    <main className="force-light min-h-screen bg-ink text-paper">
       <section className="border-b border-white/10 bg-white">
         <div className="mx-auto max-w-7xl px-5 py-5 sm:px-6 lg:px-8">
           <nav

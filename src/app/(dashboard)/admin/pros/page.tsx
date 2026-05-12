@@ -247,31 +247,31 @@ export default async function AdminProsPage({
                       <div className="absolute right-0 z-10 mt-1 grid w-48 gap-1 rounded-lg border border-white/15 bg-black/95 p-2 shadow-xl">
                         <Link
                           href={`/dashboard/profil-pro?as=${p.id}`}
-                          className="rounded px-3 py-1.5 text-xs text-foreground hover:bg-white/10"
+                          className="rounded px-3 py-1.5 text-xs text-white hover:bg-white/10"
                         >
                           Infos publiques
                         </Link>
                         <Link
                           href={`/dashboard/profil-pro/prestations?as=${p.id}`}
-                          className="rounded px-3 py-1.5 text-xs text-foreground hover:bg-white/10"
+                          className="rounded px-3 py-1.5 text-xs text-white hover:bg-white/10"
                         >
                           Prestations
                         </Link>
                         <Link
                           href={`/dashboard/profil-pro/equipe?as=${p.id}`}
-                          className="rounded px-3 py-1.5 text-xs text-foreground hover:bg-white/10"
+                          className="rounded px-3 py-1.5 text-xs text-white hover:bg-white/10"
                         >
                           Équipe
                         </Link>
                         <Link
                           href={`/dashboard/profil-pro/horaires?as=${p.id}`}
-                          className="rounded px-3 py-1.5 text-xs text-foreground hover:bg-white/10"
+                          className="rounded px-3 py-1.5 text-xs text-white hover:bg-white/10"
                         >
                           Horaires & congés
                         </Link>
                         <Link
                           href={`/dashboard/planning?as=${p.id}`}
-                          className="rounded px-3 py-1.5 text-xs text-foreground hover:bg-white/10"
+                          className="rounded px-3 py-1.5 text-xs text-white hover:bg-white/10"
                         >
                           Planning / RDV
                         </Link>
