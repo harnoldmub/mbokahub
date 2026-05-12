@@ -168,7 +168,7 @@ export default async function BabysittingPage({
           <div className="flex flex-col justify-between gap-6 rounded-[2.5rem] border border-blood/30 bg-blood/5 p-10">
             <div>
               <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.3em] text-blood">
-                Mboka Hub
+                Nevent
               </p>
               <p className="font-body italic text-paper-dim leading-relaxed">
                 {c.note}

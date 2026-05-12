@@ -260,7 +260,7 @@ export function ProRegistrationForm({ defaultCategory }: Props = {}) {
         {/* SUBMIT */}
         <div className="pt-8 flex flex-col items-center gap-6">
           <p className="max-w-md text-center text-paper-mute text-[10px] font-mono leading-relaxed uppercase tracking-widest">
-            En soumettant ce formulaire, tu acceptes que Mboka Hub vérifie
+            En soumettant ce formulaire, tu acceptes que Nevent vérifie
             manuellement tes informations avant de mettre ton profil en ligne.
           </p>
           <Button

@@ -7,7 +7,7 @@ import type { SearchParams } from "@/lib/nls";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
-  title: "Prestataires · Mboka Hub",
+  title: "Prestataires · Nevent",
   description:
     "Trouvez un prestataire de confiance, consultez ses médias et demandez un rendez-vous gratuitement.",
 };

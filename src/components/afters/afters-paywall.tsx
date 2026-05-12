@@ -1,6 +1,6 @@
 /**
  * Conservé pour compat. avec les anciens imports.
- * Mboka Hub est désormais 100% gratuit pour les fans : plus de paywall.
+ * Nevent est désormais 100% gratuit pour les fans : plus de paywall.
  * Ce composant ne rend plus rien.
  */
 type Props = {

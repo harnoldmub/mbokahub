@@ -25,7 +25,7 @@ type ProCardData = ProDemo & {
 type ProCardProps = {
   pro: ProCardData & { whatsappRaw?: string | null };
   /**
-   * Conservé pour compat. — Mboka Hub est désormais 100% gratuit pour les
+   * Conservé pour compat. — Nevent est désormais 100% gratuit pour les
    * fans, le contact est toujours révélé.
    */
   unlocked?: boolean;

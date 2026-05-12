@@ -41,7 +41,7 @@ export default function PartenariatPage() {
         <SectionHeading
           number="01"
           eyebrow="Partenariats"
-          title="Travaille avec *Mboka Hub*."
+          title="Travaille avec *Nevent*."
           description="Une audience engagée, congolaise et diasporique, prête à vibrer pour Fally. Tes campagnes, nos canaux."
         />
 

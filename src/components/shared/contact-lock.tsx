@@ -5,7 +5,7 @@ type ContactLockProps = {
   value: string;
   /**
    * Conservé pour compat. avec les appels existants — n'a plus d'effet.
-   * Mboka Hub est désormais gratuit pour tous les fans : le contact est
+   * Nevent est désormais gratuit pour tous les fans : le contact est
    * toujours révélé.
    */
   unlocked?: boolean;

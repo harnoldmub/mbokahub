@@ -9,14 +9,14 @@ const PRESENCE_TTL_MS = 90_000;
 
 declare global {
   // eslint-disable-next-line no-var
-  var __mbokaPresence: Map<string, number> | undefined;
+  var __neventPresence: Map<string, number> | undefined;
 }
 
 function getStore(): Map<string, number> {
-  if (!globalThis.__mbokaPresence) {
-    globalThis.__mbokaPresence = new Map();
+  if (!globalThis.__neventPresence) {
+    globalThis.__neventPresence = new Map();
   }
-  return globalThis.__mbokaPresence;
+  return globalThis.__neventPresence;
 }
 
 function sweep(store: Map<string, number>) {

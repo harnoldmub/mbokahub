@@ -83,7 +83,7 @@ export default async function AdminProsPage({
           <input
             name="displayName"
             required
-            placeholder="Nom affiché (ex: Studio Mboka)"
+            placeholder="Nom affiché (ex: Studio Nevent)"
             className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
           />
           <select

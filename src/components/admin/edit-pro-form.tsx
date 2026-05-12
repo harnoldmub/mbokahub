@@ -162,7 +162,7 @@ export function EditProForm({ pro }: EditProFormProps) {
               <input
                 name="instagramHandle"
                 defaultValue={pro.instagramHandle ?? ""}
-                placeholder="@studio_mboka"
+                placeholder="@studio_nevent"
                 className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm"
               />
             </label>
@@ -172,7 +172,7 @@ export function EditProForm({ pro }: EditProFormProps) {
               <input
                 name="tiktokHandle"
                 defaultValue={pro.tiktokHandle ?? ""}
-                placeholder="@studio_mboka"
+                placeholder="@studio_nevent"
                 className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm"
               />
             </label>

@@ -2,15 +2,15 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Conditions générales d'utilisation",
-  description: "Règles d'utilisation de la marketplace Mboka Hub.",
+  description: "Règles d'utilisation de la marketplace Nevent.",
 };
 
 const rules = [
-  "Mboka Hub est une plateforme de mise en relation indépendante.",
+  "Nevent est une plateforme de mise en relation indépendante.",
   "Les utilisateurs restent responsables des informations publiées et des échanges après mise en contact.",
   "Aucune revente de billets n'est autorisée sur la plateforme.",
   "Les afters listés doivent renvoyer vers une billetterie externe ou une page officielle de l'organisateur.",
-  "Aucun paiement entre utilisateurs n'est traité par Mboka Hub.",
+  "Aucun paiement entre utilisateurs n'est traité par Nevent.",
   "Les profils pros peuvent être modérés, refusés ou désactivés en cas d'information trompeuse.",
   "Les contenus utilisant des visuels non autorisés ou une affiliation officielle trompeuse peuvent être supprimés.",
 ] as const;

@@ -32,7 +32,7 @@ export function NewsletterForm({ source = "footer" }: { source?: string }) {
     <form onSubmit={submit} className="space-y-3">
       <div>
         <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-blood">
-          📬 Newsletter Mboka Hub
+          📬 Newsletter Nevent
         </p>
         <p className="mt-2 text-sm text-paper">
           Reçois les <strong className="text-paper">bons plans, alertes

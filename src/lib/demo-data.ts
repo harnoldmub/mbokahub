@@ -151,9 +151,9 @@ export const demoPros: ProDemo[] = [
     isPremium: true,
   },
   {
-    id: "mboka-vision",
+    id: "nevent-vision",
     category: "PHOTOGRAPHE",
-    displayName: "Mboka Vision",
+    displayName: "Nevent Vision",
     city: "Paris",
     country: "France",
     specialities: ["portrait", "event", "retouche"],
@@ -253,8 +253,8 @@ export const parisClassics: ParisClassicDemo[] = [
     category: "Transports",
     name: "Navettes & covoiturages communautaires",
     description:
-      "Des navettes privées sont régulièrement organisées par la communauté depuis Matonge (Bruxelles), Château-Rouge et Barbès. Consulter les groupes WhatsApp et les annonces sur Mboka Hub.",
-    address: "Points de départ annoncés sur Mboka Hub",
+      "Des navettes privées sont régulièrement organisées par la communauté depuis Matonge (Bruxelles), Château-Rouge et Barbès. Consulter les groupes WhatsApp et les annonces sur Nevent.",
+    address: "Points de départ annoncés sur Nevent",
     tags: ["navette", "communauté", "covoiturage"],
   },
 

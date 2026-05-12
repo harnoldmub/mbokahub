@@ -6,9 +6,9 @@ export const dynamic = "force-static";
 const SECTIONS = [
   {
     title: "1. Objet et champ d'application",
-    content: `Mboka Hub est une plateforme communautaire indépendante destinée aux fans du concert de Fally Ipupa au Stade de France (2 et 3 mai 2026). Elle met en relation des particuliers et des prestataires pour faciliter l'organisation du séjour concert (covoiturage, prestations beauté, afters, bons plans).
+    content: `Nevent est une plateforme communautaire indépendante destinée aux fans du concert de Fally Ipupa au Stade de France (2 et 3 mai 2026). Elle met en relation des particuliers et des prestataires pour faciliter l'organisation du séjour concert (covoiturage, prestations beauté, afters, bons plans).
 
-Mboka Hub n'est ni organisateur du concert, ni revendeur officiel de billets, ni affilié à Fally Ipupa, F'Victeam ou au Stade de France.`,
+Nevent n'est ni organisateur du concert, ni revendeur officiel de billets, ni affilié à Fally Ipupa, F'Victeam ou au Stade de France.`,
   },
   {
     title: "2. Services proposés",
@@ -19,21 +19,21 @@ Mboka Hub n'est ni organisateur du concert, ni revendeur officiel de billets, ni
 — Des informations pratiques compilées de sources publiques.
 — Des activités communautaires (quiz, jeu).
 
-Mboka Hub agit en qualité d'intermédiaire de mise en relation. Les transactions éventuelles se concluent directement entre les utilisateurs.`,
+Nevent agit en qualité d'intermédiaire de mise en relation. Les transactions éventuelles se concluent directement entre les utilisateurs.`,
   },
   {
     title: "3. Inscription et compte utilisateur",
-    content: `L'accès aux fonctionnalités complètes nécessite la création d'un compte. L'utilisateur s'engage à fournir des informations exactes et à maintenir la confidentialité de ses identifiants. Mboka Hub se réserve le droit de suspendre tout compte en cas de comportement abusif.`,
+    content: `L'accès aux fonctionnalités complètes nécessite la création d'un compte. L'utilisateur s'engage à fournir des informations exactes et à maintenir la confidentialité de ses identifiants. Nevent se réserve le droit de suspendre tout compte en cas de comportement abusif.`,
   },
   {
     title: "4. Responsabilité",
-    content: `Les informations publiées sur Mboka Hub (prix, horaires, adresses, règles du stade) sont fournies à titre indicatif, compilées de sources publiques, et peuvent évoluer sans préavis. Mboka Hub décline toute responsabilité en cas d'inexactitude ou de modification postérieure à la publication.
+    content: `Les informations publiées sur Nevent (prix, horaires, adresses, règles du stade) sont fournies à titre indicatif, compilées de sources publiques, et peuvent évoluer sans préavis. Nevent décline toute responsabilité en cas d'inexactitude ou de modification postérieure à la publication.
 
-Les annonces de trajet et de prestation relèvent de la responsabilité exclusive de leurs auteurs. Mboka Hub ne garantit pas la fiabilité ou la solvabilité des utilisateurs.`,
+Les annonces de trajet et de prestation relèvent de la responsabilité exclusive de leurs auteurs. Nevent ne garantit pas la fiabilité ou la solvabilité des utilisateurs.`,
   },
   {
     title: "5. Propriété intellectuelle",
-    content: `Le contenu éditorial de Mboka Hub (textes, design, code) est protégé par le droit d'auteur. Les photos utilisées sont issues de Wikimedia Commons sous licences CC BY-SA 4.0 et CC BY-SA 2.0 — les crédits photographiques sont disponibles en pied de page et sur la page Disclaimer.
+    content: `Le contenu éditorial de Nevent (textes, design, code) est protégé par le droit d'auteur. Les photos utilisées sont issues de Wikimedia Commons sous licences CC BY-SA 4.0 et CC BY-SA 2.0 — les crédits photographiques sont disponibles en pied de page et sur la page Disclaimer.
 
 Le nom, l'image et la musique de Fally Ipupa appartiennent à leurs ayants droit respectifs. Leur mention sur ce site relève d'un usage éditorial informatif.`,
   },
@@ -47,7 +47,7 @@ Le nom, l'image et la musique de Fally Ipupa appartiennent à leurs ayants droit
   },
   {
     title: "8. Modification des CGV",
-    content: `Mboka Hub se réserve le droit de modifier les présentes CGV à tout moment. Les modifications prennent effet dès leur publication sur cette page. L'utilisation continue du service vaut acceptation des nouvelles conditions.`,
+    content: `Nevent se réserve le droit de modifier les présentes CGV à tout moment. Les modifications prennent effet dès leur publication sur cette page. L'utilisation continue du service vaut acceptation des nouvelles conditions.`,
   },
 ] as const;
 
@@ -64,7 +64,7 @@ export default function CgvPage() {
 
       <div className="mb-12">
         <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-blood">
-          Mboka Hub
+          Nevent
         </p>
         <h1 className="mt-3 font-display text-5xl uppercase text-paper leading-tight">
           Conditions Générales
@@ -80,7 +80,7 @@ export default function CgvPage() {
           Site indépendant · Non officiel
         </p>
         <p className="font-body text-sm text-paper-dim leading-relaxed">
-          Mboka Hub n&apos;est pas affilié à Fally Ipupa, F&apos;Victeam, au Stade de France
+          Nevent n&apos;est pas affilié à Fally Ipupa, F&apos;Victeam, au Stade de France
           ou à tout organisateur officiel. Ce site est créé par des fans pour les fans.
         </p>
       </div>

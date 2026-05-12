@@ -31,7 +31,7 @@ export default async function AdminLayout({
         <header className="mb-8 flex flex-wrap items-center justify-between gap-4 border-white/10 border-b pb-6">
           <div>
             <p className="font-mono text-muted-foreground text-xs uppercase tracking-widest">
-              Mboka Hub · Backoffice
+              Nevent · Backoffice
             </p>
             <h1 className="mt-1 font-heading text-3xl text-foreground">
               Administration

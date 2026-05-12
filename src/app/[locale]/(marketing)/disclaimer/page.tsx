@@ -18,7 +18,7 @@ export default function DisclaimerPage() {
 
       <div className="mb-12">
         <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-blood">
-          Mboka Hub
+          Nevent
         </p>
         <h1 className="mt-3 font-display text-5xl uppercase text-paper leading-tight">
           Disclaimer
@@ -34,7 +34,7 @@ export default function DisclaimerPage() {
           Site indépendant · Non officiel
         </h2>
         <p className="font-body text-base leading-relaxed text-paper-dim">
-          Mboka Hub est une plateforme communautaire créée par des fans, pour les fans.
+          Nevent est une plateforme communautaire créée par des fans, pour les fans.
           Ce site <strong className="text-paper">n&apos;est affilié d&apos;aucune façon</strong> à :
         </p>
         <ul className="space-y-2 font-body text-sm text-paper-dim">
@@ -64,10 +64,10 @@ export default function DisclaimerPage() {
           Informations non contractuelles
         </h2>
         <p className="font-body text-sm leading-relaxed text-paper-dim">
-          Les informations pratiques publiées sur Mboka Hub (prix de transport, horaires,
+          Les informations pratiques publiées sur Nevent (prix de transport, horaires,
           règles d&apos;accès au stade, adresses) sont compilées de sources publiques et
           fournies à titre strictement indicatif. Elles peuvent être inexactes ou évoluer
-          sans préavis. Mboka Hub décline toute responsabilité pour toute décision prise
+          sans préavis. Nevent décline toute responsabilité pour toute décision prise
           sur la base de ces informations.
         </p>
         <p className="mt-4 font-mono text-[10px] uppercase tracking-wider text-blood">

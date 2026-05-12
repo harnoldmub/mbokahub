@@ -19,10 +19,10 @@ const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3001";
 const GA_ID = "G-YS8CL4ZE62";
 
 export const metadata: Metadata = {
-  applicationName: "Mboka Hub",
+  applicationName: "Nevent",
   title: {
-    default: "Mboka Hub | Services, prestataires et réservations",
-    template: "%s | Mboka Hub",
+    default: "Nevent | Services, prestataires et réservations",
+    template: "%s | Nevent",
   },
   description:
     "Plateforme gratuite de mise en relation entre clients et prestataires : services locaux, planning, réservation, médias, boosts et placements sponsorisés.",
@@ -59,15 +59,15 @@ export const metadata: Metadata = {
       "Annuaire gratuit, réservation directe et visibilité sponsorisée pour les prestataires.",
     images: [
       {
-        alt: "Logo Mboka Hub",
+        alt: "Logo Nevent",
         height: 512,
         url: "/logo.png",
         width: 512,
       },
     ],
     locale: "fr_FR",
-    siteName: "Mboka Hub",
-    title: "Mboka Hub | Services, prestataires et réservations",
+    siteName: "Nevent",
+    title: "Nevent | Services, prestataires et réservations",
     type: "website",
     url: "/",
   },
@@ -87,7 +87,7 @@ export const metadata: Metadata = {
     description:
       "Trouve un prestataire, réserve un créneau et booste ta visibilité locale.",
     images: ["/logo.png"],
-    title: "Mboka Hub",
+    title: "Nevent",
   },
 };
 

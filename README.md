@@ -1,4 +1,4 @@
-# Mboka Hub
+# Nevent
 
 Marketplace indépendante pour organiser trajets, pros, afters et bons plans autour du concert diaspora Paris 2026.
 
@@ -46,4 +46,4 @@ corepack pnpm build
 
 ## Legal Guardrails
 
-Mboka Hub reste une plateforme indépendante de mise en relation. Le nom de l'artiste, l'affiche officielle et toute billetterie interne sont exclus du code, du branding, du SEO et des routes publiques.
+Nevent reste une plateforme indépendante de mise en relation. Le nom de l'artiste, l'affiche officielle et toute billetterie interne sont exclus du code, du branding, du SEO et des routes publiques.

@@ -8,12 +8,12 @@ const PILLARS = [
   {
     icon: ShieldCheck,
     title: "Prestataires vérifiés",
-    desc: "Sélection humaine par l'équipe Mboka Hub : profils contrôlés, avis transparents.",
+    desc: "Sélection humaine par l'équipe Nevent : profils contrôlés, avis transparents.",
   },
   {
     icon: BadgeCheck,
     title: "Tarifs diaspora",
-    desc: "Conditions négociées pour la communauté Mboka Hub, sans commission cachée.",
+    desc: "Conditions négociées pour la communauté Nevent, sans commission cachée.",
   },
   {
     icon: Sparkles,
@@ -38,13 +38,13 @@ export function GuaranteeStrip({ variant = "full" }: GuaranteeStripProps) {
 
   return (
     <section
-      aria-label="Pourquoi passer par Mboka Hub"
+      aria-label="Pourquoi passer par Nevent"
       className="relative overflow-hidden rounded-3xl border border-blood/20 bg-gradient-to-br from-blood/10 via-coal/40 to-transparent p-6 sm:p-8"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(229,9,20,0.08),transparent_60%)]" />
       <div className="relative">
         <p className="font-mono text-[10px] text-blood uppercase tracking-[0.3em]">
-          Pourquoi Mboka Hub
+          Pourquoi Nevent
         </p>
         <h2 className="mt-2 max-w-2xl font-display text-2xl text-paper uppercase leading-tight sm:text-3xl">
           Une sélection diaspora,

@@ -39,7 +39,7 @@ export default function GlobalError({
               margin: 0,
             }}
           >
-            Mboka Hub · Erreur
+            Nevent · Erreur
           </p>
           <h1
             style={{

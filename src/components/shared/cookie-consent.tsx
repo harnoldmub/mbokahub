@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-const STORAGE_KEY = "mboka-hub-cookie-consent-v1";
+const STORAGE_KEY = "nevent-cookie-consent-v1";
 
 type Consent = {
   necessary: true;
@@ -35,7 +35,7 @@ export function CookieConsent() {
     };
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(value));
-      document.cookie = `mboka_cookie_consent=${encodeURIComponent(
+      document.cookie = `nevent_cookie_consent=${encodeURIComponent(
         JSON.stringify(value),
       )}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
     } catch {}
@@ -56,7 +56,7 @@ export function CookieConsent() {
               Cookies & vie privée
             </h3>
             <p className="mt-1 text-muted-foreground text-sm">
-              Mboka Hub utilise des cookies pour faire fonctionner le site,
+              Nevent utilise des cookies pour faire fonctionner le site,
               mesurer l'audience et améliorer l'expérience. Tu choisis ce que tu
               acceptes.{" "}
               <Link

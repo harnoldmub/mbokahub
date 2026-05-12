@@ -46,7 +46,7 @@ export default async function PublishTrajetPage({
                   Validation manuelle
                 </p>
                 <p className="text-paper-dim text-xs leading-relaxed font-body">
-                  Ton annonce sera vérifiée par Mboka Hub. Les passagers voient
+                  Ton annonce sera vérifiée par Nevent. Les passagers voient
                   ta voiture, ton modèle et ton prix avant de te contacter via
                   WhatsApp.
                 </p>

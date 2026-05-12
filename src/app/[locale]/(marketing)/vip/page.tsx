@@ -17,9 +17,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { isFoundingFamilyMember } from "@/lib/auth-helpers";
 
 export const metadata = {
-  title: "Famille Fondatrice · Mboka Hub",
+  title: "Famille Fondatrice · Nevent",
   description:
-    "Mboka Hub est désormais 100% gratuit pour les fans. Les premiers à avoir cru au projet (anciens VIP) gardent un badge ⭐ Famille Fondatrice à vie.",
+    "Nevent est désormais 100% gratuit pour les fans. Les premiers à avoir cru au projet (anciens VIP) gardent un badge ⭐ Famille Fondatrice à vie.",
 };
 
 const FREE_FOR_FANS = [
@@ -41,7 +41,7 @@ const FREE_FOR_FANS = [
   {
     icon: MessagesSquare,
     title: "Toute l'info",
-    body: "Concert, classiques de Paris, playlists, communauté. La maison Mboka est ouverte.",
+    body: "Concert, classiques de Paris, playlists, communauté. La maison Nevent est ouverte.",
   },
 ];
 
@@ -76,7 +76,7 @@ export default async function VipPage() {
             </div>
 
             <p className="mt-6 max-w-2xl text-lg text-paper-dim">
-              Tu fais partie des premiers qui ont cru à Mboka Hub avant le
+              Tu fais partie des premiers qui ont cru à Nevent avant le
               concert, quand l&apos;accès était encore payant. Aujourd&apos;hui
               la plateforme est 100% gratuite pour tous les fans — mais ton
               badge ⭐ Famille Fondatrice reste, à vie.
@@ -115,14 +115,14 @@ export default async function VipPage() {
             100% gratuit pour la famille
           </Badge>
           <h1 className="mt-6 font-display text-5xl text-foreground leading-[1.05] md:text-7xl">
-            MBOKA HUB EST{" "}
+            NEVENT EST{" "}
             <span className="text-emerald-300">GRATUIT</span> POUR{" "}
             <span className="text-primary">TOUS LES FANS</span>.
           </h1>
           <p className="mt-6 max-w-xl text-muted-foreground text-lg leading-8">
             Plus de pass à acheter. Plus de paywall. Tu vois tous les
             prestataires, tu prends tous les contacts, tu réserves tous les
-            trajets et tous les afters. La maison Mboka est ouverte.
+            trajets et tous les afters. La maison Nevent est ouverte.
           </p>
 
           <div className="mt-10 flex flex-wrap gap-3">
@@ -192,7 +192,7 @@ export default async function VipPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             number="01"
-            description="Mboka Hub appartient à la famille. Voici ce qui est gratuit, pour tout le monde, dès aujourd'hui."
+            description="Nevent appartient à la famille. Voici ce qui est gratuit, pour tout le monde, dès aujourd'hui."
             eyebrow="Tout est ouvert"
             title="Ce qui est gratuit pour les fans"
           />
@@ -237,7 +237,7 @@ export default async function VipPage() {
             number="02"
             description="On ne fait jamais payer un fan pour voir. On fait payer ceux qui veulent de la visibilité."
             eyebrow="Le nouveau modèle"
-            title="Qui paye Mboka Hub ?"
+            title="Qui paye Nevent ?"
           />
 
           <div className="mt-12 grid gap-4 sm:grid-cols-2">

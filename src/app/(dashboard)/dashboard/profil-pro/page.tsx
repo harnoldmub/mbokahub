@@ -44,7 +44,7 @@ export default async function ProfilProPage({
           <p className="mt-3 max-w-2xl text-paper-dim leading-7">
             Tu n&apos;as pas encore inscrit ton service. Crée-le en deux
             minutes pour apparaître dans l&apos;annuaire des prestataires
-            Mboka Hub.
+            Nevent.
           </p>
         </div>
         <div>

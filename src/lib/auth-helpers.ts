@@ -29,7 +29,7 @@ export async function isCurrentUserAdmin(): Promise<boolean> {
 }
 
 export async function canSeePrivateProInfo(): Promise<boolean> {
-  // Modèle Mboka Hub : 100% gratuit pour les fans.
+  // Modèle Nevent : 100% gratuit pour les fans.
   // Les noms et contacts des prestataires sont visibles par tout le monde.
   return true;
 }

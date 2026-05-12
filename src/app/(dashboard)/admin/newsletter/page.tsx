@@ -18,7 +18,7 @@ export default async function AdminNewsletterPage() {
             Newsletter ({subs.length})
           </h2>
           <p className="mt-1 text-muted-foreground text-sm">
-            Liste des abonnés à la newsletter Mboka Hub.
+            Liste des abonnés à la newsletter Nevent.
           </p>
         </div>
         <a

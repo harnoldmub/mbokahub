@@ -106,7 +106,7 @@ const TRANSPORT = [
 ];
 
 export const metadata = {
-  title: "Concert Fally Ipupa — Stade de France 2 & 3 mai 2026 | Mboka Hub",
+  title: "Concert Fally Ipupa — Stade de France 2 & 3 mai 2026 | Nevent",
   description:
     "Toutes les infos pratiques du concert Fally Ipupa au Stade de France les 2 et 3 mai 2026 : billetterie officielle, horaires, transports, FAQ.",
 };
@@ -138,7 +138,7 @@ export default function ConcertPage() {
                     Important — site indépendant
                   </p>
                   <p className="mt-1 text-xs text-paper-dim leading-relaxed">
-                    Mboka Hub n'est pas affilié à Fally Ipupa, à Gérard Drouot
+                    Nevent n'est pas affilié à Fally Ipupa, à Gérard Drouot
                     Productions ou au Stade de France. Vérifie toujours les infos
                     officielles avant tout achat.
                   </p>
@@ -389,7 +389,7 @@ export default function ConcertPage() {
       <section className="relative z-10 mx-auto max-w-7xl px-6 py-16">
         <div className="rounded-3xl border border-blood/30 bg-blood/5 p-10 text-center sm:p-16">
           <h2 className="font-display text-3xl uppercase text-paper sm:text-4xl">
-            Prépare ton week-end avec Mboka Hub
+            Prépare ton week-end avec Nevent
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-paper-dim">
             Trajets, beauté, photographes, afters : tout ce qu'il faut pour vivre les

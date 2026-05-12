@@ -43,7 +43,7 @@ type Props = {
   pros: ProListItem[];
   initialSearch?: string;
   /**
-   * Conservé pour compat. — Mboka Hub est désormais 100% gratuit pour les
+   * Conservé pour compat. — Nevent est désormais 100% gratuit pour les
    * fans. Toujours considéré comme `true` côté rendu.
    */
   unlocked?: boolean;

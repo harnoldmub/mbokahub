@@ -61,7 +61,7 @@ export default async function ProDetailsPage({
   const displayedName = pro.displayName;
   const whatsappDigits = pro.whatsapp.replace(/[^\d]/g, "");
   const bookingMessage = encodeURIComponent(
-    `Bonjour ${displayedName}, je viens de Mboka Hub et je veux réserver un créneau.`,
+    `Bonjour ${displayedName}, je viens de Nevent et je veux réserver un créneau.`,
   );
 
   return (

@@ -49,7 +49,7 @@ export default async function MerchPage() {
             </p>
           </div>
           <Button asChild variant="outline" className="h-12 px-6">
-            <Link href="mailto:contact@mbokahub.com?subject=Référencer%20ma%20boutique%20-%20Mboka%20Hub">
+            <Link href="mailto:contact@mbokahub.com?subject=Référencer%20ma%20boutique%20-%20Nevent%20Hub">
               Référencer ma boutique
             </Link>
           </Button>

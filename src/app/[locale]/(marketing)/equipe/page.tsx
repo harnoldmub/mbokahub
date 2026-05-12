@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 const TEAM = [
   {
-    name: "Mboka Hub Studio",
+    name: "Nevent Studio",
     role: "Direction artistique & produit",
     bio: "Le collectif derrière la plateforme. Designers, devs et passionnés de musique congolaise basés à Bruxelles et Paris.",
     initials: "MH",
@@ -15,7 +15,7 @@ const TEAM = [
   {
     name: "Communauté",
     role: "Pros, drivers, organisateurs",
-    bio: "Sans vous, pas de plateforme. Plus de 200 contributeurs vérifiés font vivre Mboka Hub au quotidien.",
+    bio: "Sans vous, pas de plateforme. Plus de 200 contributeurs vérifiés font vivre Nevent au quotidien.",
     initials: "CO",
     color: "bg-gold",
   },
@@ -116,7 +116,7 @@ export default function EquipePage() {
             className="flex items-center gap-3 rounded-2xl border border-white/5 bg-coal p-5 hover:border-blood/30"
           >
             <AtSign className="size-5 text-blood" />
-            <span className="text-sm text-paper">@mbokahub</span>
+            <span className="text-sm text-paper">@nevent</span>
           </a>
           <a
             href="https://wa.me/32000000000"

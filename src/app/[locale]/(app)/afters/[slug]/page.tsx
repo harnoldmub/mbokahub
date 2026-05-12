@@ -134,7 +134,7 @@ export default async function AfterDetailsPage({
         <p className="mt-6 text-muted-foreground leading-8">
           Cette fiche référence une soirée externe. Les conditions
           d&apos;entrée, prix définitifs et remboursements sont gérés par
-          l&apos;organisateur ou la billetterie externe. Mboka Hub n&apos;est
+          l&apos;organisateur ou la billetterie externe. Nevent n&apos;est
           pas partie au contrat.
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">

@@ -104,7 +104,7 @@ export default async function TrajetsPage() {
             <span className="font-serif italic text-blood">un trajet</span>
           </h1>
           <p className="mt-4 max-w-md font-body text-paper-dim">
-            Fais le trajet avec d&apos;autres fans de la Famille Mboka. Économise, rencontre l&apos;Aigle, et
+            Fais le trajet avec d&apos;autres fans de la Famille Nevent. Économise, rencontre l&apos;Aigle, et
             arrive en toute sécurité au Stade.
           </p>
         </div>

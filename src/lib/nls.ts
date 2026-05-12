@@ -110,7 +110,7 @@ export const nls = {
       seeMore: "Voir plus",
     },
     home: {
-      heroTitle: "Mboka Hub",
+      heroTitle: "Nevent",
       heroSubtitle:
         "Prépare le week-end du concert de Fally Ipupa au Stade de France : trajets, prestataires, afters, merch, jeu et bons plans vérifiés.",
       primaryCta: "Préparer mon week-end",
@@ -218,7 +218,7 @@ export const nls = {
       explore: "Explorer la catégorie",
       proTitle: "Tu es prestataire ?",
       proDescription:
-        "Mboka Hub te donne une vitrine simple pour toucher les fans qui préparent leur week-end à Paris.",
+        "Nevent te donne une vitrine simple pour toucher les fans qui préparent leur week-end à Paris.",
       proCta: "S'inscrire comme pro",
       categories: [
         {
@@ -269,11 +269,11 @@ export const nls = {
       emptyLeaderboard: "Aucun score cette semaine — sois le premier !",
       beFirst: "Lancer la première partie",
       back: "Retour au jeu",
-      eyebrow: "Mboka Hub × Stade de France 2026",
+      eyebrow: "Nevent × Stade de France 2026",
       tagline: "Le Sapeur doit traverser Paris jusqu'au Stade de France — aide-le !",
       idleTagline:
         "Aide le Sapeur à traverser Paris jusqu'au Stade de France. Ramasse chapeaux, diamants et micros !",
-      idleEyebrow: "Mboka Hub Game",
+      idleEyebrow: "Nevent Game",
       start: "Commencer",
       controlsHint: "Espace / Clic / Tap pour sauter",
       gameOver: "Game Over",
@@ -311,7 +311,7 @@ export const nls = {
       eyebrow: "Contact",
       title: "On reste *en ligne*.",
       description:
-        "Une question sur un trajet, un paiement ou ton profil pro ? L'équipe Mboka Hub te répond.",
+        "Une question sur un trajet, un paiement ou ton profil pro ? L'équipe Nevent te répond.",
       email: "Email",
       whatsapp: "WhatsApp Business",
       office: "Bureau",
@@ -353,7 +353,7 @@ export const nls = {
     appHome: {
       hero: {
         eyebrow: "Stade de France · 02 & 03 mai 2026",
-        title: "Mboka Hub",
+        title: "Nevent",
         subtitle: "Tout pour vivre le week-end Fally Ipupa sans stress.",
         primaryCta: "Préparer mon week-end",
         proCta: "Je suis prestataire",
@@ -382,7 +382,7 @@ export const nls = {
       },
     },
     prestatairesPage: {
-      eyebrow: "Annuaire vérifié · Mboka Hub",
+      eyebrow: "Annuaire vérifié · Nevent",
       title: "Prestataires",
       subtitle:
         "Tous les pros disponibles pour ton week-end Fally Ipupa au Stade de France. Profils vérifiés, contacts WhatsApp, paiement direct.",
@@ -392,7 +392,7 @@ export const nls = {
       eyebrow: "Communauté",
       title: "Rejoins ta communauté WhatsApp",
       subtitle:
-        "Une communauté par région, animée par des modérateurs Mboka Hub. Entraide, infos concert, covoiturage, bons plans — tout est là.",
+        "Une communauté par région, animée par des modérateurs Nevent. Entraide, infos concert, covoiturage, bons plans — tout est là.",
       cta: "Devenir modérateur de ta région",
       emptyTitle: "Bientôt disponible",
       emptyText:
@@ -453,7 +453,7 @@ export const nls = {
       seeMore: "Voir plus",
     },
     home: {
-      heroTitle: "Mboka Hub",
+      heroTitle: "Nevent",
       heroSubtitle:
         "Plan the Fally Ipupa concert weekend at Stade de France: rides, providers, afterparties, merch, game and verified tips.",
       primaryCta: "See rides",
@@ -561,7 +561,7 @@ export const nls = {
       explore: "Explore category",
       proTitle: "Are you a provider?",
       proDescription:
-        "Mboka Hub gives you a simple storefront to reach fans preparing their Paris weekend.",
+        "Nevent gives you a simple storefront to reach fans preparing their Paris weekend.",
       proCta: "Register as a pro",
       categories: [
         {
@@ -610,11 +610,11 @@ export const nls = {
       emptyLeaderboard: "No scores this week — be the first!",
       beFirst: "Start the first run",
       back: "Back to game",
-      eyebrow: "Mboka Hub × Stade de France 2026",
+      eyebrow: "Nevent × Stade de France 2026",
       tagline: "The Sapeur must cross Paris all the way to Stade de France — help him!",
       idleTagline:
         "Help the Sapeur cross Paris to reach Stade de France. Grab hats, diamonds and microphones!",
-      idleEyebrow: "Mboka Hub Game",
+      idleEyebrow: "Nevent Game",
       start: "Start",
       controlsHint: "Space / Click / Tap to jump",
       gameOver: "Game Over",
@@ -652,7 +652,7 @@ export const nls = {
       eyebrow: "Contact",
       title: "Let's stay *connected*.",
       description:
-        "Question about a ride, payment or pro profile? The Mboka Hub team will reply.",
+        "Question about a ride, payment or pro profile? The Nevent team will reply.",
       email: "Email",
       whatsapp: "WhatsApp Business",
       office: "Office",
@@ -694,7 +694,7 @@ export const nls = {
     appHome: {
       hero: {
         eyebrow: "Stade de France · 02 & 03 May 2026",
-        title: "Mboka Hub",
+        title: "Nevent",
         subtitle: "Everything to enjoy the Fally Ipupa weekend stress-free.",
         primaryCta: "Plan my weekend",
         proCta: "I'm a service provider",
@@ -723,7 +723,7 @@ export const nls = {
       },
     },
     prestatairesPage: {
-      eyebrow: "Verified directory · Mboka Hub",
+      eyebrow: "Verified directory · Nevent",
       title: "Providers",
       subtitle:
         "All the pros available for your Fally Ipupa weekend at Stade de France. Verified profiles, WhatsApp contact, direct payment.",
@@ -733,7 +733,7 @@ export const nls = {
       eyebrow: "Community",
       title: "Join your WhatsApp community",
       subtitle:
-        "One community per region, run by Mboka Hub moderators. Help, concert tips, carpooling, good deals — it's all here.",
+        "One community per region, run by Nevent moderators. Help, concert tips, carpooling, good deals — it's all here.",
       cta: "Become moderator of your region",
       emptyTitle: "Coming soon",
       emptyText:
@@ -794,7 +794,7 @@ export const nls = {
       seeMore: "Mehr sehen",
     },
     home: {
-      heroTitle: "Mboka Hub",
+      heroTitle: "Nevent",
       heroSubtitle:
         "Plane das Konzertwochenende von Fally Ipupa im Stade de France: Fahrten, Dienstleister, Afters, Merch, Spiel und geprüfte Tipps.",
       primaryCta: "Fahrten ansehen",
@@ -902,7 +902,7 @@ export const nls = {
       explore: "Kategorie ansehen",
       proTitle: "Bist du Dienstleister?",
       proDescription:
-        "Mboka Hub gibt dir eine einfache Bühne, um Fans vor ihrem Paris-Wochenende zu erreichen.",
+        "Nevent gibt dir eine einfache Bühne, um Fans vor ihrem Paris-Wochenende zu erreichen.",
       proCta: "Als Profi anmelden",
       categories: [
         {
@@ -952,11 +952,11 @@ export const nls = {
       emptyLeaderboard: "Diese Woche noch keine Scores — sei der Erste!",
       beFirst: "Erste Runde starten",
       back: "Zurück zum Spiel",
-      eyebrow: "Mboka Hub × Stade de France 2026",
+      eyebrow: "Nevent × Stade de France 2026",
       tagline: "Der Sapeur muss durch Paris bis zum Stade de France — hilf ihm!",
       idleTagline:
         "Hilf dem Sapeur, durch Paris bis zum Stade de France zu kommen. Sammle Hüte, Diamanten und Mikros!",
-      idleEyebrow: "Mboka Hub Game",
+      idleEyebrow: "Nevent Game",
       start: "Start",
       controlsHint: "Leertaste / Klick / Tap zum Springen",
       gameOver: "Game Over",
@@ -994,7 +994,7 @@ export const nls = {
       eyebrow: "Kontakt",
       title: "Wir bleiben *verbunden*.",
       description:
-        "Frage zu Fahrt, Zahlung oder Profi-Profil? Das Mboka-Hub-Team antwortet dir.",
+        "Frage zu Fahrt, Zahlung oder Profi-Profil? Das Nevent-Hub-Team antwortet dir.",
       email: "E-Mail",
       whatsapp: "WhatsApp Business",
       office: "Büro",
@@ -1036,7 +1036,7 @@ export const nls = {
     appHome: {
       hero: {
         eyebrow: "Stade de France · 02. & 03. Mai 2026",
-        title: "Mboka Hub",
+        title: "Nevent",
         subtitle: "Alles für ein entspanntes Fally-Ipupa-Wochenende.",
         primaryCta: "Wochenende planen",
         proCta: "Ich bin Anbieter",
@@ -1065,7 +1065,7 @@ export const nls = {
       },
     },
     prestatairesPage: {
-      eyebrow: "Geprüftes Verzeichnis · Mboka Hub",
+      eyebrow: "Geprüftes Verzeichnis · Nevent",
       title: "Anbieter",
       subtitle:
         "Alle Profis für dein Fally-Ipupa-Wochenende im Stade de France. Geprüfte Profile, WhatsApp-Kontakt, direkte Zahlung.",
@@ -1075,7 +1075,7 @@ export const nls = {
       eyebrow: "Community",
       title: "Tritt deiner WhatsApp-Community bei",
       subtitle:
-        "Eine Community pro Region, betreut von Mboka-Hub-Moderatoren. Hilfe, Konzertinfos, Mitfahrgelegenheiten, gute Tipps — alles da.",
+        "Eine Community pro Region, betreut von Nevent-Hub-Moderatoren. Hilfe, Konzertinfos, Mitfahrgelegenheiten, gute Tipps — alles da.",
       cta: "Werde Moderator deiner Region",
       emptyTitle: "Bald verfügbar",
       emptyText:
@@ -1136,7 +1136,7 @@ export const nls = {
       seeMore: "Meer zien",
     },
     home: {
-      heroTitle: "Mboka Hub",
+      heroTitle: "Nevent",
       heroSubtitle:
         "Plan het concertweekend van Fally Ipupa in het Stade de France: ritten, dienstverleners, afters, merch, game en geverifieerde tips.",
       primaryCta: "Bekijk ritten",
@@ -1244,7 +1244,7 @@ export const nls = {
       explore: "Categorie bekijken",
       proTitle: "Ben jij dienstverlener?",
       proDescription:
-        "Mboka Hub geeft je een eenvoudige etalage om fans te bereiken die hun Parijs-weekend voorbereiden.",
+        "Nevent geeft je een eenvoudige etalage om fans te bereiken die hun Parijs-weekend voorbereiden.",
       proCta: "Inschrijven als pro",
       categories: [
         {
@@ -1294,11 +1294,11 @@ export const nls = {
       emptyLeaderboard: "Nog geen scores deze week — wees de eerste!",
       beFirst: "Start de eerste run",
       back: "Terug naar het spel",
-      eyebrow: "Mboka Hub × Stade de France 2026",
+      eyebrow: "Nevent × Stade de France 2026",
       tagline: "De Sapeur moet door Parijs naar Stade de France — help hem!",
       idleTagline:
         "Help de Sapeur dwars door Parijs tot Stade de France. Pak hoeden, diamanten en microfoons!",
-      idleEyebrow: "Mboka Hub Game",
+      idleEyebrow: "Nevent Game",
       start: "Start",
       controlsHint: "Spatie / Klik / Tap om te springen",
       gameOver: "Game Over",
@@ -1336,7 +1336,7 @@ export const nls = {
       eyebrow: "Contact",
       title: "We blijven *verbonden*.",
       description:
-        "Vraag over een rit, betaling of pro-profiel? Het Mboka Hub-team antwoordt.",
+        "Vraag over een rit, betaling of pro-profiel? Het Nevent-team antwoordt.",
       email: "E-mail",
       whatsapp: "WhatsApp Business",
       office: "Kantoor",
@@ -1378,7 +1378,7 @@ export const nls = {
     appHome: {
       hero: {
         eyebrow: "Stade de France · 02 & 03 mei 2026",
-        title: "Mboka Hub",
+        title: "Nevent",
         subtitle: "Alles voor een zorgeloos Fally Ipupa-weekend.",
         primaryCta: "Mijn weekend plannen",
         proCta: "Ik ben dienstverlener",
@@ -1407,7 +1407,7 @@ export const nls = {
       },
     },
     prestatairesPage: {
-      eyebrow: "Geverifieerde gids · Mboka Hub",
+      eyebrow: "Geverifieerde gids · Nevent",
       title: "Dienstverleners",
       subtitle:
         "Alle pro's voor je Fally Ipupa-weekend in het Stade de France. Geverifieerde profielen, WhatsApp-contact, directe betaling.",
@@ -1417,7 +1417,7 @@ export const nls = {
       eyebrow: "Community",
       title: "Sluit je aan bij je WhatsApp-community",
       subtitle:
-        "Eén community per regio, geleid door Mboka Hub-moderators. Hulp, concertinfo, carpoolen, goede tips — alles is hier.",
+        "Eén community per regio, geleid door Nevent-moderators. Hulp, concertinfo, carpoolen, goede tips — alles is hier.",
       cta: "Word moderator van je regio",
       emptyTitle: "Binnenkort beschikbaar",
       emptyText:

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Configure Stripe Checkout branding for Mboka Hub.
+ * Configure Stripe Checkout branding for Nevent.
  * Uploads the logo and sets brand colors on your Stripe account.
  *
  * Usage:
@@ -25,7 +25,7 @@ const LOGO_PATH = resolve(__dirname, "../public/logo.png");
 const stripe = new Stripe(SECRET, { apiVersion: "2025-03-31.basil" });
 const mode = SECRET.startsWith("sk_live_") ? "LIVE" : "TEST";
 
-// Mboka Hub brand palette
+// Nevent brand palette
 const PRIMARY_COLOR = "#E50914";    // rouge sang — boutons, liens
 const SECONDARY_COLOR = "#0a0808";  // noir profond — fond checkout
 
@@ -62,7 +62,7 @@ async function uploadFile(purpose, label) {
   console.log(`     Primary   : ${PRIMARY_COLOR}`);
   console.log(`     Secondary : ${SECONDARY_COLOR}`);
   console.log("\n=================================================================");
-  console.log(`✅ Stripe Checkout is now branded Mboka Hub (${mode})`);
+  console.log(`✅ Stripe Checkout is now branded Nevent (${mode})`);
   console.log("   Verify → https://dashboard.stripe.com/settings/branding");
   console.log("=================================================================\n");
 })().catch((err) => {

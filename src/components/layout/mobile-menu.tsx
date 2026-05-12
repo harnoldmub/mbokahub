@@ -169,10 +169,7 @@ export function MobileMenu({ market, lang }: MobileMenuProps) {
                 variant="outline"
               >
                 <Link
-                  href={localizedHref(
-                    "/sign-in?redirect_url=/dashboard",
-                    market,
-                  )}
+                  href="/sign-in?redirect_url=/dashboard"
                   onClick={() => setOpen(false)}
                 >
                   <LogIn className="size-4" />
@@ -186,10 +183,7 @@ export function MobileMenu({ market, lang }: MobileMenuProps) {
                 variant="ghost"
               >
                 <Link
-                  href={localizedHref(
-                    "/sign-up?redirect_url=/dashboard",
-                    market,
-                  )}
+                  href="/sign-up?redirect_url=/dashboard"
                   onClick={() => setOpen(false)}
                 >
                   <UserPlus className="size-4" />

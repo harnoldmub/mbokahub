@@ -137,7 +137,7 @@ export default async function AdminStatsPage() {
           <StatBox icon={Crown} label="Pros total" value={prosTotal} hint={`${prosVerified} validés · ${prosPremium} premium`} tone="gold" />
           <StatBox
             icon={BadgeEuro}
-            label="Recettes Mboka Hub"
+            label="Recettes Nevent"
             value={`${(paymentsAgg._sum.amount ?? 0).toFixed(2)} €`}
             hint={`${paymentsAgg._count._all} paiements (badges pros, boost, déblocages, anciens VIP)`}
             tone="green"
@@ -151,9 +151,9 @@ export default async function AdminStatsPage() {
           />
         </div>
         <p className="mt-3 text-muted-foreground text-xs">
-          ℹ️ Mboka Hub n'encaisse pas pour le compte des prestataires. Les fans paient
+          ℹ️ Nevent n'encaisse pas pour le compte des prestataires. Les fans paient
           directement les pros (cash, virement, leur propre lien). Les recettes ci-dessus sont
-          uniquement les abonnements et services payés <em>à</em> Mboka Hub.
+          uniquement les abonnements et services payés <em>à</em> Nevent.
         </p>
       </section>
 

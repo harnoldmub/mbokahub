@@ -6,9 +6,11 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { BrandLogo } from "@/components/layout/brand-logo";
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { MegaMenu } from "@/components/layout/mega-menu";
 import { MobileMenu } from "@/components/layout/mobile-menu";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_MARKET, MARKETS, type Market } from "@/lib/markets";
 import { getLocale, localizedHref, nls } from "@/lib/nls";
@@ -100,13 +102,11 @@ export function SiteHeader() {
     <header className="glass-header">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-5 sm:px-6 lg:px-8">
         <Link
-          aria-label="Mboka Hub"
+          aria-label="Nevent"
           className="group flex items-center"
           href={localizedHref("/", market)}
         >
-          <span className="text-2xl font-black uppercase tracking-[0.22em] text-paper">
-            MbokaHub
-          </span>
+          <BrandLogo />
         </Link>
 
         <nav
@@ -126,6 +126,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-3">
+          <ThemeToggle />
           <LanguageSwitcher />
           <Button
             asChild
@@ -165,9 +166,7 @@ export function SiteHeader() {
             </div>
           ) : (
             <Button asChild className="hidden sm:inline-flex" size="sm">
-              <Link
-                href={localizedHref("/sign-in?redirect_url=/dashboard", market)}
-              >
+              <Link href="/sign-in?redirect_url=/dashboard">
                 <UserRound className="size-4" />
                 Mon compte
               </Link>

@@ -58,7 +58,7 @@ export default async function ProPage() {
             tu veux
           </h1>
           <p className="mt-6 max-w-2xl text-muted-foreground text-xl leading-8">
-            Mboka Hub connecte les clients aux prestataires utiles : beauté,
+            Nevent connecte les clients aux prestataires utiles : beauté,
             photo, transport, événementiel, restauration et services locaux.
             L&apos;inscription est gratuite. Tu payes uniquement si tu veux plus
             de visibilité.

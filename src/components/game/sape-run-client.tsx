@@ -432,7 +432,7 @@ export interface SapeRunCopy {
 }
 
 const DEFAULT_COPY: SapeRunCopy = {
-  idleEyebrow: "Mboka Hub Game",
+  idleEyebrow: "Nevent Game",
   idleTitle: "Sape Run",
   idleTagline:
     "Aide le Sapeur à traverser Paris jusqu'au Stade de France. Ramasse chapeaux, diamants et micros !",

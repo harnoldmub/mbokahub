@@ -11,9 +11,9 @@ import {
 
 export const dynamic = "force-dynamic";
 export const metadata = {
-  title: "Communautés WhatsApp · Mboka Hub",
+  title: "Communautés WhatsApp · Nevent",
   description:
-    "Rejoins la communauté Mboka Hub de ta région : entraide, infos concert, bons plans, covoiturage.",
+    "Rejoins la communauté Nevent de ta région : entraide, infos concert, bons plans, covoiturage.",
 };
 
 type Props = { params: Promise<{ locale: string }>; searchParams?: Promise<SearchParams> };

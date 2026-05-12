@@ -26,7 +26,7 @@ export default function QuizStartPage() {
 
         <div className="mb-4 text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-blood">
-            Mboka Hub × Stade de France 2026
+            Nevent × Stade de France 2026
           </p>
           <h1 className="mt-3 font-display text-5xl uppercase text-paper leading-tight sm:text-6xl">
             Quiz Fally & Stade

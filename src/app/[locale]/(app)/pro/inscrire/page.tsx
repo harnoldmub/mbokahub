@@ -22,7 +22,7 @@ export default async function ProRegisterPage({ searchParams }: Props) {
           <SectionHeading
             number="PRO"
             eyebrow="Business"
-            title="Deviens un Pro *Mboka Hub*."
+            title="Deviens un Pro *Nevent*."
             description="Expose ton talent à des milliers de fans. Valide ton profil, booste ta visibilité et connecte-toi avec la diaspora."
           />
         </div>

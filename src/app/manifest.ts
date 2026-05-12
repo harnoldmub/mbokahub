@@ -13,8 +13,8 @@ export default function manifest(): MetadataRoute.Manifest {
         type: "image/png",
       },
     ],
-    name: "Mboka Hub",
-    short_name: "Mboka",
+    name: "Nevent",
+    short_name: "Nevent",
     start_url: "/",
     theme_color: "#12715B",
   };

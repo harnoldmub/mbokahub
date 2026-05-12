@@ -58,7 +58,7 @@ export default async function DashboardLayout({
             </div>
             <p className="mt-3 text-paper-dim text-sm leading-6">
               Vérifie les pros, modère les trajets, suis les paiements et gère
-              la Famille Mboka.
+              la Famille Nevent.
             </p>
             <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.25em] text-amber-200">
               Accéder au backoffice →
@@ -72,7 +72,7 @@ export default async function DashboardLayout({
             </div>
             <p className="mt-3 text-paper-dim text-sm leading-6">
               L&apos;accès aux trajets, prestataires et afters est gratuit pour
-              toute la Famille Mboka. Profite à fond !
+              toute la Famille Nevent. Profite à fond !
             </p>
           </div>
         )}

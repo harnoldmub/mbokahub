@@ -27,7 +27,7 @@ export async function VipMemberBanner({ message }: Props) {
           </p>
           <p className="font-body text-paper text-sm">
             {message ??
-              "Merci d'avoir cru en Mboka Hub avant tout le monde. Badge à vie."}
+              "Merci d'avoir cru en Nevent avant tout le monde. Badge à vie."}
           </p>
         </div>
       </div>

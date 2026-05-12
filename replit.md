@@ -1,4 +1,4 @@
-# Mboka Hub
+# Nevent
 
 A Next.js 15 community platform for the diaspora concert in Paris 2026. It provides services around the Stade de France event: ride-sharing (trajets), beauty professionals, afters/events, merch listings, quizzes, and games.
 

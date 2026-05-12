@@ -46,7 +46,7 @@ export function RulesDialog({
               Règles de mise en relation
             </DialogTitle>
             <DialogDescription className="text-paper-dim">
-              Mboka Hub est un site indépendant qui met en relation des membres
+              Nevent est un site indépendant qui met en relation des membres
               de la diaspora. Nous ne vendons rien, nous ne transportons
               personne, nous ne gérons pas les paiements entre vous.
             </DialogDescription>
@@ -69,7 +69,7 @@ export function RulesDialog({
               title="2. Le paiement se règle entre vous"
             >
               Le prix indicatif (carburant + péage divisés) reste un repère.
-              Aucun paiement ne passe par Mboka Hub : tu paies directement le
+              Aucun paiement ne passe par Nevent : tu paies directement le
               conducteur sur place, en liquide ou via l&apos;application qu&apos;il
               accepte.
             </Rule>
@@ -110,7 +110,7 @@ export function RulesDialog({
               Responsabilité
             </p>
             <p className="mt-2 text-sm text-paper-dim leading-relaxed">
-              Mboka Hub est un service d&apos;intermédiation gratuit. Le site
+              Nevent est un service d&apos;intermédiation gratuit. Le site
               n&apos;est pas partie au contrat de transport et n&apos;est pas
               responsable des trajets effectués, des paiements échangés, ni
               du comportement des utilisateurs. En contactant un membre, tu

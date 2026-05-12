@@ -53,7 +53,7 @@ export default function FiscalitePage() {
       <div className="mt-6 rounded-3xl border border-blood/20 bg-blood/5 p-6">
         <h3 className="font-heading text-lg text-paper">Rappel légal</h3>
         <p className="mt-2 text-sm leading-relaxed text-paper-dim">
-          En tant que prestataire indépendant sur Mboka Hub, vous êtes responsable de la déclaration de tous vos revenus générés via la plateforme auprès de l'administration fiscale de votre pays de résidence. Mboka Hub transmettra prochainement un récapitulatif annuel pour vous aider dans cette démarche.
+          En tant que prestataire indépendant sur Nevent, vous êtes responsable de la déclaration de tous vos revenus générés via la plateforme auprès de l'administration fiscale de votre pays de résidence. Nevent transmettra prochainement un récapitulatif annuel pour vous aider dans cette démarche.
         </p>
       </div>
     </div>

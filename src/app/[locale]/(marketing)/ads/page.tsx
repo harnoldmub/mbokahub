@@ -56,7 +56,7 @@ export default function AdsPage() {
           number="02"
           eyebrow="Espaces publicitaires"
           title="Achète de la visibilité utile."
-          description="Les clients et prestataires utilisent Mboka Hub gratuitement. Les revenus viennent des boosts, placements sponsorisés et campagnes partenaires."
+          description="Les clients et prestataires utilisent Nevent gratuitement. Les revenus viennent des boosts, placements sponsorisés et campagnes partenaires."
         />
 
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">

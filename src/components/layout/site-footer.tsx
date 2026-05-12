@@ -119,7 +119,7 @@ export function SiteFooter() {
 
           <div className="space-y-6">
             <h3 className="font-display text-sm uppercase tracking-[0.2em] text-blood">
-              Mboka Hub
+              Nevent
             </h3>
             <nav className="flex flex-col gap-3">
               <Link
@@ -183,7 +183,7 @@ export function SiteFooter() {
               Modèle ouvert
             </p>
             <p className="font-mono text-[10px] text-paper-mute leading-relaxed">
-              Mboka Hub est gratuit pour les clients et les prestataires. Les
+              Nevent est gratuit pour les clients et les prestataires. Les
               options payantes concernent uniquement la visibilité sponsorisée,
               les boosts, les placements et les campagnes partenaires.
             </p>
@@ -191,7 +191,7 @@ export function SiteFooter() {
 
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="font-mono text-[10px] text-paper-mute uppercase">
-              © 2026 MBOKA HUB — {copy.rights}
+              © 2026 NEVENT — {copy.rights}
             </p>
             {isAdmin ? (
               <Link

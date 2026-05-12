@@ -50,7 +50,7 @@ export default async function EditTrajetPage({
           {trajet.villeDepart} → {trajet.villeArrivee}
         </h1>
         <p className="mt-3 max-w-2xl text-paper-dim leading-7">
-          Toute modification renvoie ton trajet en file de validation Mboka Hub
+          Toute modification renvoie ton trajet en file de validation Nevent
           (visible uniquement après approbation). Les passagers déjà en contact
           ne sont pas notifiés automatiquement — préviens-les sur WhatsApp si
           tu changes l&apos;horaire ou le prix.

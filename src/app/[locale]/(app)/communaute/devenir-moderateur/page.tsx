@@ -3,16 +3,16 @@ import { ShieldCheck } from "lucide-react";
 import { applyAsModeratorAction } from "@/lib/actions/public";
 
 export const metadata = {
-  title: "Devenir modérateur · Mboka Hub",
+  title: "Devenir modérateur · Nevent",
   description:
-    "Postule pour devenir modérateur de la communauté WhatsApp Mboka Hub de ta région.",
+    "Postule pour devenir modérateur de la communauté WhatsApp Nevent de ta région.",
 };
 
 const RULES = [
   "Maintenir une ambiance respectueuse et bienveillante.",
   "Faire respecter la charte : pas d'arnaque, pas de spam, pas de contenu haineux.",
   "Vérifier les annonces partagées (trajets, prestataires, afters) avant validation.",
-  "Renvoyer les questions générales vers la plateforme Mboka Hub.",
+  "Renvoyer les questions générales vers la plateforme Nevent.",
   "Signaler tout abus à l'équipe via contact@mbokahub.com.",
 ];
 
@@ -39,7 +39,7 @@ export default async function DevenirModerateurPage({
         </h1>
         <p className="mt-6 max-w-2xl text-lg text-paper-dim">
           Tu connais ton quartier, ta ville, ta diaspora ? Deviens
-          modérateur·rice de la communauté WhatsApp Mboka Hub de ta région et
+          modérateur·rice de la communauté WhatsApp Nevent de ta région et
           aide à faire vivre l'esprit Stade de France 2026.
         </p>
 
@@ -65,7 +65,7 @@ export default async function DevenirModerateurPage({
           <div className="mt-8 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-5 text-emerald-200">
             <p className="font-display uppercase">Candidature envoyée 🙌</p>
             <p className="mt-1 text-sm text-emerald-100/80">
-              L'équipe Mboka Hub revient vers toi sous 48h. Tu peux compléter
+              L'équipe Nevent revient vers toi sous 48h. Tu peux compléter
               ton dossier en revenant ici.
             </p>
           </div>

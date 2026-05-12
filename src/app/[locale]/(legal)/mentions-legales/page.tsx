@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Mentions légales",
-  description: "Informations légales de Mboka Hub.",
+  description: "Informations légales de Nevent.",
 };
 
 export default function LegalNoticePage() {
@@ -16,7 +16,7 @@ export default function LegalNoticePage() {
         <section className="border border-white/10 bg-card p-5">
           <h2 className="font-heading text-2xl text-foreground">Editeur</h2>
           <p className="mt-3 text-muted-foreground leading-7">
-            Mboka Hub. Informations société à compléter avant publication
+            Nevent. Informations société à compléter avant publication
             production.
           </p>
         </section>

@@ -92,7 +92,7 @@ export default async function AdminDashboardPage() {
           Vue d'ensemble
         </h2>
         <p className="mt-1 text-muted-foreground text-sm">
-          Indicateurs clés de la plateforme Mboka Hub.
+          Indicateurs clés de la plateforme Nevent.
         </p>
       </div>
 

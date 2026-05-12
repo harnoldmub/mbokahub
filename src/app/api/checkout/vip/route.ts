@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 /**
- * Le pass VIP a été supprimé : Mboka Hub est désormais 100% gratuit pour les
+ * Le pass VIP a été supprimé : Nevent est désormais 100% gratuit pour les
  * fans. Cette route reste en place et renvoie 410 Gone pour clore proprement
  * tout client (front, marque-page) qui tenterait encore d'acheter.
  *
@@ -12,7 +12,7 @@ export async function POST() {
   return NextResponse.json(
     {
       error:
-        "Le pass VIP n'est plus en vente. Mboka Hub est désormais gratuit pour tous les fans.",
+        "Le pass VIP n'est plus en vente. Nevent est désormais gratuit pour tous les fans.",
       redirect: "/vip",
     },
     { status: 410 },

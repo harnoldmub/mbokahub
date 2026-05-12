@@ -112,7 +112,7 @@ export function PriceOfferDialog({
             {hasSuggestion && (
               <div className="mt-4 rounded-xl border border-[#E50914]/25 bg-[#E50914]/[0.06] p-4">
                 <div className="font-mono text-[#ff5a63] text-[10px] tracking-[0.18em] uppercase">
-                  Estimation Mboka Hub
+                  Estimation Nevent
                 </div>
                 <p className="mt-2 text-foreground text-sm leading-relaxed">
                   Pour ce trajet, on estime un prix juste à{" "}

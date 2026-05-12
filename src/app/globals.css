@@ -1,5 +1,7 @@
-/* MBOKA HUB - SERVICE MARKETPLACE SYSTEM */
+/* NEVENT — SERVICE MARKETPLACE SYSTEM */
 @import "tailwindcss/index.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   /* BACKGROUNDS — inspiration Planity : blanc, gris froid, lisible */
@@ -62,6 +64,33 @@
   --radius-3xl: 16px;
 }
 
+/* DARK THEME — overrides via class="dark" set by next-themes */
+.dark {
+  --color-ink: #0b0b0d;
+  --color-coal: #111114;
+  --color-smoke: #16181c;
+  --color-ash: #2a2d33;
+
+  --color-paper: #f5f5f7;
+  --color-paper-dim: #b3b6bd;
+  --color-paper-mute: #7a7f87;
+
+  --color-primary: #ffffff;
+  --color-primary-foreground: #0b0b0d;
+  --color-foreground: #f5f5f7;
+  --color-background: #0b0b0d;
+  --color-muted: #16181c;
+  --color-muted-foreground: #b3b6bd;
+  --color-border: #2a2d33;
+  --color-card: #16181c;
+  --color-card-foreground: #f5f5f7;
+
+  --color-gold: #f5f5f7;
+  --color-gold-soft: #b3b6bd;
+  --color-vip: #f5f5f7;
+  --color-vip-soft: #b3b6bd;
+}
+
 /* BASE STYLES */
 @layer base {
   * {
@@ -75,7 +104,8 @@
 
   body {
     @apply bg-ink text-paper selection:bg-blood/20 selection:text-paper;
-    background: #ffffff;
+    background: var(--color-ink);
+    color: var(--color-paper);
   }
 
   body::before {
@@ -99,10 +129,24 @@
     border-color: #e6e8ed;
   }
 
+  .dark .glass-header {
+    border-color: var(--color-ash);
+  }
+
   .border-white\/5,
   .border-white\/10,
   .border-white\/15 {
     border-color: #dfe3ea;
+  }
+
+  .dark .border-white\/5 {
+    border-color: rgba(255, 255, 255, 0.05);
+  }
+  .dark .border-white\/10 {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  .dark .border-white\/15 {
+    border-color: rgba(255, 255, 255, 0.15);
   }
 
   .bg-white\/5 {
@@ -111,6 +155,13 @@
 
   .bg-white\/10 {
     background-color: #eceff3;
+  }
+
+  .dark .bg-white\/5 {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  .dark .bg-white\/10 {
+    background-color: rgba(255, 255, 255, 0.1);
   }
 
   @keyframes marquee {

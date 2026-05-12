@@ -1329,7 +1329,7 @@ const PROFILES = [
     title: "Légende Vivante",
     subtitle: "Power Icarius lui-même t'approuverait !",
     description:
-      "Score parfait ou quasi-parfait. Tu es l'encyclopédie vivante de Mboka Hub.",
+      "Score parfait ou quasi-parfait. Tu es l'encyclopédie vivante de Mboka.",
     icon: Crown,
     color: "text-blood",
     accent: "from-blood/20 to-blood/5",
@@ -1543,7 +1543,7 @@ export function QuizClient() {
           </button>
           <button
             onClick={() => {
-              const text = `Je suis "${profile.title}" sur le Quiz Fally Ipupa ! ${score}/${questions.length} 🎵 #FallyStadeDeFrance #MbokaHub`;
+              const text = `Je suis "${profile.title}" sur le Quiz Fally Ipupa ! ${score}/${questions.length} 🎵 #FallyStadeDeFrance #Mboka`;
               if (navigator.share)
                 navigator.share({ text, title: "Quiz Fally Ipupa" });
               else {

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 const sections = [
   {
     title: "Données collectées",
-    body: "Nous collectons les informations nécessaires au fonctionnement du service : compte utilisateur, email, ville, pays, annonces publiées, contacts débloqués, paiements effectués auprès de Mboka Hub et statistiques de consultation.",
+    body: "Nous collectons les informations nécessaires au fonctionnement du service : compte utilisateur, email, ville, pays, annonces publiées, contacts débloqués, paiements effectués auprès de Nevent et statistiques de consultation.",
   },
   {
     title: "Emails et double opt-in",
@@ -16,7 +16,7 @@ const sections = [
   },
   {
     title: "Paiements",
-    body: "Les paiements sont traités par Stripe Checkout. Mboka Hub ne stocke pas les numéros de carte bancaire. Les identifiants Stripe nécessaires au suivi des achats peuvent être conservés.",
+    body: "Les paiements sont traités par Stripe Checkout. Nevent ne stocke pas les numéros de carte bancaire. Les identifiants Stripe nécessaires au suivi des achats peuvent être conservés.",
   },
   {
     title: "Cookies et analytics",

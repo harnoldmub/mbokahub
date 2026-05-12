@@ -11,7 +11,7 @@ export default function NotFound() {
           Page introuvable
         </h1>
         <p className="mt-4 text-muted-foreground">
-          Cette page n&apos;est pas encore disponible sur Mboka Hub.
+          Cette page n&apos;est pas encore disponible sur Nevent.
         </p>
         <Button asChild className="mt-8">
           <Link href="/">Retour accueil</Link>

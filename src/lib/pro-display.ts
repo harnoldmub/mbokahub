@@ -58,7 +58,7 @@ export function normalizePriceRangeInput(value: string | null | undefined): stri
 
 /**
  * Detect whether a free-text bio contains direct contact info.
- * Pros must keep the bio about their craft — contacts go through Mboka Hub
+ * Pros must keep the bio about their craft — contacts go through Nevent
  * (WhatsApp / Instagram fields are surfaced separately and locked behind VIP).
  *
  * Returns the matched reason key, or null if the text is clean.

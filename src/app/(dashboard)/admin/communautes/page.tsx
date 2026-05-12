@@ -47,7 +47,7 @@ export default async function AdminCommunautesPage() {
         <div className="grid gap-4 sm:grid-cols-2">
           <input
             name="name"
-            placeholder="Nom (ex: Mboka Hub Paris)"
+            placeholder="Nom (ex: Nevent Paris)"
             required
             className="rounded-md border border-white/10 bg-background px-3 py-2 text-foreground text-sm"
           />

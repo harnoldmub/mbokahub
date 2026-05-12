@@ -84,7 +84,7 @@ export function ReportButton({
           >
             <h3 className="font-heading text-foreground text-xl">Signaler ce contenu</h3>
             <p className="mt-1 text-muted-foreground text-sm">
-              Aide-nous à protéger la communauté Mboka Hub. Votre signalement reste confidentiel.
+              Aide-nous à protéger la communauté Nevent. Votre signalement reste confidentiel.
             </p>
 
             <form onSubmit={submit} className="mt-5 space-y-4">

@@ -19,8 +19,8 @@ type Message = {
 const HEARTBEAT_MS = 45_000;
 const ROTATE_MS = 7_000;
 const SHOW_DELAY_MS = 4_000;
-const DISMISS_KEY = "mboka_fomo_dismissed_at";
-const SID_KEY = "mboka_fomo_sid";
+const DISMISS_KEY = "nevent_fomo_dismissed_at";
+const SID_KEY = "nevent_fomo_sid";
 const DISMISS_COOLDOWN_MS = 24 * 60 * 60 * 1000;
 
 const HIDDEN_PREFIXES = [

@@ -9,7 +9,7 @@ function getResend(): Resend | null {
   return cached;
 }
 
-const FROM = process.env.RESEND_FROM_EMAIL || "Mboka Hub <hello@mbokahub.com>";
+const FROM = process.env.RESEND_FROM_EMAIL || "Nevent <hello@mbokahub.com>";
 
 const PUBLIC_URL =
   process.env.NEXT_PUBLIC_SITE_URL ||
@@ -62,12 +62,12 @@ function emailLayout(title: string, body: string) {
   <body style="margin:0;padding:24px;background:#0a0a0a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#e5e5e5;">
     <div style="max-width:560px;margin:0 auto;background:#141414;border:1px solid rgba(255,255,255,0.08);border-radius:24px;padding:40px;">
       <div style="font-family:'Courier New',monospace;font-size:11px;letter-spacing:0.3em;color:#E50914;margin-bottom:24px;text-transform:uppercase;">
-        Mboka Hub · Stade de France
+        Nevent · Stade de France
       </div>
       ${body}
       <hr style="border:none;border-top:1px solid rgba(255,255,255,0.08);margin:32px 0;" />
       <p style="font-size:12px;color:#888;margin:0;">
-        Mboka Hub · Plateforme indépendante pour la diaspora<br/>
+        Nevent · Plateforme indépendante pour la diaspora<br/>
         <a href="${PUBLIC_URL}" style="color:#E50914;text-decoration:none;">${PUBLIC_URL.replace(/^https?:\/\//, "")}</a>
       </p>
     </div>
@@ -92,7 +92,7 @@ export async function sendProValidatedEmail(args: {
       Salut <strong style="color:#fff;">${escapeHtml(args.displayName)}</strong>,
     </p>
     <p style="font-size:16px;line-height:1.6;color:#d4d4d4;margin:0 0 24px;">
-      Bonne nouvelle : ton profil <strong style="color:#fff;">${escapeHtml(args.category)}</strong> vient d'être validé par notre équipe. Tu es désormais visible dans l'annuaire des prestataires Mboka Hub pour le week-end Fally Ipupa au Stade de France (2 & 3 mai 2026).
+      Bonne nouvelle : ton profil <strong style="color:#fff;">${escapeHtml(args.category)}</strong> vient d'être validé par notre équipe. Tu es désormais visible dans l'annuaire des prestataires Nevent pour le week-end Fally Ipupa au Stade de France (2 & 3 mai 2026).
     </p>
     <div style="text-align:center;margin:32px 0;">
       <a href="${profileUrl}" style="display:inline-block;background:#E50914;color:#fff;padding:14px 28px;border-radius:999px;text-decoration:none;font-weight:600;font-size:14px;">
@@ -115,9 +115,9 @@ export async function sendProValidatedEmail(args: {
 
   return sendEmail({
     to: args.to,
-    subject: "✅ Ton profil Mboka Hub est en ligne",
+    subject: "✅ Ton profil Nevent est en ligne",
     html: emailLayout("Profil validé", body),
-    text: `Salut ${args.displayName}, ton profil ${args.category} vient d'être validé sur Mboka Hub. Tu es visible ici : ${profileUrl}`,
+    text: `Salut ${args.displayName}, ton profil ${args.category} vient d'être validé sur Nevent. Tu es visible ici : ${profileUrl}`,
   });
 }
 
@@ -276,7 +276,7 @@ export async function sendProPhotoReminderEmail(args: {
       Salut <strong style="color:#fff;">${escapeHtml(args.displayName)}</strong>,
     </p>
     <p style="font-size:16px;line-height:1.6;color:#d4d4d4;margin:0 0 24px;">
-      Ta fiche <strong style="color:#fff;">${escapeHtml(args.category)}</strong> est en ligne sur Mboka Hub, mais elle n'a encore <strong style="color:#fff;">aucune photo</strong>. Les fans cliquent <strong style="color:#fff;">3 à 5 fois plus</strong> sur les profils avec une vraie photo de couverture et une petite galerie.
+      Ta fiche <strong style="color:#fff;">${escapeHtml(args.category)}</strong> est en ligne sur Nevent, mais elle n'a encore <strong style="color:#fff;">aucune photo</strong>. Les fans cliquent <strong style="color:#fff;">3 à 5 fois plus</strong> sur les profils avec une vraie photo de couverture et une petite galerie.
     </p>
     <ul style="font-size:14px;line-height:1.7;color:#c4c4c4;padding-left:20px;margin:0 0 24px;">
       <li>Une photo de couverture nette (visage, atelier, voiture, prestation)</li>
@@ -296,9 +296,9 @@ export async function sendProPhotoReminderEmail(args: {
 
   return sendEmail({
     to: args.to,
-    subject: "📸 Ajoute des photos à ta fiche Mboka Hub",
+    subject: "📸 Ajoute des photos à ta fiche Nevent",
     html: emailLayout("Complète ta fiche pro", body),
-    text: `Salut ${args.displayName}, ta fiche pro Mboka Hub n'a pas encore de photos. Ajoute-les ici : ${profilUrl}`,
+    text: `Salut ${args.displayName}, ta fiche pro Nevent n'a pas encore de photos. Ajoute-les ici : ${profilUrl}`,
   });
 }
 

@@ -147,7 +147,7 @@ const SPOTIFY_PLAYLIST = "https://open.spotify.com/playlist/1gYERmVgRIly3kef2tvT
 const YOUTUBE_CHANNEL = "https://www.youtube.com/channel/UCBFYkrVI8OfHm9PzbAGFqlA";
 
 export const metadata = {
-  title: "Playlists Fally Ipupa — Les meilleurs sons & paroles | Mboka Hub",
+  title: "Playlists Fally Ipupa — Les meilleurs sons & paroles | Nevent",
   description:
     "3 playlists curated des hits de Fally Ipupa, avec liens directs vers Spotify, YouTube et Genius pour les paroles complètes.",
 };
@@ -183,7 +183,7 @@ export default function PlaylistsPage() {
         </div>
 
         <div className="rounded-2xl border border-yellow-500/30 bg-yellow-500/5 p-5 text-sm text-yellow-200">
-          ⚠️ Mboka Hub n'héberge ni les chansons ni les paroles. On te renvoie vers Spotify,
+          ⚠️ Nevent n'héberge ni les chansons ni les paroles. On te renvoie vers Spotify,
           YouTube et Genius — les sources officielles.
         </div>
       </section>

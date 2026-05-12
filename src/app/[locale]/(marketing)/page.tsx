@@ -85,7 +85,7 @@ export default async function HomePage({ params, searchParams }: HomePageProps) 
               Trouvez un prestataire et réservez un rendez-vous.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-paper-dim">
-              Mboka Hub connecte les clients aux professionnels : beauté,
+              Nevent connecte les clients aux professionnels : beauté,
               coiffure, photo, transport et services événementiels. Gratuit pour
               chercher, publier et gérer ses demandes.
             </p>

@@ -6,7 +6,7 @@ export default function AboutPage() {
     <main className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
       <SectionHeading
         number="INFO"
-        description="Mboka Hub est né d'un besoin simple : aider une diaspora mobile à se coordonner autour d'un grand week-end culturel, sans mélanger mise en relation, billetterie et paiements entre particuliers."
+        description="Nevent est né d'un besoin simple : aider une diaspora mobile à se coordonner autour d'un grand week-end culturel, sans mélanger mise en relation, billetterie et paiements entre particuliers."
         eyebrow="Mission"
         title="Une plateforme utile, indépendante et cadrée"
       />
@@ -15,7 +15,7 @@ export default function AboutPage() {
           Le produit met en avant les services pratiques dont les fans ont
           besoin : trajets, pros beauté, afters externes, merch et bons plans
           parisiens. Le modèle économique repose sur des accès et options vendus
-          par Mboka Hub.
+          par Nevent.
         </p>
         <p>
           Les contacts sensibles sont protégés par floutage, les profils pros

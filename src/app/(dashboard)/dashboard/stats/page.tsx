@@ -58,7 +58,7 @@ export default async function StatsPage() {
           value={String(contactAttempts)}
         />
         <StatCard
-          description="Paiements Mboka Hub"
+          description="Paiements Nevent"
           icon={BadgeEuro}
           label="Total payé"
           value={formatMoney(revenue)}

@@ -65,7 +65,7 @@ export default async function SettingsPage({
           </h2>
         </div>
         <p className="mt-4 max-w-2xl text-paper-dim leading-7">
-          Cette action supprime ton compte Clerk et les données Mboka Hub liées
+          Cette action supprime ton compte Clerk et les données Nevent liées
           à ton utilisateur. Elle est définitive.
         </p>
         {error === "confirmation" ? (

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Bootstrap Stripe LIVE products, prices, and webhook for Mboka Hub.
+ * Bootstrap Stripe LIVE products, prices, and webhook for Nevent.
  *
  * Usage:
  *   STRIPE_SECRET_KEY=sk_live_xxx APP_URL=https://mbokahub.com node scripts/setup-stripe-prod.mjs
@@ -37,27 +37,27 @@ const LOGO_URL = `${APP_URL}/logo.png`;
 
 const PRODUCTS = {
   pro: {
-    name: "Placement Pro Premium Mboka Hub",
+    name: "Placement Pro Premium Nevent",
     description:
       "Option payante de visibilité pour prestataires : mise en avant, badge sponsorisé et statistiques. L'inscription pro reste gratuite.",
-    statement_descriptor: "MBOKAHUB PRO",
+    statement_descriptor: "NEVENT PRO",
     images: [LOGO_URL],
-    metadata: { type: "pro", brand: "Mboka Hub" },
+    metadata: { type: "pro", brand: "Nevent" },
   },
   boost: {
     name: "Boost de visibilité",
     description:
       "Mise en avant prioritaire d'un trajet ou d'un profil pro pendant 7 jours.",
-    statement_descriptor: "MBOKAHUB BOOST",
+    statement_descriptor: "NEVENT BOOST",
     images: [LOGO_URL],
-    metadata: { type: "boost", brand: "Mboka Hub" },
+    metadata: { type: "boost", brand: "Nevent" },
   },
 };
 
 async function ensureProduct(spec) {
   // Lookup by metadata.type for stability across renames
   const list = await stripe.products.search({
-    query: `metadata['type']:'${spec.metadata.type}' AND metadata['brand']:'Mboka Hub'`,
+    query: `metadata['type']:'${spec.metadata.type}' AND metadata['brand']:'Nevent'`,
     limit: 1,
   });
   const desired = {
@@ -120,7 +120,7 @@ async function ensureWebhook(url) {
     url,
     enabled_events: events,
     description:
-      "Mboka Hub — Production webhook (paiements Pro Premium, Boost)",
+      "Nevent — Production webhook (paiements Pro Premium, Boost)",
   });
   console.log(`  + Webhook created: ${url} (${w.id})`);
   return { endpoint: w, secret: w.secret };
@@ -131,7 +131,7 @@ async function ensureWebhook(url) {
   const proProduct = await ensureProduct(PRODUCTS.pro);
   const proPrice = await ensurePrice(
     proProduct.id,
-    "mbokahub_pro_1999",
+    "nevent_pro_1999",
     1999,
     "Placement Pro Premium",
   );
@@ -139,7 +139,7 @@ async function ensureWebhook(url) {
   const boostProduct = await ensureProduct(PRODUCTS.boost);
   const boostPrice = await ensurePrice(
     boostProduct.id,
-    "mbokahub_boost_899",
+    "nevent_boost_899",
     899,
     "Boost Vedette",
   );
@@ -177,11 +177,11 @@ async function ensureWebhook(url) {
   console.log(
     "\n👉 N'oublie pas dans Stripe Dashboard → Settings → Business :",
   );
-  console.log("   • Public business name : Mboka Hub");
+  console.log("   • Public business name : Nevent");
   console.log("   • Support email       : admin@mbokahub.com");
   console.log("   • Support URL         : https://mbokahub.com");
   console.log(
-    "   • Statement descriptor: MBOKA HUB (sera préfixé aux noms produits)",
+    "   • Statement descriptor: NEVENT (sera préfixé aux noms produits)",
   );
   console.log("\nDone.\n");
 })().catch((err) => {
