@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db/prisma";
 
 // Returns available 30-min slots for a given pro and optional service on a given date range.
 // GET /api/pros/[id]/slots?startDate=2026-05-12&days=7&serviceId=xxx
+// All dates/times are in the server's local TZ (Europe/Paris in production).
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -18,13 +19,26 @@ export async function GET(
     return NextResponse.json({ error: "startDate required" }, { status: 400 });
   }
 
-  const startDate = new Date(startDateParam + "T00:00:00");
-  if (Number.isNaN(startDate.getTime())) {
+  // Parse "YYYY-MM-DD" as local-time midnight (Europe/Paris on the server).
+  const dateMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(startDateParam);
+  if (!dateMatch) {
+    return NextResponse.json({ error: "invalid startDate" }, { status: 400 });
+  }
+  const y = Number(dateMatch[1]);
+  const mo = Number(dateMatch[2]);
+  const d = Number(dateMatch[3]);
+  const startDate = new Date(y, mo - 1, d, 0, 0, 0, 0);
+  // Reject calendar-invalid dates that JS would silently roll over (e.g. Feb 31).
+  if (
+    Number.isNaN(startDate.getTime()) ||
+    startDate.getFullYear() !== y ||
+    startDate.getMonth() !== mo - 1 ||
+    startDate.getDate() !== d
+  ) {
     return NextResponse.json({ error: "invalid startDate" }, { status: 400 });
   }
   const days = Math.min(Math.max(daysParam, 1), 14);
 
-  // Load pro availability + confirmed/pending bookings in range
   const endDate = new Date(startDate);
   endDate.setDate(endDate.getDate() + days);
 
@@ -44,53 +58,39 @@ export async function GET(
         })
       : null,
   ]);
-  // Legacy per-pro availability has been replaced by per-team-member
-  // WorkingHours; this route falls back to the default Mon–Sat 9–19h grid.
-  const availability: { dayOfWeek: number; startTime: string; endTime: string }[] = [];
 
   const slotDuration = 30; // fixed slot grid in minutes
   const serviceDuration = service?.durationMin ?? slotDuration;
 
-  // Build a Set of booked minute-offsets (from midnight UTC) per date string
-  // We store blocked slots as "YYYY-MM-DD HH:MM" strings
+  // Build a Set of booked minute-offsets (from local midnight) per local date.
   const blockedSlots = new Set<string>();
   for (const b of bookings) {
     const dateStr = toLocalDateStr(b.requestedAt);
-    const bookingMinutes = timeToMinutes(
-      b.requestedAt.getUTCHours().toString().padStart(2, "0") +
-        ":" +
-        b.requestedAt.getUTCMinutes().toString().padStart(2, "0")
-    );
+    const bookingMinutes =
+      b.requestedAt.getHours() * 60 + b.requestedAt.getMinutes();
     const dur = b.durationMin ?? slotDuration;
-    // Block all 30-min slots that overlap this booking
     for (let m = bookingMinutes; m < bookingMinutes + dur; m += slotDuration) {
       blockedSlots.add(`${dateStr} ${minutesToTime(m)}`);
     }
   }
 
-  // If no availability configured, default Mon-Sat 9h-19h
+  // Default availability when no per-pro config exists: Mon-Sat 9h-19h.
   const availByDay = new Map<number, { start: number; end: number }>();
-  if (availability.length === 0) {
-    // Default: Mon–Sat 09:00–19:00
-    for (let d = 1; d <= 6; d++) {
-      availByDay.set(d, { start: timeToMinutes("09:00"), end: timeToMinutes("19:00") });
-    }
-  } else {
-    for (const a of availability) {
-      availByDay.set(a.dayOfWeek, {
-        start: timeToMinutes(a.startTime),
-        end: timeToMinutes(a.endTime),
-      });
-    }
+  for (let day = 1; day <= 6; day++) {
+    availByDay.set(day, {
+      start: timeToMinutes("09:00"),
+      end: timeToMinutes("19:00"),
+    });
   }
 
   type DaySlots = { date: string; dayLabel: string; slots: string[] };
   const result: DaySlots[] = [];
+  const now = new Date();
 
   for (let i = 0; i < days; i++) {
     const day = new Date(startDate);
     day.setDate(day.getDate() + i);
-    const dow = day.getUTCDay();
+    const dow = day.getDay();
     const dateStr = toLocalDateStr(day);
 
     const avail = availByDay.get(dow);
@@ -100,11 +100,10 @@ export async function GET(
     }
 
     const slots: string[] = [];
-    // Last possible start = avail.end - serviceDuration
     const lastStart = avail.end - serviceDuration;
     for (let m = avail.start; m <= lastStart; m += slotDuration) {
       const time = minutesToTime(m);
-      // Check if all 30-min sub-slots needed for this service are free
+      // Skip slots already blocked by a confirmed/pending booking
       let free = true;
       for (let sm = m; sm < m + serviceDuration; sm += slotDuration) {
         if (blockedSlots.has(`${dateStr} ${minutesToTime(sm)}`)) {
@@ -112,12 +111,13 @@ export async function GET(
           break;
         }
       }
+      if (!free) continue;
       // Skip slots in the past (today)
-      const now = new Date();
-      const slotDate = new Date(`${dateStr}T${time}:00Z`);
+      const slotDate = new Date(day);
+      slotDate.setHours(Math.floor(m / 60), m % 60, 0, 0);
       if (slotDate <= now) continue;
 
-      if (free) slots.push(time);
+      slots.push(time);
     }
 
     result.push({ date: dateStr, dayLabel: dayLabel(day), slots });
@@ -127,9 +127,9 @@ export async function GET(
 }
 
 function toLocalDateStr(d: Date): string {
-  const y = d.getUTCFullYear();
-  const m = String(d.getUTCMonth() + 1).padStart(2, "0");
-  const day = String(d.getUTCDate()).padStart(2, "0");
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
   return `${y}-${m}-${day}`;
 }
 
@@ -146,5 +146,5 @@ const FR_DAYS = ["Dim.", "Lun.", "Mar.", "Mer.", "Jeu.", "Ven.", "Sam."];
 const FR_MONTHS = ["jan.", "fév.", "mar.", "avr.", "mai", "juin", "juil.", "août", "sep.", "oct.", "nov.", "déc."];
 
 function dayLabel(d: Date): string {
-  return `${FR_DAYS[d.getUTCDay()]} ${d.getUTCDate()} ${FR_MONTHS[d.getUTCMonth()]}`;
+  return `${FR_DAYS[d.getDay()]} ${d.getDate()} ${FR_MONTHS[d.getMonth()]}`;
 }
