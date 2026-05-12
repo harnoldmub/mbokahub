@@ -50,3 +50,7 @@ STRIPE_BOOST_PRICE_ID = "price_1TQNhwCWVY7OGzL2SPcu4xdV"
 STRIPE_VIP_EARLY_BIRD_PRICE_ID = "price_1TQNhuCWVY7OGzL28mGgUWWA"
 
 [userenv.development]
+
+[postMerge]
+path = "scripts/post-merge.sh"
+timeoutMs = 180000
