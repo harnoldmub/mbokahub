@@ -195,7 +195,7 @@ export function SiteFooter() {
             </p>
             {isAdmin ? (
               <Link
-                className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/60 bg-emerald-400/15 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-100 transition hover:border-emerald-300 hover:bg-emerald-400/25 hover:text-white"
+                className="inline-flex items-center gap-1.5 rounded-full border border-emerald-600 bg-emerald-600 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-white transition hover:bg-emerald-700 hover:border-emerald-700"
                 href="/admin"
               >
                 <ShieldCheck aria-hidden className="size-3" />
