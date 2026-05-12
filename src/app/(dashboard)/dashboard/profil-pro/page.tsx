@@ -2,18 +2,19 @@ import { AtSign, Camera, CheckCircle2, IdCard, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 import { PhotoUploader } from "@/components/admin/photo-uploader";
-import { PhoneInput } from "@/components/ui/phone-input";
 import { ScrollToTopOnMount } from "@/components/dashboard/scroll-to-top-on-mount";
 import { VerifyIdentityButton } from "@/components/dashboard/verify-identity-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { FormField } from "@/components/ui/form-field";
 import { CityInput } from "@/components/ui/city-input";
+import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
+import { PhoneInput } from "@/components/ui/phone-input";
+import { updateProProfileAction } from "@/lib/actions/public";
 import { getDashboardUser } from "@/lib/dashboard";
 import { prisma } from "@/lib/db/prisma";
 import { PRO_CATEGORY_BY_ID } from "@/lib/pro-categories";
-import { updateProProfileAction } from "@/lib/actions/public";
+import { ProfilProTabs } from "./_nav";
 
 type SearchParams = {
   saved?: string;
@@ -42,9 +43,8 @@ export default async function ProfilProPage({
             Pas encore de profil professionnel
           </h1>
           <p className="mt-3 max-w-2xl text-paper-dim leading-7">
-            Tu n&apos;as pas encore inscrit ton service. Crée-le en deux
-            minutes pour apparaître dans l&apos;annuaire des prestataires
-            Nevent.
+            Tu n&apos;as pas encore inscrit ton service. Crée-le en deux minutes
+            pour apparaître dans l&apos;annuaire des prestataires Nevent.
           </p>
         </div>
         <div>
@@ -68,8 +68,8 @@ export default async function ProfilProPage({
           Modifier ma fiche pro
         </h1>
         <p className="mt-3 max-w-2xl text-paper-dim leading-7">
-          Mets à jour tes infos pro à tout moment. Les changements
-          apparaissent immédiatement sur ta fiche publique.
+          Mets à jour tes infos pro à tout moment. Les changements apparaissent
+          immédiatement sur ta fiche publique.
         </p>
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <Badge variant="outline">
@@ -84,6 +84,8 @@ export default async function ProfilProPage({
           {!pro.isVerified && <VerifyIdentityButton />}
         </div>
       </div>
+
+      <ProfilProTabs active="/dashboard/profil-pro" />
 
       {pro.photos.length === 0 ? (
         <div className="flex items-start gap-3 rounded-2xl border border-yellow-400/40 bg-yellow-400/10 p-4 text-yellow-100 text-sm leading-6">
@@ -176,11 +178,7 @@ export default async function ProfilProPage({
             label="WhatsApp"
             helperText="Choisis ton indicatif pays puis tape ton numéro"
           >
-            <PhoneInput
-              name="whatsapp"
-              required
-              defaultValue={pro.whatsapp}
-            />
+            <PhoneInput name="whatsapp" required defaultValue={pro.whatsapp} />
           </FormField>
           <FormField label="Instagram (optionnel)" helperText="@handle">
             <div className="relative">

@@ -39,6 +39,10 @@ export default async function PlanningPage({
     include: {
       bookings: {
         orderBy: [{ status: "asc" }, { requestedAt: "asc" }],
+        include: {
+          service: { select: { name: true, durationMin: true } },
+          teamMember: { select: { displayName: true } },
+        },
       },
     },
   });
@@ -79,7 +83,11 @@ export default async function PlanningPage({
           confirmes, annules ou marques terminé depuis cet espace.
         </p>
         <div className="mt-5 rounded-2xl border border-warning/30 bg-warning/10 p-4 text-sm text-paper-dim max-w-2xl">
-          <strong className="text-warning">Règle sur les acomptes :</strong> Si tu demandes un acompte pour valider une réservation, celui-ci ne doit <strong>jamais dépasser 20€</strong>. Le paiement se fait directement avec le client via PayPal, Paylib, etc. Tout abus (acompte abusif, arnaque) entraînera le bannissement de la plateforme.
+          <strong className="text-warning">Règle sur les acomptes :</strong> Si
+          tu demandes un acompte pour valider une réservation, celui-ci ne doit{" "}
+          <strong>jamais dépasser 20€</strong>. Le paiement se fait directement
+          avec le client via PayPal, Paylib, etc. Tout abus (acompte abusif,
+          arnaque) entraînera le bannissement de la plateforme.
         </div>
       </div>
 
@@ -142,6 +150,25 @@ export default async function PlanningPage({
                     <Clock className="size-4 text-blood" />
                     {formatSlot(booking.requestedAt)}
                   </p>
+                  {booking.service || booking.teamMember ? (
+                    <p className="mt-1 text-sm text-paper-dim">
+                      {booking.service ? (
+                        <span className="text-paper">
+                          {booking.service.name}
+                          {(() => {
+                            const dur =
+                              booking.durationMin ??
+                              booking.service.durationMin;
+                            return dur ? ` · ${dur} min` : "";
+                          })()}
+                        </span>
+                      ) : null}
+                      {booking.service && booking.teamMember ? " · " : ""}
+                      {booking.teamMember ? (
+                        <span>avec {booking.teamMember.displayName}</span>
+                      ) : null}
+                    </p>
+                  ) : null}
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {booking.status !== "CONFIRMED" ? (
