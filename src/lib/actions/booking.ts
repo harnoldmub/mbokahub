@@ -9,25 +9,47 @@ import { isSlotStillAvailable } from "@/lib/booking-slots";
 import { getDashboardUser } from "@/lib/dashboard";
 import { prisma } from "@/lib/db/prisma";
 import { sendBookingRequestedEmail } from "@/lib/email";
+import { logActAs, resolveProForAction, withAs } from "@/lib/pro-context";
 
-async function ensureOwnedProfile() {
+async function ensureOwnedProfile(form?: FormData) {
+  if (form) {
+    const r = await resolveProForAction(form);
+    return { user: r.user, pro: r.pro, actingAs: r.actingAs };
+  }
   const user = await getDashboardUser();
   const pro = await prisma.proProfile.findUnique({
     where: { userId: user.id },
   });
   if (!pro) redirect("/pro/inscrire");
-  return { user, pro };
+  return { user, pro, actingAs: null as string | null };
 }
 
-async function ensureOwnedTeamMember(teamMemberId: string) {
-  const { pro } = await ensureOwnedProfile();
+function audit(
+  action: string,
+  ctx: {
+    actingAs: string | null;
+    user: { email: string | null };
+    pro: { userId: string };
+    extra?: Record<string, unknown>;
+  },
+) {
+  logActAs(action, {
+    actingAs: ctx.actingAs,
+    adminEmail: ctx.user.email,
+    targetUserId: ctx.pro.userId,
+    extra: ctx.extra,
+  });
+}
+
+async function ensureOwnedTeamMember(teamMemberId: string, form?: FormData) {
+  const { pro, actingAs } = await ensureOwnedProfile(form);
   const member = await prisma.teamMember.findUnique({
     where: { id: teamMemberId },
   });
   if (!member || member.proProfileId !== pro.id) {
-    redirect("/dashboard/profil-pro/equipe?error=forbidden");
+    redirect(withAs("/dashboard/profil-pro/equipe", actingAs, { error: "forbidden" }));
   }
-  return { pro, member };
+  return { pro, member, actingAs };
 }
 
 async function ensureDefaultTeamMember(
@@ -46,14 +68,14 @@ async function ensureDefaultTeamMember(
 
 // ────────────────── Services ──────────────────
 export async function createServiceAction(form: FormData) {
-  const { pro } = await ensureOwnedProfile();
+  const { user, pro, actingAs } = await ensureOwnedProfile(form);
   const name = String(form.get("name") || "").trim();
   const durationMin = Number(form.get("durationMin") || 0);
   const priceCents = Math.round(Number(form.get("priceEuros") || 0) * 100);
   const description = String(form.get("description") || "").trim() || null;
   const isOnlineBookable = form.get("isOnlineBookable") === "on";
   if (!name || durationMin <= 0 || priceCents < 0) {
-    redirect("/dashboard/profil-pro/prestations?error=missing");
+    redirect(withAs("/dashboard/profil-pro/prestations", actingAs, { error: "missing" }));
   }
 
   const lastPos = await prisma.service.aggregate({
@@ -84,16 +106,19 @@ export async function createServiceAction(form: FormData) {
     skipDuplicates: true,
   });
 
+  audit("service.create", { actingAs, user, pro, extra: { serviceId: created.id } });
   revalidatePath("/dashboard/profil-pro/prestations");
-  redirect("/dashboard/profil-pro/prestations?saved=1");
+  revalidatePath(`/pro/${pro.id}`);
+  if (actingAs) revalidatePath("/admin/pros");
+  redirect(withAs("/dashboard/profil-pro/prestations", actingAs, { saved: "1" }));
 }
 
 export async function updateServiceAction(form: FormData) {
-  const { pro } = await ensureOwnedProfile();
+  const { user, pro, actingAs } = await ensureOwnedProfile(form);
   const id = String(form.get("id") || "").trim();
   const service = await prisma.service.findUnique({ where: { id } });
   if (!service || service.proProfileId !== pro.id) {
-    redirect("/dashboard/profil-pro/prestations?error=forbidden");
+    redirect(withAs("/dashboard/profil-pro/prestations", actingAs, { error: "forbidden" }));
   }
   const name = String(form.get("name") || "").trim();
   const durationMin = Number(form.get("durationMin") || 0);
@@ -103,7 +128,7 @@ export async function updateServiceAction(form: FormData) {
   const submittedMemberIds = form.getAll("memberIds").map((v) => String(v));
 
   if (!name || durationMin <= 0 || priceCents < 0) {
-    redirect("/dashboard/profil-pro/prestations?error=missing");
+    redirect(withAs("/dashboard/profil-pro/prestations", actingAs, { error: "missing" }));
   }
 
   // Whitelist: only keep team-member ids that actually belong to this pro.
@@ -135,27 +160,30 @@ export async function updateServiceAction(form: FormData) {
       : []),
   ]);
 
+  audit("service.update", { actingAs, user, pro, extra: { serviceId: id } });
   revalidatePath("/dashboard/profil-pro/prestations");
   revalidatePath(`/pro/${pro.id}`);
-  redirect("/dashboard/profil-pro/prestations?saved=1");
+  if (actingAs) revalidatePath("/admin/pros");
+  redirect(withAs("/dashboard/profil-pro/prestations", actingAs, { saved: "1" }));
 }
 
 export async function deleteServiceAction(form: FormData) {
-  const { pro } = await ensureOwnedProfile();
+  const { user, pro, actingAs } = await ensureOwnedProfile(form);
   const id = String(form.get("id") || "").trim();
   const service = await prisma.service.findUnique({ where: { id } });
   if (!service || service.proProfileId !== pro.id) {
-    redirect("/dashboard/profil-pro/prestations?error=forbidden");
+    redirect(withAs("/dashboard/profil-pro/prestations", actingAs, { error: "forbidden" }));
   }
   await prisma.service.delete({ where: { id } });
+  audit("service.delete", { actingAs, user, pro, extra: { serviceId: id } });
   revalidatePath("/dashboard/profil-pro/prestations");
   revalidatePath(`/pro/${pro.id}`);
-  redirect("/dashboard/profil-pro/prestations?saved=1");
+  redirect(withAs("/dashboard/profil-pro/prestations", actingAs, { saved: "1" }));
 }
 
 // ────────────────── Team members ──────────────────
 export async function createTeamMemberAction(form: FormData) {
-  const { pro } = await ensureOwnedProfile();
+  const { user, pro, actingAs } = await ensureOwnedProfile(form);
   const displayName = String(form.get("displayName") || "").trim();
   const photoUrlRaw = String(form.get("photoUrl") || "").trim();
   const photoUrl =
@@ -164,7 +192,7 @@ export async function createTeamMemberAction(form: FormData) {
       ? photoUrlRaw.split("\n")[0].trim()
       : null;
   if (!displayName) {
-    redirect("/dashboard/profil-pro/equipe?error=missing");
+    redirect(withAs("/dashboard/profil-pro/equipe", actingAs, { error: "missing" }));
   }
   const lastPos = await prisma.teamMember.aggregate({
     where: { proProfileId: pro.id },
@@ -192,13 +220,17 @@ export async function createTeamMemberAction(form: FormData) {
       skipDuplicates: true,
     });
   }
+  audit("team.create", { actingAs, user, pro, extra: { teamMemberId: member.id } });
   revalidatePath("/dashboard/profil-pro/equipe");
-  redirect("/dashboard/profil-pro/equipe?saved=1");
+  revalidatePath(`/pro/${pro.id}`);
+  if (actingAs) revalidatePath("/admin/pros");
+  redirect(withAs("/dashboard/profil-pro/equipe", actingAs, { saved: "1" }));
 }
 
 export async function updateTeamMemberAction(form: FormData) {
   const teamMemberId = String(form.get("id") || "").trim();
-  const { pro } = await ensureOwnedTeamMember(teamMemberId);
+  const user = await getDashboardUser();
+  const { pro, actingAs } = await ensureOwnedTeamMember(teamMemberId, form);
   const displayName = String(form.get("displayName") || "").trim();
   const photoUrlRaw = String(form.get("photoUrl") || "").trim();
   const photoUrl =
@@ -208,24 +240,29 @@ export async function updateTeamMemberAction(form: FormData) {
       : null;
   const isActive = form.get("isActive") === "on";
   if (!displayName) {
-    redirect("/dashboard/profil-pro/equipe?error=missing");
+    redirect(withAs("/dashboard/profil-pro/equipe", actingAs, { error: "missing" }));
   }
   await prisma.teamMember.update({
     where: { id: teamMemberId },
     data: { displayName, photoUrl, isActive },
   });
+  audit("team.update", { actingAs, user, pro, extra: { teamMemberId } });
   revalidatePath("/dashboard/profil-pro/equipe");
   revalidatePath(`/pro/${pro.id}`);
-  redirect("/dashboard/profil-pro/equipe?saved=1");
+  if (actingAs) revalidatePath("/admin/pros");
+  redirect(withAs("/dashboard/profil-pro/equipe", actingAs, { saved: "1" }));
 }
 
 export async function deleteTeamMemberAction(form: FormData) {
   const teamMemberId = String(form.get("id") || "").trim();
-  const { pro } = await ensureOwnedTeamMember(teamMemberId);
+  const user = await getDashboardUser();
+  const { pro, actingAs } = await ensureOwnedTeamMember(teamMemberId, form);
   await prisma.teamMember.delete({ where: { id: teamMemberId } });
+  audit("team.delete", { actingAs, user, pro, extra: { teamMemberId } });
   revalidatePath("/dashboard/profil-pro/equipe");
   revalidatePath(`/pro/${pro.id}`);
-  redirect("/dashboard/profil-pro/equipe?saved=1");
+  if (actingAs) revalidatePath("/admin/pros");
+  redirect(withAs("/dashboard/profil-pro/equipe", actingAs, { saved: "1" }));
 }
 
 // ────────────────── Working hours ──────────────────
@@ -240,7 +277,8 @@ function parseHHMM(value: string): number | null {
 
 export async function saveWorkingHoursAction(form: FormData) {
   const teamMemberId = String(form.get("teamMemberId") || "").trim();
-  const { pro } = await ensureOwnedTeamMember(teamMemberId);
+  const user = await getDashboardUser();
+  const { pro, actingAs } = await ensureOwnedTeamMember(teamMemberId, form);
   // For each day 0-6, read open/close and isOpen
   const ops: { dayOfWeek: number; openMinute: number; closeMinute: number }[] =
     [];
@@ -262,14 +300,17 @@ export async function saveWorkingHoursAction(form: FormData) {
         ]
       : []),
   ]);
+  audit("hours.save", { actingAs, user, pro, extra: { teamMemberId } });
   revalidatePath("/dashboard/profil-pro/horaires");
   revalidatePath(`/pro/${pro.id}`);
-  redirect("/dashboard/profil-pro/horaires?saved=1");
+  if (actingAs) revalidatePath("/admin/pros");
+  redirect(withAs("/dashboard/profil-pro/horaires", actingAs, { saved: "1" }));
 }
 
 export async function addTimeOffAction(form: FormData) {
   const teamMemberId = String(form.get("teamMemberId") || "").trim();
-  const { pro } = await ensureOwnedTeamMember(teamMemberId);
+  const user = await getDashboardUser();
+  const { pro, actingAs } = await ensureOwnedTeamMember(teamMemberId, form);
   const startsAtStr = String(form.get("startsAt") || "").trim();
   const endsAtStr = String(form.get("endsAt") || "").trim();
   const reason = String(form.get("reason") || "").trim() || null;
@@ -280,27 +321,33 @@ export async function addTimeOffAction(form: FormData) {
     Number.isNaN(endsAt.getTime()) ||
     endsAt <= startsAt
   ) {
-    redirect("/dashboard/profil-pro/horaires?error=date");
+    redirect(withAs("/dashboard/profil-pro/horaires", actingAs, { error: "date" }));
   }
   await prisma.timeOff.create({
     data: { teamMemberId, startsAt, endsAt, reason },
   });
+  audit("timeoff.add", { actingAs, user, pro, extra: { teamMemberId } });
   revalidatePath("/dashboard/profil-pro/horaires");
   revalidatePath(`/pro/${pro.id}`);
-  redirect("/dashboard/profil-pro/horaires?saved=1");
+  redirect(withAs("/dashboard/profil-pro/horaires", actingAs, { saved: "1" }));
 }
 
 export async function deleteTimeOffAction(form: FormData) {
   const id = String(form.get("id") || "").trim();
+  const actingAsHint = String(form.get("_actingAs") || "").trim() || null;
   const off = await prisma.timeOff.findUnique({
     where: { id },
     include: { teamMember: true },
   });
-  if (!off) redirect("/dashboard/profil-pro/horaires");
-  await ensureOwnedTeamMember(off.teamMemberId);
+  if (!off) {
+    redirect(withAs("/dashboard/profil-pro/horaires", actingAsHint));
+  }
+  const user = await getDashboardUser();
+  const { pro, actingAs } = await ensureOwnedTeamMember(off.teamMemberId, form);
   await prisma.timeOff.delete({ where: { id } });
+  audit("timeoff.delete", { actingAs, user, pro, extra: { timeOffId: id } });
   revalidatePath("/dashboard/profil-pro/horaires");
-  redirect("/dashboard/profil-pro/horaires?saved=1");
+  redirect(withAs("/dashboard/profil-pro/horaires", actingAs, { saved: "1" }));
 }
 
 // ────────────────── Onboarding wizard ──────────────────

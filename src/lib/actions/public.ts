@@ -13,11 +13,13 @@ import {
   sendBookingRequestedEmail,
   sendTrajetPriceSuggestionEmail,
 } from "@/lib/email";
+import { isAdminEmail } from "@/lib/admin";
 import { PRO_CATEGORY_IDS } from "@/lib/pro-categories";
 import {
   detectContactInBio,
   normalizePriceRangeInput,
 } from "@/lib/pro-display";
+import { logActAs, withAs } from "@/lib/pro-context";
 
 const VALID_PRO_CATEGORIES: ProCategory[] = PRO_CATEGORY_IDS;
 
@@ -310,11 +312,15 @@ export async function createProProfileAction(form: FormData) {
 export async function updateProProfileAction(form: FormData) {
   const user = await ensureUser("/dashboard/profil-pro");
 
-  const existing = await prisma.proProfile.findUnique({
-    where: { userId: user.id },
-  });
+  const actingAsRaw = String(form.get("_actingAs") || "").trim();
+  const isAdmin = actingAsRaw ? await isAdminEmail(user.email) : false;
+  const actingAs = actingAsRaw && isAdmin ? actingAsRaw : null;
+
+  const existing = actingAs
+    ? await prisma.proProfile.findUnique({ where: { id: actingAs } })
+    : await prisma.proProfile.findUnique({ where: { userId: user.id } });
   if (!existing) {
-    redirect("/pro/inscrire");
+    redirect(actingAs ? "/admin/pros?error=pro-not-found" : "/pro/inscrire");
   }
 
   const displayName = String(form.get("displayName") || "").trim();
@@ -349,15 +355,17 @@ export async function updateProProfileAction(form: FormData) {
     .slice(0, 12);
 
   if (!displayName || !city || !whatsapp) {
-    redirect("/dashboard/profil-pro?error=missing");
+    redirect(withAs("/dashboard/profil-pro", actingAs, { error: "missing" }));
   }
 
   if (detectContactInBio(bio)) {
-    redirect("/dashboard/profil-pro?error=contact-in-bio");
+    redirect(
+      withAs("/dashboard/profil-pro", actingAs, { error: "contact-in-bio" }),
+    );
   }
 
   await prisma.proProfile.update({
-    where: { userId: user.id },
+    where: { id: existing.id },
     data: {
       displayName,
       city,
@@ -372,11 +380,18 @@ export async function updateProProfileAction(form: FormData) {
     },
   });
 
+  logActAs("proProfile.update", {
+    actingAs,
+    adminEmail: user.email,
+    targetUserId: existing.userId,
+  });
+
   revalidatePath("/dashboard/profil-pro");
   revalidatePath("/dashboard/annonces");
   revalidatePath("/prestataires");
   revalidatePath(`/pro/${existing.id}`);
-  redirect("/dashboard/profil-pro?saved=1");
+  if (actingAs) revalidatePath("/admin/pros");
+  redirect(withAs("/dashboard/profil-pro", actingAs, { saved: "1" }));
 }
 
 export async function createProBookingAction(form: FormData) {
@@ -471,6 +486,9 @@ export async function updateProBookingStatusAction(form: FormData) {
   const user = await ensureUser("/dashboard/planning");
   const bookingId = String(form.get("bookingId") || "").trim();
   const statusRaw = String(form.get("status") || "").trim();
+  const actingAsRaw = String(form.get("_actingAs") || "").trim();
+  const isAdmin = await isAdminEmail(user.email);
+  const actingAs = actingAsRaw && isAdmin ? actingAsRaw : null;
   const validStatuses: ProBookingStatus[] = [
     "PENDING",
     "CONFIRMED",
@@ -479,7 +497,7 @@ export async function updateProBookingStatusAction(form: FormData) {
   ];
 
   if (!bookingId || !validStatuses.includes(statusRaw as ProBookingStatus)) {
-    redirect("/dashboard/planning?error=missing");
+    redirect(withAs("/dashboard/planning", actingAs, { error: "missing" }));
   }
 
   const booking = await prisma.proBooking.findUnique({
@@ -500,8 +518,11 @@ export async function updateProBookingStatusAction(form: FormData) {
     },
   });
 
-  if (!booking || booking.proProfile.userId !== user.id) {
-    redirect("/dashboard/planning?error=forbidden");
+  const ownerOk = booking?.proProfile.userId === user.id;
+  const adminActingOk =
+    !!booking && !!actingAs && booking.proProfileId === actingAs;
+  if (!booking || (!ownerOk && !adminActingOk)) {
+    redirect(withAs("/dashboard/planning", actingAs, { error: "forbidden" }));
   }
 
   const newStatus = statusRaw as ProBookingStatus;
@@ -509,6 +530,13 @@ export async function updateProBookingStatusAction(form: FormData) {
   await prisma.proBooking.update({
     where: { id: bookingId },
     data: { status: newStatus },
+  });
+
+  logActAs("booking.status", {
+    actingAs,
+    adminEmail: user.email,
+    targetUserId: booking.proProfile.userId,
+    extra: { bookingId, status: newStatus },
   });
 
   if (
@@ -541,7 +569,8 @@ export async function updateProBookingStatusAction(form: FormData) {
   }
 
   revalidatePath("/dashboard/planning");
-  redirect("/dashboard/planning?updated=1");
+  if (actingAs) revalidatePath("/admin/pros");
+  redirect(withAs("/dashboard/planning", actingAs, { updated: "1" }));
 }
 
 export async function applyAsModeratorAction(form: FormData) {

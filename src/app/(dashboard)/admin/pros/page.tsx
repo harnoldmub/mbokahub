@@ -29,6 +29,9 @@ const CATEGORIES = [
   "AUTRE",
 ] as const;
 
+const FILTER_BTN_BASE =
+  "rounded-full px-3 py-1 text-xs font-semibold transition";
+
 export default async function AdminProsPage({
   searchParams,
 }: {
@@ -49,6 +52,9 @@ export default async function AdminProsPage({
     take: 200,
   });
 
+  const isActive = (val: string | undefined) =>
+    (val ?? "all") === (status ?? "all");
+
   return (
     <div className="space-y-8">
       <div>
@@ -59,9 +65,24 @@ export default async function AdminProsPage({
           Créer, valider, certifier ou supprimer les profils prestataires (toutes catégories : maquilleuses, coiffeurs, photographes, DJ, traiteurs…).
         </p>
         <div className="mt-4 flex gap-2">
-          <a href="/admin/pros" className="rounded-full border border-white/20 px-3 py-1 text-foreground text-xs hover:bg-white/10">Tous</a>
-          <a href="/admin/pros?status=pending" className="rounded-full border border-yellow-500/40 bg-yellow-500/10 px-3 py-1 text-yellow-300 text-xs hover:bg-yellow-500/20">En attente</a>
-          <a href="/admin/pros?status=verified" className="rounded-full border border-green-500/40 bg-green-500/10 px-3 py-1 text-green-300 text-xs hover:bg-green-500/20">Validés</a>
+          <Link
+            href="/admin/pros"
+            className={`${FILTER_BTN_BASE} ${isActive(undefined) ? "bg-white text-black" : "border border-white/20 text-foreground hover:bg-white/10"}`}
+          >
+            Tous
+          </Link>
+          <Link
+            href="/admin/pros?status=pending"
+            className={`${FILTER_BTN_BASE} ${isActive("pending") ? "bg-amber-500 text-black" : "border border-amber-500/60 bg-amber-500/15 text-amber-100 hover:bg-amber-500 hover:text-black"}`}
+          >
+            En attente
+          </Link>
+          <Link
+            href="/admin/pros?status=verified"
+            className={`${FILTER_BTN_BASE} ${isActive("verified") ? "bg-emerald-600 text-white" : "border border-emerald-500/60 bg-emerald-500/15 text-emerald-100 hover:bg-emerald-600 hover:text-white"}`}
+          >
+            Validés
+          </Link>
         </div>
       </div>
 
@@ -192,23 +213,70 @@ export default async function AdminProsPage({
                 <td className="px-4 py-3 font-mono text-muted-foreground text-xs">{p.whatsapp}</td>
                 <td className="px-4 py-3 font-mono text-muted-foreground text-xs">{p.user.email}</td>
                 <td className="px-4 py-3 text-muted-foreground text-xs">
-                  {p.isPremium ? "✓" : "—"}
+                  {p.isPremium ? (
+                    <span className="rounded-full bg-blood px-2 py-1 text-xs font-semibold text-white">
+                      Premium
+                    </span>
+                  ) : (
+                    "—"
+                  )}
                 </td>
                 <td className="px-4 py-3">
                   {p.isVerified ? (
-                    <span className="rounded-full bg-green-500/20 px-2 py-1 text-green-300 text-xs">Validé</span>
+                    <span className="inline-flex rounded-full bg-emerald-600 px-2.5 py-1 text-xs font-semibold text-white">
+                      ✓ Validé
+                    </span>
                   ) : (
-                    <span className="rounded-full bg-yellow-500/20 px-2 py-1 text-yellow-300 text-xs">En attente</span>
+                    <span className="inline-flex rounded-full bg-amber-500 px-2.5 py-1 text-xs font-semibold text-black">
+                      ⏳ En attente
+                    </span>
                   )}
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex flex-wrap justify-end gap-2">
                     <Link
                       href={`/pro/${p.id}?from=admin`}
-                      className="rounded-md bg-blue-500/20 px-2 py-1 text-blue-300 text-xs hover:bg-blue-500/30"
+                      className="inline-flex items-center rounded-md bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-blue-700"
                     >
                       Voir la fiche
                     </Link>
+                    <details className="relative">
+                      <summary className="inline-flex cursor-pointer items-center rounded-md border border-amber-500/60 bg-amber-500/15 px-3 py-1.5 text-xs font-semibold text-amber-100 transition hover:bg-amber-500 hover:text-black">
+                        Gérer comme pro ▾
+                      </summary>
+                      <div className="absolute right-0 z-10 mt-1 grid w-48 gap-1 rounded-lg border border-white/15 bg-black/95 p-2 shadow-xl">
+                        <Link
+                          href={`/dashboard/profil-pro?as=${p.id}`}
+                          className="rounded px-3 py-1.5 text-xs text-foreground hover:bg-white/10"
+                        >
+                          Infos publiques
+                        </Link>
+                        <Link
+                          href={`/dashboard/profil-pro/prestations?as=${p.id}`}
+                          className="rounded px-3 py-1.5 text-xs text-foreground hover:bg-white/10"
+                        >
+                          Prestations
+                        </Link>
+                        <Link
+                          href={`/dashboard/profil-pro/equipe?as=${p.id}`}
+                          className="rounded px-3 py-1.5 text-xs text-foreground hover:bg-white/10"
+                        >
+                          Équipe
+                        </Link>
+                        <Link
+                          href={`/dashboard/profil-pro/horaires?as=${p.id}`}
+                          className="rounded px-3 py-1.5 text-xs text-foreground hover:bg-white/10"
+                        >
+                          Horaires & congés
+                        </Link>
+                        <Link
+                          href={`/dashboard/planning?as=${p.id}`}
+                          className="rounded px-3 py-1.5 text-xs text-foreground hover:bg-white/10"
+                        >
+                          Planning / RDV
+                        </Link>
+                      </div>
+                    </details>
                     <AdminProActionsBar
                       pro={{
                         id: p.id,

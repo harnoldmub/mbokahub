@@ -1,7 +1,9 @@
 import { CalendarCheck, CalendarDays, Clock, Mail, MessageCircle, Plus, Timer, Trash2, User } from "lucide-react";
 import Link from "next/link";
 
+import { AdminAsProBanner } from "@/components/admin/admin-as-pro-banner";
 import { Button } from "@/components/ui/button";
+<<<<<<< HEAD
 import {
   createProServiceAction,
   deleteProServiceAction,
@@ -9,7 +11,11 @@ import {
   updateProBookingStatusAction,
 } from "@/lib/actions/public";
 import { getDashboardUser } from "@/lib/dashboard";
+=======
+import { updateProBookingStatusAction } from "@/lib/actions/public";
+>>>>>>> 8c9a45fe819424003bf860e709a24cf9836ec106
 import { prisma } from "@/lib/db/prisma";
+import { resolveProTarget, withAs } from "@/lib/pro-context";
 
 const statusLabel = {
   PENDING: "À confirmer",
@@ -53,12 +59,16 @@ function formatSlot(date: Date) {
 export default async function PlanningPage({
   searchParams,
 }: {
+<<<<<<< HEAD
   searchParams?: Promise<{ updated?: string; error?: string; serviceSaved?: string; serviceDeleted?: string; serviceError?: string; availSaved?: string }>;
+=======
+  searchParams?: Promise<{ updated?: string; error?: string; as?: string }>;
+>>>>>>> 8c9a45fe819424003bf860e709a24cf9836ec106
 }) {
-  const sp = await searchParams;
-  const user = await getDashboardUser();
+  const sp = (await searchParams) ?? {};
+  const ctx = await resolveProTarget(sp.as);
   const pro = await prisma.proProfile.findUnique({
-    where: { userId: user.id },
+    where: { userId: ctx.proUserId },
     include: {
       bookings: {
         orderBy: [{ status: "asc" }, { requestedAt: "asc" }],
@@ -100,6 +110,14 @@ export default async function PlanningPage({
 
   return (
     <div className="grid gap-8">
+      {ctx.isAdminActingAs ? (
+        <AdminAsProBanner
+          proId={pro.id}
+          proDisplayName={pro.displayName}
+          ownerEmail={ctx.ownerEmail}
+        />
+      ) : null}
+
       <div>
         <p className="font-mono text-blood text-xs uppercase tracking-[0.3em]">
           Planning
@@ -152,6 +170,44 @@ export default async function PlanningPage({
               Définis tes services avec leurs durées. Les clients les verront sur ta fiche publique.
             </p>
           </div>
+<<<<<<< HEAD
+=======
+          <div className="flex flex-wrap gap-2">
+            <Button asChild variant="outline" size="sm">
+              <Link
+                href={withAs(
+                  "/dashboard/profil-pro/prestations",
+                  ctx.actingAsProId,
+                )}
+              >
+                Prestations
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link
+                href={withAs(
+                  "/dashboard/profil-pro/equipe",
+                  ctx.actingAsProId,
+                )}
+              >
+                Équipe
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link
+                href={withAs(
+                  "/dashboard/profil-pro/horaires",
+                  ctx.actingAsProId,
+                )}
+              >
+                Horaires
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link href={`/pro/${pro.id}`}>Voir la fiche publique</Link>
+            </Button>
+          </div>
+>>>>>>> 8c9a45fe819424003bf860e709a24cf9836ec106
         </div>
 
         {pro.services.length > 0 ? (
@@ -393,21 +449,66 @@ export default async function PlanningPage({
                 <div className="flex flex-col gap-2 shrink-0">
                   {booking.status !== "CONFIRMED" && booking.status !== "COMPLETED" && booking.status !== "CANCELLED" ? (
                     <form action={updateProBookingStatusAction}>
+<<<<<<< HEAD
                       <input name="bookingId" type="hidden" value={booking.id} />
+=======
+                      {ctx.actingAsProId ? (
+                        <input
+                          name="_actingAs"
+                          type="hidden"
+                          value={ctx.actingAsProId}
+                        />
+                      ) : null}
+                      <input
+                        name="bookingId"
+                        type="hidden"
+                        value={booking.id}
+                      />
+>>>>>>> 8c9a45fe819424003bf860e709a24cf9836ec106
                       <input name="status" type="hidden" value="CONFIRMED" />
                       <Button size="sm" type="submit" className="w-full">Confirmer</Button>
                     </form>
                   ) : null}
                   {booking.status === "CONFIRMED" && booking.requestedAt >= now ? (
                     <form action={updateProBookingStatusAction}>
+<<<<<<< HEAD
                       <input name="bookingId" type="hidden" value={booking.id} />
+=======
+                      {ctx.actingAsProId ? (
+                        <input
+                          name="_actingAs"
+                          type="hidden"
+                          value={ctx.actingAsProId}
+                        />
+                      ) : null}
+                      <input
+                        name="bookingId"
+                        type="hidden"
+                        value={booking.id}
+                      />
+>>>>>>> 8c9a45fe819424003bf860e709a24cf9836ec106
                       <input name="status" type="hidden" value="COMPLETED" />
                       <Button size="sm" type="submit" variant="outline" className="w-full">Terminer</Button>
                     </form>
                   ) : null}
                   {booking.status !== "CANCELLED" && booking.status !== "COMPLETED" ? (
                     <form action={updateProBookingStatusAction}>
+<<<<<<< HEAD
                       <input name="bookingId" type="hidden" value={booking.id} />
+=======
+                      {ctx.actingAsProId ? (
+                        <input
+                          name="_actingAs"
+                          type="hidden"
+                          value={ctx.actingAsProId}
+                        />
+                      ) : null}
+                      <input
+                        name="bookingId"
+                        type="hidden"
+                        value={booking.id}
+                      />
+>>>>>>> 8c9a45fe819424003bf860e709a24cf9836ec106
                       <input name="status" type="hidden" value="CANCELLED" />
                       <Button size="sm" type="submit" variant="outline" className="w-full text-error hover:text-error">Annuler</Button>
                     </form>

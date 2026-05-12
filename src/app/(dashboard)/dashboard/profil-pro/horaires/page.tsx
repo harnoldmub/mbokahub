@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { AdminAsProBanner } from "@/components/admin/admin-as-pro-banner";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
@@ -8,8 +9,8 @@ import {
   deleteTimeOffAction,
   saveWorkingHoursAction,
 } from "@/lib/actions/booking";
-import { getDashboardUser } from "@/lib/dashboard";
 import { prisma } from "@/lib/db/prisma";
+import { resolveProTarget, withAs } from "@/lib/pro-context";
 import { ProfilProTabs } from "../_nav";
 
 const DAYS = [
@@ -32,12 +33,12 @@ function fmtMinutes(min: number): string {
 export default async function HorairesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ saved?: string; error?: string }>;
+  searchParams: Promise<{ saved?: string; error?: string; as?: string }>;
 }) {
   const sp = await searchParams;
-  const user = await getDashboardUser();
+  const ctx = await resolveProTarget(sp.as);
   const pro = await prisma.proProfile.findUnique({
-    where: { userId: user.id },
+    where: { userId: ctx.proUserId },
     include: {
       teamMembers: {
         orderBy: { position: "asc" },
@@ -59,8 +60,20 @@ export default async function HorairesPage({
     );
   }
 
+  const actingAsHidden = ctx.actingAsProId ? (
+    <input type="hidden" name="_actingAs" value={ctx.actingAsProId} />
+  ) : null;
+
   return (
     <div className="grid gap-6">
+      {ctx.isAdminActingAs ? (
+        <AdminAsProBanner
+          proId={pro.id}
+          proDisplayName={pro.displayName}
+          ownerEmail={ctx.ownerEmail}
+        />
+      ) : null}
+
       <div>
         <p className="font-mono text-blood text-xs uppercase tracking-[0.3em]">
           Profil pro
@@ -75,7 +88,10 @@ export default async function HorairesPage({
         </p>
       </div>
 
-      <ProfilProTabs active="/dashboard/profil-pro/horaires" />
+      <ProfilProTabs
+        active="/dashboard/profil-pro/horaires"
+        actingAs={ctx.actingAsProId}
+      />
 
       {sp.saved ? (
         <div className="rounded-2xl border border-success/30 bg-success/10 p-4 text-success text-sm">
@@ -92,7 +108,7 @@ export default async function HorairesPage({
         <div className="rounded-2xl border border-white/10 bg-coal p-6 text-paper-dim">
           Ajoute d&apos;abord un membre dans l&apos;onglet{" "}
           <Link
-            href="/dashboard/profil-pro/equipe"
+            href={withAs("/dashboard/profil-pro/equipe", ctx.actingAsProId)}
             className="text-blood underline"
           >
             Équipe
@@ -113,6 +129,7 @@ export default async function HorairesPage({
             <p className="text-paper-mute text-xs">Horaires hebdomadaires</p>
           </div>
           <form action={saveWorkingHoursAction} className="grid gap-3">
+            {actingAsHidden}
             <input type="hidden" name="teamMemberId" value={m.id} />
             <div className="grid gap-2">
               {DOW_INDEX.map((dow, i) => {
@@ -162,6 +179,7 @@ export default async function HorairesPage({
               action={addTimeOffAction}
               className="mt-3 grid gap-3 sm:grid-cols-[1fr_1fr_2fr_auto]"
             >
+              {actingAsHidden}
               <input type="hidden" name="teamMemberId" value={m.id} />
               <FormField label="Début">
                 <Input
@@ -214,6 +232,7 @@ export default async function HorairesPage({
                       {off.reason ? ` · ${off.reason}` : ""}
                     </span>
                     <form action={deleteTimeOffAction}>
+                      {actingAsHidden}
                       <input type="hidden" name="id" value={off.id} />
                       <Button size="sm" variant="outline" type="submit">
                         Supprimer

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { AdminAsProBanner } from "@/components/admin/admin-as-pro-banner";
 import { PhotoUploader } from "@/components/admin/photo-uploader";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
@@ -10,19 +11,19 @@ import {
   deleteTeamMemberAction,
   updateTeamMemberAction,
 } from "@/lib/actions/booking";
-import { getDashboardUser } from "@/lib/dashboard";
 import { prisma } from "@/lib/db/prisma";
+import { resolveProTarget } from "@/lib/pro-context";
 import { ProfilProTabs } from "../_nav";
 
 export default async function EquipePage({
   searchParams,
 }: {
-  searchParams: Promise<{ saved?: string; error?: string }>;
+  searchParams: Promise<{ saved?: string; error?: string; as?: string }>;
 }) {
   const sp = await searchParams;
-  const user = await getDashboardUser();
+  const ctx = await resolveProTarget(sp.as);
   const pro = await prisma.proProfile.findUnique({
-    where: { userId: user.id },
+    where: { userId: ctx.proUserId },
     include: { teamMembers: { orderBy: { position: "asc" } } },
   });
   if (!pro) {
@@ -38,6 +39,14 @@ export default async function EquipePage({
 
   return (
     <div className="grid gap-6">
+      {ctx.isAdminActingAs ? (
+        <AdminAsProBanner
+          proId={pro.id}
+          proDisplayName={pro.displayName}
+          ownerEmail={ctx.ownerEmail}
+        />
+      ) : null}
+
       <div>
         <p className="font-mono text-blood text-xs uppercase tracking-[0.3em]">
           Profil pro
@@ -50,7 +59,10 @@ export default async function EquipePage({
         </p>
       </div>
 
-      <ProfilProTabs active="/dashboard/profil-pro/equipe" />
+      <ProfilProTabs
+        active="/dashboard/profil-pro/equipe"
+        actingAs={ctx.actingAsProId}
+      />
 
       {sp.saved ? (
         <div className="rounded-2xl border border-success/30 bg-success/10 p-4 text-success text-sm">
@@ -67,6 +79,9 @@ export default async function EquipePage({
         action={createTeamMemberAction}
         className="grid gap-4 rounded-3xl border border-white/10 bg-coal p-6"
       >
+        {ctx.actingAsProId ? (
+          <input type="hidden" name="_actingAs" value={ctx.actingAsProId} />
+        ) : null}
         <h2 className="font-display text-xl uppercase text-paper">
           Ajouter un membre
         </h2>
@@ -107,6 +122,13 @@ export default async function EquipePage({
               key={m.id}
               className="grid gap-4 rounded-3xl border border-white/10 bg-coal p-5"
             >
+              {ctx.actingAsProId ? (
+                <input
+                  type="hidden"
+                  name="_actingAs"
+                  value={ctx.actingAsProId}
+                />
+              ) : null}
               <input type="hidden" name="id" value={m.id} />
               <div className="flex items-center gap-4">
                 <div className="relative size-14 overflow-hidden rounded-full bg-smoke">

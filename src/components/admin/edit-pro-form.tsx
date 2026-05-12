@@ -75,7 +75,11 @@ export function EditProForm({ pro }: EditProFormProps) {
       <button
         type="button"
         onClick={() => setOpen(true)}
+<<<<<<< HEAD
         className="rounded-md bg-blue-500/15 px-2 py-1 text-blue-700 text-xs hover:bg-blue-500/25"
+=======
+        className="inline-flex items-center rounded-md bg-blue-600 px-3 py-1.5 font-medium text-white text-xs shadow-sm transition hover:bg-blue-700"
+>>>>>>> 8c9a45fe819424003bf860e709a24cf9836ec106
       >
         Modifier
       </button>

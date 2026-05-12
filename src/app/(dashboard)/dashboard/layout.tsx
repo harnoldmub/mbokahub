@@ -1,6 +1,8 @@
 import { UserButton } from "@clerk/nextjs";
 import { Bell, ShieldCheck } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
+import { AdminAsProBannerSticky } from "@/components/admin/admin-as-pro-banner-sticky";
 import { DashboardNav } from "@/components/dashboard/nav";
 import { Badge } from "@/components/ui/badge";
 import { isAdminEmail } from "@/lib/admin";
@@ -92,7 +94,12 @@ export default async function DashboardLayout({
         )}
       </aside>
 
-      <section>{children}</section>
+      <section>
+        <Suspense fallback={null}>
+          <AdminAsProBannerSticky isAdmin={isAdmin} />
+        </Suspense>
+        {children}
+      </section>
     </div>
   );
 }

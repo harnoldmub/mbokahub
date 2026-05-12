@@ -82,6 +82,7 @@ export default async function ProDetailsPage({
 
       {/* ── Admin panel ── */}
       {isAdmin && (
+<<<<<<< HEAD
         <section className="mb-6 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4">
           <p className="font-mono text-[10px] uppercase tracking-widest text-amber-300">
             Actions admin
@@ -91,6 +92,21 @@ export default async function ProDetailsPage({
             demande une confirmation.
           </p>
           <div className="mt-3">
+=======
+        <section className="mt-6 rounded-2xl border-2 border-amber-500 bg-amber-500 p-4 text-black shadow-lg">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="font-mono text-[11px] font-bold uppercase tracking-widest">
+              Mode admin · actions sur cette fiche
+            </p>
+            <Link
+              href={`/dashboard/profil-pro?as=${pro.id}`}
+              className="inline-flex items-center rounded-md bg-black px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-black/80"
+            >
+              Gérer ce prestataire (act-as)
+            </Link>
+          </div>
+          <div className="mt-3 rounded-xl bg-black/10 p-3">
+>>>>>>> 8c9a45fe819424003bf860e709a24cf9836ec106
             <AdminProActionsBar
               pro={{
                 id: pro.id,

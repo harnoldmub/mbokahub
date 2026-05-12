@@ -1,6 +1,7 @@
 import { AtSign, Camera, CheckCircle2, IdCard, Sparkles } from "lucide-react";
 import Link from "next/link";
 
+import { AdminAsProBanner } from "@/components/admin/admin-as-pro-banner";
 import { PhotoUploader } from "@/components/admin/photo-uploader";
 import { ScrollToTopOnMount } from "@/components/dashboard/scroll-to-top-on-mount";
 import { VerifyIdentityButton } from "@/components/dashboard/verify-identity-button";
@@ -11,14 +12,15 @@ import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { updateProProfileAction } from "@/lib/actions/public";
-import { getDashboardUser } from "@/lib/dashboard";
 import { prisma } from "@/lib/db/prisma";
 import { PRO_CATEGORY_BY_ID } from "@/lib/pro-categories";
+import { resolveProTarget } from "@/lib/pro-context";
 import { ProfilProTabs } from "./_nav";
 
 type SearchParams = {
   saved?: string;
   error?: string;
+  as?: string;
 };
 
 export default async function ProfilProPage({
@@ -27,9 +29,9 @@ export default async function ProfilProPage({
   searchParams: Promise<SearchParams>;
 }) {
   const sp = await searchParams;
-  const user = await getDashboardUser();
+  const ctx = await resolveProTarget(sp.as);
   const pro = await prisma.proProfile.findUnique({
-    where: { userId: user.id },
+    where: { userId: ctx.proUserId },
   });
 
   if (!pro) {
@@ -60,6 +62,13 @@ export default async function ProfilProPage({
 
   return (
     <div className="grid gap-8">
+      {ctx.isAdminActingAs ? (
+        <AdminAsProBanner
+          proId={pro.id}
+          proDisplayName={pro.displayName}
+          ownerEmail={ctx.ownerEmail}
+        />
+      ) : null}
       <div>
         <p className="font-mono text-blood text-xs uppercase tracking-[0.3em]">
           Profil pro
@@ -85,7 +94,10 @@ export default async function ProfilProPage({
         </div>
       </div>
 
-      <ProfilProTabs active="/dashboard/profil-pro" />
+      <ProfilProTabs
+        active="/dashboard/profil-pro"
+        actingAs={ctx.actingAsProId}
+      />
 
       {pro.photos.length === 0 ? (
         <div className="flex items-start gap-3 rounded-2xl border border-yellow-400/40 bg-yellow-400/10 p-4 text-yellow-100 text-sm leading-6">
@@ -128,6 +140,9 @@ export default async function ProfilProPage({
         action={updateProProfileAction}
         className="grid gap-8 rounded-3xl border border-white/10 bg-coal/60 p-6 sm:p-8"
       >
+        {ctx.actingAsProId ? (
+          <input type="hidden" name="_actingAs" value={ctx.actingAsProId} />
+        ) : null}
         <div className="flex items-center gap-3">
           <span className="flex size-10 items-center justify-center rounded-xl bg-blood/15 text-blood">
             <IdCard className="size-5" />
