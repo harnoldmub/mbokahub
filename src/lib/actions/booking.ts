@@ -3,10 +3,12 @@
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 
 import { isSlotStillAvailable } from "@/lib/booking-slots";
 import { getDashboardUser } from "@/lib/dashboard";
 import { prisma } from "@/lib/db/prisma";
+import { sendBookingRequestedEmail } from "@/lib/email";
 
 async function ensureOwnedProfile() {
   const user = await getDashboardUser();
@@ -423,9 +425,27 @@ export async function createSlotBookingAction(form: FormData) {
 
   const service = await prisma.service.findUnique({
     where: { id: serviceId },
-    select: { id: true, durationMin: true, proProfileId: true },
+    select: { id: true, name: true, durationMin: true, proProfileId: true },
   });
   if (!service || service.proProfileId !== proProfileId) {
+    redirect(`/pro/${proProfileId}?booking=missing`);
+  }
+
+  const [proInfo, memberInfo] = await Promise.all([
+    prisma.proProfile.findUnique({
+      where: { id: proProfileId },
+      select: { displayName: true, whatsapp: true },
+    }),
+    prisma.teamMember.findUnique({
+      where: { id: teamMemberId },
+      select: { displayName: true, proProfileId: true },
+    }),
+  ]);
+  if (
+    !proInfo ||
+    !memberInfo ||
+    memberInfo.proProfileId !== proProfileId
+  ) {
     redirect(`/pro/${proProfileId}?booking=missing`);
   }
 
@@ -482,6 +502,28 @@ export async function createSlotBookingAction(form: FormData) {
   }
   if (conflict || serializationFailure) {
     redirect(`/pro/${proProfileId}?booking=taken&serviceId=${serviceId}`);
+  }
+
+  if (clientEmail) {
+    const emailTo = clientEmail;
+    const emailArgs = {
+      to: emailTo,
+      clientName,
+      proDisplayName: proInfo.displayName,
+      proWhatsapp: proInfo.whatsapp,
+      serviceName: service.name,
+      teamMemberName: memberInfo.displayName,
+      startsAt,
+      durationMin: service.durationMin,
+      proId: proProfileId,
+    };
+    after(async () => {
+      try {
+        await sendBookingRequestedEmail(emailArgs);
+      } catch (e) {
+        console.error("[booking] requested email failed:", e);
+      }
+    });
   }
 
   revalidatePath(`/pro/${proProfileId}`);

@@ -302,6 +302,172 @@ export async function sendProPhotoReminderEmail(args: {
   });
 }
 
+function formatBookingDateFr(date: Date) {
+  try {
+    return new Intl.DateTimeFormat("fr-FR", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "Europe/Paris",
+    }).format(date);
+  } catch {
+    return date.toISOString();
+  }
+}
+
+function buildWhatsappLink(whatsapp: string, message: string) {
+  const cleaned = whatsapp.replace(/[^\d+]/g, "").replace(/^\+/, "");
+  if (!cleaned) return null;
+  return `https://wa.me/${cleaned}?text=${encodeURIComponent(message)}`;
+}
+
+type BookingEmailArgs = {
+  to: string;
+  clientName: string;
+  proDisplayName: string;
+  proWhatsapp: string;
+  serviceName: string | null;
+  teamMemberName: string | null;
+  startsAt: Date;
+  durationMin: number | null;
+  proId: string;
+};
+
+function bookingRecapHtml(args: BookingEmailArgs) {
+  const when = escapeHtml(formatBookingDateFr(args.startsAt));
+  const lines: string[] = [];
+  if (args.serviceName) {
+    lines.push(
+      `<p style="font-size:15px;line-height:1.6;color:#d4d4d4;margin:0 0 8px;">Prestation : <strong style="color:#fff;">${escapeHtml(args.serviceName)}</strong>${args.durationMin ? ` <span style="color:#a4a4a4;">(${args.durationMin} min)</span>` : ""}</p>`,
+    );
+  }
+  if (args.teamMemberName) {
+    lines.push(
+      `<p style="font-size:15px;line-height:1.6;color:#d4d4d4;margin:0 0 8px;">Avec : <strong style="color:#fff;">${escapeHtml(args.teamMemberName)}</strong></p>`,
+    );
+  }
+  lines.push(
+    `<p style="font-size:15px;line-height:1.6;color:#d4d4d4;margin:0 0 8px;">Date : <strong style="color:#fff;">${when}</strong></p>`,
+  );
+  lines.push(
+    `<p style="font-size:15px;line-height:1.6;color:#d4d4d4;margin:0;">Prestataire : <strong style="color:#fff;">${escapeHtml(args.proDisplayName)}</strong></p>`,
+  );
+  return `<div style="background:#1a1a1a;border:1px solid rgba(229,9,20,0.25);border-radius:16px;padding:20px;margin:0 0 24px;">
+      <div style="font-family:'Courier New',monospace;font-size:11px;letter-spacing:0.2em;color:#E50914;margin:0 0 12px;text-transform:uppercase;">
+        Récap de ta réservation
+      </div>
+      ${lines.join("\n")}
+    </div>`;
+}
+
+function bookingRecapText(args: BookingEmailArgs) {
+  const parts: string[] = [];
+  if (args.serviceName) {
+    parts.push(
+      `Prestation : ${args.serviceName}${args.durationMin ? ` (${args.durationMin} min)` : ""}`,
+    );
+  }
+  if (args.teamMemberName) parts.push(`Avec : ${args.teamMemberName}`);
+  parts.push(`Date : ${formatBookingDateFr(args.startsAt)}`);
+  parts.push(`Prestataire : ${args.proDisplayName}`);
+  return parts.join(" — ");
+}
+
+function whatsappCtaBlock(args: BookingEmailArgs, message: string) {
+  const link = buildWhatsappLink(args.proWhatsapp, message);
+  if (!link) return "";
+  return `<div style="text-align:center;margin:32px 0;">
+      <a href="${link}" style="display:inline-block;background:#25D366;color:#fff;padding:14px 28px;border-radius:999px;text-decoration:none;font-weight:600;font-size:14px;">
+        Contacter le prestataire sur WhatsApp
+      </a>
+    </div>`;
+}
+
+export async function sendBookingRequestedEmail(args: BookingEmailArgs) {
+  const profileUrl = `${PUBLIC_URL}/pro/${args.proId}`;
+  const waMessage = `Bonjour ${args.proDisplayName}, je viens de réserver via Nevent pour le ${formatBookingDateFr(args.startsAt)}${args.serviceName ? ` (${args.serviceName})` : ""}.`;
+  const body = `
+    <h1 style="font-size:26px;font-weight:800;color:#fff;margin:0 0 16px;line-height:1.2;">
+      Ta demande de réservation est bien reçue ✨
+    </h1>
+    <p style="font-size:16px;line-height:1.6;color:#d4d4d4;margin:0 0 24px;">
+      Salut <strong style="color:#fff;">${escapeHtml(args.clientName)}</strong>,
+    </p>
+    <p style="font-size:16px;line-height:1.6;color:#d4d4d4;margin:0 0 24px;">
+      Nous avons transmis ta demande à <strong style="color:#fff;">${escapeHtml(args.proDisplayName)}</strong>. Tu recevras un email dès que la réservation sera confirmée. En attendant, tu peux contacter directement le prestataire sur WhatsApp pour aller plus vite.
+    </p>
+    ${bookingRecapHtml(args)}
+    ${whatsappCtaBlock(args, waMessage)}
+    <p style="font-size:14px;line-height:1.6;color:#a4a4a4;margin:0;">
+      Voir la fiche du prestataire : <a href="${profileUrl}" style="color:#E50914;text-decoration:none;">${profileUrl.replace(/^https?:\/\//, "")}</a>
+    </p>
+  `;
+  return sendEmail({
+    to: args.to,
+    subject: `✨ Demande de réservation envoyée à ${args.proDisplayName}`,
+    html: emailLayout("Réservation reçue", body),
+    text: `Salut ${args.clientName}, ta demande de réservation a bien été envoyée à ${args.proDisplayName}. ${bookingRecapText(args)}. Fiche : ${profileUrl}`,
+  });
+}
+
+export async function sendBookingConfirmedEmail(args: BookingEmailArgs) {
+  const profileUrl = `${PUBLIC_URL}/pro/${args.proId}`;
+  const waMessage = `Bonjour ${args.proDisplayName}, je confirme bien notre RDV du ${formatBookingDateFr(args.startsAt)}${args.serviceName ? ` (${args.serviceName})` : ""}.`;
+  const body = `
+    <h1 style="font-size:26px;font-weight:800;color:#fff;margin:0 0 16px;line-height:1.2;">
+      Ta réservation est confirmée ✅
+    </h1>
+    <p style="font-size:16px;line-height:1.6;color:#d4d4d4;margin:0 0 24px;">
+      Salut <strong style="color:#fff;">${escapeHtml(args.clientName)}</strong>,
+    </p>
+    <p style="font-size:16px;line-height:1.6;color:#d4d4d4;margin:0 0 24px;">
+      <strong style="color:#fff;">${escapeHtml(args.proDisplayName)}</strong> vient de confirmer ton rendez-vous. À très vite !
+    </p>
+    ${bookingRecapHtml(args)}
+    ${whatsappCtaBlock(args, waMessage)}
+    <p style="font-size:14px;line-height:1.6;color:#a4a4a4;margin:0;">
+      Si tu dois annuler ou modifier, préviens le prestataire au plus vite via WhatsApp.<br/>
+      Fiche prestataire : <a href="${profileUrl}" style="color:#E50914;text-decoration:none;">${profileUrl.replace(/^https?:\/\//, "")}</a>
+    </p>
+  `;
+  return sendEmail({
+    to: args.to,
+    subject: `✅ Réservation confirmée — ${formatBookingDateFr(args.startsAt)}`,
+    html: emailLayout("Réservation confirmée", body),
+    text: `Salut ${args.clientName}, ta réservation chez ${args.proDisplayName} est confirmée. ${bookingRecapText(args)}.`,
+  });
+}
+
+export async function sendBookingCancelledEmail(args: BookingEmailArgs) {
+  const profileUrl = `${PUBLIC_URL}/pro/${args.proId}`;
+  const waMessage = `Bonjour ${args.proDisplayName}, je reviens vers vous suite à l'annulation de ma réservation du ${formatBookingDateFr(args.startsAt)}.`;
+  const body = `
+    <h1 style="font-size:26px;font-weight:800;color:#fff;margin:0 0 16px;line-height:1.2;">
+      Ta réservation a été annulée ❌
+    </h1>
+    <p style="font-size:16px;line-height:1.6;color:#d4d4d4;margin:0 0 24px;">
+      Salut <strong style="color:#fff;">${escapeHtml(args.clientName)}</strong>,
+    </p>
+    <p style="font-size:16px;line-height:1.6;color:#d4d4d4;margin:0 0 24px;">
+      <strong style="color:#fff;">${escapeHtml(args.proDisplayName)}</strong> a annulé le rendez-vous suivant. Si tu veux reprogrammer, contacte-le directement ou trouve un autre créneau sur sa fiche.
+    </p>
+    ${bookingRecapHtml(args)}
+    ${whatsappCtaBlock(args, waMessage)}
+    <p style="font-size:14px;line-height:1.6;color:#a4a4a4;margin:0;">
+      Reprogrammer : <a href="${profileUrl}" style="color:#E50914;text-decoration:none;">${profileUrl.replace(/^https?:\/\//, "")}</a>
+    </p>
+  `;
+  return sendEmail({
+    to: args.to,
+    subject: `❌ Réservation annulée — ${formatBookingDateFr(args.startsAt)}`,
+    html: emailLayout("Réservation annulée", body),
+    text: `Salut ${args.clientName}, ${args.proDisplayName} a annulé ta réservation. ${bookingRecapText(args)}. Reprogrammer : ${profileUrl}`,
+  });
+}
+
 function escapeHtml(s: string) {
   return s
     .replace(/&/g, "&amp;")

@@ -7,7 +7,12 @@ import { redirect } from "next/navigation";
 import { after } from "next/server";
 import { findCity, suggestPrice } from "@/lib/data/cities";
 import { prisma } from "@/lib/db/prisma";
-import { sendTrajetPriceSuggestionEmail } from "@/lib/email";
+import {
+  sendBookingCancelledEmail,
+  sendBookingConfirmedEmail,
+  sendBookingRequestedEmail,
+  sendTrajetPriceSuggestionEmail,
+} from "@/lib/email";
 import { PRO_CATEGORY_IDS } from "@/lib/pro-categories";
 import {
   detectContactInBio,
@@ -412,6 +417,33 @@ export async function createProBookingAction(form: FormData) {
     },
   });
 
+  if (clientEmail) {
+    const proInfo = await prisma.proProfile.findUnique({
+      where: { id: proProfileId },
+      select: { displayName: true, whatsapp: true },
+    });
+    if (proInfo) {
+      const emailArgs = {
+        to: clientEmail,
+        clientName,
+        proDisplayName: proInfo.displayName,
+        proWhatsapp: proInfo.whatsapp,
+        serviceName: null,
+        teamMemberName: null,
+        startsAt: requestedAt,
+        durationMin: null,
+        proId: proProfileId,
+      };
+      after(async () => {
+        try {
+          await sendBookingRequestedEmail(emailArgs);
+        } catch (e) {
+          console.error("[booking] requested email failed:", e);
+        }
+      });
+    }
+  }
+
   revalidatePath(`/pro/${proProfileId}`);
   revalidatePath("/dashboard/planning");
   redirect(`/pro/${proProfileId}?booking=requested`);
@@ -436,7 +468,17 @@ export async function updateProBookingStatusAction(form: FormData) {
     where: { id: bookingId },
     select: {
       id: true,
-      proProfile: { select: { userId: true } },
+      clientName: true,
+      clientEmail: true,
+      requestedAt: true,
+      durationMin: true,
+      status: true,
+      proProfileId: true,
+      proProfile: {
+        select: { userId: true, displayName: true, whatsapp: true },
+      },
+      service: { select: { name: true, durationMin: true } },
+      teamMember: { select: { displayName: true } },
     },
   });
 
@@ -444,10 +486,41 @@ export async function updateProBookingStatusAction(form: FormData) {
     redirect("/dashboard/planning?error=forbidden");
   }
 
+  const newStatus = statusRaw as ProBookingStatus;
+
   await prisma.proBooking.update({
     where: { id: bookingId },
-    data: { status: statusRaw as ProBookingStatus },
+    data: { status: newStatus },
   });
+
+  if (
+    booking.clientEmail &&
+    booking.status !== newStatus &&
+    (newStatus === "CONFIRMED" || newStatus === "CANCELLED")
+  ) {
+    const emailArgs = {
+      to: booking.clientEmail,
+      clientName: booking.clientName,
+      proDisplayName: booking.proProfile.displayName,
+      proWhatsapp: booking.proProfile.whatsapp,
+      serviceName: booking.service?.name ?? null,
+      teamMemberName: booking.teamMember?.displayName ?? null,
+      startsAt: booking.requestedAt,
+      durationMin: booking.durationMin ?? booking.service?.durationMin ?? null,
+      proId: booking.proProfileId,
+    };
+    after(async () => {
+      try {
+        if (newStatus === "CONFIRMED") {
+          await sendBookingConfirmedEmail(emailArgs);
+        } else {
+          await sendBookingCancelledEmail(emailArgs);
+        }
+      } catch (e) {
+        console.error("[booking] status email failed:", e);
+      }
+    });
+  }
 
   revalidatePath("/dashboard/planning");
   redirect("/dashboard/planning?updated=1");
