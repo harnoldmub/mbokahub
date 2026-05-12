@@ -82,5 +82,7 @@ export async function markConversationReadAction(conversationId: string) {
     data: isClient ? { clientUnread: 0 } : { proUnread: 0 },
   });
 
-  revalidatePath("/dashboard/messages");
+  // NOTE: do NOT call revalidatePath here. This action is invoked from the
+  // conversation page during render, and revalidate during render throws.
+  // The messages list re-fetches on the next navigation anyway.
 }
