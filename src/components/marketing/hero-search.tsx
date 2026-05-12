@@ -201,7 +201,7 @@ export function HeroSearch({ locale }: { locale: string }) {
                         type="button"
                         onClick={() =>
                           go({
-                            href: localizedHref(`/pro/${p.slug}`, locale),
+                            href: localizedHref(`/pro/${p.id}`, locale),
                           })
                         }
                         className="flex w-full items-start gap-3 rounded-lg px-3 py-2 text-left transition hover:bg-smoke"
