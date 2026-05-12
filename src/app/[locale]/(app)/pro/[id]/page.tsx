@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import {
   ArrowLeft,
   AtSign,
+  Clock,
   MapPin,
   Pencil,
   Sparkles,
@@ -229,23 +230,87 @@ export default async function ProDetailsPage({
             </a>
           ) : null}
 
-          <div className="rounded-2xl border border-blood/20 bg-blood/10 p-5">
-            <p className="font-display text-xl uppercase text-paper mb-1">
-              Réserver un créneau
-            </p>
-            <p className="text-sm text-paper-dim mb-4">
-              Choisis ta prestation et un créneau disponible directement en ligne.
-            </p>
-            <BookingModal
-              proProfileId={pro.id}
-              proName={pro.displayName}
-              services={pro.services.map((s) => ({
-                id: s.id,
-                name: s.name,
-                durationMinutes: s.durationMinutes,
-                price: s.price,
-              }))}
-            />
+          {/* ── Prestations + réservation ── */}
+          <div className="rounded-2xl border border-ash overflow-hidden">
+            <div className="px-5 py-4 bg-smoke border-b border-ash flex items-center justify-between gap-3">
+              <p className="font-display text-base uppercase text-paper">
+                Prestations &amp; réservation
+              </p>
+              {pro.services.length === 0 && (
+                <BookingModal
+                  proProfileId={pro.id}
+                  proName={pro.displayName}
+                  services={[]}
+                />
+              )}
+            </div>
+
+            {pro.services.length > 0 ? (
+              <>
+                <div className="divide-y divide-ash">
+                  {pro.services.map((svc) => (
+                    <div
+                      key={svc.id}
+                      className="flex items-center justify-between gap-4 px-5 py-4 hover:bg-smoke/50 transition-colors"
+                    >
+                      <div className="min-w-0">
+                        <p className="font-medium text-paper truncate">{svc.name}</p>
+                        {svc.description && (
+                          <p className="mt-0.5 text-xs text-paper-dim truncate">{svc.description}</p>
+                        )}
+                        <p className="mt-1 flex items-center gap-1.5 text-xs text-paper-dim">
+                          <Clock className="size-3 shrink-0 text-blood" />
+                          {svc.durationMinutes < 60
+                            ? `${svc.durationMinutes} min`
+                            : svc.durationMinutes % 60 === 0
+                              ? `${svc.durationMinutes / 60} h`
+                              : `${Math.floor(svc.durationMinutes / 60)} h ${svc.durationMinutes % 60}`}
+                          {svc.price ? (
+                            <span className="ml-2 font-semibold text-paper">{svc.price.toFixed(0)} €</span>
+                          ) : null}
+                        </p>
+                      </div>
+                      <BookingModal
+                        proProfileId={pro.id}
+                        proName={pro.displayName}
+                        services={pro.services.map((s) => ({
+                          id: s.id,
+                          name: s.name,
+                          durationMinutes: s.durationMinutes,
+                          price: s.price,
+                          description: s.description,
+                        }))}
+                        initialServiceId={svc.id}
+                        triggerLabel="Réserver"
+                        triggerClassName="shrink-0 inline-flex h-9 items-center gap-1.5 rounded-full border border-blood bg-white px-4 text-sm font-medium text-blood hover:bg-blood hover:text-white transition-colors"
+                      />
+                    </div>
+                  ))}
+                </div>
+                <div className="px-5 py-4 border-t border-ash bg-smoke/40 flex items-center justify-between gap-3">
+                  <p className="text-xs text-paper-mute">
+                    Demande gratuite · confirmation par le prestataire
+                  </p>
+                  <BookingModal
+                    proProfileId={pro.id}
+                    proName={pro.displayName}
+                    services={pro.services.map((s) => ({
+                      id: s.id,
+                      name: s.name,
+                      durationMinutes: s.durationMinutes,
+                      price: s.price,
+                      description: s.description,
+                    }))}
+                    triggerLabel="Voir tous les créneaux"
+                    triggerClassName="shrink-0 inline-flex h-9 items-center gap-1.5 rounded-full bg-blood px-4 text-sm font-medium text-white hover:bg-blood-deep transition-colors"
+                  />
+                </div>
+              </>
+            ) : (
+              <p className="px-5 py-6 text-sm text-paper-dim">
+                Envoie une demande de rendez-vous directement au prestataire.
+              </p>
+            )}
           </div>
 
           <div className="border-t border-white/10 pt-6">

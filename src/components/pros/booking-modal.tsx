@@ -1,13 +1,14 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, Clock, Loader2, X } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { CalendarCheck, ChevronLeft, ChevronRight, Clock, Loader2, X } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-type ProService = {
+export type ProService = {
   id: string;
   name: string;
   durationMinutes: number;
   price: number | null;
+  description?: string | null;
 };
 
 type DaySlots = {
@@ -20,13 +21,16 @@ type Props = {
   proProfileId: string;
   proName: string;
   services: ProService[];
+  initialServiceId?: string;
+  triggerLabel?: string;
+  triggerClassName?: string;
 };
 
 function formatDuration(minutes: number) {
   if (minutes < 60) return `${minutes} min`;
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;
-  return m > 0 ? `${h} h ${m}` : `${h} h`;
+  return m > 0 ? `${h}h${m}` : `${h} h`;
 }
 
 function todayIso(): string {
@@ -40,55 +44,106 @@ function addDays(iso: string, n: number): string {
   return d.toISOString().slice(0, 10);
 }
 
-export function BookingModal({ proProfileId, proName, services }: Props) {
+const FR_DAYS_SHORT = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
+const FR_MONTHS = ["jan.", "fév.", "mar.", "avr.", "mai", "juin", "juil.", "août", "sep.", "oct.", "nov.", "déc."];
+const FR_DAYS_LONG = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+const FR_MONTHS_LONG = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+
+function parseDayLabel(iso: string) {
+  const d = new Date(iso + "T00:00:00Z");
+  return {
+    day: FR_DAYS_SHORT[d.getUTCDay()],
+    date: d.getUTCDate(),
+    month: FR_MONTHS[d.getUTCMonth()],
+  };
+}
+
+function formatDateLong(iso: string): string {
+  const d = new Date(iso + "T00:00:00Z");
+  return `${FR_DAYS_LONG[d.getUTCDay()]} ${d.getUTCDate()} ${FR_MONTHS_LONG[d.getUTCMonth()]}`;
+}
+
+function formatWeekRange(start: string): string {
+  const s = new Date(start + "T00:00:00Z");
+  const e = new Date(start + "T00:00:00Z");
+  e.setUTCDate(e.getUTCDate() + 6);
+  if (s.getUTCMonth() === e.getUTCMonth()) {
+    return `${s.getUTCDate()}–${e.getUTCDate()} ${FR_MONTHS_LONG[s.getUTCMonth()]}`;
+  }
+  return `${s.getUTCDate()} ${FR_MONTHS[s.getUTCMonth()]} – ${e.getUTCDate()} ${FR_MONTHS[e.getUTCMonth()]}`;
+}
+
+export function BookingModal({
+  proProfileId,
+  proName,
+  services,
+  initialServiceId,
+  triggerLabel = "Réserver un créneau",
+  triggerClassName,
+}: Props) {
+  const initialService = initialServiceId
+    ? (services.find((s) => s.id === initialServiceId) ?? null)
+    : services.length === 1
+    ? services[0]
+    : null;
+
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<"service" | "slot" | "details">("service");
-  const [selectedService, setSelectedService] = useState<ProService | null>(
-    services.length === 1 ? services[0] : null
-  );
+  const [selectedService, setSelectedService] = useState<ProService | null>(initialService);
   const [weekStart, setWeekStart] = useState(todayIso);
   const [days, setDays] = useState<DaySlots[]>([]);
   const [loading, setLoading] = useState(false);
+  const [hasMoreSlots, setHasMoreSlots] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState<{ date: string; time: string } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
 
-  const fetchSlots = useCallback(async () => {
+  const totalSlots = days.reduce((acc, d) => acc + d.slots.length, 0);
+
+  const fetchSlots = useCallback(async (start: string, svc: ProService | null) => {
     setLoading(true);
     try {
       const params = new URLSearchParams({
-        startDate: weekStart,
+        startDate: start,
         days: "7",
-        ...(selectedService ? { serviceId: selectedService.id } : {}),
+        ...(svc ? { serviceId: svc.id } : {}),
       });
       const res = await fetch(`/api/pros/${proProfileId}/slots?${params}`);
       const data = await res.json();
-      setDays(data.days ?? []);
+      const fetched: DaySlots[] = data.days ?? [];
+      setDays(fetched);
+      const total = fetched.reduce((a, d) => a + d.slots.length, 0);
+      setHasMoreSlots(total === 0);
     } finally {
       setLoading(false);
     }
-  }, [proProfileId, weekStart, selectedService]);
+  }, [proProfileId]);
 
   useEffect(() => {
     if (step === "slot") {
-      fetchSlots();
+      fetchSlots(weekStart, selectedService);
     }
-  }, [step, fetchSlots]);
+  }, [step, weekStart, selectedService, fetchSlots]);
 
-  function handleOpen() {
-    setOpen(true);
-    setStep(services.length === 0 ? "slot" : "service");
+  function openModal(preService?: ProService) {
+    const svc = preService ?? initialService;
+    setSelectedService(svc);
+    setStep(services.length === 0 || svc ? "slot" : "service");
     setSelectedSlot(null);
     setSubmitted(false);
     setFormError(null);
     setWeekStart(todayIso());
+    setDays([]);
+    setOpen(true);
   }
 
   function handleServiceSelect(svc: ProService | null) {
     setSelectedService(svc);
+    setWeekStart(todayIso());
+    setDays([]);
     setStep("slot");
-    setSelectedSlot(null);
   }
 
   function handleSlotSelect(date: string, time: string) {
@@ -101,15 +156,11 @@ export function BookingModal({ proProfileId, proName, services }: Props) {
     setSubmitting(true);
     setFormError(null);
     const fd = new FormData(e.currentTarget);
-    // Build requestedAt in ISO (use UTC noon approximation; actual display is local)
     fd.set("proProfileId", proProfileId);
     fd.set("requestedAt", `${selectedSlot!.date}T${selectedSlot!.time}:00`);
     if (selectedService) fd.set("serviceId", selectedService.id);
     try {
-      const res = await fetch("/api/bookings", {
-        method: "POST",
-        body: fd,
-      });
+      const res = await fetch("/api/bookings", { method: "POST", body: fd });
       if (res.ok) {
         setSubmitted(true);
       } else {
@@ -123,94 +174,128 @@ export function BookingModal({ proProfileId, proName, services }: Props) {
     }
   }
 
+  const stepIndex = { service: 0, slot: 1, details: 2 }[step];
+
   return (
     <>
       <button
         type="button"
-        onClick={handleOpen}
-        className="inline-flex h-12 items-center gap-2 rounded-full bg-blood px-6 text-sm font-medium text-white shadow-glow-blood hover:bg-blood-deep transition-colors"
+        onClick={() => openModal()}
+        className={
+          triggerClassName ??
+          "inline-flex h-12 items-center gap-2 rounded-full bg-blood px-6 text-sm font-medium text-white shadow-glow-blood hover:bg-blood-deep transition-colors"
+        }
       >
-        <Clock className="size-4" />
-        Réserver un créneau
+        <CalendarCheck className="size-4" />
+        {triggerLabel}
       </button>
 
       {open && (
         <div
-          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 px-4 pb-4 sm:pb-0"
-          onClick={(e) => e.target === e.currentTarget && setOpen(false)}
+          ref={overlayRef}
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 px-0 sm:px-4"
+          onClick={(e) => e.target === overlayRef.current && setOpen(false)}
         >
-          <div className="relative w-full max-w-2xl rounded-3xl bg-white shadow-2xl max-h-[90vh] flex flex-col">
-            {/* Header */}
-            <div className="flex items-center justify-between border-b border-ash px-6 py-4 shrink-0">
-              <div>
-                <p className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">
-                  Réservation
-                </p>
-                <p className="font-display text-lg uppercase text-paper">{proName}</p>
+          <div className="relative w-full max-w-2xl rounded-t-3xl sm:rounded-3xl bg-white shadow-2xl max-h-[92vh] flex flex-col">
+
+            {/* ── Header ── */}
+            <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-ash shrink-0">
+              <div className="flex items-center gap-3">
+                {stepIndex > 0 && !submitted && (
+                  <button
+                    type="button"
+                    onClick={() => setStep(step === "details" ? "slot" : "service")}
+                    className="rounded-full p-1 hover:bg-smoke transition-colors"
+                    aria-label="Retour"
+                  >
+                    <ChevronLeft className="size-5 text-paper-dim" />
+                  </button>
+                )}
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-paper-mute leading-none">
+                    Réservation
+                  </p>
+                  <p className="font-display text-base uppercase text-paper leading-tight mt-0.5">
+                    {proName}
+                  </p>
+                </div>
               </div>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
                 className="rounded-full p-2 hover:bg-smoke transition-colors"
               >
-                <X className="size-5 text-paper-dim" />
+                <X className="size-4 text-paper-dim" />
               </button>
             </div>
 
-            {/* Steps indicator */}
-            <div className="flex gap-0 border-b border-ash shrink-0">
-              {[
-                { key: "service", label: "1. Prestation" },
-                { key: "slot", label: "2. Créneau" },
-                { key: "details", label: "3. Infos" },
-              ].map((s) => (
-                <div
-                  key={s.key}
-                  className={`flex-1 py-3 text-center text-xs font-medium transition-colors ${
-                    step === s.key
-                      ? "border-b-2 border-blood text-blood"
-                      : "text-paper-mute"
-                  }`}
-                >
-                  {s.label}
-                </div>
-              ))}
-            </div>
+            {/* ── Step progress ── */}
+            {!submitted && (
+              <div className="flex shrink-0 border-b border-ash">
+                {(services.length > 0
+                  ? [
+                      { i: 0, label: "Prestation" },
+                      { i: 1, label: "Créneau" },
+                      { i: 2, label: "Mes infos" },
+                    ]
+                  : [
+                      { i: 1, label: "Créneau" },
+                      { i: 2, label: "Mes infos" },
+                    ]
+                ).map(({ i, label }) => (
+                  <div
+                    key={i}
+                    className={`flex-1 py-2.5 text-center text-[11px] font-medium transition-colors border-b-2 ${
+                      stepIndex === i
+                        ? "border-blood text-blood"
+                        : stepIndex > i
+                        ? "border-transparent text-success"
+                        : "border-transparent text-paper-mute"
+                    }`}
+                  >
+                    {stepIndex > i ? "✓ " : ""}{label}
+                  </div>
+                ))}
+              </div>
+            )}
 
             <div className="overflow-y-auto flex-1 p-5">
 
               {/* ── STEP 1: Service ── */}
               {step === "service" && (
-                <div className="grid gap-3">
-                  <p className="text-sm text-paper-dim">
-                    Choisis la prestation souhaitée.
+                <div className="grid gap-2">
+                  <p className="mb-2 text-sm text-paper-dim">
+                    Quelle prestation souhaites-tu réserver ?
                   </p>
                   {services.map((svc) => (
                     <button
                       key={svc.id}
                       type="button"
                       onClick={() => handleServiceSelect(svc)}
-                      className="flex items-center justify-between rounded-2xl border border-ash bg-smoke px-5 py-4 text-left hover:border-blood/40 hover:bg-blood/5 transition-colors"
+                      className="group flex items-center justify-between rounded-2xl border border-ash bg-smoke px-5 py-4 text-left hover:border-blood/40 hover:bg-blood/5 transition-colors"
                     >
-                      <div>
-                        <p className="font-medium text-paper">{svc.name}</p>
-                        <p className="mt-0.5 text-xs text-paper-dim">
+                      <div className="min-w-0">
+                        <p className="font-medium text-paper truncate">{svc.name}</p>
+                        {svc.description && (
+                          <p className="mt-0.5 text-xs text-paper-dim truncate">{svc.description}</p>
+                        )}
+                        <p className="mt-1 flex items-center gap-1.5 text-xs text-paper-dim">
+                          <Clock className="size-3 shrink-0" />
                           {formatDuration(svc.durationMinutes)}
-                          {svc.price ? ` · ${svc.price.toFixed(0)} €` : ""}
+                          {svc.price ? (
+                            <span className="ml-1 font-medium text-paper">{svc.price.toFixed(0)} €</span>
+                          ) : null}
                         </p>
                       </div>
-                      <span className="inline-flex items-center gap-1 rounded-full bg-blood/10 px-3 py-1 text-xs font-mono text-blood">
-                        <Clock className="size-3" />
-                        {formatDuration(svc.durationMinutes)}
-                      </span>
+                      <ChevronRight className="size-4 shrink-0 text-paper-mute group-hover:text-blood transition-colors ml-3" />
                     </button>
                   ))}
                   <button
                     type="button"
                     onClick={() => handleServiceSelect(null)}
-                    className="rounded-2xl border border-dashed border-ash px-5 py-3 text-sm text-paper-mute hover:border-paper-dim hover:text-paper-dim transition-colors"
+                    className="rounded-2xl border border-dashed border-ash px-5 py-3 text-sm text-paper-mute hover:border-paper-dim hover:text-paper-dim transition-colors text-left"
                   >
-                    Autre / Sans préférence
+                    Autre / Sans préférence de prestation
                   </button>
                 </div>
               )}
@@ -218,137 +303,176 @@ export function BookingModal({ proProfileId, proName, services }: Props) {
               {/* ── STEP 2: Slot picker ── */}
               {step === "slot" && (
                 <div>
+                  {/* Selected service recap */}
                   {selectedService && (
-                    <div className="mb-4 flex items-center gap-3 rounded-2xl border border-blood/20 bg-blood/5 px-4 py-3">
+                    <div className="mb-4 flex items-center gap-3 rounded-xl border border-blood/20 bg-blood/5 px-4 py-2.5">
                       <Clock className="size-4 text-blood shrink-0" />
-                      <div>
-                        <p className="text-sm font-medium text-paper">{selectedService.name}</p>
-                        <p className="text-xs text-paper-dim">
+                      <p className="text-sm font-medium text-paper flex-1 truncate">
+                        {selectedService.name}
+                        <span className="ml-2 font-normal text-paper-dim">
                           {formatDuration(selectedService.durationMinutes)}
                           {selectedService.price ? ` · ${selectedService.price.toFixed(0)} €` : ""}
-                        </p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setStep("service")}
-                        className="ml-auto text-xs text-blood hover:underline"
-                      >
-                        Changer
-                      </button>
+                        </span>
+                      </p>
+                      {services.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => setStep("service")}
+                          className="shrink-0 text-xs text-blood hover:underline"
+                        >
+                          Changer
+                        </button>
+                      )}
                     </div>
                   )}
 
-                  {/* Week navigation */}
-                  <div className="mb-3 flex items-center justify-between">
+                  {/* Week nav */}
+                  <div className="mb-4 flex items-center justify-between gap-2">
                     <button
                       type="button"
                       onClick={() => setWeekStart((w) => addDays(w, -7))}
                       disabled={weekStart <= todayIso()}
-                      className="rounded-full p-1.5 hover:bg-smoke disabled:opacity-30 transition-colors"
+                      className="rounded-full border border-ash p-1.5 hover:bg-smoke disabled:opacity-30 transition-colors"
                     >
-                      <ChevronLeft className="size-5 text-paper" />
+                      <ChevronLeft className="size-4 text-paper" />
                     </button>
                     <span className="text-sm font-medium text-paper">
-                      Semaine du {formatDateShort(weekStart)}
+                      {formatWeekRange(weekStart)}
                     </span>
                     <button
                       type="button"
                       onClick={() => setWeekStart((w) => addDays(w, 7))}
-                      className="rounded-full p-1.5 hover:bg-smoke transition-colors"
+                      className="rounded-full border border-ash p-1.5 hover:bg-smoke transition-colors"
                     >
-                      <ChevronRight className="size-5 text-paper" />
+                      <ChevronRight className="size-4 text-paper" />
                     </button>
                   </div>
 
                   {loading ? (
-                    <div className="flex items-center justify-center py-16">
+                    <div className="flex flex-col items-center justify-center py-16 gap-3">
                       <Loader2 className="size-6 animate-spin text-blood" />
+                      <p className="text-xs text-paper-mute">Chargement des créneaux…</p>
+                    </div>
+                  ) : totalSlots === 0 ? (
+                    <div className="flex flex-col items-center py-12 gap-4 text-center">
+                      <div className="flex size-14 items-center justify-center rounded-full bg-ash/60 text-2xl">
+                        📅
+                      </div>
+                      <div>
+                        <p className="font-medium text-paper">Aucun créneau cette semaine</p>
+                        <p className="mt-1 text-sm text-paper-dim">
+                          Le prestataire n&apos;a pas de disponibilité sur cette période.
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setWeekStart((w) => addDays(w, 7))}
+                        className="inline-flex items-center gap-1.5 rounded-full bg-blood px-5 py-2 text-sm font-medium text-white hover:bg-blood-deep transition-colors"
+                      >
+                        Voir la semaine suivante <ChevronRight className="size-4" />
+                      </button>
                     </div>
                   ) : (
-                    <div className="grid grid-cols-7 gap-1 text-center">
-                      {days.map((day) => (
-                        <div key={day.date}>
-                          <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-paper-mute">
-                            {day.dayLabel.split(" ")[0]}
-                          </p>
-                          <p className="mb-3 text-xs text-paper-dim">
-                            {day.dayLabel.split(" ").slice(1).join(" ")}
-                          </p>
-                          <div className="flex flex-col gap-1">
+                    <div className="grid grid-cols-7 gap-1">
+                      {days.map((day) => {
+                        const { day: dayName, date, month } = parseDayLabel(day.date);
+                        return (
+                          <div key={day.date} className="flex flex-col items-center gap-1">
+                            <p className="text-[10px] font-semibold uppercase tracking-wide text-paper-mute">
+                              {dayName}
+                            </p>
+                            <p className="text-xs font-medium text-paper mb-1">
+                              {date}
+                              <span className="hidden sm:inline text-paper-mute"> {month}</span>
+                            </p>
                             {day.slots.length === 0 ? (
-                              <span className="text-[10px] text-paper-mute">—</span>
+                              <div className="h-8 w-full flex items-center justify-center">
+                                <span className="text-[10px] text-paper-mute">—</span>
+                              </div>
                             ) : (
                               day.slots.map((time) => (
                                 <button
                                   key={time}
                                   type="button"
                                   onClick={() => handleSlotSelect(day.date, time)}
-                                  className="rounded-lg border border-ash bg-smoke px-1 py-1.5 text-[11px] font-mono text-paper hover:border-blood hover:bg-blood hover:text-white transition-colors"
+                                  className="w-full rounded-lg border border-ash bg-smoke py-1.5 text-[11px] font-mono text-paper hover:border-blood hover:bg-blood hover:text-white transition-colors"
                                 >
                                   {time}
                                 </button>
                               ))
                             )}
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
+                  )}
+
+                  {!loading && totalSlots > 0 && hasMoreSlots && (
+                    <p className="mt-4 text-center text-xs text-paper-mute">
+                      D&apos;autres créneaux sont disponibles la semaine suivante.
+                    </p>
                   )}
                 </div>
               )}
 
-              {/* ── STEP 3: Details form ── */}
+              {/* ── STEP 3: Details ── */}
               {step === "details" && !submitted && selectedSlot && (
-                <form onSubmit={handleSubmit} className="grid gap-4">
-                  <div className="flex items-center gap-3 rounded-2xl border border-blood/20 bg-blood/5 px-4 py-3">
-                    <Clock className="size-4 text-blood shrink-0" />
-                    <div>
-                      <p className="text-sm font-medium text-paper">
-                        {formatDateLong(selectedSlot.date)} à {selectedSlot.time}
-                      </p>
-                      {selectedService && (
-                        <p className="text-xs text-paper-dim">
-                          {selectedService.name} · {formatDuration(selectedService.durationMinutes)}
+                <form onSubmit={handleSubmit} className="grid gap-3">
+                  {/* Booking summary */}
+                  <div className="rounded-2xl border border-blood/20 bg-blood/5 p-4">
+                    <div className="flex items-start gap-3">
+                      <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-blood/10 text-blood">
+                        <CalendarCheck className="size-5" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-paper">
+                          {formatDateLong(selectedSlot.date)} à {selectedSlot.time}
                         </p>
-                      )}
+                        {selectedService ? (
+                          <p className="mt-0.5 text-sm text-paper-dim">
+                            {selectedService.name} · {formatDuration(selectedService.durationMinutes)}
+                            {selectedService.price ? ` · ${selectedService.price.toFixed(0)} €` : ""}
+                          </p>
+                        ) : (
+                          <p className="mt-0.5 text-sm text-paper-dim">Sans préférence de prestation</p>
+                        )}
+                      </div>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => setStep("slot")}
-                      className="ml-auto text-xs text-blood hover:underline"
-                    >
-                      Changer
-                    </button>
                   </div>
 
-                  <input
-                    name="clientName"
-                    required
-                    placeholder="Ton nom *"
-                    className="h-11 rounded-xl border border-ash bg-smoke px-4 text-sm text-paper outline-none focus:border-blood/50"
-                  />
-                  <input
-                    name="clientPhone"
-                    required
-                    placeholder="Téléphone / WhatsApp *"
-                    className="h-11 rounded-xl border border-ash bg-smoke px-4 text-sm text-paper outline-none focus:border-blood/50"
-                  />
-                  <input
-                    name="clientEmail"
-                    type="email"
-                    placeholder="Email (optionnel)"
-                    className="h-11 rounded-xl border border-ash bg-smoke px-4 text-sm text-paper outline-none focus:border-blood/50"
-                  />
-                  <textarea
-                    name="note"
-                    rows={3}
-                    placeholder="Message optionnel : précisions sur ta demande…"
-                    className="rounded-xl border border-ash bg-smoke px-4 py-3 text-sm text-paper outline-none focus:border-blood/50"
-                  />
-
-                  <div className="rounded-xl border border-warning/30 bg-warning/10 px-3 py-2 text-xs text-paper-dim">
-                    <strong className="text-warning">Acomptes :</strong> Un prestataire peut demander un acompte max. 20€ via PayPal/Paylib.
+                  <div className="grid gap-2.5">
+                    <input
+                      name="clientName"
+                      required
+                      placeholder="Ton nom *"
+                      autoComplete="name"
+                      className="h-11 rounded-xl border border-ash bg-smoke px-4 text-sm text-paper placeholder:text-paper-mute outline-none focus:border-blood/50 focus:bg-white transition-colors"
+                    />
+                    <input
+                      name="clientPhone"
+                      required
+                      placeholder="Téléphone / WhatsApp *"
+                      autoComplete="tel"
+                      className="h-11 rounded-xl border border-ash bg-smoke px-4 text-sm text-paper placeholder:text-paper-mute outline-none focus:border-blood/50 focus:bg-white transition-colors"
+                    />
+                    <input
+                      name="clientEmail"
+                      type="email"
+                      placeholder="Email (optionnel)"
+                      autoComplete="email"
+                      className="h-11 rounded-xl border border-ash bg-smoke px-4 text-sm text-paper placeholder:text-paper-mute outline-none focus:border-blood/50 focus:bg-white transition-colors"
+                    />
+                    <textarea
+                      name="note"
+                      rows={3}
+                      placeholder="Message optionnel : précisions sur ta demande…"
+                      className="rounded-xl border border-ash bg-smoke px-4 py-3 text-sm text-paper placeholder:text-paper-mute outline-none focus:border-blood/50 focus:bg-white transition-colors resize-none"
+                    />
                   </div>
+
+                  <p className="rounded-xl border border-warning/30 bg-warning/10 px-3 py-2 text-xs text-paper-dim">
+                    <strong className="text-warning">Acomptes :</strong> max. 20€ via PayPal/Paylib.
+                  </p>
 
                   {formError && (
                     <p className="rounded-xl border border-error/30 bg-error/10 px-3 py-2 text-sm text-error">
@@ -359,30 +483,40 @@ export function BookingModal({ proProfileId, proName, services }: Props) {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="inline-flex h-12 items-center justify-center rounded-full bg-blood px-6 text-sm font-medium text-white hover:bg-blood-deep disabled:opacity-50 transition-colors"
+                    className="h-12 rounded-full bg-blood text-sm font-medium text-white hover:bg-blood-deep disabled:opacity-50 transition-colors"
                   >
                     {submitting ? (
-                      <><Loader2 className="mr-2 size-4 animate-spin" /> Envoi…</>
+                      <span className="flex items-center justify-center gap-2">
+                        <Loader2 className="size-4 animate-spin" /> Envoi…
+                      </span>
                     ) : (
-                      "Envoyer la demande"
+                      "Envoyer la demande de réservation"
                     )}
                   </button>
                 </form>
               )}
 
+              {/* ── Success ── */}
               {submitted && (
-                <div className="flex flex-col items-center gap-4 py-10 text-center">
-                  <div className="flex size-16 items-center justify-center rounded-full bg-success/15 text-3xl">
+                <div className="flex flex-col items-center gap-4 py-8 text-center">
+                  <div className="flex size-16 items-center justify-center rounded-full bg-success/15 text-4xl">
                     ✓
                   </div>
-                  <p className="font-display text-2xl uppercase text-paper">Demande envoyée !</p>
-                  <p className="max-w-sm text-sm text-paper-dim">
-                    Le prestataire recevra ta demande et pourra la confirmer depuis son espace Planning.
-                  </p>
+                  <div>
+                    <p className="font-display text-2xl uppercase text-paper">Demande envoyée !</p>
+                    <p className="mt-2 max-w-xs text-sm text-paper-dim">
+                      {proName} recevra ta demande et pourra la confirmer depuis son espace Planning.
+                    </p>
+                  </div>
+                  {selectedSlot && (
+                    <div className="rounded-xl border border-success/30 bg-success/10 px-5 py-3 text-sm text-paper">
+                      📅 {formatDateLong(selectedSlot.date)} à {selectedSlot.time}
+                    </div>
+                  )}
                   <button
                     type="button"
                     onClick={() => setOpen(false)}
-                    className="mt-2 rounded-full border border-ash px-6 py-2 text-sm text-paper hover:bg-smoke transition-colors"
+                    className="mt-1 rounded-full border border-ash px-6 py-2.5 text-sm text-paper hover:bg-smoke transition-colors"
                   >
                     Fermer
                   </button>
@@ -394,17 +528,4 @@ export function BookingModal({ proProfileId, proName, services }: Props) {
       )}
     </>
   );
-}
-
-const FR_DAYS_LONG = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
-const FR_MONTHS_LONG = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
-
-function formatDateLong(iso: string): string {
-  const d = new Date(iso + "T00:00:00Z");
-  return `${FR_DAYS_LONG[d.getUTCDay()]} ${d.getUTCDate()} ${FR_MONTHS_LONG[d.getUTCMonth()]}`;
-}
-
-function formatDateShort(iso: string): string {
-  const d = new Date(iso + "T00:00:00Z");
-  return `${d.getUTCDate()} ${FR_MONTHS_LONG[d.getUTCMonth()]}`;
 }

@@ -331,113 +331,145 @@ export default async function PlanningPage({
       })()}
 
       {/* ── Bookings section ── */}
-      <div className="rounded-2xl border border-white/10 bg-coal p-5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h2 className="font-display text-2xl uppercase text-paper">
-              {pro.displayName}
-            </h2>
-            <p className="mt-1 text-sm text-paper-dim">
-              {pro.bookings.length} demande{pro.bookings.length > 1 ? "s" : ""}
-            </p>
-          </div>
-          <Button asChild variant="outline">
-            <Link href={`/pro/${pro.id}`}>Voir ma fiche publique</Link>
-          </Button>
-        </div>
-      </div>
+      {(() => {
+        const now = new Date();
+        const pending = pro.bookings
+          .filter((b) => b.status === "PENDING")
+          .sort((a, b) => a.requestedAt.getTime() - b.requestedAt.getTime());
+        const confirmed = pro.bookings
+          .filter((b) => b.status === "CONFIRMED" && b.requestedAt >= now)
+          .sort((a, b) => a.requestedAt.getTime() - b.requestedAt.getTime());
+        const past = pro.bookings
+          .filter((b) => b.status === "CANCELLED" || b.status === "COMPLETED" || (b.status === "CONFIRMED" && b.requestedAt < now))
+          .sort((a, b) => b.requestedAt.getTime() - a.requestedAt.getTime());
 
-      {pro.bookings.length === 0 ? (
-        <div className="rounded-2xl border border-white/10 bg-coal p-8 text-center">
-          <CalendarCheck className="mx-auto size-8 text-blood" />
-          <h2 className="mt-4 font-display text-2xl uppercase text-paper">
-            Aucune demande pour le moment
-          </h2>
-          <p className="mx-auto mt-2 max-w-md text-paper-dim">
-            Ajoute une photo principale et partage ta fiche pour recevoir des
-            demandes de réservation.
-          </p>
-        </div>
-      ) : (
-        <div className="grid gap-4">
-          {pro.bookings.map((booking) => (
-            <article
-              className="rounded-2xl border border-white/10 bg-coal p-5"
-              key={booking.id}
-            >
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                  <span
-                    className={`inline-flex rounded-full border px-3 py-1 text-xs ${statusClass[booking.status]}`}
-                  >
-                    {statusLabel[booking.status]}
-                  </span>
-                  <h2 className="mt-3 font-display text-2xl uppercase text-paper">
-                    {booking.clientName}
-                  </h2>
-                  {booking.serviceName ? (
-                    <p className="mt-1 inline-flex items-center gap-2 text-sm font-medium text-blood">
-                      <Timer className="size-4" />
-                      {booking.serviceName}
-                      {booking.durationMinutes ? (
-                        <span className="text-paper-dim font-normal">
-                          · {formatDuration(booking.durationMinutes)}
-                        </span>
-                      ) : null}
-                    </p>
-                  ) : null}
-                  <p className="mt-1 inline-flex items-center gap-2 text-paper-dim">
-                    <Clock className="size-4 text-blood" />
+        type Booking = NonNullable<typeof pro>["bookings"][0];
+        function BookingCard({ booking }: { booking: Booking }) {
+          return (
+            <article className="rounded-2xl border border-white/10 bg-coal overflow-hidden">
+              <div className="flex items-start justify-between gap-4 p-5">
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
+                    <span className={`inline-flex rounded-full border px-2.5 py-0.5 text-xs font-medium ${statusClass[booking.status]}`}>
+                      {statusLabel[booking.status]}
+                    </span>
+                    {booking.serviceName && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-blood/10 px-2.5 py-0.5 text-xs text-blood font-medium">
+                        <Timer className="size-3" />
+                        {booking.serviceName}
+                        {booking.durationMinutes ? ` · ${formatDuration(booking.durationMinutes)}` : ""}
+                      </span>
+                    )}
+                  </div>
+                  <p className="font-display text-xl uppercase text-paper truncate">{booking.clientName}</p>
+                  <p className="mt-1 flex items-center gap-1.5 text-sm text-paper-dim">
+                    <Clock className="size-4 text-blood shrink-0" />
                     {formatSlot(booking.requestedAt)}
                   </p>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {booking.status !== "CONFIRMED" ? (
+                <div className="flex flex-col gap-2 shrink-0">
+                  {booking.status !== "CONFIRMED" && booking.status !== "COMPLETED" && booking.status !== "CANCELLED" ? (
                     <form action={updateProBookingStatusAction}>
                       <input name="bookingId" type="hidden" value={booking.id} />
                       <input name="status" type="hidden" value="CONFIRMED" />
-                      <Button size="sm" type="submit">Confirmer</Button>
+                      <Button size="sm" type="submit" className="w-full">Confirmer</Button>
                     </form>
                   ) : null}
-                  {booking.status !== "COMPLETED" ? (
+                  {booking.status === "CONFIRMED" && booking.requestedAt >= now ? (
                     <form action={updateProBookingStatusAction}>
                       <input name="bookingId" type="hidden" value={booking.id} />
                       <input name="status" type="hidden" value="COMPLETED" />
-                      <Button size="sm" type="submit" variant="outline">Terminer</Button>
+                      <Button size="sm" type="submit" variant="outline" className="w-full">Terminer</Button>
                     </form>
                   ) : null}
-                  {booking.status !== "CANCELLED" ? (
+                  {booking.status !== "CANCELLED" && booking.status !== "COMPLETED" ? (
                     <form action={updateProBookingStatusAction}>
                       <input name="bookingId" type="hidden" value={booking.id} />
                       <input name="status" type="hidden" value="CANCELLED" />
-                      <Button size="sm" type="submit" variant="outline">Annuler</Button>
+                      <Button size="sm" type="submit" variant="outline" className="w-full text-error hover:text-error">Annuler</Button>
                     </form>
                   ) : null}
                 </div>
               </div>
-
-              <div className="mt-5 grid gap-2 text-sm text-paper-dim">
-                <p className="inline-flex items-center gap-2">
-                  <MessageCircle className="size-4 text-blood" />
+              <div className="flex flex-wrap gap-x-5 gap-y-1 border-t border-white/10 bg-white/5 px-5 py-3 text-sm text-paper-dim">
+                <span className="inline-flex items-center gap-1.5">
+                  <MessageCircle className="size-3.5 text-blood shrink-0" />
                   {booking.clientPhone}
-                </p>
-                {booking.clientEmail ? (
-                  <p className="inline-flex items-center gap-2">
-                    <Mail className="size-4 text-blood" />
+                </span>
+                {booking.clientEmail && (
+                  <span className="inline-flex items-center gap-1.5">
+                    <Mail className="size-3.5 text-blood shrink-0" />
                     {booking.clientEmail}
-                  </p>
-                ) : null}
-                {booking.note ? (
-                  <p className="mt-2 rounded-xl border border-white/10 bg-smoke p-3 text-paper-dim">
-                    <User className="mr-2 inline size-4 text-blood" />
-                    {booking.note}
-                  </p>
-                ) : null}
+                  </span>
+                )}
+                {booking.note && (
+                  <span className="w-full mt-1 flex items-start gap-1.5">
+                    <User className="size-3.5 text-blood shrink-0 mt-0.5" />
+                    <span className="italic">{booking.note}</span>
+                  </span>
+                )}
               </div>
             </article>
-          ))}
-        </div>
-      )}
+          );
+        }
+
+        return (
+          <>
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-coal p-5">
+              <div>
+                <h2 className="font-display text-2xl uppercase text-paper">{pro.displayName}</h2>
+                <p className="mt-1 text-sm text-paper-dim">
+                  {pending.length > 0 && <span className="text-warning font-medium">{pending.length} en attente · </span>}
+                  {confirmed.length} confirmé{confirmed.length > 1 ? "s" : ""} à venir · {past.length} passé{past.length > 1 ? "s" : ""}
+                </p>
+              </div>
+              <Button asChild variant="outline" size="sm">
+                <Link href={`/pro/${pro.id}`}>Voir ma fiche publique</Link>
+              </Button>
+            </div>
+
+            {pro.bookings.length === 0 ? (
+              <div className="rounded-2xl border border-white/10 bg-coal p-10 text-center">
+                <CalendarCheck className="mx-auto size-8 text-blood" />
+                <h2 className="mt-4 font-display text-2xl uppercase text-paper">Aucune demande pour le moment</h2>
+                <p className="mx-auto mt-2 max-w-md text-paper-dim">
+                  Ajoute une photo et partage ta fiche pour recevoir des demandes.
+                </p>
+              </div>
+            ) : (
+              <div className="grid gap-6">
+                {pending.length > 0 && (
+                  <div className="grid gap-3">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-warning flex items-center gap-2">
+                      <span className="inline-block size-2 rounded-full bg-warning animate-pulse" />
+                      À confirmer ({pending.length})
+                    </p>
+                    {pending.map((b) => <BookingCard key={b.id} booking={b} />)}
+                  </div>
+                )}
+                {confirmed.length > 0 && (
+                  <div className="grid gap-3">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-success">
+                      Confirmés à venir ({confirmed.length})
+                    </p>
+                    {confirmed.map((b) => <BookingCard key={b.id} booking={b} />)}
+                  </div>
+                )}
+                {past.length > 0 && (
+                  <details className="group">
+                    <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-widest text-paper-mute hover:text-paper-dim transition-colors">
+                      Historique ({past.length}) ▸
+                    </summary>
+                    <div className="mt-3 grid gap-3 opacity-70">
+                      {past.map((b) => <BookingCard key={b.id} booking={b} />)}
+                    </div>
+                  </details>
+                )}
+              </div>
+            )}
+          </>
+        );
+      })()}
     </div>
   );
 }
