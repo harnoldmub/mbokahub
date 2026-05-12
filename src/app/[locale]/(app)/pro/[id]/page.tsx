@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import { AdminProActionsBar } from "@/components/admin/admin-pro-actions-bar";
 import { ProGalleryClient } from "@/components/pros/pro-gallery-client";
 import { ProProfileTabs } from "@/components/pros/pro-profile-tabs";
+import { RatingBadge } from "@/components/pros/rating-badge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { isCurrentUserAdmin } from "@/lib/auth-helpers";
@@ -168,14 +169,7 @@ export default async function ProDetailsPage({
             {pro.city}, {pro.country}
           </p>
 
-          {(pro.rating > 0 || pro.reviewsCount > 0) && (
-            <p className="mt-2 flex items-center gap-1.5 text-sm text-amber-500 font-medium">
-              ★ {pro.rating.toFixed(1)}
-              <span className="font-normal text-paper-mute">
-                ({pro.reviewsCount} avis)
-              </span>
-            </p>
-          )}
+          <RatingBadge rating={pro.rating} reviewsCount={pro.reviewsCount} />
         </div>
       </div>
 

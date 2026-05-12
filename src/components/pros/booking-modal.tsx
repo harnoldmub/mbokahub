@@ -130,7 +130,13 @@ export function BookingModal({
   function openModal(preService?: ProService) {
     const svc = preService ?? initialService;
     setSelectedService(svc);
-    setStep(services.length === 0 || svc ? "slot" : "service");
+    // Pros without bookable services (DJ, MC, VTC, traiteur…) → go straight
+    // to a free-form quote form (date + time + contact fields), no slot grid.
+    if (services.length === 0) {
+      setStep("details");
+    } else {
+      setStep(svc ? "slot" : "service");
+    }
     setSelectedSlot(null);
     setSubmitted(false);
     setFormError(null);
@@ -157,7 +163,22 @@ export function BookingModal({
     setFormError(null);
     const fd = new FormData(e.currentTarget);
     fd.set("proProfileId", proProfileId);
-    fd.set("requestedAt", `${selectedSlot!.date}T${selectedSlot!.time}:00`);
+    let requestedAt: string;
+    if (selectedSlot) {
+      requestedAt = `${selectedSlot.date}T${selectedSlot.time}:00`;
+    } else {
+      const date = String(fd.get("freeformDate") ?? "");
+      const time = String(fd.get("freeformTime") ?? "");
+      if (!date || !time) {
+        setFormError("Choisis une date et une heure.");
+        setSubmitting(false);
+        return;
+      }
+      requestedAt = `${date}T${time}:00`;
+      fd.delete("freeformDate");
+      fd.delete("freeformTime");
+    }
+    fd.set("requestedAt", requestedAt);
     if (selectedService) fd.set("serviceId", selectedService.id);
     try {
       const res = await fetch("/api/bookings", { method: "POST", body: fd });
@@ -201,7 +222,7 @@ export function BookingModal({
             {/* ── Header ── */}
             <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-ash shrink-0">
               <div className="flex items-center gap-3">
-                {stepIndex > 0 && !submitted && (
+                {stepIndex > 0 && !submitted && services.length > 0 && (
                   <button
                     type="button"
                     onClick={() => setStep(step === "details" ? "slot" : "service")}
@@ -238,10 +259,7 @@ export function BookingModal({
                       { i: 1, label: "Créneau" },
                       { i: 2, label: "Mes infos" },
                     ]
-                  : [
-                      { i: 1, label: "Créneau" },
-                      { i: 2, label: "Mes infos" },
-                    ]
+                  : [{ i: 2, label: "Demande de devis" }]
                 ).map(({ i, label }) => (
                   <div
                     key={i}
@@ -416,29 +434,65 @@ export function BookingModal({
               )}
 
               {/* ── STEP 3: Details ── */}
-              {step === "details" && !submitted && selectedSlot && (
+              {step === "details" && !submitted && (
                 <form onSubmit={handleSubmit} className="grid gap-3">
-                  {/* Booking summary */}
-                  <div className="rounded-2xl border border-blood/20 bg-blood/5 p-4">
-                    <div className="flex items-start gap-3">
-                      <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-blood/10 text-blood">
-                        <CalendarCheck className="size-5" />
-                      </div>
-                      <div>
-                        <p className="font-medium text-paper">
-                          {formatDateLong(selectedSlot.date)} à {selectedSlot.time}
-                        </p>
-                        {selectedService ? (
-                          <p className="mt-0.5 text-sm text-paper-dim">
-                            {selectedService.name} · {formatDuration(selectedService.durationMinutes)}
-                            {selectedService.price ? ` · ${selectedService.price.toFixed(0)} €` : ""}
+                  {/* Booking summary or free-form date/time inputs */}
+                  {selectedSlot ? (
+                    <div className="rounded-2xl border border-blood/20 bg-blood/5 p-4">
+                      <div className="flex items-start gap-3">
+                        <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-blood/10 text-blood">
+                          <CalendarCheck className="size-5" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-paper">
+                            {formatDateLong(selectedSlot.date)} à {selectedSlot.time}
                           </p>
-                        ) : (
-                          <p className="mt-0.5 text-sm text-paper-dim">Sans préférence de prestation</p>
-                        )}
+                          {selectedService ? (
+                            <p className="mt-0.5 text-sm text-paper-dim">
+                              {selectedService.name} · {formatDuration(selectedService.durationMinutes)}
+                              {selectedService.price ? ` · ${selectedService.price.toFixed(0)} €` : ""}
+                            </p>
+                          ) : (
+                            <p className="mt-0.5 text-sm text-paper-dim">Sans préférence de prestation</p>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  ) : (
+                    <>
+                      <p className="text-sm text-paper-dim">
+                        Indique la date et l&apos;heure souhaitées. Le prestataire reviendra vers toi avec un devis personnalisé.
+                      </p>
+                      <div className="grid grid-cols-2 gap-2.5">
+                        <label className="flex flex-col gap-1">
+                          <span className="text-[10px] font-mono uppercase tracking-widest text-paper-mute">
+                            Date *
+                          </span>
+                          <input
+                            name="freeformDate"
+                            type="date"
+                            required
+                            min={todayIso()}
+                            defaultValue={addDays(todayIso(), 1)}
+                            className="h-11 rounded-xl border border-ash bg-smoke px-3 text-sm text-paper outline-none focus:border-blood/50 focus:bg-white transition-colors"
+                          />
+                        </label>
+                        <label className="flex flex-col gap-1">
+                          <span className="text-[10px] font-mono uppercase tracking-widest text-paper-mute">
+                            Heure *
+                          </span>
+                          <input
+                            name="freeformTime"
+                            type="time"
+                            required
+                            step={900}
+                            defaultValue="20:00"
+                            className="h-11 rounded-xl border border-ash bg-smoke px-3 text-sm text-paper outline-none focus:border-blood/50 focus:bg-white transition-colors"
+                          />
+                        </label>
+                      </div>
+                    </>
+                  )}
 
                   <div className="grid gap-2.5">
                     <input

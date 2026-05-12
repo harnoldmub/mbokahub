@@ -1,7 +1,7 @@
 "use client";
 
 import { AtSign, Clock, MapPin, Star } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { BookingModal, type ProService } from "./booking-modal";
 import { ContactProButton } from "./contact-pro-button";
@@ -66,11 +66,29 @@ export function ProProfileTabs({
 }: ProProfileTabsProps) {
   const [tab, setTab] = useState<"rdv" | "avis" | "apropos">("rdv");
 
+  useEffect(() => {
+    function onOpenTab(e: Event) {
+      const detail = (e as CustomEvent<string>).detail;
+      if (detail === "rdv" || detail === "avis" || detail === "apropos") {
+        setTab(detail);
+        // scroll the tabs into view so the user actually sees the change
+        document
+          .getElementById("pro-tabs")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+    window.addEventListener("pro:open-tab", onOpenTab);
+    return () => window.removeEventListener("pro:open-tab", onOpenTab);
+  }, []);
+
   const availMap = Object.fromEntries(availability.map((a) => [a.dayOfWeek, a]));
   const todayDow = new Date().getDay();
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-ash bg-white">
+    <div
+      id="pro-tabs"
+      className="overflow-hidden rounded-3xl border border-ash bg-white scroll-mt-4"
+    >
       {/* Tab bar */}
       <div className="flex border-b border-ash">
         {(
