@@ -65,6 +65,29 @@ export async function resolveProTarget(
   };
 }
 
+/**
+ * Structured server log for any admin action performed in act-as-a-pro mode.
+ * Always called from server actions immediately after the DB write succeeds.
+ * Keeps a permanent trace tying admin email + target pro + action name.
+ */
+export function logActAs(
+  action: string,
+  ctx: {
+    actingAs: string | null;
+    adminEmail?: string | null;
+    targetUserId?: string | null;
+    extra?: Record<string, unknown>;
+  },
+): void {
+  if (!ctx.actingAs) return;
+  console.log(
+    `[admin-act-as] action=${action} admin=${ctx.adminEmail ?? "?"} ` +
+      `targetProId=${ctx.actingAs} targetUserId=${ctx.targetUserId ?? "?"} ` +
+      `at=${new Date().toISOString()}` +
+      (ctx.extra ? ` extra=${JSON.stringify(ctx.extra)}` : ""),
+  );
+}
+
 export function asQuery(actingAsProId?: string | null): string {
   return actingAsProId ? `?as=${encodeURIComponent(actingAsProId)}` : "";
 }

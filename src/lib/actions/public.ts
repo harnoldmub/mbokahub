@@ -19,7 +19,7 @@ import {
   detectContactInBio,
   normalizePriceRangeInput,
 } from "@/lib/pro-display";
-import { withAs } from "@/lib/pro-context";
+import { logActAs, withAs } from "@/lib/pro-context";
 
 const VALID_PRO_CATEGORIES: ProCategory[] = PRO_CATEGORY_IDS;
 
@@ -380,6 +380,12 @@ export async function updateProProfileAction(form: FormData) {
     },
   });
 
+  logActAs("proProfile.update", {
+    actingAs,
+    adminEmail: user.email,
+    targetUserId: existing.userId,
+  });
+
   revalidatePath("/dashboard/profil-pro");
   revalidatePath("/dashboard/annonces");
   revalidatePath("/prestataires");
@@ -506,6 +512,13 @@ export async function updateProBookingStatusAction(form: FormData) {
   await prisma.proBooking.update({
     where: { id: bookingId },
     data: { status: newStatus },
+  });
+
+  logActAs("booking.status", {
+    actingAs,
+    adminEmail: user.email,
+    targetUserId: booking.proProfile.userId,
+    extra: { bookingId, status: newStatus },
   });
 
   if (

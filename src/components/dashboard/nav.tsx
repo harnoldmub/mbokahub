@@ -13,7 +13,7 @@ import {
   FileText,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const baseItems = [
@@ -29,6 +29,15 @@ const baseItems = [
 
 export function DashboardNav({ isAdmin = false }: { isAdmin?: boolean }) {
   const pathname = usePathname();
+  const sp = useSearchParams();
+  // Preserve the admin act-as context (?as=<proId>) across in-dashboard
+  // navigation so an admin doesn't silently drop impersonation by clicking
+  // a sidebar link. The /admin link intentionally never carries it.
+  const actingAs = sp?.get("as") ?? null;
+  const withAs = (href: string) =>
+    actingAs && href.startsWith("/dashboard")
+      ? `${href}?as=${encodeURIComponent(actingAs)}`
+      : href;
   const items = isAdmin
     ? [
         ...baseItems,
@@ -61,7 +70,7 @@ export function DashboardNav({ isAdmin = false }: { isAdmin?: boolean }) {
                   ? "border border-amber-400/30 bg-amber-400/5 text-paper hover:border-amber-400/50 hover:bg-amber-400/10"
                   : "text-paper-dim hover:bg-smoke hover:text-paper border border-transparent",
             )}
-            href={item.href}
+            href={withAs(item.href)}
             key={item.href}
           >
             <Icon
