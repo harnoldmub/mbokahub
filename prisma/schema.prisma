@@ -19,6 +19,7 @@ model User {
   isVipActive      Boolean   @default(false)
   vipUntil         DateTime?
   stripeCustomerId String?   @unique
+  onboardingProBookingDoneAt DateTime?
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 

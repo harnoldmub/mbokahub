@@ -301,6 +301,96 @@ export async function deleteTimeOffAction(form: FormData) {
   redirect("/dashboard/profil-pro/horaires?saved=1");
 }
 
+// ────────────────── Onboarding wizard ──────────────────
+export async function createServiceOnboardingAction(form: FormData) {
+  const { pro } = await ensureOwnedProfile();
+  const name = String(form.get("name") || "").trim();
+  const durationMin = Number(form.get("durationMin") || 0);
+  const priceCents = Math.round(Number(form.get("priceEuros") || 0) * 100);
+  const description = String(form.get("description") || "").trim() || null;
+  if (!name || durationMin <= 0 || priceCents < 0) {
+    redirect("/dashboard/profil-pro/onboarding?step=1&error=missing");
+  }
+
+  const lastPos = await prisma.service.aggregate({
+    where: { proProfileId: pro.id },
+    _max: { position: true },
+  });
+  const created = await prisma.service.create({
+    data: {
+      proProfileId: pro.id,
+      name,
+      durationMin,
+      priceCents,
+      description,
+      isOnlineBookable: true,
+      position: (lastPos._max.position ?? -1) + 1,
+    },
+  });
+
+  const member = await ensureDefaultTeamMember(pro.id, pro.displayName);
+  const allMembers = await prisma.teamMember.findMany({
+    where: { proProfileId: pro.id },
+    select: { id: true },
+  });
+  const ids = allMembers.length ? allMembers.map((m) => m.id) : [member.id];
+  await prisma.serviceMember.createMany({
+    data: ids.map((tid) => ({ serviceId: created.id, teamMemberId: tid })),
+    skipDuplicates: true,
+  });
+
+  revalidatePath("/dashboard/profil-pro/onboarding");
+  redirect("/dashboard/profil-pro/onboarding?step=2");
+}
+
+export async function saveWorkingHoursOnboardingAction(form: FormData) {
+  const teamMemberId = String(form.get("teamMemberId") || "").trim();
+  const { pro } = await ensureOwnedTeamMember(teamMemberId);
+  const ops: { dayOfWeek: number; openMinute: number; closeMinute: number }[] =
+    [];
+  for (let d = 0; d < 7; d++) {
+    const isOpen = form.get(`day_${d}_open`) === "on";
+    if (!isOpen) continue;
+    const openMin = parseHHMM(String(form.get(`day_${d}_from`) || ""));
+    const closeMin = parseHHMM(String(form.get(`day_${d}_to`) || ""));
+    if (openMin === null || closeMin === null || closeMin <= openMin) continue;
+    ops.push({ dayOfWeek: d, openMinute: openMin, closeMinute: closeMin });
+  }
+  await prisma.$transaction([
+    prisma.workingHours.deleteMany({ where: { teamMemberId } }),
+    ...(ops.length
+      ? [
+          prisma.workingHours.createMany({
+            data: ops.map((o) => ({ teamMemberId, ...o })),
+          }),
+        ]
+      : []),
+  ]);
+  revalidatePath("/dashboard/profil-pro/onboarding");
+  revalidatePath(`/pro/${pro.id}`);
+  redirect("/dashboard/profil-pro/onboarding?step=3");
+}
+
+export async function completeProOnboardingAction() {
+  const user = await getDashboardUser();
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { onboardingProBookingDoneAt: new Date() },
+  });
+  revalidatePath("/dashboard");
+  redirect("/dashboard?onboarding=done");
+}
+
+export async function skipProOnboardingAction() {
+  const user = await getDashboardUser();
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { onboardingProBookingDoneAt: new Date() },
+  });
+  revalidatePath("/dashboard");
+  redirect("/dashboard?onboarding=skipped");
+}
+
 // ────────────────── Customer booking on a slot ──────────────────
 export async function createSlotBookingAction(form: FormData) {
   const proProfileId = String(form.get("proProfileId") || "").trim();

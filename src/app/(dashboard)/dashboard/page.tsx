@@ -4,6 +4,7 @@ import {
   Camera,
   Contact,
   Megaphone,
+  Sparkles,
   Star,
 } from "lucide-react";
 import Link from "next/link";
@@ -18,7 +19,7 @@ import { prisma } from "@/lib/db/prisma";
 export default async function DashboardPage() {
   const user = await getDashboardUser();
 
-  const [contactsCount, trajetsCount, completedPayments, proProfile] =
+  const [contactsCount, trajetsCount, completedPayments, proProfile, servicesCount] =
     await Promise.all([
       prisma.unlockedContact.count({ where: { userId: user.id } }),
       prisma.trajet.count({ where: { userId: user.id } }),
@@ -28,7 +29,14 @@ export default async function DashboardPage() {
         where: { status: "COMPLETED", userId: user.id },
       }),
       prisma.proProfile.findUnique({ where: { userId: user.id } }),
+      prisma.service.count({
+        where: { proProfile: { userId: user.id } },
+      }),
     ]);
+
+  const showProBookingOnboarding =
+    Boolean(proProfile) && !user.onboardingProBookingDoneAt;
+  const proBookingOnboardingHasService = servicesCount > 0;
 
   const totalPaid = completedPayments.reduce(
     (sum, payment) => sum + payment.amount,
@@ -49,6 +57,34 @@ export default async function DashboardPage() {
           rendez-vous.
         </p>
       </div>
+
+      {showProBookingOnboarding ? (
+        <Link
+          href="/dashboard/profil-pro/onboarding"
+          className="group flex items-start gap-4 rounded-3xl border border-blood/40 bg-blood/10 p-5 transition hover:border-blood/70"
+        >
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-blood/20 text-blood">
+            <Sparkles className="size-5" />
+          </span>
+          <div className="flex-1">
+            <p className="font-display text-base uppercase text-paper">
+              Configure tes prestations en ligne
+            </p>
+            <p className="mt-1 text-sm text-paper-dim leading-6">
+              {proBookingOnboardingHasService
+                ? "Continue ton paramétrage : il te reste à définir tes horaires et publier ta fiche réservable."
+                : "En 3 étapes (prestations, horaires, publication), tes clients pourront réserver un créneau directement depuis ta fiche."}{" "}
+              <strong className="text-paper">{proProfile?.displayName}</strong>
+              {" — "}tu peux passer cette étape et y revenir plus tard.
+            </p>
+            <span className="mt-2 inline-flex items-center gap-1 font-mono text-xs uppercase tracking-wider text-blood group-hover:gap-2 transition-all">
+              {proBookingOnboardingHasService
+                ? "Reprendre le wizard →"
+                : "Lancer le wizard →"}
+            </span>
+          </div>
+        </Link>
+      ) : null}
 
       {proProfile && proProfile.photos.length === 0 ? (
         <Link
