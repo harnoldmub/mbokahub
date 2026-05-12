@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { ArrowLeft, Pencil, Sparkles } from "lucide-react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -18,6 +19,51 @@ type ProDetailsPageProps = {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ from?: string }>;
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const pro = await prisma.proProfile
+    .findUnique({
+      where: { id },
+      select: {
+        displayName: true,
+        category: true,
+        city: true,
+        bio: true,
+        photos: true,
+      },
+    })
+    .catch(() => null);
+  if (!pro) {
+    return {
+      title: "Prestataire introuvable",
+      robots: { index: false, follow: false },
+    };
+  }
+  const cat = PRO_CATEGORY_BY_ID[pro.category]?.label ?? "Prestataire";
+  const city = pro.city ? ` à ${pro.city}` : "";
+  const title = `${pro.displayName} — ${cat}${city}`;
+  const description =
+    pro.bio?.slice(0, 160).trim() ||
+    `${cat}${city}. Découvrez le profil, les photos et réservez en ligne sur Nevent.`;
+  const cover = pro.photos?.[0];
+  return {
+    title,
+    description,
+    alternates: { canonical: `/pro/${id}` },
+    openGraph: {
+      title,
+      description,
+      type: "profile",
+      url: `/pro/${id}`,
+      images: cover ? [{ url: cover }] : undefined,
+    },
+  };
+}
 
 export default async function ProDetailsPage({
   params,

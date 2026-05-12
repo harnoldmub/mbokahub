@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { ExternalLink, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 
@@ -7,6 +8,13 @@ import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/db/prisma";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Merch officiel & créateurs de la diaspora",
+  description:
+    "T-shirts, accessoires et créations exclusives autour de la culture afro et du concert Fally Ipupa Stade de France 2026.",
+  alternates: { canonical: "/merch" },
+};
 
 function formatPrice(amount: number): string {
   if (Number.isInteger(amount)) return `${amount} EUR`;

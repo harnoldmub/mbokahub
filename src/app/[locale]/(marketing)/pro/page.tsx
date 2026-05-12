@@ -1,4 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
+import type { Metadata } from "next";
 import { ArrowRight, Check, ShieldCheck, UserPlus } from "lucide-react";
 import Link from "next/link";
 
@@ -8,6 +9,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { prisma } from "@/lib/db/prisma";
 import { proOffer, proProofPoints } from "@/lib/marketing-data";
+
+export const metadata: Metadata = {
+  title: "Devenir prestataire — Inscription gratuite",
+  description:
+    "Créez votre fiche pro Nevent en 5 minutes. Visibilité gratuite, messagerie sécurisée, réservation en ligne et options de boost.",
+  alternates: { canonical: "/pro" },
+};
 
 export default async function ProPage() {
   const { userId } = await auth();

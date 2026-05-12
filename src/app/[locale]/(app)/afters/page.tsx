@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 
@@ -6,6 +7,13 @@ import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/db/prisma";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Afters & soirées de la diaspora",
+  description:
+    "Tous les afters validés par le Hub : lieux, line-ups, billetterie. Soirées afro, congolaises et caribéennes à Paris, Bruxelles, Londres.",
+  alternates: { canonical: "/afters" },
+};
 
 const FR_DAYS = [
   "Dimanche",

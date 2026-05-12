@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 
@@ -8,6 +9,13 @@ import { prisma } from "@/lib/db/prisma";
 import type { TrajetDemo } from "@/lib/demo-data";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Trajets & covoiturage de la diaspora",
+  description:
+    "Covoiturages et trajets partagés par la diaspora vers Paris, Bruxelles, Londres et toutes les grandes villes. Publication gratuite, contact direct.",
+  alternates: { canonical: "/trajets" },
+};
 
 const FR_DAYS = ["Dim.", "Lun.", "Mar.", "Mer.", "Jeu.", "Ven.", "Sam."];
 const FR_MONTHS = [

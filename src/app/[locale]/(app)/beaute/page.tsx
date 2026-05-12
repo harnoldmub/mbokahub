@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { ArrowRight, Baby, Camera, Scissors, Sparkles } from "lucide-react";
 import Link from "next/link";
 
@@ -13,6 +14,13 @@ import {
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Beauté afro — Coiffeurs, maquilleurs, photographes",
+  description:
+    "Annuaire de prestataires beauté afro : coiffeurs, maquilleurs, photographes et babysitters vérifiés. Réservation directe en ligne.",
+  alternates: { canonical: "/beaute" },
+};
 
 type PrestationsPageProps = {
   params: Promise<{ locale: string }>;

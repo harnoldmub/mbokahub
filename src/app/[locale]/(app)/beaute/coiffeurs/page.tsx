@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -6,6 +7,13 @@ import { PrestatairesListClient } from "@/components/pros/prestataires-list-clie
 import { prisma } from "@/lib/db/prisma";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Coiffeurs & barbiers afro — Annuaire vérifié",
+  description:
+    "Coiffeurs et barbiers spécialisés cheveux afro et métissés : tresses, locks, fade, défrisage. Profils vérifiés et réservation gratuite.",
+  alternates: { canonical: "/beaute/coiffeurs" },
+};
 
 const CATEGORIES = ["COIFFEUR", "BARBIER"] as const;
 

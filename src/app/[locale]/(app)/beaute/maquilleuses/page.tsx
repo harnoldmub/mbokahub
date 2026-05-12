@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -6,6 +7,13 @@ import { PrestatairesListClient } from "@/components/pros/prestataires-list-clie
 import { prisma } from "@/lib/db/prisma";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Maquilleuses afro pro — Réservation en ligne",
+  description:
+    "Maquilleuses, esthéticiennes, prothésistes ongles et techniciennes cils spécialisées peaux noires et métissées. Réservation directe sur Nevent.",
+  alternates: { canonical: "/beaute/maquilleuses" },
+};
 
 const CATEGORIES = [
   "MAQUILLEUSE",

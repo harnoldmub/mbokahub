@@ -15,8 +15,48 @@ import { fontBody, fontDisplay, fontMono, fontSerif } from "./fonts";
 import "./globals.css";
 
 const fontVariables = `${fontDisplay.variable} ${fontSerif.variable} ${fontBody.variable} ${fontMono.variable}`;
-const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3001";
+const replitDomain = process.env.REPLIT_DOMAINS?.split(",")[0]?.trim();
+const envAppUrl = process.env.NEXT_PUBLIC_APP_URL;
+const isLocalUrl = envAppUrl
+  ? /(^https?:\/\/)?(localhost|0\.0\.0\.0|127\.0\.0\.1)(:\d+)?\/?$/.test(envAppUrl)
+  : true;
+const appUrl =
+  envAppUrl && !isLocalUrl
+    ? envAppUrl
+    : replitDomain
+      ? `https://${replitDomain}`
+      : "https://mbokahub.com";
 const GA_ID = "G-YS8CL4ZE62";
+
+const ORG_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Nevent",
+  alternateName: "Mboka Hub",
+  url: appUrl,
+  logo: `${appUrl}/logo.png`,
+  sameAs: [],
+  contactPoint: [
+    {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      email: "contact@mbokahub.com",
+      availableLanguage: ["French", "English"],
+    },
+  ],
+};
+
+const WEBSITE_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Nevent",
+  url: appUrl,
+  potentialAction: {
+    "@type": "SearchAction",
+    target: `${appUrl}/prestataires?q={search_term_string}`,
+    "query-input": "required name=search_term_string",
+  },
+};
 
 export const metadata: Metadata = {
   applicationName: "Nevent",
@@ -121,6 +161,14 @@ export default function RootLayout({
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
             strategy="afterInteractive"
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSONLD) }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE_JSONLD) }}
           />
           <Script id="ga4-init" strategy="afterInteractive">
             {`

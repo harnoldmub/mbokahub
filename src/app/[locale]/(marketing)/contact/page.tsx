@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
 
 import { SectionHeading } from "@/components/marketing/section-heading";
@@ -5,6 +6,13 @@ import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { getLocaleFromSearchParams, nls, type SearchParams } from "@/lib/nls";
+
+export const metadata: Metadata = {
+  title: "Contact — Nous écrire",
+  description:
+    "Une question, un partenariat, un signalement ? Contactez l'équipe Nevent par email ou via le formulaire dédié.",
+  alternates: { canonical: "/contact" },
+};
 
 type ContactPageProps = {
   params: Promise<{ locale: string }>;

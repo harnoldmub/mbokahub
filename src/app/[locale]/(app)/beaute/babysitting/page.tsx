@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Baby, Check, ChevronLeft, Mail } from "lucide-react";
 import Link from "next/link";
 
@@ -11,6 +12,13 @@ import {
 } from "@/lib/nls";
 
 export const dynamic = "force-static";
+
+export const metadata: Metadata = {
+  title: "Babysitting de la diaspora — Garde d'enfants événements",
+  description:
+    "Service de babysitting ponctuel pour les soirées, mariages et concerts de la diaspora. Profils vérifiés, contact direct.",
+  alternates: { canonical: "/beaute/babysitting" },
+};
 
 type BabysittingPageProps = {
   params: Promise<{ locale: string }>;

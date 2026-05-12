@@ -1,5 +1,14 @@
+import type { Metadata } from "next";
+
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { LEGAL_DISCLAIMER } from "@/lib/constants";
+
+export const metadata: Metadata = {
+  title: "À propos de Nevent — Notre mission diaspora",
+  description:
+    "Nevent est né d'un besoin simple : aider une diaspora mobile à se coordonner autour des grands week-ends culturels. Notre mission, notre équipe.",
+  alternates: { canonical: "/a-propos" },
+};
 
 export default function AboutPage() {
   return (

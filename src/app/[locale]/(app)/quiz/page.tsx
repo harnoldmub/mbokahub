@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { ArrowRight, BrainCircuit, Share2, Sparkles } from "lucide-react";
 import Link from "next/link";
 
@@ -12,6 +13,13 @@ import {
 type QuizPageProps = {
   params: Promise<{ locale: string }>;
   searchParams?: Promise<SearchParams>;
+};
+
+export const metadata: Metadata = {
+  title: "Quiz Fally Ipupa — Connais-tu vraiment l'artiste ?",
+  description:
+    "Teste tes connaissances sur Fally Ipupa avec le quiz Nevent : carrière, hits, dates clés. Partage ton score à ta communauté.",
+  alternates: { canonical: "/quiz" },
 };
 
 export default async function QuizPage({ params, searchParams }: QuizPageProps) {

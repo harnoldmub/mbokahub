@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, HelpCircle } from "lucide-react";
 
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { Button } from "@/components/ui/button";
+
+export const metadata: Metadata = {
+  title: "FAQ Nevent — Toutes les réponses",
+  description:
+    "Réservation, trajets, prestataires, paiement, modération : retrouvez toutes les réponses aux questions fréquentes sur Nevent.",
+  alternates: { canonical: "/faq" },
+};
 
 const FAQ_SECTIONS = [
   {

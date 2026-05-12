@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
   AlertTriangle,
   BedDouble,
@@ -16,6 +17,13 @@ import { Badge } from "@/components/ui/badge";
 import { parisClassics } from "@/lib/demo-data";
 
 export const dynamic = "force-static";
+
+export const metadata: Metadata = {
+  title: "Classiques de Paris — Hôtels, restos & transports",
+  description:
+    "Le guide pratique de Paris pour la diaspora : hôtels, restaurants, transports, lieux iconiques. Bonnes adresses et conseils.",
+  alternates: { canonical: "/classiques-paris" },
+};
 
 const CATEGORY_META: Record<
   string,

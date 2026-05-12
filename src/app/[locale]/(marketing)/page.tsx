@@ -15,12 +15,27 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+import type { Metadata } from "next";
+
 import { HeroSearch } from "@/components/marketing/hero-search";
 import { Button } from "@/components/ui/button";
 import {
   localizedHref,
   type SearchParams,
 } from "@/lib/nls";
+
+export const metadata: Metadata = {
+  title: "Nevent — Prestataires, trajets & afters de la diaspora",
+  description:
+    "Trouvez coiffeurs, maquilleurs, photographes, covoiturages et afters de la diaspora. Annuaire 100% gratuit, réservation directe et messagerie incluse.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "Nevent — Prestataires, trajets & afters de la diaspora",
+    description:
+      "Annuaire 100% gratuit de prestataires de la diaspora : beauté, transport, événements, merch.",
+    url: "/",
+  },
+};
 
 type HomePageProps = {
   params: Promise<{ locale: string }>;

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { ArrowRight, Gamepad2, Trophy, Users, Zap } from "lucide-react";
 import Link from "next/link";
 
@@ -17,6 +18,13 @@ type GamePageProps = {
 };
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Le Jeu Nevent — défis & classement de la diaspora",
+  description:
+    "Joue, gagne des points, grimpe au classement de la diaspora. Mini-jeux, défis quotidiens et récompenses exclusives.",
+  alternates: { canonical: "/jeu" },
+};
 
 const RANK_STYLES = [
   { icon: Trophy, color: "text-gold" },
