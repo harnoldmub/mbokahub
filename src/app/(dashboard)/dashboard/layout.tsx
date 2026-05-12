@@ -17,16 +17,27 @@ export default async function DashboardLayout({
   const user = await getDashboardUser();
   const isAdmin = user.role === "ADMIN" || (await isAdminEmail(user.email));
 
-  const unreadAgg = await prisma.conversation.aggregate({
-    where: { clientId: user.id },
-    _sum: { clientUnread: true },
-  });
-  const unreadAggPro = await prisma.conversation.aggregate({
-    where: { proId: user.id },
-    _sum: { proUnread: true },
-  });
-  const unreadMessages =
-    (unreadAgg._sum.clientUnread ?? 0) + (unreadAggPro._sum.proUnread ?? 0);
+  let unreadMessages = 0;
+  try {
+    const [unreadAgg, unreadAggPro] = await Promise.all([
+      prisma.conversation.aggregate({
+        where: { clientId: user.id },
+        _sum: { clientUnread: true },
+      }),
+      prisma.conversation.aggregate({
+        where: { proId: user.id },
+        _sum: { proUnread: true },
+      }),
+    ]);
+    unreadMessages =
+      (unreadAgg._sum.clientUnread ?? 0) + (unreadAggPro._sum.proUnread ?? 0);
+  } catch (err) {
+    // Conversation table may not yet exist in this environment
+    // (messaging feature pending migration). Fall back to 0.
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("[dashboard] conversation aggregate skipped:", err instanceof Error ? err.message : err);
+    }
+  }
 
   return (
     <div className="mx-auto grid max-w-7xl gap-8 px-6 py-10 lg:grid-cols-[280px_1fr] lg:px-8">
