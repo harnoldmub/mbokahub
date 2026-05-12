@@ -9,8 +9,8 @@ export default function manifest(): MetadataRoute.Manifest {
     icons: [
       {
         sizes: "512x512",
-        src: "/logo.svg",
-        type: "image/svg+xml",
+        src: "/logo.png",
+        type: "image/png",
       },
     ],
     name: "Mboka Hub",

@@ -28,8 +28,8 @@ export const metadata: Metadata = {
     "Plateforme gratuite de mise en relation entre clients et prestataires : services locaux, planning, réservation, médias, boosts et placements sponsorisés.",
   icons: {
     apple: [{ url: "/apple-icon.svg", type: "image/svg+xml" }],
-    icon: [{ url: "/logo.svg", type: "image/svg+xml" }],
-    shortcut: ["/logo.svg"],
+    icon: [{ url: "/logo.png", type: "image/png" }],
+    shortcut: ["/logo.png"],
   },
   keywords: [
     "concert diaspora Paris 2026",
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
       {
         alt: "Logo Mboka Hub",
         height: 512,
-        url: "/logo.svg",
+        url: "/logo.png",
         width: 512,
       },
     ],
@@ -86,7 +86,7 @@ export const metadata: Metadata = {
     card: "summary",
     description:
       "Trouve un prestataire, réserve un créneau et booste ta visibilité locale.",
-    images: ["/logo.svg"],
+    images: ["/logo.png"],
     title: "Mboka Hub",
   },
 };
