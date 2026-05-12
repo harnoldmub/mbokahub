@@ -76,18 +76,18 @@ export default async function DashboardLayout({
 
         {isAdmin ? (
           <Link
-            className="mt-4 block rounded-3xl border border-amber-400/30 bg-gradient-to-br from-amber-500/10 via-amber-400/5 to-transparent p-5 transition hover:border-amber-400/50 hover:bg-amber-400/10"
+            className="mt-4 block rounded-3xl border border-amber-500/40 bg-gradient-to-br from-amber-500/15 via-amber-500/10 to-transparent p-5 transition hover:border-amber-500/70 hover:bg-amber-500/15"
             href="/admin"
           >
             <div className="flex items-center gap-3">
-              <ShieldCheck aria-hidden className="size-5 text-amber-300" />
+              <ShieldCheck aria-hidden className="size-5 text-amber-500" />
               <p className="font-heading text-paper">Backoffice admin</p>
             </div>
             <p className="mt-3 text-paper-dim text-sm leading-6">
               Vérifie les pros, modère les trajets, suis les paiements et gère
               la communauté Nevent.
             </p>
-            <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.25em] text-amber-200">
+            <p className="mt-3 font-mono text-[10px] font-semibold uppercase tracking-[0.25em] text-amber-600">
               Accéder au backoffice →
             </p>
           </Link>

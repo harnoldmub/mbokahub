@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { Suspense } from "react";
 
+import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { AppProviders } from "@/components/providers/app-providers";
@@ -111,6 +112,9 @@ export default function RootLayout({
                 <SiteFooter />
               </Suspense>
             </div>
+            <Suspense fallback={null}>
+              <MobileBottomNav />
+            </Suspense>
             <CookieConsent />
             <FomoTicker />
           </AppProviders>

@@ -216,8 +216,8 @@ async function seedArnoldBookings(seeded) {
   }
 
   // Trajets — Bruxelles → Paris (Stade de France)
-  const concertEve = new Date("2026-05-01T18:00:00.000Z");
-  const concertReturn = new Date("2026-05-04T08:00:00.000Z");
+  const concertEve = new Date("2026-05-29T18:00:00.000Z");
+  const concertReturn = new Date("2026-06-01T08:00:00.000Z");
   await prisma.trajet.createMany({
     data: [
       {
