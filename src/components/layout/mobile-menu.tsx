@@ -142,7 +142,7 @@ export function MobileMenu({ market, lang }: MobileMenuProps) {
                 variant="outline"
               >
                 <Link
-                  href={localizedHref("/dashboard", market)}
+                  href="/dashboard"
                   onClick={() => setOpen(false)}
                 >
                   <LayoutDashboard className="size-4" />

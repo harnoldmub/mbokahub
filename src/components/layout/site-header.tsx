@@ -135,10 +135,11 @@ export function SiteHeader() {
             variant="vip"
           >
             <Link
-              href={localizedHref(
-                isSignedIn ? "/dashboard" : "/pro/inscrire",
-                market,
-              )}
+              href={
+                isSignedIn
+                  ? "/dashboard"
+                  : localizedHref("/pro/inscrire", market)
+              }
             >
               {isSignedIn ? dashboardLabel : "Devenir pro"}
             </Link>
