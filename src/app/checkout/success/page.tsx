@@ -16,8 +16,8 @@ export default async function CheckoutSuccessPage({
 
   const messages: Record<string, { title: string; body: string; cta: string; href: string }> = {
     vip: {
-      title: "Bienvenue dans la Famille Nevent VIP",
-      body: "Ton statut VIP est en cours d'activation. Tu peux dès maintenant accéder à la Famille Nevent privée et débloquer les contacts pros.",
+      title: "Bienvenue dans la Famille Fondatrice",
+      body: "Ton statut VIP est en cours d'activation. Tu peux dès maintenant accéder à la communauté Nevent privée et débloquer les contacts pros.",
       cta: "Aller au tableau de bord",
       href: "/dashboard",
     },
@@ -37,7 +37,7 @@ export default async function CheckoutSuccessPage({
 
   const m = messages[type ?? ""] ?? {
     title: "Paiement reçu",
-    body: "Merci pour ton soutien à la Famille Nevent.",
+    body: "Merci pour ton soutien à la communauté Nevent.",
     cta: "Retour à l'accueil",
     href: "/",
   };

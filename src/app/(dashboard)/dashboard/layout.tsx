@@ -32,16 +32,18 @@ export default async function DashboardLayout({
             <Badge className={user.isVipActive ? "bg-gold text-ink" : ""}>
               {user.isVipActive ? "⭐ Famille Fondatrice" : "Fan"}
             </Badge>
-            <Badge
-              className={
-                isAdmin
-                  ? "border-amber-400/50 bg-amber-400/10 text-amber-200"
-                  : ""
-              }
-              variant="outline"
-            >
-              {user.role}
-            </Badge>
+            {user.role !== "FAN" || isAdmin ? (
+              <Badge
+                className={
+                  isAdmin
+                    ? "border-amber-400/50 bg-amber-400/10 text-amber-200"
+                    : ""
+                }
+                variant="outline"
+              >
+                {isAdmin ? "ADMIN" : user.role}
+              </Badge>
+            ) : null}
           </div>
 
           <DashboardNav isAdmin={isAdmin} />
@@ -58,7 +60,7 @@ export default async function DashboardLayout({
             </div>
             <p className="mt-3 text-paper-dim text-sm leading-6">
               Vérifie les pros, modère les trajets, suis les paiements et gère
-              la Famille Nevent.
+              la communauté Nevent.
             </p>
             <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.25em] text-amber-200">
               Accéder au backoffice →
@@ -72,7 +74,7 @@ export default async function DashboardLayout({
             </div>
             <p className="mt-3 text-paper-dim text-sm leading-6">
               L&apos;accès aux trajets, prestataires et afters est gratuit pour
-              toute la Famille Nevent. Profite à fond !
+              toute la communauté Nevent. Profite à fond !
             </p>
           </div>
         )}

@@ -42,7 +42,7 @@ export default async function DashboardPage() {
           Dashboard
         </p>
         <h1 className="mt-3 font-heading text-4xl text-paper">
-          Salut la Famille Nevent, {user.name?.split(" ")[0] ?? ""}
+          Salut {user.name?.split(" ")[0] ?? "👋"}
         </h1>
         <p className="mt-3 max-w-2xl text-paper-dim leading-7">
           Ici tu gères ton compte, tes annonces, ta fiche pro et tes demandes de
