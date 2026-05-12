@@ -201,7 +201,8 @@ export function FomoTicker() {
     return null;
   }
 
-  const current = messages[index];
+  const current = messages[index] ?? messages[0];
+  if (!current) return null;
 
   return (
     <output
