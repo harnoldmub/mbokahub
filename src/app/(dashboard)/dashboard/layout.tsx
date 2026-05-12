@@ -61,7 +61,7 @@ export default async function DashboardLayout({
               <Badge
                 className={
                   isAdmin
-                    ? "border-amber-400/50 bg-amber-400/10 text-amber-200"
+                    ? "border-amber-600 bg-amber-500 text-black"
                     : ""
                 }
                 variant="outline"

@@ -73,13 +73,13 @@ export default async function AdminProsPage({
           </Link>
           <Link
             href="/admin/pros?status=pending"
-            className={`${FILTER_BTN_BASE} ${isActive("pending") ? "bg-amber-500 text-black" : "border border-amber-500/60 bg-amber-500/15 text-amber-100 hover:bg-amber-500 hover:text-black"}`}
+            className={`${FILTER_BTN_BASE} ${isActive("pending") ? "bg-amber-500 text-black" : "border border-amber-600 bg-amber-100 text-amber-900 hover:bg-amber-500 hover:text-black"}`}
           >
             En attente
           </Link>
           <Link
             href="/admin/pros?status=verified"
-            className={`${FILTER_BTN_BASE} ${isActive("verified") ? "bg-emerald-600 text-white" : "border border-emerald-500/60 bg-emerald-500/15 text-emerald-100 hover:bg-emerald-600 hover:text-white"}`}
+            className={`${FILTER_BTN_BASE} ${isActive("verified") ? "bg-emerald-600 text-white" : "border border-emerald-600 bg-emerald-100 text-emerald-900 hover:bg-emerald-600 hover:text-white"}`}
           >
             Validés
           </Link>
@@ -241,7 +241,7 @@ export default async function AdminProsPage({
                       Voir la fiche
                     </Link>
                     <details className="relative">
-                      <summary className="inline-flex cursor-pointer items-center rounded-md border border-amber-500/60 bg-amber-500/15 px-3 py-1.5 text-xs font-semibold text-amber-100 transition hover:bg-amber-500 hover:text-black">
+                      <summary className="inline-flex cursor-pointer items-center rounded-md border border-amber-600 bg-amber-500 px-3 py-1.5 text-xs font-semibold text-black transition hover:bg-amber-600">
                         Gérer comme pro ▾
                       </summary>
                       <div className="absolute right-0 z-10 mt-1 grid w-48 gap-1 rounded-lg border border-white/15 bg-black/95 p-2 shadow-xl">

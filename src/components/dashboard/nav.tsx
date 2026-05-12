@@ -75,7 +75,7 @@ export function DashboardNav({
               isActive
                 ? "bg-blood/10 text-paper border border-blood/20 shadow-[0_0_15px_-5px_theme(colors.blood.DEFAULT)]"
                 : isHighlight
-                  ? "border border-amber-400/30 bg-amber-400/5 text-paper hover:border-amber-400/50 hover:bg-amber-400/10"
+                  ? "border border-amber-600 bg-amber-500/90 text-black font-semibold hover:bg-amber-500"
                   : "text-paper-dim hover:bg-smoke hover:text-paper border border-transparent",
             )}
             href={withAs(item.href)}
@@ -88,7 +88,7 @@ export function DashboardNav({
                 isActive
                   ? "text-blood"
                   : isHighlight
-                    ? "text-amber-300"
+                    ? "text-black"
                     : "text-paper-mute group-hover:text-blood",
               )}
             />
