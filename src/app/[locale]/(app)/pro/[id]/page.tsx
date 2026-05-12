@@ -29,12 +29,9 @@ export default async function ProDetailsPage({
     prisma.proProfile.findUnique({
       where: { id },
       include: {
-        services: {
-          where: { isActive: true },
-          orderBy: [{ order: "asc" }, { createdAt: "asc" }],
-        },
-        availability: {
-          orderBy: { dayOfWeek: "asc" },
+        onlineServices: {
+          where: { isOnlineBookable: true },
+          orderBy: [{ position: "asc" }, { createdAt: "asc" }],
         },
       },
     }),
@@ -207,19 +204,14 @@ export default async function ProDetailsPage({
           rating={pro.rating}
           reviewsCount={pro.reviewsCount}
           priceRange={pro.priceRange}
-          services={pro.services.map((s) => ({
+          services={pro.onlineServices.map((s) => ({
             id: s.id,
             name: s.name,
-            durationMinutes: s.durationMinutes,
-            price: s.price,
+            durationMinutes: s.durationMin,
+            price: s.priceCents / 100,
             description: s.description,
           }))}
-          availability={pro.availability.map((a) => ({
-            dayOfWeek: a.dayOfWeek,
-            startTime: a.startTime,
-            endTime: a.endTime,
-            isActive: a.isActive,
-          }))}
+          availability={[]}
           isSignedIn={!!clerkId}
         />
       </div>
