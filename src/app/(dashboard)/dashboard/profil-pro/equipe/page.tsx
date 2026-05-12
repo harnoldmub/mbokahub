@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { AdminAsProBanner } from "@/components/admin/admin-as-pro-banner";
 import { PhotoUploader } from "@/components/admin/photo-uploader";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
@@ -39,13 +38,6 @@ export default async function EquipePage({
 
   return (
     <div className="grid gap-6">
-      {ctx.isAdminActingAs ? (
-        <AdminAsProBanner
-          proId={pro.id}
-          proDisplayName={pro.displayName}
-          ownerEmail={ctx.ownerEmail}
-        />
-      ) : null}
 
       <div>
         <p className="font-mono text-blood text-xs uppercase tracking-[0.3em]">

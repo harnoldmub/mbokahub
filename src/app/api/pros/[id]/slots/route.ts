@@ -28,28 +28,28 @@ export async function GET(
   const endDate = new Date(startDate);
   endDate.setDate(endDate.getDate() + days);
 
-  const [availability, bookings, service] = await Promise.all([
-    prisma.proAvailability.findMany({
-      where: { proProfileId, isActive: true },
-    }),
+  const [bookings, service] = await Promise.all([
     prisma.proBooking.findMany({
       where: {
         proProfileId,
         requestedAt: { gte: startDate, lt: endDate },
         status: { in: ["PENDING", "CONFIRMED"] },
       },
-      select: { requestedAt: true, durationMinutes: true },
+      select: { requestedAt: true, durationMin: true },
     }),
     serviceId
-      ? prisma.proService.findUnique({
-          where: { id: serviceId },
-          select: { durationMinutes: true },
+      ? prisma.service.findFirst({
+          where: { id: serviceId, proProfileId },
+          select: { durationMin: true },
         })
       : null,
   ]);
+  // Legacy per-pro availability has been replaced by per-team-member
+  // WorkingHours; this route falls back to the default Mon–Sat 9–19h grid.
+  const availability: { dayOfWeek: number; startTime: string; endTime: string }[] = [];
 
   const slotDuration = 30; // fixed slot grid in minutes
-  const serviceDuration = service?.durationMinutes ?? slotDuration;
+  const serviceDuration = service?.durationMin ?? slotDuration;
 
   // Build a Set of booked minute-offsets (from midnight UTC) per date string
   // We store blocked slots as "YYYY-MM-DD HH:MM" strings
@@ -61,7 +61,7 @@ export async function GET(
         ":" +
         b.requestedAt.getUTCMinutes().toString().padStart(2, "0")
     );
-    const dur = b.durationMinutes ?? slotDuration;
+    const dur = b.durationMin ?? slotDuration;
     // Block all 30-min slots that overlap this booking
     for (let m = bookingMinutes; m < bookingMinutes + dur; m += slotDuration) {
       blockedSlots.add(`${dateStr} ${minutesToTime(m)}`);

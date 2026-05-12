@@ -1,7 +1,6 @@
 import { AtSign, Camera, CheckCircle2, IdCard, Sparkles } from "lucide-react";
 import Link from "next/link";
 
-import { AdminAsProBanner } from "@/components/admin/admin-as-pro-banner";
 import { PhotoUploader } from "@/components/admin/photo-uploader";
 import { ScrollToTopOnMount } from "@/components/dashboard/scroll-to-top-on-mount";
 import { VerifyIdentityButton } from "@/components/dashboard/verify-identity-button";
@@ -62,13 +61,6 @@ export default async function ProfilProPage({
 
   return (
     <div className="grid gap-8">
-      {ctx.isAdminActingAs ? (
-        <AdminAsProBanner
-          proId={pro.id}
-          proDisplayName={pro.displayName}
-          ownerEmail={ctx.ownerEmail}
-        />
-      ) : null}
       <div>
         <p className="font-mono text-blood text-xs uppercase tracking-[0.3em]">
           Profil pro

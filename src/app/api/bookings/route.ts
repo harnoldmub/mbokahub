@@ -29,17 +29,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Date invalide." }, { status: 400 });
   }
 
-  let serviceName: string | null = null;
-  let durationMinutes: number | null = null;
+  let durationMin: number | null = null;
+  let resolvedServiceId: string | null = null;
 
   if (serviceId) {
-    const svc = await prisma.proService.findUnique({
-      where: { id: serviceId },
-      select: { name: true, durationMinutes: true },
+    const svc = await prisma.service.findFirst({
+      where: { id: serviceId, proProfileId },
+      select: { id: true, durationMin: true },
     });
     if (svc) {
-      serviceName = svc.name;
-      durationMinutes = svc.durationMinutes;
+      resolvedServiceId = svc.id;
+      durationMin = svc.durationMin;
     }
   }
 
@@ -51,9 +51,8 @@ export async function POST(req: NextRequest) {
       clientEmail,
       requestedAt,
       note,
-      serviceId,
-      serviceName,
-      durationMinutes,
+      serviceId: resolvedServiceId,
+      durationMin,
     },
   });
 

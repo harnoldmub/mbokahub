@@ -422,17 +422,17 @@ export async function createProBookingAction(form: FormData) {
     redirect(`/pro/${proProfileId}?booking=date`);
   }
 
-  let serviceName: string | null = null;
-  let durationMinutes: number | null = null;
+  let durationMin: number | null = null;
+  let resolvedServiceId: string | null = null;
 
   if (serviceId) {
-    const svc = await prisma.proService.findUnique({
-      where: { id: serviceId },
-      select: { name: true, durationMinutes: true },
+    const svc = await prisma.service.findFirst({
+      where: { id: serviceId, proProfileId },
+      select: { id: true, durationMin: true },
     });
     if (svc) {
-      serviceName = svc.name;
-      durationMinutes = svc.durationMinutes;
+      resolvedServiceId = svc.id;
+      durationMin = svc.durationMin;
     }
   }
 
@@ -444,9 +444,8 @@ export async function createProBookingAction(form: FormData) {
       clientPhone,
       requestedAt,
       note,
-      serviceId,
-      serviceName,
-      durationMinutes,
+      serviceId: resolvedServiceId,
+      durationMin,
     },
   });
 
@@ -510,18 +509,22 @@ export async function updateProBookingStatusAction(form: FormData) {
       durationMin: true,
       status: true,
       proProfileId: true,
-      proProfile: {
-        select: { userId: true, displayName: true, whatsapp: true },
-      },
-      service: { select: { name: true, durationMin: true } },
-      teamMember: { select: { displayName: true } },
+      serviceId: true,
+      teamMemberId: true,
     },
   });
 
-  const ownerOk = booking?.proProfile.userId === user.id;
+  const proInfo = booking
+    ? await prisma.proProfile.findUnique({
+        where: { id: booking.proProfileId },
+        select: { userId: true, displayName: true, whatsapp: true },
+      })
+    : null;
+
+  const ownerOk = !!proInfo && proInfo.userId === user.id;
   const adminActingOk =
     !!booking && !!actingAs && booking.proProfileId === actingAs;
-  if (!booking || (!ownerOk && !adminActingOk)) {
+  if (!booking || !proInfo || (!ownerOk && !adminActingOk)) {
     redirect(withAs("/dashboard/planning", actingAs, { error: "forbidden" }));
   }
 
@@ -535,7 +538,7 @@ export async function updateProBookingStatusAction(form: FormData) {
   logActAs("booking.status", {
     actingAs,
     adminEmail: user.email,
-    targetUserId: booking.proProfile.userId,
+    targetUserId: proInfo.userId,
     extra: { bookingId, status: newStatus },
   });
 
@@ -544,15 +547,29 @@ export async function updateProBookingStatusAction(form: FormData) {
     booking.status !== newStatus &&
     (newStatus === "CONFIRMED" || newStatus === "CANCELLED")
   ) {
+    const [svc, member] = await Promise.all([
+      booking.serviceId
+        ? prisma.service.findFirst({
+            where: { id: booking.serviceId, proProfileId: booking.proProfileId },
+            select: { name: true, durationMin: true },
+          })
+        : null,
+      booking.teamMemberId
+        ? prisma.teamMember.findFirst({
+            where: { id: booking.teamMemberId, proProfileId: booking.proProfileId },
+            select: { displayName: true },
+          })
+        : null,
+    ]);
     const emailArgs = {
       to: booking.clientEmail,
       clientName: booking.clientName,
-      proDisplayName: booking.proProfile.displayName,
-      proWhatsapp: booking.proProfile.whatsapp,
-      serviceName: booking.service?.name ?? null,
-      teamMemberName: booking.teamMember?.displayName ?? null,
+      proDisplayName: proInfo.displayName,
+      proWhatsapp: proInfo.whatsapp,
+      serviceName: svc?.name ?? null,
+      teamMemberName: member?.displayName ?? null,
       startsAt: booking.requestedAt,
-      durationMin: booking.durationMin ?? booking.service?.durationMin ?? null,
+      durationMin: booking.durationMin ?? svc?.durationMin ?? null,
       proId: booking.proProfileId,
     };
     after(async () => {

@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import { AdminAsProBanner } from "@/components/admin/admin-as-pro-banner";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
@@ -24,7 +23,7 @@ export default async function PrestationsPage({
   const pro = await prisma.proProfile.findUnique({
     where: { userId: ctx.proUserId },
     include: {
-      services: {
+      onlineServices: {
         orderBy: { position: "asc" },
         include: { members: true },
       },
@@ -44,14 +43,6 @@ export default async function PrestationsPage({
 
   return (
     <div className="grid gap-6">
-      {ctx.isAdminActingAs ? (
-        <AdminAsProBanner
-          proId={pro.id}
-          proDisplayName={pro.displayName}
-          ownerEmail={ctx.ownerEmail}
-        />
-      ) : null}
-
       <div>
         <p className="font-mono text-blood text-xs uppercase tracking-[0.3em]">
           Profil pro
@@ -145,13 +136,13 @@ export default async function PrestationsPage({
       </form>
 
       <div className="grid gap-4">
-        {pro.services.length === 0 ? (
+        {pro.onlineServices.length === 0 ? (
           <p className="rounded-2xl border border-white/10 bg-coal p-6 text-center text-paper-dim">
             Aucune prestation pour l&apos;instant. Ajoute ta première prestation
             ci-dessus.
           </p>
         ) : (
-          pro.services.map((s) => (
+          pro.onlineServices.map((s) => (
             <form
               action={updateServiceAction}
               key={s.id}
