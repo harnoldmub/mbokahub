@@ -49,7 +49,7 @@ type Props = {
   unlocked?: boolean;
 };
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 12;
 
 export function PrestatairesListClient({ pros, initialSearch = "" }: Props) {
   const [search, setSearch] = useState(initialSearch);
