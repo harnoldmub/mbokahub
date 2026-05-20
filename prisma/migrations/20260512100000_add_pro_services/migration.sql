@@ -1,5 +1,9 @@
 -- CreateTable ProService
-CREATE TABLE "ProService" (
+-- Note: ProBooking already has serviceId/durationMin from the prior
+-- "20260512000000_add_booking_slots" migration. We only create the
+-- ProService table here. (Idempotent for partial-apply recovery.)
+
+CREATE TABLE IF NOT EXISTS "ProService" (
     "id" TEXT NOT NULL,
     "proProfileId" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -14,14 +18,17 @@ CREATE TABLE "ProService" (
     CONSTRAINT "ProService_pkey" PRIMARY KEY ("id")
 );
 
-CREATE INDEX "ProService_proProfileId_isActive_order_idx" ON "ProService"("proProfileId", "isActive", "order");
+CREATE INDEX IF NOT EXISTS "ProService_proProfileId_isActive_order_idx"
+    ON "ProService"("proProfileId", "isActive", "order");
 
-ALTER TABLE "ProService" ADD CONSTRAINT "ProService_proProfileId_fkey" FOREIGN KEY ("proProfileId") REFERENCES "ProProfile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- Alter ProBooking: add service fields
-ALTER TABLE "ProBooking"
-    ADD COLUMN "serviceId" TEXT,
-    ADD COLUMN "serviceName" TEXT,
-    ADD COLUMN "durationMinutes" INTEGER;
-
-ALTER TABLE "ProBooking" ADD CONSTRAINT "ProBooking_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "ProService"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint WHERE conname = 'ProService_proProfileId_fkey'
+    ) THEN
+        ALTER TABLE "ProService"
+            ADD CONSTRAINT "ProService_proProfileId_fkey"
+            FOREIGN KEY ("proProfileId") REFERENCES "ProProfile"("id")
+            ON DELETE CASCADE ON UPDATE CASCADE;
+    END IF;
+END $$;
