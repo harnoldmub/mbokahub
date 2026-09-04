@@ -21,6 +21,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { MOBILE_MENU_LINKS } from "@/lib/navigation";
 import { type Locale, localizedHref, nls } from "@/lib/nls";
 
 type MobileMenuProps = {
@@ -57,17 +58,19 @@ export function MobileMenu({ market, lang }: MobileMenuProps) {
           ? "Uitloggen"
           : "Se déconnecter";
   const dashboardLabel = lang === "fr" ? "Tableau de bord" : "Dashboard";
-  const navItems = [
-    { href: "/", label: copy.quickNav.home },
-    { href: "/evenements", label: "Événements" },
-    { href: "/prestataires", label: "Prestataires" },
-    { href: "/trajets", label: copy.quickNav.trajets },
-    { href: "/afters", label: copy.quickNav.afters },
-    { href: "/beaute", label: copy.quickNav.beaute },
-    { href: "/pro", label: "Espace prestataire" },
-    { href: "/ads", label: "Boost & pub" },
-    { href: "/contact", label: copy.nav.contact },
-  ] as const;
+  // Même arborescence que le méga-menu, mise à plat : un utilisateur mobile
+  // doit atteindre exactement ce qu'atteint un utilisateur desktop.
+  const translatedLabels: Record<string, string> = {
+    "/": copy.quickNav.home,
+    "/trajets": copy.quickNav.trajets,
+    "/afters": copy.quickNav.afters,
+    "/contact": copy.nav.contact,
+    "/pro/inscrire": copy.megaServices.links.becomePro,
+  };
+  const navItems = MOBILE_MENU_LINKS.map((link) => ({
+    ...link,
+    label: translatedLabels[link.href] ?? link.label,
+  }));
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>

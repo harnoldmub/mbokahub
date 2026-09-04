@@ -69,7 +69,7 @@ export const nls = {
         contact: "Contact",
       },
       megaServices: {
-        trigger: "Prestations",
+        trigger: "Explorer",
         sections: {
           annuaire: "Annuaire",
           beaute: "Beauté",
@@ -241,7 +241,7 @@ export const nls = {
         contact: "Contact",
       },
       megaServices: {
-        trigger: "Services",
+        trigger: "Explore",
         sections: {
           annuaire: "Directory",
           beaute: "Beauty",
@@ -412,7 +412,7 @@ export const nls = {
         contact: "Kontakt",
       },
       megaServices: {
-        trigger: "Services",
+        trigger: "Entdecken",
         sections: {
           annuaire: "Verzeichnis",
           beaute: "Beauty",
@@ -583,7 +583,7 @@ export const nls = {
         contact: "Contact",
       },
       megaServices: {
-        trigger: "Diensten",
+        trigger: "Ontdekken",
         sections: {
           annuaire: "Gids",
           beaute: "Beauty",

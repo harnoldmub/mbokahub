@@ -13,6 +13,7 @@ import { MobileMenu } from "@/components/layout/mobile-menu";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_MARKET, MARKETS, type Market } from "@/lib/markets";
+import { HEADER_PRIMARY, MEGA_MENU_GROUPS } from "@/lib/navigation";
 import { getLocale, localizedHref, nls } from "@/lib/nls";
 
 export function SiteHeader() {
@@ -51,55 +52,35 @@ export function SiteHeader() {
         : lang === "nl"
           ? "Dashboard"
           : "Tableau de bord";
+  // Arborescence unique : src/lib/navigation.ts. L'en-tête n'affiche que les
+  // trois destinations visiteur les plus fréquentes ; le méga-menu déplie le
+  // reste. La structure vient du module, les libellés restent traduits quand
+  // une traduction existe.
   const m = copy.megaServices;
-  const megaSections = [
-    {
-      title: "Découvrir",
-      links: [
-        {
-          href: "/prestataires",
-          label: "Tous les prestataires",
-          description: "Annuaire gratuit, profils vérifiés",
-        },
-        {
-          href: "/trajets",
-          label: "Trajets",
-          description: "Transport et covoiturage",
-        },
-      ],
-    },
-    {
-      // Renommée : la section et le déclencheur du méga-menu s'appelaient tous
-      // deux « Services ».
-      title: "Par catégorie",
-      links: [
-        { href: "/beaute/maquilleuses", label: m.links.maquilleuses },
-        { href: "/beaute/coiffeurs", label: m.links.coiffeurs },
-        { href: "/beaute/photographes", label: m.links.photographes },
-        { href: "/beaute/babysitting", label: m.links.babysitting },
-      ],
-    },
-    {
-      title: "Visibilité",
-      links: [
-        { href: "/ads", label: "Boosts & publicité" },
-        { href: "/partenariat", label: "Partenariats" },
-      ],
-    },
-    {
-      title: "Espace prestataire",
-      links: [
-        { href: "/pro", label: "Comprendre l'offre pro" },
-        { href: "/pro/inscrire", label: m.links.becomePro },
-      ],
-    },
-  ];
-  const simpleNavItems = [
-    { href: "/evenements", label: "Événements" },
-    { href: "/prestataires", label: "Prestataires" },
-    { href: "/trajets", label: "Trajets" },
-    { href: "/ads", label: "Boost" },
-  ] as const;
+  const translatedLabels: Record<string, string> = {
+    "/prestataires": m.links.all,
+    "/beaute/maquilleuses": m.links.maquilleuses,
+    "/beaute/coiffeurs": m.links.coiffeurs,
+    "/beaute/photographes": m.links.photographes,
+    "/beaute/babysitting": m.links.babysitting,
+    "/afters": m.links.afters,
+    "/pro/inscrire": m.links.becomePro,
+    "/pro": m.sections.devenirPro,
+  };
+  const translate = (link: { href: string; label: string }) => ({
+    ...link,
+    label: translatedLabels[link.href] ?? link.label,
+  });
+  const megaSections = MEGA_MENU_GROUPS.map((group) => ({
+    ...group,
+    links: group.links.map((link) => ({
+      ...translate(link),
+      description: link.description,
+    })),
+  }));
+  // La barre de l'en-tête garde les libellés courts : « Tous les
+  // prestataires » n'a de sens qu'à l'intérieur du méga-menu.
+  const simpleNavItems = HEADER_PRIMARY;
 
   return (
     <header className="glass-header">
@@ -116,7 +97,7 @@ export function SiteHeader() {
           aria-label="Navigation principale"
           className="hidden items-center gap-7 lg:flex"
         >
-          <MegaMenu label="Services" locale={market} sections={megaSections} />
+          <MegaMenu label={m.trigger} locale={market} sections={megaSections} />
           {simpleNavItems.map((item) => (
             <Link
               className="text-sm font-medium text-paper transition-colors hover:text-blood"

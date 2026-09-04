@@ -35,34 +35,46 @@ type StaticRoute = {
   changeFrequency: Freq;
 };
 
+// Aligné sur l'arborescence de src/lib/navigation.ts. Une page hors navigation
+// parce qu'elle est vide (/merch, /communaute) n'est pas non plus déclarée ici :
+// l'exposer au référencement reviendrait à proposer une page vide.
 const STATIC_ROUTES: StaticRoute[] = [
   { path: "/", priority: 1, changeFrequency: "daily" },
+
+  // Découvrir
   { path: "/evenements", priority: 0.95, changeFrequency: "daily" },
   { path: "/evenements/londres", priority: 0.8, changeFrequency: "daily" },
   { path: "/evenements/bruxelles", priority: 0.8, changeFrequency: "daily" },
   { path: "/evenements/paris", priority: 0.7, changeFrequency: "daily" },
+  { path: "/classiques-paris", priority: 0.85, changeFrequency: "weekly" },
+  { path: "/jeu", priority: 0.5, changeFrequency: "monthly" },
 
-  // Core verticals
+  // Organiser
+  { path: "/prestataires", priority: 0.95, changeFrequency: "daily" },
   { path: "/trajets", priority: 0.95, changeFrequency: "daily" },
+  { path: "/afters", priority: 0.9, changeFrequency: "daily" },
   { path: "/beaute", priority: 0.9, changeFrequency: "daily" },
   { path: "/beaute/maquilleuses", priority: 0.85, changeFrequency: "weekly" },
   { path: "/beaute/coiffeurs", priority: 0.85, changeFrequency: "weekly" },
-  { path: "/afters", priority: 0.9, changeFrequency: "daily" },
-  { path: "/merch", priority: 0.8, changeFrequency: "weekly" },
-  { path: "/classiques-paris", priority: 0.85, changeFrequency: "weekly" },
+  { path: "/beaute/photographes", priority: 0.85, changeFrequency: "weekly" },
+  { path: "/beaute/babysitting", priority: 0.8, changeFrequency: "weekly" },
 
-  // Conversion
-  { path: "/vip", priority: 0.95, changeFrequency: "weekly" },
+  // Prestataires
+  { path: "/pro/inscrire", priority: 0.9, changeFrequency: "weekly" },
   { path: "/pro", priority: 0.9, changeFrequency: "weekly" },
+  { path: "/ads", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/partenariat", priority: 0.6, changeFrequency: "monthly" },
 
-  // Engagement
-  { path: "/jeu", priority: 0.65, changeFrequency: "monthly" },
-
-  // Brand
+  // Nevent
   { path: "/a-propos", priority: 0.5, changeFrequency: "monthly" },
+  { path: "/vip", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/equipe", priority: 0.4, changeFrequency: "monthly" },
+  { path: "/contact", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/faq", priority: 0.7, changeFrequency: "monthly" },
 
-  // Legal
+  // Légal
   { path: "/cgu", priority: 0.3, changeFrequency: "yearly" },
+  { path: "/cgv", priority: 0.3, changeFrequency: "yearly" },
   { path: "/confidentialite", priority: 0.3, changeFrequency: "yearly" },
   { path: "/mentions-legales", priority: 0.3, changeFrequency: "yearly" },
   { path: "/disclaimer", priority: 0.3, changeFrequency: "yearly" },
@@ -109,6 +121,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Dynamic content — fail open if DB is unreachable so the sitemap still builds
   let dynamicEntries: MetadataRoute.Sitemap = [];
   try {
+    const startOfToday = new Date();
+    startOfToday.setUTCHours(0, 0, 0, 0);
     const [pros, trajets, afters] = await Promise.all([
       prisma.proProfile.findMany({
         where: { isVerified: true },
@@ -116,14 +130,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         take: 1000,
         orderBy: { updatedAt: "desc" },
       }),
+      // Les fiches datées passées sont servies en noindex (voir
+      // src/lib/content-lifecycle.ts) : les déclarer ici demanderait à Google
+      // d'explorer des pages qui refusent d'être indexées. La date plancher
+      // n'est donc pas une constante, c'est aujourd'hui.
       prisma.trajet.findMany({
-        where: { isActive: true, date: { gte: new Date("2026-04-15") } },
+        where: { isActive: true, date: { gte: startOfToday } },
         select: { id: true, updatedAt: true },
         take: 1000,
         orderBy: { updatedAt: "desc" },
       }),
       prisma.after.findMany({
-        where: { isActive: true },
+        where: { isActive: true, date: { gte: startOfToday } },
         select: { slug: true, createdAt: true },
         take: 500,
         orderBy: { createdAt: "desc" },

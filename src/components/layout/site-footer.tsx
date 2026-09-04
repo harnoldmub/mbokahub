@@ -13,6 +13,7 @@ import {
   MARKETS,
   type Market,
 } from "@/lib/markets";
+import { FOOTER_COLUMNS, LEGAL_LINKS } from "@/lib/navigation";
 import { getLocale, localizedHref, nls } from "@/lib/nls";
 
 const CONTACT_EMAIL = "contact@mbokahub.com";
@@ -49,44 +50,37 @@ export function SiteFooter() {
     };
   }, [isSignedIn]);
 
+  // Le pied de page est la seule surface exhaustive : il déroule toute
+  // l'arborescence de src/lib/navigation.ts, plus le légal.
+  // La structure vient du module ; les libellés restent traduits quand une
+  // traduction existe, pour ne pas perdre l'i18n en centralisant.
+  const translatedLabels: Record<string, string> = {
+    "/trajets": copy.links.rides,
+    "/afters": copy.links.afters,
+    "/prestataires": copy.links.services,
+    "/beaute/photographes": copy.links.photographers,
+    "/pro": copy.links.proSpace,
+    "/partenariat": copy.links.partnerships,
+    "/ads": copy.links.ads,
+    "/equipe": copy.links.team,
+    "/contact": copy.links.contact,
+    "/faq": copy.links.faq,
+    "/cgu": copy.links.terms,
+    "/cgv": copy.links.sales,
+    "/confidentialite": copy.links.privacy,
+    "/mentions-legales": copy.links.legalNotice,
+    "/disclaimer": copy.links.disclaimer,
+  };
   const columns = [
-    {
-      title: copy.navigation,
-      links: [
-        { href: "/evenements", label: "Événements" },
-        { href: "/trajets", label: copy.links.rides },
-        { href: "/afters", label: copy.links.afters },
-        { href: "/prestataires", label: copy.links.services },
-        { href: "/beaute/photographes", label: copy.links.photographers },
-      ],
-    },
-    {
-      title: copy.professionals,
-      links: [
-        { href: "/pro", label: copy.links.proSpace },
-        { href: "/partenariat", label: copy.links.partnerships },
-        { href: "/ads", label: copy.links.ads },
-      ],
-    },
-    {
-      title: "Nevent",
-      links: [
-        { href: "/equipe", label: copy.links.team },
-        { href: "/contact", label: copy.links.contact },
-        { href: "/faq", label: copy.links.faq },
-      ],
-    },
-    {
-      title: copy.legal,
-      links: [
-        { href: "/cgu", label: copy.links.terms },
-        { href: "/cgv", label: copy.links.sales },
-        { href: "/confidentialite", label: copy.links.privacy },
-        { href: "/mentions-legales", label: copy.links.legalNotice },
-        { href: "/disclaimer", label: copy.links.disclaimer },
-      ],
-    },
-  ] as const;
+    ...FOOTER_COLUMNS,
+    { id: "legal" as const, title: copy.legal, links: LEGAL_LINKS },
+  ].map((column) => ({
+    ...column,
+    links: column.links.map((link) => ({
+      ...link,
+      label: translatedLabels[link.href] ?? link.label,
+    })),
+  }));
 
   const linkClass =
     "inline-block text-sm text-white/60 transition-colors hover:text-white focus-visible:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5252]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0c0f] rounded-sm";

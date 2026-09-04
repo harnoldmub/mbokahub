@@ -95,10 +95,13 @@ export function MobileBottomNav() {
       active: cleanPath.startsWith("/evenements"),
     },
     {
-      href: localizedHref("/trajets", market),
-      label: "Trajets",
+      // La barre basse est réservée aux gestes récurrents. « Prestataires » est
+      // la destination principale du site : elle y remplace « Trajets », qui
+      // reste atteignable depuis le menu et le pied de page.
+      href: localizedHref("/prestataires", market),
+      label: "Prestataires",
       icon: Sparkles,
-      active: cleanPath.startsWith("/trajets"),
+      active: cleanPath.startsWith("/prestataires"),
     },
     {
       href: messagesHref,
