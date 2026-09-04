@@ -6,10 +6,8 @@ import { prisma } from "@/lib/db/prisma";
 import { getEnv } from "@/lib/env";
 import { getStripe } from "@/lib/stripe";
 
+import { boostEndsAt, premiumEndsAt } from "@/lib/stripe-config";
 export const runtime = "nodejs";
-
-const PREMIUM_END = new Date("2026-05-31T23:59:59+02:00");
-const BOOST_END = new Date("2026-05-31T23:59:59+02:00");
 
 // Le pass VIP fan n'est plus en vente (fans 100% gratuits depuis le pivot).
 // On ne traite plus que les paiements pros : BOOST, PRO_PREMIUM, CONDUCTEUR_REVEAL.
@@ -36,7 +34,7 @@ async function activateBoost(meta: Record<string, string>) {
   if (targetType === "TRAJET") {
     const r = await prisma.trajet.updateMany({
       where: { id: targetId },
-      data: { isBoosted: true, boostUntil: BOOST_END },
+      data: { isBoosted: true, boostUntil: boostEndsAt() },
     });
     if (r.count === 0) {
       console.warn("[stripe webhook] boost target trajet missing", targetId);
@@ -44,7 +42,7 @@ async function activateBoost(meta: Record<string, string>) {
   } else if (targetType === "PRO_PROFILE") {
     const r = await prisma.proProfile.updateMany({
       where: { id: targetId },
-      data: { isBoosted: true, boostUntil: BOOST_END },
+      data: { isBoosted: true, boostUntil: boostEndsAt() },
     });
     if (r.count === 0) {
       console.warn("[stripe webhook] boost target pro missing", targetId);
@@ -76,7 +74,7 @@ async function activateProPremium(userId: string) {
   });
   await prisma.proProfile.updateMany({
     where: { userId },
-    data: { isPremium: true, premiumUntil: PREMIUM_END },
+    data: { isPremium: true, premiumUntil: premiumEndsAt() },
   });
 }
 

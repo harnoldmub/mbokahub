@@ -8,7 +8,7 @@ import { prisma } from "@/lib/db/prisma";
 import { getEnv } from "@/lib/env";
 import { getStripe } from "@/lib/stripe";
 
-const PREMIUM_END = new Date("2026-05-31T23:59:59+02:00");
+import { premiumEndsAt } from "@/lib/stripe-config";
 
 const bodySchema = z
   .object({
@@ -203,7 +203,7 @@ export async function POST(req: Request) {
 
       await prisma.proProfile.updateMany({
         where: { userId: dbUser.id, isPremium: false },
-        data: { isPremium: true, premiumUntil: PREMIUM_END },
+        data: { isPremium: true, premiumUntil: premiumEndsAt() },
       });
 
       const paymentRef = `promo_${promo.code}_${dbUser.id}`;

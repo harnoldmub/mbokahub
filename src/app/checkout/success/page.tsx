@@ -19,11 +19,14 @@ export default async function CheckoutSuccessPage({
     string,
     { title: string; body: string; cta: string; href: string }
   > = {
+    // Le pass VIP est retiré : on n'atteint plus ce cas que par un vieux lien
+    // ou un marque-page. Le message ne doit donc rien promettre qui n'existe
+    // plus — les contacts sont ouverts à tous depuis la bascule.
     vip: {
-      title: "Bienvenue dans la Famille Fondatrice",
-      body: "Ton statut VIP est en cours d'activation. Tu peux dès maintenant accéder à la communauté Nevent privée et débloquer les contacts pros.",
-      cta: "Aller au tableau de bord",
-      href: "/dashboard",
+      title: "Merci — tu fais partie de la Famille Fondatrice",
+      body: "Le pass VIP n'existe plus : Nevent est gratuit pour tout le monde, contacts des prestataires compris. Ton badge Famille Fondatrice, lui, te reste à vie.",
+      cta: "Voir comment ça marche",
+      href: "/vip",
     },
     pro: {
       title: "Mise en avant activée",

@@ -36,23 +36,32 @@ prisma/
 Required:
 - `DATABASE_URL` - PostgreSQL connection string
 - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` / `CLERK_SECRET_KEY` - Clerk auth
-- `STRIPE_VIP_PRICE_ID` / `STRIPE_PRO_PRICE_ID` / `STRIPE_BOOST_PRICE_ID` - Stripe price IDs
+- `STRIPE_PRO_PRICE_ID` / `STRIPE_BOOST_PRICE_ID` - Stripe price IDs (only needed when `PAYMENTS_ENABLED` is true)
 
 Optional (recommended):
 - `NEXT_PUBLIC_APP_URL` - canonical URL (auto-derived from request `Origin` if absent)
-- `STRIPE_VIP_EARLY_BIRD_PRICE_ID` - 6,99 € price (active until 2026-04-30)
 - `STRIPE_SECRET_KEY` / `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` - explicit LIVE keys for production (overrides connector)
 - `STRIPE_WEBHOOK_SECRET` - required for the webhook to verify events
 - `CLERK_WEBHOOK_SECRET`, Resend, Supabase, Plausible — only when those features are needed
 
 ## Pricing & Stripe
 
-- **VIP Famille**: 9,99 € flat, Early Bird 6,99 € until 2026-04-30 (toggle in `src/lib/stripe-config.ts`)
-- **Pro**: 19,99 € flat for all categories (Beauté, Merch, After...)
-- **Boost**: 8,99 € — applied to a TRAJET or PRO_PROFILE via metadata `targetType` + `targetId`
-- VIP payment → `User.isVipActive=true`, `vipUntil=2026-05-31`, ContactLock unlocks
-- Pro payment → `User.role=PRO` + `ProProfile.isPremium=true`, `premiumUntil=2026-05-31`
-- Boost payment → target `isBoosted=true`, `boostUntil=2026-05-31`
+**Nevent is free for everyone during the launch phase.** `PAYMENTS_ENABLED` is
+the single switch: while it is `false`, `/api/checkout/pro` and
+`/api/checkout/boost` grant the benefit immediately without charging, and the
+dashboard buttons read "gratuitement". Flipping it to `true` re-enables the
+paid flows below — nothing else needs changing.
+
+- **VIP Famille**: retired. The contact lock it unlocked no longer exists;
+  contacts are public for everyone. `/api/checkout/vip` answers `410 Gone`.
+  Users who paid before the switch keep the ⭐ Famille Fondatrice badge for
+  life (`isFoundingFamilyMember()`).
+- **Pro**: 19,99 € flat for all categories — dormant while `PAYMENTS_ENABLED`
+  is false.
+- **Boost**: 8,99 € — applied to a TRAJET or PRO_PROFILE via metadata
+  `targetType` + `targetId`. Dormant under the same switch.
+- Pro payment → `User.role=PRO` + `ProProfile.isPremium=true`
+- Boost payment → target `isBoosted=true`
 
 ### Stripe credentials resolution
 `src/lib/stripe.ts` resolves credentials in this order:
@@ -63,7 +72,7 @@ Optional (recommended):
 Run `STRIPE_SECRET_KEY=sk_live_xxx APP_URL=https://mbokahub.com node scripts/setup-stripe-prod.mjs` to bootstrap LIVE products, prices, and webhook endpoint. The script prints all env vars to set in the deployment.
 
 ## Checkout endpoints
-- `POST /api/checkout/vip` — creates VIP checkout (uses Early Bird price if active)
+- `POST /api/checkout/vip` — retired, answers `410 Gone` (kept to close old clients)
 - `POST /api/checkout/pro` — body `{ category }` (MAQUILLEUSE, COIFFEUR, etc.)
 - `POST /api/checkout/boost` — body `{ targetType: "TRAJET" | "PRO_PROFILE", targetId }`
 - `POST /api/webhooks/stripe` — Stripe webhook (signature verified)
@@ -71,12 +80,12 @@ Run `STRIPE_SECRET_KEY=sk_live_xxx APP_URL=https://mbokahub.com node scripts/set
 All checkout endpoints derive `success_url`/`cancel_url` from the request `Origin`, so they work in dev preview, production, and any custom domain without env tweaking.
 
 ## Dashboard actions
-- `/dashboard/annonces` shows each owned trajet/pro profile with a "Booster 8,99 €" button (`BoostButton` → `/api/checkout/boost`).
-- For pros without `isPremium=true`, an "Activer ma fiche pro 19,99 €" CTA appears (`PremiumActivateButton` → `/api/checkout/pro`).
+- `/dashboard/annonces` shows each owned trajet/pro profile with a "Mettre en vedette" button (`BoostButton` → `/api/checkout/boost`). The price is only shown when `PAYMENTS_ENABLED` is true.
+- For pros without `isPremium=true`, a "Mettre ma fiche en avant" CTA appears (`PremiumActivateButton` → `/api/checkout/pro`), free under the same switch.
 
 ## Helpers
 - `src/lib/app-url.ts` → `getAppUrl(req?)` — resolves base URL from request origin → env → REPLIT_DOMAINS → localhost.
-- `src/lib/auth-helpers.ts` → `getOptionalDbUser()`, `isCurrentUserVip()` — used by detail pages and `ContactLock` for unlock state.
+- `src/lib/auth-helpers.ts` → `getOptionalDbUser()`, `isCurrentUserVip()` — the VIP flag now only drives the historical Famille Fondatrice badge; `ContactLock` no longer locks anything.
 
 ## Replit-Specific Configuration
 

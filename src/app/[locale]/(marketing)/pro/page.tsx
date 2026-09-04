@@ -71,7 +71,7 @@ export default async function ProPage() {
             className="border-primary/40 bg-primary/15 text-white"
             variant="outline"
           >
-            Espace prestatairefessionnels gratuit
+            Espace prestataire gratuit
           </Badge>
           <h1 className="mt-6 max-w-4xl font-display text-5xl text-foreground uppercase leading-none sm:text-7xl">
             Crée ta fiche, gère tes{" "}

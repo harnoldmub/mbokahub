@@ -219,10 +219,10 @@ export function SiteFooter() {
 
         {/* MODÈLE ÉCONOMIQUE */}
         <p className="mt-8 text-white/40 text-xs leading-relaxed">
-          <span className="text-white/60">Modèle ouvert —</span> Nevent est
-          gratuit pour les clients et les prestataires. Les options payantes
-          concernent uniquement la visibilité sponsorisée, les boosts, les
-          placements et les campagnes partenaires.
+          <span className="text-white/60">Modèle ouvert —</span> Pendant la
+          phase de lancement, Nevent est gratuit pour tout le monde : visiteurs
+          comme prestataires, mise en avant comprise. Toute évolution sera
+          annoncée à l&apos;avance.
         </p>
 
         {/* BARRE BASSE */}
