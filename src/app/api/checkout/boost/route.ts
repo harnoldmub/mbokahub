@@ -19,7 +19,10 @@ export async function POST(req: Request) {
   try {
     const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json({ error: "Connecte-toi d'abord" }, { status: 401 });
+      return NextResponse.json(
+        { error: "Connecte-toi d'abord" },
+        { status: 401 },
+      );
     }
 
     const clerkUser = await currentUser();
@@ -39,16 +42,6 @@ export async function POST(req: Request) {
       // empty body — boost without target (legacy)
     }
 
-    const env = getEnv();
-    if (!env.STRIPE_BOOST_PRICE_ID) {
-      console.error("[checkout/boost] missing STRIPE_BOOST_PRICE_ID");
-      return NextResponse.json(
-        { error: "Paiement temporairement indisponible. Réessaie plus tard." },
-        { status: 503 },
-      );
-    }
-    const stripe = await getStripe();
-
     const dbUser = await prisma.user.upsert({
       where: { clerkId: userId },
       update: {},
@@ -62,7 +55,9 @@ export async function POST(req: Request) {
     });
 
     if (targetType === "TRAJET" && targetId) {
-      const trajet = await prisma.trajet.findUnique({ where: { id: targetId } });
+      const trajet = await prisma.trajet.findUnique({
+        where: { id: targetId },
+      });
       if (!trajet || trajet.userId !== dbUser.id) {
         return NextResponse.json(
           { error: "Trajet introuvable ou non autorisé" },
@@ -70,7 +65,9 @@ export async function POST(req: Request) {
         );
       }
     } else if (targetType === "PRO_PROFILE" && targetId) {
-      const pro = await prisma.proProfile.findUnique({ where: { id: targetId } });
+      const pro = await prisma.proProfile.findUnique({
+        where: { id: targetId },
+      });
       if (!pro || pro.userId !== dbUser.id) {
         return NextResponse.json(
           { error: "Profil introuvable ou non autorisé" },
@@ -78,6 +75,39 @@ export async function POST(req: Request) {
         );
       }
     }
+
+    const env = getEnv();
+    if (!env.PAYMENTS_ENABLED) {
+      if (targetType === "TRAJET" && targetId) {
+        await prisma.trajet.update({
+          where: { id: targetId },
+          data: { isBoosted: true, boostUntil: null },
+        });
+      } else if (targetType === "PRO_PROFILE" && targetId) {
+        await prisma.proProfile.update({
+          where: { id: targetId },
+          data: { isBoosted: true, boostUntil: null },
+        });
+      } else {
+        return NextResponse.json(
+          { error: "Annonce à mettre en avant manquante." },
+          { status: 400 },
+        );
+      }
+
+      return NextResponse.json({
+        redirect: "/dashboard/annonces?boost=active",
+      });
+    }
+
+    if (!env.STRIPE_BOOST_PRICE_ID) {
+      console.error("[checkout/boost] missing STRIPE_BOOST_PRICE_ID");
+      return NextResponse.json(
+        { error: "Paiement temporairement indisponible. Réessaie plus tard." },
+        { status: 503 },
+      );
+    }
+    const stripe = await getStripe();
 
     let stripeCustomerId = dbUser.stripeCustomerId;
     if (!stripeCustomerId) {
@@ -110,7 +140,10 @@ export async function POST(req: Request) {
     });
 
     if (!session.url) {
-      return NextResponse.json({ error: "Stripe URL manquante" }, { status: 500 });
+      return NextResponse.json(
+        { error: "Stripe URL manquante" },
+        { status: 500 },
+      );
     }
 
     return NextResponse.json({ url: session.url });

@@ -8,6 +8,7 @@ import {
   ALLOWED_IMAGE_TYPES,
   extForMime,
   getMediaStorageMode,
+  getNeonStorageClient,
   getStorageClient,
   MAX_IMAGE_BYTES,
   publicUrlForKey,
@@ -58,7 +59,8 @@ export async function POST(req: Request) {
   }
 
   const storageMode = getMediaStorageMode();
-  const client = storageMode === "object" ? getStorageClient() : null;
+  const replitClient = storageMode === "replit" ? getStorageClient() : null;
+  const neonClient = storageMode === "neon" ? getNeonStorageClient() : null;
   const uploaded: UploadedFile[] = [];
   const errors: string[] = [];
 
@@ -93,8 +95,13 @@ export async function POST(req: Request) {
     try {
       if (storageMode === "local") {
         await writeLocalMedia(key, buffer);
-      } else if (client) {
-        const result = await client.uploadFromBytes(key, buffer);
+      } else if (neonClient) {
+        await neonClient.upload(key, buffer, {
+          contentType: mime,
+          cacheControl: "public, max-age=31536000, immutable",
+        });
+      } else if (replitClient) {
+        const result = await replitClient.uploadFromBytes(key, buffer);
         if (!result.ok) {
           const msg = result.error?.message ?? "échec de l'upload";
           console.error("[api/upload] uploadFromBytes failed", {
@@ -104,7 +111,7 @@ export async function POST(req: Request) {
           });
           // Fallback: try the streaming path (forces resumable:false internally).
           try {
-            await client.uploadFromStream(key, Readable.from(buffer));
+            await replitClient.uploadFromStream(key, Readable.from(buffer));
           } catch (streamErr) {
             const streamMsg =
               streamErr instanceof Error

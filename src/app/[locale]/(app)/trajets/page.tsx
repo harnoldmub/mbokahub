@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import { Plus } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { VipMemberBanner } from "@/components/marketing/vip-member-banner";
@@ -47,7 +47,12 @@ function maskPhone(raw: string): string {
   return `${head} •• •• •• ••`;
 }
 
-export default async function TrajetsPage() {
+export default async function TrajetsPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ destination?: string; date?: string }>;
+}) {
+  const filters = await searchParams;
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
 
@@ -59,11 +64,7 @@ export default async function TrajetsPage() {
         isActive: true,
         date: { gte: today },
       },
-      orderBy: [
-        { isBoosted: "desc" },
-        { date: "asc" },
-        { createdAt: "desc" },
-      ],
+      orderBy: [{ isBoosted: "desc" }, { date: "asc" }, { createdAt: "desc" }],
       take: 200,
     })
     .catch((err) => {
@@ -79,6 +80,7 @@ export default async function TrajetsPage() {
   })[] = trajetsDb.map((t) => ({
     id: t.id,
     villeDepart: t.villeDepart,
+    villeArrivee: t.villeArrivee,
     paysDepart: t.paysDepart,
     dateLabel: formatDateLabel(t.date),
     dateIso: t.date.toISOString().slice(0, 10),
@@ -108,8 +110,9 @@ export default async function TrajetsPage() {
             <span className="font-serif italic text-blood">un trajet</span>
           </h1>
           <p className="mt-4 max-w-md font-body text-paper-dim">
-            Fais le trajet avec d&apos;autres fans de la communauté Nevent. Économise, rencontre l&apos;Aigle, et
-            arrive en toute sécurité au Stade.
+            Fais le trajet avec d&apos;autres fans de la communauté Nevent.
+            Économise, rencontre l&apos;Aigle, et arrive en toute sécurité au
+            Stade.
           </p>
         </div>
         <Button
@@ -124,7 +127,12 @@ export default async function TrajetsPage() {
         </Button>
       </div>
 
-      <TrajetsListClient trajets={trajets} unlocked />
+      <TrajetsListClient
+        trajets={trajets}
+        unlocked
+        initialDate={filters?.date}
+        initialDestination={filters?.destination}
+      />
     </main>
   );
 }

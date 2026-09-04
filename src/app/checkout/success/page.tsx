@@ -2,7 +2,7 @@ import { CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 
 export const metadata = {
-  title: "Paiement confirmé · Nevent",
+  title: "Activation confirmée · Nevent",
 };
 
 type Search = Promise<{ type?: string; session_id?: string }>;
@@ -14,7 +14,10 @@ export default async function CheckoutSuccessPage({
 }) {
   const { type } = await searchParams;
 
-  const messages: Record<string, { title: string; body: string; cta: string; href: string }> = {
+  const messages: Record<
+    string,
+    { title: string; body: string; cta: string; href: string }
+  > = {
     vip: {
       title: "Bienvenue dans la Famille Fondatrice",
       body: "Ton statut VIP est en cours d'activation. Tu peux dès maintenant accéder à la communauté Nevent privée et débloquer les contacts pros.",
@@ -22,8 +25,8 @@ export default async function CheckoutSuccessPage({
       href: "/dashboard",
     },
     pro: {
-      title: "Inscription pro confirmée",
-      body: "Ton paiement de 19,99 € est validé. Tu peux compléter ton profil pro et il sera publié après validation par l'équipe.",
+      title: "Mise en avant activée",
+      body: "Ta fiche pro est mise en avant gratuitement. Tu peux continuer à la compléter depuis ton tableau de bord.",
       cta: "Compléter mon profil pro",
       href: "/dashboard/profil-pro",
     },
@@ -36,8 +39,8 @@ export default async function CheckoutSuccessPage({
   };
 
   const m = messages[type ?? ""] ?? {
-    title: "Paiement reçu",
-    body: "Merci pour ton soutien à la communauté Nevent.",
+    title: "Activation terminée",
+    body: "La fonctionnalité est maintenant active gratuitement sur ton compte.",
     cta: "Retour à l'accueil",
     href: "/",
   };
@@ -60,7 +63,7 @@ export default async function CheckoutSuccessPage({
         {m.cta}
       </Link>
       <p className="mt-6 text-muted-foreground text-xs">
-        Un email de confirmation va t'arriver dans quelques minutes.
+        Aucun paiement n&apos;a été demandé.
       </p>
     </div>
   );

@@ -21,7 +21,10 @@ export async function POST(req: Request) {
   try {
     const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json({ error: "Connecte-toi d'abord" }, { status: 401 });
+      return NextResponse.json(
+        { error: "Connecte-toi d'abord" },
+        { status: 401 },
+      );
     }
 
     const clerkUser = await currentUser();
@@ -60,8 +63,7 @@ export async function POST(req: Request) {
     if (!proProfile) {
       return NextResponse.json(
         {
-          error:
-            "Crée d'abord ta fiche pro avant d'activer Premium.",
+          error: "Crée d'abord ta fiche pro avant d'activer Premium.",
           redirect: "/pro/inscrire",
         },
         { status: 400 },
@@ -69,9 +71,23 @@ export async function POST(req: Request) {
     }
     if (proProfile.isPremium) {
       return NextResponse.json(
-        { error: "Ta fiche est déjà Premium.", redirect: "/dashboard/annonces" },
+        {
+          error: "Ta fiche est déjà Premium.",
+          redirect: "/dashboard/annonces",
+        },
         { status: 400 },
       );
+    }
+
+    const env = getEnv();
+    if (!env.PAYMENTS_ENABLED) {
+      await prisma.proProfile.update({
+        where: { id: proProfile.id },
+        data: { isPremium: true, premiumUntil: null },
+      });
+      return NextResponse.json({
+        redirect: "/checkout/success?type=pro&free=1",
+      });
     }
 
     // --- Internal promo code path ---
@@ -100,7 +116,9 @@ export async function POST(req: Request) {
       }
       if (promo.usedCount >= promo.maxUses) {
         return NextResponse.json(
-          { error: "Ce code promo a atteint son nombre maximum d'utilisations." },
+          {
+            error: "Ce code promo a atteint son nombre maximum d'utilisations.",
+          },
           { status: 400 },
         );
       }
@@ -215,7 +233,6 @@ export async function POST(req: Request) {
     }
 
     // --- Stripe checkout path ---
-    const env = getEnv();
     if (!env.STRIPE_PRO_PRICE_ID) {
       console.error("[checkout/pro] missing STRIPE_PRO_PRICE_ID");
       return NextResponse.json(
@@ -257,7 +274,10 @@ export async function POST(req: Request) {
     });
 
     if (!session.url) {
-      return NextResponse.json({ error: "Stripe URL manquante" }, { status: 500 });
+      return NextResponse.json(
+        { error: "Stripe URL manquante" },
+        { status: 500 },
+      );
     }
 
     return NextResponse.json({ url: session.url });

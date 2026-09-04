@@ -3,25 +3,49 @@ import { mkdir, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { Client } from "@replit/object-storage";
+import { Files } from "files-sdk";
+import { neon } from "files-sdk/neon";
 
-let cached: Client | null = null;
+let cachedReplit: Client | null = null;
+let cachedNeon: Files | null = null;
 
 export function getStorageClient(): Client {
-  if (!cached) {
+  if (!cachedReplit) {
     const bucketId = process.env.DEFAULT_OBJECT_STORAGE_BUCKET_ID;
-    cached = bucketId ? new Client({ bucketId }) : new Client();
+    cachedReplit = bucketId ? new Client({ bucketId }) : new Client();
   }
-  return cached;
+  return cachedReplit;
 }
 
-export type MediaStorageMode = "local" | "object";
+export function getNeonStorageClient(): Files {
+  if (!cachedNeon) {
+    cachedNeon = new Files({
+      adapter: neon({
+        bucket: process.env.NEON_STORAGE_BUCKET ?? "nevent-media",
+      }),
+    });
+  }
+  return cachedNeon;
+}
+
+export type MediaStorageMode = "local" | "neon" | "replit";
 
 export function getMediaStorageMode(): MediaStorageMode {
   const configured = process.env.MEDIA_STORAGE_DRIVER;
-  if (configured === "object" || configured === "local") return configured;
+  if (
+    configured === "local" ||
+    configured === "neon" ||
+    configured === "replit"
+  ) {
+    return configured;
+  }
+  if (configured === "object") {
+    return process.env.AWS_ENDPOINT_URL_S3 ? "neon" : "replit";
+  }
   if (process.env.MEDIA_UPLOAD_DIR) return "local";
-  if (!process.env.DEFAULT_OBJECT_STORAGE_BUCKET_ID) return "local";
-  return "object";
+  if (process.env.AWS_ENDPOINT_URL_S3) return "neon";
+  if (process.env.DEFAULT_OBJECT_STORAGE_BUCKET_ID) return "replit";
+  return "local";
 }
 
 export function getLocalMediaRoot(): string {

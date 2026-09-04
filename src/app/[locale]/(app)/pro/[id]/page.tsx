@@ -154,7 +154,7 @@ export default async function ProDetailsPage({
                 specialities: pro.specialities,
                 photos: pro.photos,
                 isVerified: pro.isVerified,
-                isPremium: pro.isPremium,
+                isCertified: pro.isCertified,
               }}
             />
           </div>
@@ -194,9 +194,9 @@ export default async function ProDetailsPage({
             <Badge variant="outline">
               {meta?.icon} {meta?.label ?? pro.category}
             </Badge>
-            {pro.isPremium && (
+            {pro.isCertified && (
               <Badge className="border-blood/40 bg-blood/10 text-blood">
-                <Sparkles className="h-3 w-3" /> Premium
+                <Sparkles className="h-3 w-3" /> Certifié
               </Badge>
             )}
             {pro.isVerified && (

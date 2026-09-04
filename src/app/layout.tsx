@@ -18,14 +18,16 @@ const fontVariables = `${fontDisplay.variable} ${fontSerif.variable} ${fontBody.
 const replitDomain = process.env.REPLIT_DOMAINS?.split(",")[0]?.trim();
 const envAppUrl = process.env.NEXT_PUBLIC_APP_URL;
 const isLocalUrl = envAppUrl
-  ? /(^https?:\/\/)?(localhost|0\.0\.0\.0|127\.0\.0\.1)(:\d+)?\/?$/.test(envAppUrl)
+  ? /(^https?:\/\/)?(localhost|0\.0\.0\.0|127\.0\.0\.1)(:\d+)?\/?$/.test(
+      envAppUrl,
+    )
   : true;
 const appUrl =
   envAppUrl && !isLocalUrl
     ? envAppUrl
     : replitDomain
       ? `https://${replitDomain}`
-      : "https://mbokahub.com";
+      : "https://nevent.co";
 const GA_ID = "G-YS8CL4ZE62";
 
 const ORG_JSONLD = {
@@ -53,7 +55,7 @@ const WEBSITE_JSONLD = {
   url: appUrl,
   potentialAction: {
     "@type": "SearchAction",
-    target: `${appUrl}/prestataires?q={search_term_string}`,
+    target: `${appUrl}/fr/evenements?q={search_term_string}`,
     "query-input": "required name=search_term_string",
   },
 };
@@ -61,11 +63,11 @@ const WEBSITE_JSONLD = {
 export const metadata: Metadata = {
   applicationName: "Nevent",
   title: {
-    default: "Nevent | Services, prestataires et réservations",
+    default: "Nevent | Événements afro, trajets et services",
     template: "%s | Nevent",
   },
   description:
-    "Plateforme gratuite de mise en relation entre clients et prestataires : services locaux, planning, réservation, médias, boosts et placements sponsorisés.",
+    "Découvre les événements afro en Europe et organise toute ton expérience : trajets, beauté, photo, services et afters.",
   icons: {
     apple: [{ url: "/apple-icon.svg", type: "image/svg+xml" }],
     icon: [{ url: "/logo.png", type: "image/png" }],
@@ -147,7 +149,7 @@ export default function RootLayout({
               <Suspense fallback={null}>
                 <SiteHeader />
               </Suspense>
-              <main className="flex-1">{children}</main>
+              <div className="flex-1">{children}</div>
               <Suspense fallback={null}>
                 <SiteFooter />
               </Suspense>
@@ -162,14 +164,12 @@ export default function RootLayout({
             src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
             strategy="afterInteractive"
           />
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSONLD) }}
-          />
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE_JSONLD) }}
-          />
+          <script type="application/ld+json">
+            {JSON.stringify(ORG_JSONLD)}
+          </script>
+          <script type="application/ld+json">
+            {JSON.stringify(WEBSITE_JSONLD)}
+          </script>
           <Script id="ga4-init" strategy="afterInteractive">
             {`
               window.dataLayer = window.dataLayer || [];

@@ -8,32 +8,35 @@ datasource db {
 }
 
 model User {
-  id               String    @id @default(cuid())
-  clerkId          String    @unique
-  email            String    @unique
-  name             String?
-  phone            String?
-  country          String?
-  city             String?
-  role             UserRole  @default(FAN)
-  isVipActive      Boolean   @default(false)
-  vipUntil         DateTime?
-  stripeCustomerId String?   @unique
+  id                         String    @id @default(cuid())
+  clerkId                    String    @unique
+  email                      String    @unique
+  name                       String?
+  phone                      String?
+  country                    String?
+  city                       String?
+  role                       UserRole  @default(FAN)
+  isVipActive                Boolean   @default(false)
+  vipUntil                   DateTime?
+  stripeCustomerId           String?   @unique
   onboardingProBookingDoneAt DateTime?
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  accountVerified            Boolean   @default(false)
+  accountVerifiedAt          DateTime?
+  createdAt                  DateTime  @default(now())
+  updatedAt                  DateTime  @updatedAt
 
   trajets               Trajet[]
   proProfile            ProProfile?
   unlockedContacts      UnlockedContact[]
   quizResults           QuizResult[]
   gameScores            GameScore[]
-  afterOwnerships       After[]           @relation("AfterOrganizer")
+  afterOwnerships       After[]               @relation("AfterOrganizer")
   payments              Payment[]
   moderator             Moderator?
-  conversationsAsClient Conversation[]    @relation("ConvClient")
-  conversationsAsPro    Conversation[]    @relation("ConvPro")
-  sentMessages          Message[]         @relation("SentMessages")
+  conversationsAsClient Conversation[]        @relation("ConvClient")
+  conversationsAsPro    Conversation[]        @relation("ConvPro")
+  sentMessages          Message[]             @relation("SentMessages")
+  verificationRequests  VerificationRequest[]
 
   @@index([email])
   @@index([clerkId])
@@ -46,12 +49,12 @@ enum UserRole {
 }
 
 model Trajet {
-  id              String   @id @default(cuid())
+  id              String    @id @default(cuid())
   userId          String
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   villeDepart     String
   paysDepart      String
-  villeArrivee    String   @default("Paris")
+  villeArrivee    String    @default("Paris")
   date            DateTime
   heureDepart     String
   placesDispo     Int
@@ -61,17 +64,17 @@ model Trajet {
   vehiculeModel   String?
   vehiculeColor   String?
   carPhoto        String?
-  note            String?  @db.Text
+  note            String?   @db.Text
   whatsapp        String
-  contactRevealed Boolean  @default(false)
-  isBoosted       Boolean  @default(false)
+  contactRevealed Boolean   @default(false)
+  isBoosted       Boolean   @default(false)
   boostUntil      DateTime?
-  isActive        Boolean  @default(true)
-  isApproved      Boolean  @default(false)
+  isActive        Boolean   @default(true)
+  isApproved      Boolean   @default(false)
   approvedAt      DateTime?
-  views           Int      @default(0)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  views           Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   @@index([paysDepart, villeDepart, date])
   @@index([isBoosted, createdAt])
@@ -102,28 +105,63 @@ model ProProfile {
   boostUntil      DateTime?
   isVerified      Boolean     @default(false)
   verifiedAt      DateTime?
+  isCertified     Boolean     @default(false)
+  certifiedAt     DateTime?
   views           Int         @default(0)
   contactAttempts Int         @default(0)
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
 
-  bookings       ProBooking[]
-  services       ProService[]
-  onlineServices Service[]        @relation("OnlineServices")
-  teamMembers    TeamMember[]
-  availability   ProAvailability[]
+  bookings             ProBooking[]
+  services             ProService[]
+  onlineServices       Service[]             @relation("OnlineServices")
+  teamMembers          TeamMember[]
+  availability         ProAvailability[]
+  verificationRequests VerificationRequest[]
 
   @@index([category, city])
   @@index([isBoosted, rating])
+}
+
+model VerificationRequest {
+  id            String             @id @default(cuid())
+  userId        String
+  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  proProfileId  String?
+  proProfile    ProProfile?        @relation(fields: [proProfileId], references: [id], onDelete: Cascade)
+  type          VerificationType
+  status        VerificationStatus @default(PENDING)
+  message       String?            @db.Text
+  adminNote     String?            @db.Text
+  reviewerEmail String?
+  requestedAt   DateTime           @default(now())
+  reviewedAt    DateTime?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  @@index([status, requestedAt])
+  @@index([userId, type, status])
+  @@index([proProfileId])
+}
+
+enum VerificationType {
+  ACCOUNT
+  PROFESSIONAL
+}
+
+enum VerificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 model ProAvailability {
   id           String     @id @default(cuid())
   proProfileId String
   proProfile   ProProfile @relation(fields: [proProfileId], references: [id], onDelete: Cascade)
-  dayOfWeek    Int        // 0=Dim, 1=Lun, ..., 6=Sam
-  startTime    String     // "09:00"
-  endTime      String     // "19:00"
+  dayOfWeek    Int // 0=Dim, 1=Lun, ..., 6=Sam
+  startTime    String // "09:00"
+  endTime      String // "19:00"
   isActive     Boolean    @default(true)
 
   @@unique([proProfileId, dayOfWeek])
@@ -172,21 +210,21 @@ enum ProCategory {
 }
 
 model ProBooking {
-  id              String           @id @default(cuid())
-  proProfileId    String
-  proProfile      ProProfile       @relation(fields: [proProfileId], references: [id], onDelete: Cascade)
-  serviceId       String?
-  durationMin     Int?
-  teamMemberId    String?
-  teamMember      TeamMember?      @relation(fields: [teamMemberId], references: [id], onDelete: SetNull)
-  clientName      String
-  clientEmail     String?
-  clientPhone     String
-  requestedAt     DateTime
-  note            String?          @db.Text
-  status          ProBookingStatus @default(PENDING)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  id           String           @id @default(cuid())
+  proProfileId String
+  proProfile   ProProfile       @relation(fields: [proProfileId], references: [id], onDelete: Cascade)
+  serviceId    String?
+  durationMin  Int?
+  teamMemberId String?
+  teamMember   TeamMember?      @relation(fields: [teamMemberId], references: [id], onDelete: SetNull)
+  clientName   String
+  clientEmail  String?
+  clientPhone  String
+  requestedAt  DateTime
+  note         String?          @db.Text
+  status       ProBookingStatus @default(PENDING)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
 
   @@index([proProfileId, requestedAt])
   @@index([status, createdAt])
@@ -201,33 +239,33 @@ enum ProBookingStatus {
 }
 
 model Service {
-  id               String   @id @default(cuid())
+  id               String     @id @default(cuid())
   proProfileId     String
   proProfile       ProProfile @relation("OnlineServices", fields: [proProfileId], references: [id], onDelete: Cascade)
   name             String
-  description      String?  @db.Text
+  description      String?    @db.Text
   durationMin      Int
   priceCents       Int
-  isOnlineBookable Boolean  @default(true)
-  position         Int      @default(0)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  isOnlineBookable Boolean    @default(true)
+  position         Int        @default(0)
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
 
-  members  ServiceMember[]
+  members ServiceMember[]
 
   @@index([proProfileId, position])
 }
 
 model TeamMember {
-  id           String   @id @default(cuid())
+  id           String     @id @default(cuid())
   proProfileId String
   proProfile   ProProfile @relation(fields: [proProfileId], references: [id], onDelete: Cascade)
   displayName  String
   photoUrl     String?
-  position     Int      @default(0)
-  isActive     Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  position     Int        @default(0)
+  isActive     Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 
   services     ServiceMember[]
   workingHours WorkingHours[]
@@ -248,7 +286,7 @@ model ServiceMember {
 }
 
 model WorkingHours {
-  id           String   @id @default(cuid())
+  id           String     @id @default(cuid())
   teamMemberId String
   teamMember   TeamMember @relation(fields: [teamMemberId], references: [id], onDelete: Cascade)
   dayOfWeek    Int
@@ -259,7 +297,7 @@ model WorkingHours {
 }
 
 model TimeOff {
-  id           String   @id @default(cuid())
+  id           String     @id @default(cuid())
   teamMemberId String
   teamMember   TeamMember @relation(fields: [teamMemberId], references: [id], onDelete: Cascade)
   startsAt     DateTime
@@ -287,10 +325,10 @@ enum UnlockedTargetType {
 }
 
 model After {
-  id          String   @id @default(cuid())
-  slug        String   @unique
+  id          String    @id @default(cuid())
+  slug        String    @unique
   name        String
-  description String   @db.Text
+  description String    @db.Text
   date        DateTime
   venue       String
   address     String
@@ -300,14 +338,14 @@ model After {
   ticketUrl   String
   flyerUrl    String?
   organizerId String?
-  organizer   User?    @relation("AfterOrganizer", fields: [organizerId], references: [id])
-  isVerified  Boolean  @default(false)
-  isBoosted   Boolean  @default(false)
-  isActive    Boolean  @default(true)
+  organizer   User?     @relation("AfterOrganizer", fields: [organizerId], references: [id])
+  isVerified  Boolean   @default(false)
+  isBoosted   Boolean   @default(false)
+  isActive    Boolean   @default(true)
   isApproved  Boolean   @default(false)
   approvedAt  DateTime?
-  views       Int      @default(0)
-  createdAt   DateTime @default(now())
+  views       Int       @default(0)
+  createdAt   DateTime  @default(now())
 
   @@index([date, isActive])
   @@index([isApproved, isActive, date])
@@ -416,18 +454,18 @@ enum PromoCodeCategory {
 }
 
 model Report {
-  id           String         @id @default(cuid())
-  targetType   ReportTargetType
-  targetId     String
-  reason       ReportReason
-  description  String?        @db.Text
+  id            String           @id @default(cuid())
+  targetType    ReportTargetType
+  targetId      String
+  reason        ReportReason
+  description   String?          @db.Text
   reporterEmail String?
-  reporterId   String?
-  status       ReportStatus   @default(PENDING)
-  adminNotes   String?        @db.Text
-  resolvedAt   DateTime?
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  reporterId    String?
+  status        ReportStatus     @default(PENDING)
+  adminNotes    String?          @db.Text
+  resolvedAt    DateTime?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
 
   @@index([status, createdAt])
   @@index([targetType, targetId])
@@ -490,20 +528,20 @@ enum PaymentStatus {
 }
 
 model Moderator {
-  id           String           @id @default(cuid())
-  userId       String           @unique
-  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String          @id @default(cuid())
+  userId       String          @unique
+  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   region       String
-  country      String           @default("France")
+  country      String          @default("France")
   whatsappLink String?
-  bio          String?          @db.Text
-  motivation   String?          @db.Text
-  status       ModeratorStatus  @default(PENDING)
+  bio          String?         @db.Text
+  motivation   String?         @db.Text
+  status       ModeratorStatus @default(PENDING)
   approvedAt   DateTime?
-  createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @updatedAt
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
 
-  community    WhatsAppCommunity?
+  community WhatsAppCommunity?
 
   @@index([status, region])
 }
@@ -515,20 +553,20 @@ enum ModeratorStatus {
 }
 
 model WhatsAppCommunity {
-  id           String     @id @default(cuid())
-  name         String
-  region       String
-  country      String     @default("France")
-  inviteLink   String
-  description  String?    @db.Text
-  rules        String?    @db.Text
-  memberCount  Int        @default(0)
-  isActive     Boolean    @default(true)
-  isFeatured   Boolean    @default(false)
-  moderatorId  String?    @unique
-  moderator    Moderator? @relation(fields: [moderatorId], references: [id], onDelete: SetNull)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  id          String     @id @default(cuid())
+  name        String
+  region      String
+  country     String     @default("France")
+  inviteLink  String
+  description String?    @db.Text
+  rules       String?    @db.Text
+  memberCount Int        @default(0)
+  isActive    Boolean    @default(true)
+  isFeatured  Boolean    @default(false)
+  moderatorId String?    @unique
+  moderator   Moderator? @relation(fields: [moderatorId], references: [id], onDelete: SetNull)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 
   @@index([region, isActive])
   @@index([country, isActive])
@@ -576,4 +614,47 @@ model Message {
 
   @@index([conversationId, createdAt])
   @@index([senderId])
+}
+
+// ──────────────────────────────────────────────
+// Catalogue événementiel éditorial
+// ──────────────────────────────────────────────
+
+model Event {
+  id                String      @id @default(cuid())
+  slug              String      @unique
+  title             String
+  artist            String
+  description       String      @db.Text
+  category          String
+  genres            String[]
+  image             String
+  poster            String?
+  startDate         DateTime
+  endDate           DateTime?
+  venue             String
+  city              String
+  country           String
+  latitude          Float?
+  longitude         Float?
+  officialTicketUrl String
+  sourceUrl         String
+  featured          Boolean     @default(false)
+  published         Boolean     @default(false)
+  status            EventStatus @default(DRAFT)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  @@index([published, startDate])
+  @@index([featured, startDate])
+  @@index([city, startDate])
+  @@index([artist])
+}
+
+enum EventStatus {
+  DRAFT
+  ON_SALE
+  SOLD_OUT
+  POSTPONED
+  CANCELLED
 }

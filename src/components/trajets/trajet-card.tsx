@@ -69,7 +69,7 @@ export function TrajetCard({ trajet, unlocked: _unlocked }: TrajetCardProps) {
           </p>
           <CardTitle className="font-display text-2xl uppercase text-paper tracking-tight">
             {trajet.villeDepart} <span className="text-paper-mute">→</span>{" "}
-            Paris
+            {trajet.villeArrivee ?? "Paris"}
           </CardTitle>
         </div>
       </CardHeader>

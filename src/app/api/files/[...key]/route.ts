@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import {
   createLocalMediaReadStream,
   getMediaStorageMode,
+  getNeonStorageClient,
   getStorageClient,
   localMediaExists,
 } from "@/lib/storage";
@@ -50,6 +51,16 @@ export async function GET(
     webStream = Readable.toWeb(
       createLocalMediaReadStream(objectKey),
     ) as ReadableStream<Uint8Array>;
+  } else if (storageMode === "neon") {
+    const client = getNeonStorageClient();
+    if (!(await client.exists(objectKey))) {
+      return NextResponse.json(
+        { error: "Fichier introuvable" },
+        { status: 404 },
+      );
+    }
+    const storedFile = await client.download(objectKey, { as: "stream" });
+    webStream = storedFile.stream();
   } else {
     const client = getStorageClient();
     const exists = await client.exists(objectKey);

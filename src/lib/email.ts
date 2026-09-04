@@ -27,7 +27,11 @@ type SendArgs = {
 export async function sendEmail({ to, subject, html, text }: SendArgs) {
   const resend = getResend();
   if (!resend) {
-    console.warn("[email] RESEND_API_KEY missing — email skipped:", to, subject);
+    console.warn(
+      "[email] RESEND_API_KEY missing — email skipped:",
+      to,
+      subject,
+    );
     return { ok: false, skipped: true as const };
   }
   try {
@@ -105,7 +109,7 @@ export async function sendProValidatedEmail(args: {
     <ul style="font-size:14px;line-height:1.7;color:#c4c4c4;padding-left:20px;margin:0 0 24px;">
       <li>Partage le lien de ton profil sur tes réseaux : <a href="${profileUrl}" style="color:#E50914;">${profileUrl.replace(/^https?:\/\//, "")}</a></li>
       <li>Réponds vite aux WhatsApp pour gagner des étoiles ⭐</li>
-      <li>Pense au pack <strong style="color:#fff;">Boost (8,99€)</strong> ou <strong style="color:#fff;">Premium (19,99€)</strong> pour passer en tête de l'annuaire</li>
+      <li>Active gratuitement la mise en avant de ta fiche depuis ton tableau de bord</li>
     </ul>
     <p style="font-size:14px;line-height:1.6;color:#a4a4a4;margin:0;">
       Une question ? Réponds simplement à cet email, on te lit.<br/>

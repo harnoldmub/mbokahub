@@ -1,39 +1,38 @@
 import {
-  BarChart3,
-  CalendarCheck,
+  ArrowRight,
   Camera,
-  Check,
-  ChevronRight,
-  Clock3,
-  Megaphone,
+  CarFront,
+  MapPin,
+  Plus,
   Scissors,
-  ShieldCheck,
   Sparkles,
-  Star,
   Store,
   UserRound,
 } from "lucide-react";
-import Link from "next/link";
-
 import type { Metadata } from "next";
-
+import Image from "next/image";
+import Link from "next/link";
+import { EventCard } from "@/components/events/event-card";
+import { EventHero } from "@/components/events/event-hero";
 import { HeroSearch } from "@/components/marketing/hero-search";
 import { Button } from "@/components/ui/button";
-import {
-  localizedHref,
-  type SearchParams,
-} from "@/lib/nls";
+import { prisma } from "@/lib/db/prisma";
+import { artists } from "@/lib/events";
+import { getPublicEvents } from "@/lib/events.server";
+import { localizedHref, type SearchParams } from "@/lib/nls";
 
+export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
-  title: "Nevent — Prestataires, trajets & afters de la diaspora",
+  title: "Nevent — Découvre l’événement, organise toute ton expérience",
   description:
-    "Trouvez coiffeurs, maquilleurs, photographes, covoiturages et afters de la diaspora. Annuaire 100% gratuit, réservation directe et messagerie incluse.",
-  alternates: { canonical: "/" },
+    "Concerts afro vérifiés en Europe, trajets, coiffure, beauté, photographes, services et afters : prépare toute ton expérience événementielle avec Nevent.",
+  alternates: { canonical: "/fr" },
   openGraph: {
-    title: "Nevent — Prestataires, trajets & afters de la diaspora",
+    title: "Nevent — Plus qu’un événement",
     description:
-      "Annuaire 100% gratuit de prestataires de la diaspora : beauté, transport, événements, merch.",
-    url: "/",
+      "Découvre les événements afro à ne pas manquer et organise tout ce qui se passe autour.",
+    images: ["/images/events/fally-ipupa-london-2026.webp"],
+    url: "/fr",
   },
 };
 
@@ -41,233 +40,345 @@ type HomePageProps = {
   params: Promise<{ locale: string }>;
   searchParams?: Promise<SearchParams>;
 };
-
-const categories = [
-  { label: "Coiffeur", href: "/prestataires?q=coiffeur", icon: Scissors },
+const services = [
+  { label: "Coiffure", href: "/beaute/coiffeurs", icon: Scissors },
   { label: "Barbier", href: "/prestataires?q=barbier", icon: UserRound },
-  { label: "Manucure", href: "/prestataires?q=ongles", icon: Sparkles },
-  { label: "Institut de beauté", href: "/prestataires?q=beaute", icon: Store },
-  { label: "Bien-être", href: "/prestataires?q=bien-etre", icon: ShieldCheck },
-  { label: "Photographe", href: "/prestataires?q=photo", icon: Camera },
+  { label: "Maquillage", href: "/beaute/maquilleuses", icon: Sparkles },
+  { label: "Manucure", href: "/prestataires?q=ongles", icon: Store },
+  { label: "Photographe", href: "/beaute/photographes", icon: Camera },
+  { label: "Transport", href: "/trajets", icon: CarFront },
 ];
 
-const stats = [
-  { value: "0 €", label: "pour créer sa fiche" },
-  { value: "3 clics", label: "pour demander un rendez-vous" },
-  { value: "Boost", label: "pour augmenter sa visibilité" },
-];
-
-const proBenefits = [
-  "Profil public gratuit",
-  "Photo principale et galerie",
-  "Demandes de rendez-vous",
-  "Boost optionnel",
-];
-
-export default async function HomePage({ params, searchParams }: HomePageProps) {
+export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
-  void searchParams;
-
+  const [allEvents, pros, rides, afters] = await Promise.all([
+    getPublicEvents(),
+    prisma.proProfile
+      .findMany({
+        where: { isVerified: true },
+        orderBy: [{ isBoosted: "desc" }, { rating: "desc" }],
+        select: {
+          id: true,
+          displayName: true,
+          category: true,
+          city: true,
+          photos: true,
+        },
+        take: 4,
+      })
+      .catch(() => []),
+    prisma.trajet
+      .findMany({
+        where: { isApproved: true, isActive: true, date: { gte: new Date() } },
+        orderBy: [{ isBoosted: "desc" }, { date: "asc" }],
+        select: {
+          id: true,
+          villeDepart: true,
+          villeArrivee: true,
+          date: true,
+          prix: true,
+          placesDispo: true,
+        },
+        take: 3,
+      })
+      .catch(() => []),
+    prisma.after
+      .findMany({
+        where: { isApproved: true, isActive: true, date: { gte: new Date() } },
+        orderBy: [{ isBoosted: "desc" }, { date: "asc" }],
+        select: { slug: true, name: true, city: true, venue: true },
+        take: 3,
+      })
+      .catch(() => []),
+  ]);
+  const events = allEvents;
+  const londonHero = allEvents.find(
+    (event) => event.slug === "fally-ipupa-london-2026",
+  );
+  const brusselsHero = allEvents.find(
+    (event) => event.slug === "fally-ipupa-bruxelles-11-decembre-2026",
+  );
+  const heroEvents = [
+    londonHero,
+    brusselsHero
+      ? { ...brusselsHero, endDate: "2026-12-12T20:00:00+01:00" }
+      : undefined,
+  ].filter((event): event is NonNullable<typeof event> => Boolean(event));
+  const spotlightEvents = [
+    londonHero,
+    brusselsHero,
+    allEvents.find((event) => event.slug === "omah-lay-bruxelles-2026"),
+  ].filter((event): event is NonNullable<typeof event> => Boolean(event));
   return (
-    <main className="force-light min-h-screen bg-ink text-paper">
-      <section className="border-b border-white/10 bg-white">
-        <div className="mx-auto max-w-7xl px-5 py-5 sm:px-6 lg:px-8">
-          <nav
-            aria-label="Catégories populaires"
-            className="flex items-center gap-1 overflow-x-auto py-1"
-          >
-            {categories.map((category) => (
-              <Link
-                className="shrink-0 rounded-md px-4 py-2 text-sm font-medium text-paper-dim transition hover:bg-smoke hover:text-paper"
-                href={localizedHref(category.href, locale)}
-                key={category.label}
+    <main className="force-light min-h-screen overflow-hidden bg-white text-paper">
+      <EventHero events={heroEvents} locale={locale} />
+
+      <section className="py-16 sm:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+          <SectionIntro
+            eyebrow="À la une"
+            title="Les événements à ne pas manquer."
+            href={localizedHref("/evenements", locale)}
+          />
+          <div className="mt-10 flex snap-x gap-5 overflow-x-auto pb-4 sm:grid sm:grid-cols-2 sm:overflow-visible lg:grid-cols-3">
+            {spotlightEvents.map((event, index) => (
+              <div
+                className="w-[86vw] shrink-0 snap-start sm:w-auto"
+                key={event.slug}
               >
-                {category.label}
+                <EventCard event={event} locale={locale} priority={index < 2} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-black/10 bg-[#f4f4f1] py-16 sm:py-20">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+          <p className="text-sm font-bold uppercase tracking-[0.16em] text-blood">
+            Que veux-tu faire ?
+          </p>
+          <h2 className="mt-3 max-w-3xl text-4xl font-semibold tracking-[-0.035em] sm:text-5xl">
+            Trouve ce qu’il te faut, là où tu vas.
+          </h2>
+          <div className="mt-2 max-w-4xl">
+            <HeroSearch locale={locale} />
+          </div>
+          <div className="mt-7 flex gap-2 overflow-x-auto pb-2">
+            {services.map(({ label, href, icon: Icon }) => (
+              <Link
+                className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full border border-black/15 bg-white px-4 text-sm font-semibold transition hover:border-blood hover:text-blood"
+                href={localizedHref(href, locale)}
+                key={label}
+              >
+                <Icon aria-hidden className="size-4" /> {label}
               </Link>
             ))}
-          </nav>
+          </div>
         </div>
       </section>
 
-      <section className="bg-white">
-        <div className="mx-auto grid max-w-7xl gap-10 px-5 pb-16 pt-8 sm:px-6 sm:pt-10 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:pb-24 lg:pt-12">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-blood">
-              Réservation de services
-            </p>
-            <h1 className="mt-3 max-w-4xl text-3xl font-semibold leading-[1.05] tracking-normal text-paper sm:mt-4 sm:text-4xl lg:text-5xl">
-              Trouvez un prestataire et réservez un rendez-vous.
-            </h1>
-
-            <HeroSearch locale={locale} />
-
-            <p className="mt-6 max-w-2xl text-base leading-7 text-paper-dim">
-              Nevent connecte les clients aux professionnels : beauté,
-              coiffure, photo, transport et services événementiels. Gratuit pour
-              chercher, publier et gérer ses demandes.
-            </p>
-
-            <div className="mt-6 flex flex-wrap gap-2">
-              {categories.slice(0, 5).map((category) => {
-                const Icon = category.icon;
-                return (
-                  <Link
-                    className="inline-flex items-center gap-2 rounded-full border border-[#dfe3ea] bg-white px-3 py-2 text-sm text-paper-dim transition hover:border-blood/40 hover:text-paper"
-                    href={localizedHref(category.href, locale)}
-                    key={category.label}
-                  >
-                    <Icon className="size-4 text-blood" />
-                    {category.label}
-                  </Link>
-                );
-              })}
-            </div>
+      <section className="bg-black py-16 text-white sm:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+          <SectionIntro
+            dark
+            eyebrow="Prochains événements"
+            title="La scène afro, ville après ville."
+            href={localizedHref("/evenements", locale)}
+          />
+          <div className="mt-10 grid gap-px overflow-hidden rounded-2xl bg-white/15 sm:grid-cols-2 lg:grid-cols-3">
+            {events.slice(3).map((event) => (
+              <Link
+                className="group bg-black p-6 transition hover:bg-white/5"
+                href={localizedHref(`/evenements/${event.slug}`, locale)}
+                key={event.slug}
+              >
+                <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-blood">
+                  {new Intl.DateTimeFormat("fr-FR", {
+                    day: "2-digit",
+                    month: "short",
+                  }).format(new Date(event.startDate))}
+                </p>
+                <h3 className="mt-8 text-3xl font-semibold">{event.artist}</h3>
+                <p className="mt-2 flex items-center gap-2 text-sm text-white/60">
+                  <MapPin aria-hidden className="size-4" />
+                  {event.city} · {event.venue}
+                </p>
+                <ArrowRight
+                  aria-hidden
+                  className="mt-8 size-5 transition-transform group-hover:translate-x-2"
+                />
+              </Link>
+            ))}
           </div>
+        </div>
+      </section>
 
-          <div className="grid gap-5 lg:pt-5">
-            <div className="rounded-xl border border-[#d7dbe2] bg-[#e9f6f7] p-6">
-              <div className="flex items-center gap-3">
-                <div className="grid size-10 place-items-center rounded-lg bg-[#4ca8b6] text-white">
-                  <CalendarCheck className="size-5" />
-                </div>
-                <p className="font-semibold text-paper">
-                  Vous cherchez un salon ou un service ?
-                </p>
-              </div>
-              <h2 className="mt-8 text-3xl font-semibold tracking-normal text-paper">
-                Réservez instantanément, où vous voulez.
-              </h2>
-              <p className="mt-4 max-w-md text-paper-dim">
-                Choisissez un professionnel, envoyez une demande de créneau et
-                gardez le contact ouvert gratuitement.
-              </p>
-              <div className="mt-8 rounded-lg bg-white p-3">
-                <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.25em] text-paper-mute">
-                  Aperçu d&apos;une réservation
-                </p>
-                <div className="flex items-center justify-between gap-3 rounded-md border border-[#dfe3ea] p-3">
-                  <div>
-                    <p className="text-sm font-semibold text-paper">
-                      Coiffure afro
-                    </p>
-                    <p className="text-xs text-paper-mute">
-                      Demain · Paris 18ᵉ
+      <section className="py-16 sm:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+          <SectionIntro
+            eyebrow="Prépare ton événement"
+            title="Tout ce qu’il te faut avant le concert."
+          />
+          <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+            {services.map(({ label, href, icon: Icon }) => (
+              <Link
+                className="group flex min-h-40 flex-col justify-between rounded-2xl border border-black/10 bg-[#f4f4f1] p-5 transition hover:-translate-y-1 hover:border-blood/50"
+                href={localizedHref(href, locale)}
+                key={label}
+              >
+                <Icon aria-hidden className="size-6 text-blood" />
+                <span className="font-semibold">{label}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-black/10 bg-[#f4f4f1] py-16 sm:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+          <SectionIntro
+            eyebrow="Prestataires populaires"
+            title="Des talents pour compléter ton expérience."
+            href={localizedHref("/prestataires", locale)}
+          />
+          {pros.length ? (
+            <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {pros.map((pro) => (
+                <Link
+                  className="group overflow-hidden rounded-2xl bg-white"
+                  href={localizedHref(`/pro/${pro.id}`, locale)}
+                  key={pro.id}
+                >
+                  <div className="relative aspect-square bg-neutral-200">
+                    {pro.photos[0] ? (
+                      <Image
+                        alt={pro.displayName}
+                        className="object-cover transition-transform duration-500 group-hover:scale-[1.025]"
+                        fill
+                        sizes="(max-width: 640px) 100vw, 25vw"
+                        src={pro.photos[0]}
+                        unoptimized
+                      />
+                    ) : (
+                      <div className="grid h-full place-items-center">
+                        <Sparkles className="size-10 text-black/20" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-5">
+                    <h3 className="text-xl font-semibold">{pro.displayName}</h3>
+                    <p className="mt-1 text-sm text-paper-dim">
+                      {pro.category.toLowerCase()} · {pro.city}
                     </p>
                   </div>
-                  <span className="rounded-md bg-[#202124] px-3 py-2 text-xs font-semibold text-white">
-                    18:30
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-xl border border-[#d7dbe2] bg-smoke p-6">
-              <div className="flex items-center gap-3">
-                <div className="grid size-10 place-items-center rounded-lg bg-[#202124] text-white">
-                  <Store className="size-5" />
-                </div>
-                <p className="font-semibold text-paper">
-                  Vous êtes professionnel ?
-                </p>
-              </div>
-              <h2 className="mt-8 text-3xl font-semibold tracking-normal text-paper">
-                Gérez votre visibilité et vos rendez-vous.
-              </h2>
-              <p className="mt-4 max-w-md text-paper-dim">
-                Créez votre fiche, ajoutez vos médias, recevez des demandes et
-                boostez seulement quand vous voulez apparaître plus haut.
-              </p>
-              <Button asChild className="mt-8">
-                <Link href={localizedHref("/pro/inscrire", locale)}>
-                  Référencer mon activité
                 </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="border-y border-[#d7dbe2] bg-white">
-        <div className="mx-auto grid max-w-7xl sm:grid-cols-3">
-          {stats.map((stat, index) => (
-            <div
-              className="min-h-48 border-[#d7dbe2] px-8 py-10 sm:border-l first:sm:border-l-0"
-              key={stat.label}
-            >
-              {index === 1 ? (
-                <div className="mb-8 h-1 w-full max-w-xs bg-blood" />
-              ) : null}
-              <p className="text-5xl font-medium tracking-normal text-paper">
-                {stat.value}
-              </p>
-              <p className="mt-4 text-xl text-paper-dim">{stat.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="bg-smoke py-16">
-        <div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
-          <div className="rounded-xl border border-[#d7dbe2] bg-white p-6">
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-blood">
-              Professionnel
-            </p>
-            <h2 className="mt-4 text-4xl font-semibold leading-tight text-paper">
-              Une fiche gratuite, une galerie propre, un planning clair.
-            </h2>
-            <div className="mt-8 grid gap-3">
-              {proBenefits.map((benefit) => (
-                <div
-                  className="flex items-center gap-3 rounded-lg border border-[#dfe3ea] bg-white p-3"
-                  key={benefit}
-                >
-                  <span className="grid size-7 place-items-center rounded-full bg-blood/10 text-blood">
-                    <Check className="size-4" />
-                  </span>
-                  <span className="text-sm font-medium text-paper">
-                    {benefit}
-                  </span>
-                </div>
               ))}
             </div>
-          </div>
+          ) : (
+            <EmptyInline
+              text="Les prestataires vérifiés apparaîtront ici dès leur publication."
+              href={localizedHref("/prestataires", locale)}
+              cta="Explorer l’annuaire"
+            />
+          )}
+        </div>
+      </section>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            {[
-              {
-                icon: Clock3,
-                title: "Demandes de rendez-vous",
-                text: "Le client choisit un créneau et le pro confirme depuis son planning.",
-              },
-              {
-                icon: Camera,
-                title: "Médias pro",
-                text: "Photo principale et galerie stockées dans le dossier média monté.",
-              },
-              {
-                icon: Megaphone,
-                title: "Boosts sponsorisés",
-                text: "La plateforme reste gratuite, boostez pour apparaître en premier.",
-              },
-              {
-                icon: BarChart3,
-                title: "Stats à venir",
-                text: "Vues, clics, demandes et performance des placements.",
-              },
-            ].map((item) => {
-              const Icon = item.icon;
+      <section className="py-16 sm:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+          <div className="grid gap-12 lg:grid-cols-2">
+            <div>
+              <SectionIntro
+                eyebrow="Trajets vers les événements"
+                title="Tu vas au concert ? Pars avec la communauté."
+                href={localizedHref("/trajets", locale)}
+              />
+              {rides.length ? (
+                <div className="mt-8 divide-y divide-black/10 border-y border-black/10">
+                  {rides.map((ride) => (
+                    <Link
+                      className="flex min-h-24 items-center justify-between gap-4 py-4"
+                      href={localizedHref(`/trajets/${ride.id}`, locale)}
+                      key={ride.id}
+                    >
+                      <div>
+                        <p className="font-semibold">
+                          {ride.villeDepart} → {ride.villeArrivee}
+                        </p>
+                        <p className="mt-1 text-sm text-paper-dim">
+                          {new Intl.DateTimeFormat("fr-FR", {
+                            dateStyle: "medium",
+                          }).format(ride.date)}{" "}
+                          · {ride.placesDispo} places
+                        </p>
+                      </div>
+                      <strong>{ride.prix} €</strong>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <EmptyInline
+                  text="Aucun trajet événementiel disponible pour le moment."
+                  href={localizedHref("/trajets/publier", locale)}
+                  cta="Proposer un trajet"
+                />
+              )}
+            </div>
+            <div>
+              <SectionIntro
+                eyebrow="Afters & sorties"
+                title="Et après ? Continue la soirée."
+                href={localizedHref("/afters", locale)}
+              />
+              {afters.length ? (
+                <div className="mt-8 divide-y divide-black/10 border-y border-black/10">
+                  {afters.map((after) => (
+                    <Link
+                      className="block py-5"
+                      href={localizedHref(`/afters/${after.slug}`, locale)}
+                      key={after.slug}
+                    >
+                      <p className="font-semibold">{after.name}</p>
+                      <p className="mt-1 text-sm text-paper-dim">
+                        {after.city} · {after.venue}
+                      </p>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <EmptyInline
+                  text="Aucun after référencé pour le moment."
+                  href={localizedHref("/afters/organiser", locale)}
+                  cta="Ajouter un after"
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-black/10 bg-[#f4f4f1] py-16 sm:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+          <SectionIntro
+            eyebrow="Artistes à suivre"
+            title="Les artistes qui font vibrer la scène afro."
+          />
+          <div className="mt-10 flex snap-x gap-3 overflow-x-auto pb-4">
+            {artists.map((artist, index) => {
+              const hasEvent = events.some(
+                (event) => event.artist === artist.name,
+              );
               return (
                 <article
-                  className="rounded-xl border border-[#d7dbe2] bg-white p-5"
-                  key={item.title}
+                  className="flex min-h-64 w-64 shrink-0 snap-start flex-col justify-between rounded-2xl bg-black p-6 text-white"
+                  key={artist.name}
                 >
-                  <Icon className="size-6 text-blood" />
-                  <h3 className="mt-5 text-xl font-semibold text-paper">
-                    {item.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-6 text-paper-dim">
-                    {item.text}
-                  </p>
+                  <span className="font-mono text-xs text-white/45">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <h3 className="text-3xl font-semibold">{artist.name}</h3>
+                    <p className="mt-2 text-sm text-white/60">
+                      {artist.genre} · {artist.country}
+                    </p>
+                    <p className="mt-5 text-xs text-white/50">
+                      {hasEvent
+                        ? "Dates disponibles"
+                        : "Pas de date disponible actuellement."}
+                    </p>
+                    {hasEvent ? (
+                      <Link
+                        className="mt-4 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-white"
+                        href={localizedHref(
+                          `/evenements?artiste=${encodeURIComponent(artist.name)}`,
+                          locale,
+                        )}
+                      >
+                        Voir les événements <ArrowRight className="size-4" />
+                      </Link>
+                    ) : null}
+                  </div>
                 </article>
               );
             })}
@@ -275,23 +386,88 @@ export default async function HomePage({ params, searchParams }: HomePageProps) 
         </div>
       </section>
 
-      <section className="bg-white py-16">
-        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
-          <div className="flex flex-col justify-between gap-6 border-t border-[#d7dbe2] pt-10 sm:flex-row sm:items-center">
-            <div>
-              <h2 className="mt-3 text-3xl font-semibold text-paper">
-                Trouvez le prestataire idéal dès aujourd'hui.
-              </h2>
-            </div>
-            <Button asChild size="lg">
-              <Link href={localizedHref("/prestataires", locale)}>
-                Explorer les prestataires
-                <ChevronRight className="ml-2 size-4" />
-              </Link>
-            </Button>
+      <section className="bg-blood py-16 text-white sm:py-20">
+        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-8 px-5 sm:px-6 lg:flex-row lg:items-end lg:px-8">
+          <div>
+            <p className="text-sm font-bold uppercase tracking-[0.16em]">
+              Professionnels
+            </p>
+            <h2 className="mt-3 max-w-3xl text-4xl font-semibold tracking-[-0.035em] sm:text-6xl">
+              Ton savoir-faire fait partie de l’événement.
+            </h2>
+            <p className="mt-4 max-w-xl text-white/80">
+              Crée gratuitement ta fiche, reçois des demandes et rends-toi
+              visible auprès d’une communauté qui prépare ses sorties.
+            </p>
           </div>
+          <Button
+            asChild
+            className="min-h-12 shrink-0 bg-white text-black hover:bg-white/90"
+            size="lg"
+          >
+            <Link href={localizedHref("/pro/inscrire", locale)}>
+              Référencer mon activité <Plus className="ml-2 size-4" />
+            </Link>
+          </Button>
         </div>
       </section>
     </main>
+  );
+}
+
+function SectionIntro({
+  eyebrow,
+  title,
+  href,
+  dark = false,
+}: {
+  eyebrow: string;
+  title: string;
+  href?: string;
+  dark?: boolean;
+}) {
+  return (
+    <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+      <div>
+        <p className="text-sm font-bold uppercase tracking-[0.16em] text-blood">
+          {eyebrow}
+        </p>
+        <h2
+          className={`mt-3 max-w-3xl text-4xl font-semibold tracking-[-0.035em] sm:text-5xl ${dark ? "text-white" : "text-paper"}`}
+        >
+          {title}
+        </h2>
+      </div>
+      {href ? (
+        <Link
+          className={`inline-flex min-h-11 shrink-0 items-center gap-2 text-sm font-bold ${dark ? "text-white" : "text-paper"}`}
+          href={href}
+        >
+          Tout voir <ArrowRight className="size-4" />
+        </Link>
+      ) : null}
+    </div>
+  );
+}
+function EmptyInline({
+  text,
+  href,
+  cta,
+}: {
+  text: string;
+  href: string;
+  cta: string;
+}) {
+  return (
+    <div className="mt-8 rounded-2xl border border-black/10 bg-white p-6">
+      <p className="text-paper-dim">{text}</p>
+      <Link
+        className="mt-4 inline-flex min-h-11 items-center gap-2 font-semibold text-paper hover:text-blood"
+        href={href}
+      >
+        {cta}
+        <ArrowRight className="size-4" />
+      </Link>
+    </div>
   );
 }

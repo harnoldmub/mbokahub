@@ -1,13 +1,33 @@
 import type { MetadataRoute } from "next";
 
 import { prisma } from "@/lib/db/prisma";
+import { getPublicEvents } from "@/lib/events.server";
 import { PRO_CATEGORIES } from "@/lib/pro-categories";
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3001";
+const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://nevent.co";
 const LOCALES = ["fr", "en", "de", "nl"] as const;
 
-type Priority = 0.3 | 0.4 | 0.5 | 0.55 | 0.6 | 0.65 | 0.7 | 0.8 | 0.85 | 0.9 | 0.95 | 1;
-type Freq = "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
+type Priority =
+  | 0.3
+  | 0.4
+  | 0.5
+  | 0.55
+  | 0.6
+  | 0.65
+  | 0.7
+  | 0.8
+  | 0.85
+  | 0.9
+  | 0.95
+  | 1;
+type Freq =
+  | "always"
+  | "hourly"
+  | "daily"
+  | "weekly"
+  | "monthly"
+  | "yearly"
+  | "never";
 
 type StaticRoute = {
   path: string;
@@ -17,6 +37,10 @@ type StaticRoute = {
 
 const STATIC_ROUTES: StaticRoute[] = [
   { path: "/", priority: 1, changeFrequency: "daily" },
+  { path: "/fr/evenements", priority: 0.95, changeFrequency: "daily" },
+  { path: "/fr/evenements/londres", priority: 0.8, changeFrequency: "daily" },
+  { path: "/fr/evenements/bruxelles", priority: 0.8, changeFrequency: "daily" },
+  { path: "/fr/evenements/paris", priority: 0.7, changeFrequency: "daily" },
 
   // Core verticals
   { path: "/trajets", priority: 0.95, changeFrequency: "daily" },
@@ -45,9 +69,13 @@ const STATIC_ROUTES: StaticRoute[] = [
   { path: "/disclaimer", priority: 0.3, changeFrequency: "yearly" },
 ];
 
-function buildAlternates(path: string): MetadataRoute.Sitemap[number]["alternates"] {
+function buildAlternates(
+  path: string,
+): MetadataRoute.Sitemap[number]["alternates"] {
   return {
-    languages: Object.fromEntries(LOCALES.map((l) => [l, `${appUrl}${path}?lang=${l}`])),
+    languages: Object.fromEntries(
+      LOCALES.map((l) => [l, `${appUrl}${path}?lang=${l}`]),
+    ),
   };
 }
 
@@ -69,6 +97,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: "weekly",
     priority: 0.7,
   }));
+  const eventEntries: MetadataRoute.Sitemap = (await getPublicEvents()).map(
+    (event) => ({
+      url: `${appUrl}/fr/evenements/${event.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "daily" as const,
+      priority: 0.85 as Priority,
+    }),
+  );
 
   // Dynamic content — fail open if DB is unreachable so the sitemap still builds
   let dynamicEntries: MetadataRoute.Sitemap = [];
@@ -118,5 +154,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("[sitemap] failed to fetch dynamic content", err);
   }
 
-  return [...staticEntries, ...categoryEntries, ...dynamicEntries];
+  return [
+    ...staticEntries,
+    ...eventEntries,
+    ...categoryEntries,
+    ...dynamicEntries,
+  ];
 }

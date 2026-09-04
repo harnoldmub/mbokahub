@@ -11,7 +11,7 @@
   --color-ash: #d7dbe2;
 
   /* ACCENTS — rouge fonctionnel + noir CTA */
-  --color-blood: #E31818;
+  --color-blood: #e31818;
   --color-blood-deep: #b31212;
   --color-ember: #2f80ed;
   --color-flame: #1d4ed8;
@@ -39,7 +39,7 @@
   --color-background: #ffffff;
   --color-muted: #f4f5f7;
   --color-muted-foreground: #4d5157;
-  --color-accent: #E31818;
+  --color-accent: #e31818;
   --color-accent-foreground: #ffffff;
   --color-border: #d7dbe2;
   --color-card: #ffffff;
@@ -58,7 +58,7 @@
   /* VIOLET → rouge (override Tailwind palette) */
   --color-violet-300: #f07070;
   --color-violet-400: #e84040;
-  --color-violet-500: #E31818;
+  --color-violet-500: #e31818;
 
   /* BORDERS */
   --radius-xl: 10px;
@@ -131,6 +131,7 @@
 
   html {
     -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
   }
 
   body {
@@ -141,6 +142,20 @@
 
   body::before {
     content: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 

@@ -1,15 +1,41 @@
-"use client";
+import { CheckCircle2, Clock3, ShieldCheck } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { ShieldCheck } from "lucide-react";
+import { requestProfessionalCertificationAction } from "@/lib/actions/verification";
 
-export function VerifyIdentityButton() {
+type VerifyIdentityButtonProps = {
+  certified?: boolean;
+  pending?: boolean;
+};
+
+export function VerifyIdentityButton({
+  certified,
+  pending,
+}: VerifyIdentityButtonProps) {
+  if (certified) {
+    return (
+      <Button disabled variant="outline" size="sm" className="gap-2">
+        <CheckCircle2 aria-hidden className="size-4" />
+        Professionnel certifié
+      </Button>
+    );
+  }
+
+  if (pending) {
+    return (
+      <Button disabled variant="outline" size="sm" className="gap-2">
+        <Clock3 aria-hidden className="size-4" />
+        Vérification en cours
+      </Button>
+    );
+  }
+
   return (
-    <Button asChild variant="outline" size="sm" className="gap-2">
-      <a href="mailto:contact@mbokahub.com?subject=Vérification%20Identité%20Prestataire&body=Bonjour,%20merci%20de%20vérifier%20mon%20identité.%20Je%20vous%20envoie%20ma%20pièce%20d'identité%20en%20pièce%20jointe.">
-        <ShieldCheck className="size-4" />
-        Demander la vérification (Gratuit)
-      </a>
-    </Button>
+    <form action={requestProfessionalCertificationAction}>
+      <Button type="submit" variant="outline" size="sm" className="gap-2">
+        <ShieldCheck aria-hidden className="size-4" />
+        Demander la certification gratuite
+      </Button>
+    </form>
   );
 }

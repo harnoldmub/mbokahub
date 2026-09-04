@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
-import type { Metadata } from "next";
 import { ArrowRight, Check, ShieldCheck, UserPlus } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { SectionHeading } from "@/components/marketing/section-heading";
@@ -13,7 +13,7 @@ import { proOffer, proProofPoints } from "@/lib/marketing-data";
 export const metadata: Metadata = {
   title: "Devenir prestataire — Inscription gratuite",
   description:
-    "Créez votre fiche pro Nevent en 5 minutes. Visibilité gratuite, messagerie sécurisée, réservation en ligne et options de boost.",
+    "Créez votre fiche pro Nevent en 5 minutes. Visibilité, messagerie, réservation et mise en avant gratuites.",
   alternates: { canonical: "/pro" },
 };
 
@@ -66,10 +66,10 @@ export default async function ProPage() {
             tu veux
           </h1>
           <p className="mt-6 max-w-2xl text-muted-foreground text-xl leading-8">
-            Nevent connecte les clients aux prestataires utiles : beauté,
-            photo, transport, événementiel, restauration et services locaux.
-            L&apos;inscription est gratuite. Tu payes uniquement si tu veux plus
-            de visibilité.
+            Nevent connecte les clients aux prestataires utiles : beauté, photo,
+            transport, événementiel, restauration et services locaux.
+            L&apos;inscription et la mise en avant sont gratuites, sans carte
+            bancaire.
           </p>
           {userId && (
             <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 font-mono text-[11px] text-paper-dim uppercase tracking-widest">
@@ -139,7 +139,7 @@ export default async function ProPage() {
             number="PRO"
             description={proOffer.description}
             eyebrow="Modèle"
-            title="Inscription gratuite — boost optionnel"
+            title="Inscription et visibilité gratuites"
           />
           <div className="mt-10 mx-auto max-w-3xl">
             <Card className="rounded-2xl border-primary/30 bg-gradient-to-br from-primary/10 to-transparent shadow-[var(--glow-red)]">

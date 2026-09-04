@@ -7,7 +7,7 @@ type ConnectionItem = {
   };
 };
 
-const STRIPE_API_VERSION = "2026-03-25.dahlia" as const;
+const STRIPE_API_VERSION = "2026-08-26.dahlia" as const;
 
 async function getCredentialsFromConnector(): Promise<{
   publishableKey: string;

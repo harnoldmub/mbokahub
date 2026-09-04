@@ -4,17 +4,21 @@ import Link from "next/link";
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { PriceSuggester } from "@/components/trajets/price-suggester";
 import { Button } from "@/components/ui/button";
+import { CityInput } from "@/components/ui/city-input";
 import { FormField } from "@/components/ui/form-field";
+import { Input } from "@/components/ui/input";
 import { NumberStepper } from "@/components/ui/number-stepper";
 import { PhoneInput } from "@/components/ui/phone-input";
-import { CityInput } from "@/components/ui/city-input";
-import { Input } from "@/components/ui/input";
 import { createTrajetAction } from "@/lib/actions/public";
 
 export default async function PublishTrajetPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ error?: string }>;
+  searchParams?: Promise<{
+    error?: string;
+    destination?: string;
+    date?: string;
+  }>;
 }) {
   const sp = await searchParams;
   const error = sp?.error;
@@ -46,8 +50,8 @@ export default async function PublishTrajetPage({
                   Validation manuelle
                 </p>
                 <p className="text-paper-dim text-xs leading-relaxed font-body">
-                  Ton annonce sera vérifiée par Nevent. Les passagers voient
-                  ta voiture, ton modèle et ton prix avant de te contacter via
+                  Ton annonce sera vérifiée par Nevent. Les passagers voient ta
+                  voiture, ton modèle et ton prix avant de te contacter via
                   WhatsApp.
                 </p>
               </div>
@@ -73,7 +77,9 @@ export default async function PublishTrajetPage({
                   Tu es chauffeur VTC ?
                 </p>
                 <p className="text-paper-dim text-xs leading-relaxed font-body">
-                  Inscris-toi comme prestataire pro pour proposer tes courses (transferts aéroport, transport privé concert + after) à toute la diaspora.
+                  Inscris-toi comme prestataire pro pour proposer tes courses
+                  (transferts aéroport, transport privé concert + after) à toute
+                  la diaspora.
                 </p>
                 <p className="text-gold text-xs font-mono uppercase tracking-wider mt-2 inline-flex items-center gap-1 group-hover:gap-2 transition-all">
                   S'inscrire comme VTC <ArrowRight className="size-3" />
@@ -99,12 +105,17 @@ export default async function PublishTrajetPage({
             <div className="space-y-8">
               <div className="space-y-6">
                 <h3 className="font-display text-xl uppercase text-paper/80 tracking-tight flex items-center gap-3">
-                  <span className="size-8 rounded-lg bg-smoke flex items-center justify-center text-blood text-sm">01</span>
+                  <span className="size-8 rounded-lg bg-smoke flex items-center justify-center text-blood text-sm">
+                    01
+                  </span>
                   L'itinéraire
                 </h3>
 
                 <div className="grid sm:grid-cols-2 gap-6">
-                  <FormField label="Ville de départ" helperText="D'où pars-tu ?">
+                  <FormField
+                    label="Ville de départ"
+                    helperText="D'où pars-tu ?"
+                  >
                     <CityInput
                       name="villeDepart"
                       country="BE"
@@ -113,52 +124,121 @@ export default async function PublishTrajetPage({
                     />
                   </FormField>
                   <FormField label="Pays" helperText="Pays de départ">
-                    <Input name="paysDepart" defaultValue="Belgique" required className="h-12 bg-smoke border-none" />
+                    <Input
+                      name="paysDepart"
+                      defaultValue="Belgique"
+                      required
+                      className="h-12 bg-smoke border-none"
+                    />
+                  </FormField>
+                  <FormField
+                    label="Ville d’arrivée"
+                    helperText="Destination de l’événement"
+                  >
+                    <Input
+                      name="villeArrivee"
+                      defaultValue={sp?.destination ?? "Paris"}
+                      required
+                      className="h-12 bg-smoke border-none"
+                    />
                   </FormField>
                   <FormField label="Date" helperText="Jour du trajet">
-                    <Input name="date" type="date" required className="h-12 bg-smoke border-none text-paper-dim" />
+                    <Input
+                      name="date"
+                      defaultValue={sp?.date}
+                      type="date"
+                      required
+                      className="h-12 bg-smoke border-none text-paper-dim"
+                    />
                   </FormField>
-                  <FormField label="Heure de départ" helperText="Précise l'heure">
-                    <Input name="heureDepart" type="time" required className="h-12 bg-smoke border-none text-paper-dim" />
+                  <FormField
+                    label="Heure de départ"
+                    helperText="Précise l'heure"
+                  >
+                    <Input
+                      name="heureDepart"
+                      type="time"
+                      required
+                      className="h-12 bg-smoke border-none text-paper-dim"
+                    />
                   </FormField>
                 </div>
               </div>
 
               <div className="space-y-6">
                 <h3 className="font-display text-xl uppercase text-paper/80 tracking-tight flex items-center gap-3">
-                  <span className="size-8 rounded-lg bg-smoke flex items-center justify-center text-blood text-sm">02</span>
+                  <span className="size-8 rounded-lg bg-smoke flex items-center justify-center text-blood text-sm">
+                    02
+                  </span>
                   Le véhicule
                 </h3>
 
                 <div className="grid sm:grid-cols-2 gap-6">
-                  <FormField label="Modèle de voiture" helperText="Ex: Audi A3, Peugeot 3008">
-                    <Input name="vehiculeModel" placeholder="Audi A3" className="h-12 bg-smoke border-none" />
+                  <FormField
+                    label="Modèle de voiture"
+                    helperText="Ex: Audi A3, Peugeot 3008"
+                  >
+                    <Input
+                      name="vehiculeModel"
+                      placeholder="Audi A3"
+                      className="h-12 bg-smoke border-none"
+                    />
                   </FormField>
-                  <FormField label="Couleur" helperText="Pour te repérer plus facilement">
-                    <Input name="vehiculeColor" placeholder="Noir, Blanc, Gris..." className="h-12 bg-smoke border-none" />
+                  <FormField
+                    label="Couleur"
+                    helperText="Pour te repérer plus facilement"
+                  >
+                    <Input
+                      name="vehiculeColor"
+                      placeholder="Noir, Blanc, Gris..."
+                      className="h-12 bg-smoke border-none"
+                    />
                   </FormField>
                 </div>
               </div>
 
               <div className="space-y-6">
                 <h3 className="font-display text-xl uppercase text-paper/80 tracking-tight flex items-center gap-3">
-                  <span className="size-8 rounded-lg bg-smoke flex items-center justify-center text-blood text-sm">03</span>
+                  <span className="size-8 rounded-lg bg-smoke flex items-center justify-center text-blood text-sm">
+                    03
+                  </span>
                   Détails du voyage
                 </h3>
 
                 <div className="grid sm:grid-cols-3 gap-6">
                   <FormField label="Places" helperText="Total dispo">
-                    <NumberStepper name="placesTotal" defaultValue={4} min={1} max={8} required unit="places" />
+                    <NumberStepper
+                      name="placesTotal"
+                      defaultValue={4}
+                      min={1}
+                      max={8}
+                      required
+                      unit="places"
+                    />
                   </FormField>
                   <FormField label="Prix / place" helperText="En Euros (€)">
-                    <Input name="prix" type="number" min="0" step="0.5" required placeholder="25" className="h-12 bg-smoke border-none" />
+                    <Input
+                      name="prix"
+                      type="number"
+                      min="0"
+                      step="0.5"
+                      required
+                      placeholder="25"
+                      className="h-12 bg-smoke border-none"
+                    />
                   </FormField>
-                  <FormField label="WhatsApp" helperText="Choisis ton indicatif pays puis tape ton numéro">
+                  <FormField
+                    label="WhatsApp"
+                    helperText="Choisis ton indicatif pays puis tape ton numéro"
+                  >
                     <PhoneInput name="whatsapp" required />
                   </FormField>
                 </div>
 
-                <FormField label="Note (optionnel)" helperText="Détails utiles : départ d'une gare précise, bagages, etc.">
+                <FormField
+                  label="Note (optionnel)"
+                  helperText="Détails utiles : départ d'une gare précise, bagages, etc."
+                >
                   <textarea
                     name="note"
                     rows={3}
@@ -169,8 +249,13 @@ export default async function PublishTrajetPage({
               </div>
             </div>
 
-            <Button type="submit" className="w-full h-16 text-lg shadow-glow-blood group" size="lg">
-              Publier mon annonce <ArrowRight className="ml-2 size-5 transition-transform group-hover:translate-x-2" />
+            <Button
+              type="submit"
+              className="w-full h-16 text-lg shadow-glow-blood group"
+              size="lg"
+            >
+              Publier mon annonce{" "}
+              <ArrowRight className="ml-2 size-5 transition-transform group-hover:translate-x-2" />
             </Button>
           </form>
         </div>

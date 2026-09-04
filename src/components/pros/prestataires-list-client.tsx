@@ -31,6 +31,7 @@ type ProListItem = {
   photos: string[];
   priceRange: string | null;
   isPremium: boolean;
+  isCertified?: boolean;
   isBoosted: boolean;
   isVerified: boolean;
   rating: number;
@@ -316,9 +317,9 @@ export function PrestatairesListClient({ pros, initialSearch = "" }: Props) {
                         {meta?.icon ?? "✨"}
                       </div>
                     )}
-                    {p.isVerified && (
+                    {p.isCertified && (
                       <span className="pointer-events-none absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-vip px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-coal">
-                        <ShieldCheck className="size-3" /> Vérifié
+                        <ShieldCheck className="size-3" /> Certifié
                       </span>
                     )}
                     {p.isBoosted && (

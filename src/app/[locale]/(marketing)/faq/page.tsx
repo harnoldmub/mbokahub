@@ -1,6 +1,6 @@
+import { ArrowRight, HelpCircle } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, HelpCircle } from "lucide-react";
 
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { Button } from "@/components/ui/button";
@@ -43,7 +43,7 @@ const FAQ_SECTIONS = [
       },
       {
         q: "Combien ça coûte ?",
-        a: "L'inscription est gratuite. Tu peux booster ton profil avec un format Pro Feature (à partir de 200€/semaine — voir /ads).",
+        a: "L'inscription, la fiche et la mise en avant sont gratuites pendant la phase de lancement.",
       },
       {
         q: "Comment recevoir des paiements ?",
@@ -119,13 +119,17 @@ export default function FaqPage() {
                     <summary className="flex cursor-pointer items-start justify-between gap-4 list-none">
                       <span className="flex items-start gap-3">
                         <HelpCircle className="mt-0.5 size-5 shrink-0 text-blood" />
-                        <span className="font-display text-base text-paper">{item.q}</span>
+                        <span className="font-display text-base text-paper">
+                          {item.q}
+                        </span>
                       </span>
                       <span className="font-mono text-xs text-paper-mute group-open:rotate-180 transition-transform">
                         ▾
                       </span>
                     </summary>
-                    <p className="mt-4 pl-8 text-sm text-paper-dim leading-relaxed">{item.a}</p>
+                    <p className="mt-4 pl-8 text-sm text-paper-dim leading-relaxed">
+                      {item.a}
+                    </p>
                   </details>
                 ))}
               </div>

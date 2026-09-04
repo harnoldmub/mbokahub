@@ -1,22 +1,38 @@
-import { ShieldAlert, UserRound } from "lucide-react";
+import {
+  CheckCircle2,
+  Clock3,
+  ShieldAlert,
+  ShieldCheck,
+  UserRound,
+} from "lucide-react";
 
 import { ScrollToTopOnMount } from "@/components/dashboard/scroll-to-top-on-mount";
+import { Button } from "@/components/ui/button";
 import { deleteAccountAction } from "@/lib/actions/account";
+import { requestAccountVerificationAction } from "@/lib/actions/verification";
 import { formatDate, getDashboardUser } from "@/lib/dashboard";
+import { prisma } from "@/lib/db/prisma";
 
 type SettingsPageProps = {
   searchParams: Promise<{
     error?: string;
+    verification?: string;
   }>;
 };
 
 export default async function SettingsPage({
   searchParams,
 }: SettingsPageProps) {
-  const [{ error }, user] = await Promise.all([
+  const [{ error, verification }, user] = await Promise.all([
     searchParams,
     getDashboardUser(),
   ]);
+
+  const latestVerification = await prisma.verificationRequest.findFirst({
+    where: { userId: user.id, type: "ACCOUNT" },
+    orderBy: { requestedAt: "desc" },
+    select: { status: true, requestedAt: true },
+  });
 
   return (
     <div className="grid gap-8">
@@ -57,6 +73,44 @@ export default async function SettingsPage({
         </dl>
       </section>
 
+      <section className="rounded-3xl border border-emerald-400/20 bg-emerald-400/5 p-6">
+        <div className="flex items-center gap-3">
+          <ShieldCheck aria-hidden className="size-6 text-emerald-300" />
+          <h2 className="font-heading text-2xl text-paper">
+            Vérification du compte
+          </h2>
+        </div>
+        <p className="mt-4 max-w-2xl text-paper-dim leading-7">
+          Demande une vérification manuelle pour renforcer la confiance autour
+          de ton compte. L&apos;équipe te contactera si un justificatif est
+          nécessaire ; aucun document sensible n&apos;est envoyé par ce
+          formulaire.
+        </p>
+
+        {verification === "requested" ? (
+          <p className="mt-4 flex items-center gap-2 rounded-2xl border border-emerald-400/30 bg-emerald-500/10 p-3 text-emerald-200 text-sm">
+            <ScrollToTopOnMount />
+            <CheckCircle2 aria-hidden className="size-4" />
+            Ta demande a bien été transmise.
+          </p>
+        ) : null}
+
+        <div className="mt-6">
+          {user.accountVerified ? (
+            <BadgeState icon={CheckCircle2} label="Compte vérifié" />
+          ) : latestVerification?.status === "PENDING" ? (
+            <BadgeState icon={Clock3} label="Vérification en cours" />
+          ) : (
+            <form action={requestAccountVerificationAction}>
+              <Button type="submit">
+                <ShieldCheck aria-hidden className="size-4" />
+                Demander la vérification gratuite
+              </Button>
+            </form>
+          )}
+        </div>
+      </section>
+
       <section className="rounded-3xl border border-error/30 bg-error/5 p-6">
         <div className="flex items-center gap-3">
           <ShieldAlert aria-hidden className="size-6 text-error" />
@@ -65,8 +119,8 @@ export default async function SettingsPage({
           </h2>
         </div>
         <p className="mt-4 max-w-2xl text-paper-dim leading-7">
-          Cette action supprime ton compte Clerk et les données Nevent liées
-          à ton utilisateur. Elle est définitive.
+          Cette action supprime ton compte Clerk et les données Nevent liées à
+          ton utilisateur. Elle est définitive.
         </p>
         {error === "confirmation" ? (
           <p className="mt-4 rounded-2xl border border-error/30 bg-error/10 p-3 text-error">
@@ -96,5 +150,20 @@ export default async function SettingsPage({
         </form>
       </section>
     </div>
+  );
+}
+
+function BadgeState({
+  icon: Icon,
+  label,
+}: {
+  icon: typeof CheckCircle2;
+  label: string;
+}) {
+  return (
+    <span className="inline-flex min-h-11 items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-4 py-2 text-emerald-200 text-sm">
+      <Icon aria-hidden className="size-4" />
+      {label}
+    </span>
   );
 }

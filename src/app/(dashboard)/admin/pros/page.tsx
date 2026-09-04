@@ -3,8 +3,8 @@ import Link from "next/link";
 import { AdminProActionsBar } from "@/components/admin/admin-pro-actions-bar";
 import { PhotoUploader } from "@/components/admin/photo-uploader";
 import { PhoneInput } from "@/components/ui/phone-input";
-import { prisma } from "@/lib/db/prisma";
 import { createProProfileAdmin } from "@/lib/actions/admin";
+import { prisma } from "@/lib/db/prisma";
 
 export const dynamic = "force-dynamic";
 
@@ -62,7 +62,9 @@ export default async function AdminProsPage({
           Profils pros & beauté ({pros.length})
         </h2>
         <p className="mt-1 text-muted-foreground text-sm">
-          Créer, valider, certifier ou supprimer les profils prestataires (toutes catégories : maquilleuses, coiffeurs, photographes, DJ, traiteurs…).
+          Créer, valider, certifier ou supprimer les profils prestataires
+          (toutes catégories : maquilleuses, coiffeurs, photographes, DJ,
+          traiteurs…).
         </p>
         <div className="mt-4 flex gap-2">
           <Link
@@ -113,9 +115,13 @@ export default async function AdminProsPage({
             defaultValue=""
             className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-foreground text-sm"
           >
-            <option value="" disabled>— Catégorie —</option>
+            <option value="" disabled>
+              — Catégorie —
+            </option>
             {CATEGORIES.map((c) => (
-              <option key={c} value={c}>{c}</option>
+              <option key={c} value={c}>
+                {c}
+              </option>
             ))}
           </select>
           <input
@@ -171,8 +177,8 @@ export default async function AdminProsPage({
             Marquer comme validé
           </label>
           <label className="flex items-center gap-2 text-foreground text-sm">
-            <input type="checkbox" name="isPremium" />
-            Marquer comme Premium
+            <input type="checkbox" name="isCertified" />
+            Certifier le professionnel
           </label>
           <button
             type="submit"
@@ -192,7 +198,7 @@ export default async function AdminProsPage({
               <th className="px-4 py-3">Ville</th>
               <th className="px-4 py-3">WhatsApp</th>
               <th className="px-4 py-3">Email</th>
-              <th className="px-4 py-3">Premium</th>
+              <th className="px-4 py-3">Certification</th>
               <th className="px-4 py-3">Statut</th>
               <th className="px-4 py-3 text-right">Actions</th>
             </tr>
@@ -208,14 +214,22 @@ export default async function AdminProsPage({
                     {p.displayName}
                   </Link>
                 </td>
-                <td className="px-4 py-3 text-muted-foreground text-xs">{p.category}</td>
-                <td className="px-4 py-3 text-muted-foreground">{p.city}, {p.country}</td>
-                <td className="px-4 py-3 font-mono text-muted-foreground text-xs">{p.whatsapp}</td>
-                <td className="px-4 py-3 font-mono text-muted-foreground text-xs">{p.user.email}</td>
                 <td className="px-4 py-3 text-muted-foreground text-xs">
-                  {p.isPremium ? (
+                  {p.category}
+                </td>
+                <td className="px-4 py-3 text-muted-foreground">
+                  {p.city}, {p.country}
+                </td>
+                <td className="px-4 py-3 font-mono text-muted-foreground text-xs">
+                  {p.whatsapp}
+                </td>
+                <td className="px-4 py-3 font-mono text-muted-foreground text-xs">
+                  {p.user.email}
+                </td>
+                <td className="px-4 py-3 text-muted-foreground text-xs">
+                  {p.isCertified ? (
                     <span className="rounded-full bg-blood px-2 py-1 text-xs font-semibold text-white">
-                      Premium
+                      Certifié
                     </span>
                   ) : (
                     "—"
@@ -292,7 +306,7 @@ export default async function AdminProsPage({
                         specialities: p.specialities,
                         photos: p.photos,
                         isVerified: p.isVerified,
-                        isPremium: p.isPremium,
+                        isCertified: p.isCertified,
                       }}
                     />
                   </div>
@@ -301,7 +315,10 @@ export default async function AdminProsPage({
             ))}
             {pros.length === 0 && (
               <tr>
-                <td colSpan={8} className="px-4 py-12 text-center text-muted-foreground">
+                <td
+                  colSpan={8}
+                  className="px-4 py-12 text-center text-muted-foreground"
+                >
                   Aucun profil pro pour le moment.
                 </td>
               </tr>

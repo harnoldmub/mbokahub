@@ -4,7 +4,9 @@ import { useState } from "react";
 
 export function NewsletterForm({ source = "footer" }: { source?: string }) {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "ok" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "ok" | "error">(
+    "idle",
+  );
   const [message, setMessage] = useState("");
 
   async function submit(e: React.FormEvent) {
@@ -32,17 +34,19 @@ export function NewsletterForm({ source = "footer" }: { source?: string }) {
     <form onSubmit={submit} className="space-y-3">
       <div>
         <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-blood">
-          📬 Newsletter Nevent
+          Newsletter Nevent
         </p>
         <p className="mt-2 text-sm text-paper">
-          Reçois les <strong className="text-paper">bons plans, alertes
-          last-minute et nouveautés du week-end Stade de France</strong> (concert,
-          afters, prestataires, sape) — 1 à 2 emails max par semaine, jamais de
-          spam.
+          Reçois les{" "}
+          <strong className="text-paper">
+            nouveaux événements, alertes billetterie et bons plans utiles
+          </strong>{" "}
+          (trajets, services et afters) — 1 à 2 emails maximum par semaine,
+          jamais de spam.
         </p>
         <p className="mt-1 text-[11px] text-paper-dim">
-          ℹ️ Ce n'est pas un compte — juste pour recevoir les emails. Pour acheter
-          ton VIP, ton merch ou réserver un pro, va sur la page concernée.
+          Ce n&apos;est pas un compte : ton adresse sert uniquement à recevoir
+          ces informations.
         </p>
       </div>
       <div className="flex flex-col gap-2 sm:flex-row">
@@ -64,7 +68,9 @@ export function NewsletterForm({ source = "footer" }: { source?: string }) {
         </button>
       </div>
       {message && (
-        <p className={`text-xs ${status === "ok" ? "text-green-400" : "text-red-400"}`}>
+        <p
+          className={`text-xs ${status === "ok" ? "text-green-400" : "text-red-400"}`}
+        >
           {message}
         </p>
       )}

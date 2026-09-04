@@ -1,21 +1,16 @@
 "use client";
 
-import { ArrowRight, AtSign, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, ShieldCheck } from "lucide-react";
 import { useState } from "react";
-
-import { PhoneInput } from "@/components/ui/phone-input";
-
 import { Button } from "@/components/ui/button";
+import { CityInput } from "@/components/ui/city-input";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
-import { CityInput } from "@/components/ui/city-input";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { PhotoUpload } from "@/components/ui/photo-upload";
-import { cn } from "@/lib/utils";
 import { createProProfileAction } from "@/lib/actions/public";
-import {
-  PRO_CATEGORIES,
-  PRO_CATEGORY_GROUPS,
-} from "@/lib/pro-categories";
+import { PRO_CATEGORIES, PRO_CATEGORY_GROUPS } from "@/lib/pro-categories";
+import { cn } from "@/lib/utils";
 
 type Props = {
   defaultCategory?: string;
@@ -34,7 +29,6 @@ export function ProRegistrationForm({ defaultCategory }: Props = {}) {
     initialCat,
   );
   const [activeGroup, setActiveGroup] = useState<string>(initialGroup);
-  const [isRequestingCert, setIsRequestingCert] = useState(false);
 
   const visibleCategories =
     activeGroup === "all"
@@ -148,7 +142,10 @@ export function ProRegistrationForm({ defaultCategory }: Props = {}) {
               className="h-12 bg-smoke border-none"
             />
           </FormField>
-          <FormField label="WhatsApp" helperText="Choisis ton indicatif pays puis tape ton numéro">
+          <FormField
+            label="WhatsApp"
+            helperText="Choisis ton indicatif pays puis tape ton numéro"
+          >
             <PhoneInput name="whatsapp" required />
           </FormField>
           <FormField label="TikTok (optionnel)" helperText="@handle">
@@ -158,7 +155,10 @@ export function ProRegistrationForm({ defaultCategory }: Props = {}) {
               className="h-12 bg-smoke border-none"
             />
           </FormField>
-          <FormField label="Tarifs (optionnel)" helperText="Ex: à partir de 50€">
+          <FormField
+            label="Tarifs (optionnel)"
+            helperText="Ex: à partir de 50€"
+          >
             <Input
               name="priceRange"
               placeholder="à partir de 50€"
@@ -178,7 +178,10 @@ export function ProRegistrationForm({ defaultCategory }: Props = {}) {
           />
         </FormField>
 
-        <FormField label="Présentation (optionnel)" helperText="Parle de ton métier. Pas de numéro, email ni nom de réseau (WhatsApp, Instagram, TikTok…) — ces contacts sont gérés par les champs dédiés.">
+        <FormField
+          label="Présentation (optionnel)"
+          helperText="Parle de ton métier. Pas de numéro, email ni nom de réseau (WhatsApp, Instagram, TikTok…) — ces contacts sont gérés par les champs dédiés."
+        >
           <textarea
             name="bio"
             rows={4}
@@ -187,61 +190,17 @@ export function ProRegistrationForm({ defaultCategory }: Props = {}) {
           />
         </FormField>
 
-        {/* CERTIFICATION SYSTEM (Instagram Based) */}
-        <div className="relative group p-8 rounded-3xl border border-gold/20 bg-gold/5 overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-40 transition-opacity">
-            <ShieldCheck className="size-20 text-gold" />
-          </div>
-
-          <div className="relative z-10 space-y-6">
-            <div className="flex items-center gap-3">
-              <div className="size-10 rounded-xl bg-gold/10 flex items-center justify-center text-gold">
-                <AtSign className="size-6" />
-              </div>
-              <h3 className="font-display text-xl uppercase text-paper">
-                Certification Instagram
-              </h3>
-            </div>
-
-            <p className="max-w-xl text-paper-dim text-sm leading-relaxed font-body">
-              Améliore ta conversion en faisant certifier ton profil. Une
-              vérification manuelle sera effectuée sur ton compte Instagram pour
-              garantir l'authenticité de ton service.
+        <div className="flex items-start gap-4 rounded-3xl border border-gold/20 bg-gold/5 p-6">
+          <ShieldCheck className="mt-1 size-6 shrink-0 text-gold" aria-hidden />
+          <div>
+            <h3 className="font-display text-xl uppercase text-paper">
+              Certification gratuite
+            </h3>
+            <p className="mt-2 max-w-xl text-paper-dim text-sm leading-relaxed">
+              Une fois ta fiche créée, tu pourras demander sa certification
+              depuis ton tableau de bord. L&apos;équipe vérifiera manuellement
+              ton identité professionnelle et tes informations publiques.
             </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 items-end">
-              <FormField label="Ton @Handle Instagram" className="flex-1">
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gold/60 font-mono">
-                    @
-                  </span>
-                  <Input
-                    placeholder="username"
-                    className="h-12 bg-smoke border-none pl-8"
-                  />
-                </div>
-              </FormField>
-
-              <button
-                type="button"
-                onClick={() => setIsRequestingCert(!isRequestingCert)}
-                className={cn(
-                  "h-12 px-6 rounded-xl font-display text-[10px] uppercase tracking-widest transition-all duration-500 flex items-center gap-2",
-                  isRequestingCert
-                    ? "bg-gold text-ink shadow-glow-gold"
-                    : "bg-paper/5 text-paper-mute border border-paper/10",
-                )}
-              >
-                {isRequestingCert ? (
-                  <ShieldCheck className="size-4" />
-                ) : (
-                  <Sparkles className="size-4" />
-                )}
-                {isRequestingCert
-                  ? "Demande envoyée"
-                  : "Demander la certification"}
-              </button>
-            </div>
           </div>
         </div>
 

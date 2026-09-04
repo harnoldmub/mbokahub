@@ -14,8 +14,8 @@ import {
 
 export const landingStats = [
   { label: "catégories de services", value: "20+" },
-  { label: "modèle fan", value: "gratuit" },
-  { label: "revenu", value: "boosts" },
+  { label: "accès public", value: "gratuit" },
+  { label: "accès pro", value: "gratuit" },
 ] as const;
 
 export const fanModules = [
@@ -73,13 +73,13 @@ export const trustItems = [
   {
     title: "Gratuit pour tous",
     description:
-      "Clients et prestataires peuvent se trouver sans pass fan ni abonnement obligatoire.",
+      "Clients et prestataires utilisent toutes les fonctionnalités Nevent sans abonnement.",
     icon: BadgeEuro,
   },
   {
-    title: "Visibilité monétisable",
+    title: "Visibilité ouverte",
     description:
-      "La plateforme gagne sur les boosts, placements sponsorisés et campagnes partenaires.",
+      "Les mises en avant sont gratuites pendant la phase de lancement.",
     icon: CheckCircle2,
   },
 ] as const;
@@ -105,7 +105,7 @@ export const proOffer = {
   title: "Fiche pro gratuite",
   price: "0 EUR",
   description:
-    "Inscription gratuite pour tous les prestataires, incluant vos 10 premières réservations effectuées gratuitement. Boost optionnel pour augmenter sa visibilité.",
+    "Inscription, réservations et mise en avant gratuites pour tous les prestataires pendant la phase de lancement.",
   audiences: [
     {
       label: "Beauté",
@@ -139,7 +139,7 @@ export const proOffer = {
     "contact visible gratuitement",
     "lien Instagram, TikTok et WhatsApp",
     "demandes de rendez-vous directes",
-    "boost optionnel pour apparaître plus haut",
+    "mise en avant gratuite pour apparaître plus haut",
   ],
 } as const;
 
@@ -151,12 +151,12 @@ export const proProofPoints = [
   },
   {
     label: "Visibilité",
-    value: "boostable",
+    value: "gratuite",
     icon: Sparkles,
   },
   {
-    label: "Revenus",
-    value: "pubs",
+    label: "Paiement",
+    value: "aucun",
     icon: BadgeEuro,
   },
 ] as const;

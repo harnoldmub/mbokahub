@@ -1,8 +1,8 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import {
   type NextFetchEvent,
-  NextResponse,
   type NextRequest,
+  NextResponse,
 } from "next/server";
 
 import { DEFAULT_MARKET, MARKETS } from "@/lib/markets";
@@ -61,7 +61,11 @@ export function middleware(request: NextRequest, event: NextFetchEvent) {
     return NextResponse.redirect(url);
   }
 
-  return clerkHandler(request, event);
+  // Les pages publiques n'ont pas besoin d'initialiser Clerk côté middleware.
+  // Cela évite un aller-retour d'authentification sur les pages éditoriales et
+  // conserve la protection stricte des espaces dashboard/admin.
+  if (isProtectedRoute(request)) return clerkHandler(request, event);
+  return NextResponse.next();
 }
 
 export const config = {

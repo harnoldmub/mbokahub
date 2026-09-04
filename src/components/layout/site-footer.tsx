@@ -49,12 +49,13 @@ export function SiteFooter() {
         {/* EDITORIAL PHRASE */}
         <div className="mb-20">
           <h2 className="font-display text-5xl sm:text-7xl lg:text-8xl text-paper uppercase leading-[0.9] text-tight">
-            La plateforme{" "}
-            <span className="text-blood font-serif italic font-black">
-              gratuite
-            </span>{" "}
+            Découvre l’événement.
             <br />
-            des services, réservations et boosts.
+            Organise{" "}
+            <span className="text-blood font-serif italic font-black">
+              toute
+            </span>{" "}
+            ton expérience.
           </h2>
         </div>
 
@@ -64,6 +65,12 @@ export function SiteFooter() {
               {copy.navigation}
             </h3>
             <nav className="flex flex-col gap-3">
+              <Link
+                href={localizedHref("/evenements", market)}
+                className="text-paper-dim hover:text-paper transition-colors"
+              >
+                Événements
+              </Link>
               <Link
                 href={localizedHref("/trajets", market)}
                 className="text-paper-dim hover:text-paper transition-colors"

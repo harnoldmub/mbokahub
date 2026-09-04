@@ -12,9 +12,19 @@ import { cn } from "@/lib/utils";
 
 type TrajetWithDate = TrajetDemo & { dateIso?: string };
 
-type Props = { trajets: TrajetWithDate[]; unlocked?: boolean };
+type Props = {
+  trajets: TrajetWithDate[];
+  unlocked?: boolean;
+  initialDate?: string;
+  initialDestination?: string;
+};
 
-export function TrajetsListClient({ trajets, unlocked }: Props) {
+export function TrajetsListClient({
+  trajets,
+  unlocked,
+  initialDate,
+  initialDestination,
+}: Props) {
   const villes = useMemo(
     () => Array.from(new Set(trajets.map((t) => t.villeDepart))).sort(),
     [trajets],
@@ -34,7 +44,7 @@ export function TrajetsListClient({ trajets, unlocked }: Props) {
   }, [trajets]);
 
   const [activeVille, setActiveVille] = useState<string>("all");
-  const [activeDate, setActiveDate] = useState<string>("all");
+  const [activeDate, setActiveDate] = useState<string>(initialDate || "all");
   const [boostOnly, setBoostOnly] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -43,6 +53,12 @@ export function TrajetsListClient({ trajets, unlocked }: Props) {
       if (activeVille !== "all" && t.villeDepart !== activeVille) return false;
       if (boostOnly && !t.isBoosted) return false;
       if (activeDate !== "all" && t.dateIso !== activeDate) return false;
+      if (
+        initialDestination &&
+        t.villeArrivee?.toLocaleLowerCase("fr") !==
+          initialDestination.toLocaleLowerCase("fr")
+      )
+        return false;
 
       if (search) {
         const q = search.toLowerCase();
@@ -55,13 +71,10 @@ export function TrajetsListClient({ trajets, unlocked }: Props) {
 
       return true;
     });
-  }, [trajets, activeVille, activeDate, boostOnly, search]);
+  }, [trajets, activeVille, activeDate, boostOnly, search, initialDestination]);
 
   const hasActiveFilters =
-    activeVille !== "all" ||
-    activeDate !== "all" ||
-    boostOnly ||
-    search !== "";
+    activeVille !== "all" || activeDate !== "all" || boostOnly || search !== "";
 
   const resetFilters = () => {
     setActiveVille("all");
@@ -85,9 +98,9 @@ export function TrajetsListClient({ trajets, unlocked }: Props) {
             <span className="font-serif italic text-blood">à publier</span>
           </h2>
           <p className="font-body text-paper-dim leading-relaxed">
-            Aucun trajet pour le moment. Lance le mouvement et propose une
-            place vers le Stade de France — d&apos;autres membres de la Famille te
-            rejoindront.
+            Aucun trajet pour le moment. Lance le mouvement et propose une place
+            vers ton prochain événement — d&apos;autres membres de la communauté
+            pourront te rejoindre.
           </p>
           <Link
             href="/trajets/publier"

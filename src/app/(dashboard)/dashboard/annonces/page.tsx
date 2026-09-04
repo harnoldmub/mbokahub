@@ -12,6 +12,7 @@ import { formatDate, formatMoney, getDashboardUser } from "@/lib/dashboard";
 import { prisma } from "@/lib/db/prisma";
 
 export default async function AnnoncesPage() {
+  const paymentsEnabled = process.env.PAYMENTS_ENABLED === "true";
   const user = await getDashboardUser();
   const [trajets, proProfile] = await Promise.all([
     prisma.trajet.findMany({
@@ -90,11 +91,13 @@ export default async function AnnoncesPage() {
                     <PremiumActivateButton
                       category={proProfile.category}
                       alreadyActive={proProfile.isPremium}
+                      paymentsEnabled={paymentsEnabled}
                     />
                     <BoostButton
                       targetType="PRO_PROFILE"
                       targetId={proProfile.id}
                       alreadyBoosted={proProfile.isBoosted}
+                      paymentsEnabled={paymentsEnabled}
                     />
                     <ProActions />
                   </div>
@@ -131,6 +134,7 @@ export default async function AnnoncesPage() {
                     targetType="TRAJET"
                     targetId={trajet.id}
                     alreadyBoosted={trajet.isBoosted}
+                    paymentsEnabled={paymentsEnabled}
                   />
                   <AnnonceActions id={trajet.id} isActive={trajet.isActive} />
                 </div>

@@ -24,13 +24,13 @@ export default async function PrestatairesPage({ searchParams }: Props) {
 
   // Plateforme 100% gratuite pour les fans : on expose les noms et handles
   // de tous les prestataires. L'ordre d'affichage met en avant les fiches
-  // boostées / premium / vérifiées (sponsorisé prêt pour la V2 entreprises).
+  // mises en avant / certifiées / vérifiées.
   const { pros, unavailable } = await prisma.proProfile
     .findMany({
       where: { isVerified: true },
       orderBy: [
         { isBoosted: "desc" },
-        { isPremium: "desc" },
+        { isCertified: "desc" },
         { rating: "desc" },
         { createdAt: "desc" },
       ],
@@ -45,6 +45,7 @@ export default async function PrestatairesPage({ searchParams }: Props) {
         photos: true,
         priceRange: true,
         isPremium: true,
+        isCertified: true,
         isBoosted: true,
         isVerified: true,
         rating: true,

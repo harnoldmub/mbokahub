@@ -20,7 +20,7 @@ export type AdminProActionsPro = {
   specialities: string[];
   photos: string[];
   isVerified: boolean;
-  isPremium: boolean;
+  isCertified: boolean;
 };
 
 type AdminProActionsBarProps = {
@@ -28,7 +28,10 @@ type AdminProActionsBarProps = {
   className?: string;
 };
 
-export function AdminProActionsBar({ pro, className }: AdminProActionsBarProps) {
+export function AdminProActionsBar({
+  pro,
+  className,
+}: AdminProActionsBarProps) {
   return (
     <div className={className ?? "flex flex-wrap gap-2"}>
       <EditProForm
@@ -51,11 +54,7 @@ export function AdminProActionsBar({ pro, className }: AdminProActionsBarProps) 
         action={verifyProProfile.bind(null, pro.id, !pro.isVerified)}
         triggerLabel={pro.isVerified ? "Dévalider" : "Valider"}
         triggerClassName="inline-flex items-center rounded-md bg-emerald-600 px-3 py-1.5 font-medium text-white text-xs shadow-sm transition hover:bg-emerald-700"
-        title={
-          pro.isVerified
-            ? "Dévalider ce profil ?"
-            : "Valider ce profil ?"
-        }
+        title={pro.isVerified ? "Dévalider ce profil ?" : "Valider ce profil ?"}
         description={
           pro.isVerified ? (
             <>
@@ -80,33 +79,32 @@ export function AdminProActionsBar({ pro, className }: AdminProActionsBarProps) 
         variant={pro.isVerified ? "warning" : "default"}
       />
       <ConfirmActionForm
-        action={certifyProProfile.bind(null, pro.id, !pro.isPremium)}
-        triggerLabel={pro.isPremium ? "Retirer premium" : "Premium"}
+        action={certifyProProfile.bind(null, pro.id, !pro.isCertified)}
+        triggerLabel={pro.isCertified ? "Retirer certification" : "Certifier"}
         triggerClassName="inline-flex items-center rounded-md bg-amber-500 px-3 py-1.5 font-medium text-black text-xs shadow-sm transition hover:bg-amber-600"
         title={
-          pro.isPremium
-            ? "Retirer le statut Premium ?"
-            : "Passer ce profil en Premium ?"
+          pro.isCertified
+            ? "Retirer la certification ?"
+            : "Certifier ce professionnel ?"
         }
         description={
-          pro.isPremium ? (
+          pro.isCertified ? (
             <>
               <span className="font-semibold text-foreground">
                 {pro.displayName}
               </span>{" "}
-              perdra le badge ★ Certifié et son boost dans l'ordre d'affichage.
+              perdra le badge Certifié. Sa visibilité gratuite reste inchangée.
             </>
           ) : (
             <>
               <span className="font-semibold text-foreground">
                 {pro.displayName}
               </span>{" "}
-              recevra le badge ★ Certifié et sera mis en avant jusqu'au 31 déc.
-              2026.
+              recevra le badge Certifié après la vérification de son activité.
             </>
           )
         }
-        confirmLabel={pro.isPremium ? "Retirer Premium" : "Activer Premium"}
+        confirmLabel={pro.isCertified ? "Retirer" : "Certifier"}
         variant="warning"
       />
       <ConfirmActionForm
@@ -120,8 +118,8 @@ export function AdminProActionsBar({ pro, className }: AdminProActionsBarProps) 
             <span className="font-semibold text-foreground">
               {pro.displayName}
             </span>{" "}
-            ({pro.category}). Le compte utilisateur reste, mais le profil
-            public et toutes ses photos seront supprimés.
+            ({pro.category}). Le compte utilisateur reste, mais le profil public
+            et toutes ses photos seront supprimés.
           </>
         }
         confirmLabel="Supprimer le profil"

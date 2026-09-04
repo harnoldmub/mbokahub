@@ -16,11 +16,7 @@ const BOOST_END = new Date("2026-05-31T23:59:59+02:00");
 // Si un webhook VIP_FAN traînant arrive (paiement signé avant la bascule),
 // il est ignoré silencieusement — les anciens VIP gardent déjà leur badge
 // "Famille Fondatrice" (dérivé de user.isVipActive, déjà en base).
-const KNOWN_TYPES = new Set([
-  "BOOST",
-  "PRO_PREMIUM",
-  "CONDUCTEUR_REVEAL",
-]);
+const KNOWN_TYPES = new Set(["BOOST", "PRO_PREMIUM", "CONDUCTEUR_REVEAL"]);
 
 type PaymentTypeEnum = "BOOST" | "PRO_PREMIUM" | "CONDUCTEUR_REVEAL";
 
@@ -167,6 +163,9 @@ async function handleSessionEvent(
 
 export async function POST(req: Request) {
   const env = getEnv();
+  if (!env.PAYMENTS_ENABLED) {
+    return NextResponse.json({ received: true, ignored: true });
+  }
   if (!env.STRIPE_WEBHOOK_SECRET) {
     console.error("[stripe webhook] STRIPE_WEBHOOK_SECRET not configured");
     return NextResponse.json(
@@ -188,7 +187,11 @@ export async function POST(req: Request) {
 
   let event: Stripe.Event;
   try {
-    event = stripe.webhooks.constructEvent(body, sig, env.STRIPE_WEBHOOK_SECRET);
+    event = stripe.webhooks.constructEvent(
+      body,
+      sig,
+      env.STRIPE_WEBHOOK_SECRET,
+    );
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Invalid signature";
     console.error("[stripe webhook] signature verification failed", msg);

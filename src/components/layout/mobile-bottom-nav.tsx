@@ -1,7 +1,13 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import { Home, MessageCircle, Search, Sparkles, UserRound } from "lucide-react";
+import {
+  CalendarDays,
+  Home,
+  MessageCircle,
+  Sparkles,
+  UserRound,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -55,7 +61,7 @@ export function MobileBottomNav() {
       cancelled = true;
       clearInterval(t);
     };
-  }, [isSignedIn, pathname]);
+  }, [isSignedIn]);
 
   if (isHidden) return null;
 
@@ -83,10 +89,10 @@ export function MobileBottomNav() {
       active: cleanPath === "/" || cleanPath === "",
     },
     {
-      href: localizedHref("/prestataires", market),
-      label: "Prestataires",
-      icon: Search,
-      active: cleanPath.startsWith("/prestataires") || cleanPath.startsWith("/beaute"),
+      href: localizedHref("/evenements", market),
+      label: "Événements",
+      icon: CalendarDays,
+      active: cleanPath.startsWith("/evenements"),
     },
     {
       href: localizedHref("/trajets", market),

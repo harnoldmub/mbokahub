@@ -93,6 +93,7 @@ export function SiteHeader() {
     },
   ];
   const simpleNavItems = [
+    { href: "/evenements", label: "Événements" },
     { href: "/prestataires", label: "Prestataires" },
     { href: "/trajets", label: "Trajets" },
     { href: "/ads", label: "Boost" },
@@ -111,7 +112,7 @@ export function SiteHeader() {
 
         <nav
           aria-label="Navigation principale"
-          className="hidden items-center gap-7 md:flex"
+          className="hidden items-center gap-7 lg:flex"
         >
           <MegaMenu label="Services" locale={market} sections={megaSections} />
           {simpleNavItems.map((item) => (

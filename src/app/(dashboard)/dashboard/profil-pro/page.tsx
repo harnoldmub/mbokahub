@@ -19,6 +19,7 @@ import { ProfilProTabs } from "./_nav";
 type SearchParams = {
   saved?: string;
   error?: string;
+  verification?: string;
   as?: string;
 };
 
@@ -58,6 +59,14 @@ export default async function ProfilProPage({
   }
 
   const meta = PRO_CATEGORY_BY_ID[pro.category];
+  const verificationRequest = await prisma.verificationRequest.findFirst({
+    where: {
+      userId: pro.userId,
+      type: "PROFESSIONAL",
+    },
+    orderBy: { requestedAt: "desc" },
+    select: { status: true },
+  });
 
   return (
     <div className="grid gap-8">
@@ -79,10 +88,15 @@ export default async function ProfilProPage({
           <Badge variant={pro.isVerified ? "default" : "outline"}>
             {pro.isVerified ? "Vérifié" : "En attente de vérification"}
           </Badge>
-          <Badge variant={pro.isPremium ? "default" : "outline"}>
-            {pro.isPremium ? "Premium" : "Gratuit"}
+          <Badge variant={pro.isCertified ? "default" : "outline"}>
+            {pro.isCertified ? "Certifié" : "Non certifié"}
           </Badge>
-          {!pro.isVerified && <VerifyIdentityButton />}
+          {!ctx.actingAsProId ? (
+            <VerifyIdentityButton
+              certified={pro.isCertified}
+              pending={verificationRequest?.status === "PENDING"}
+            />
+          ) : null}
         </div>
       </div>
 
@@ -109,6 +123,13 @@ export default async function ProfilProPage({
           <ScrollToTopOnMount />
           <CheckCircle2 aria-hidden className="size-5" />
           Tes modifications ont bien été enregistrées.
+        </div>
+      ) : null}
+      {sp.verification === "requested" ? (
+        <div className="flex items-center gap-3 rounded-2xl border border-emerald-400/30 bg-emerald-500/10 p-4 text-emerald-200 text-sm">
+          <ScrollToTopOnMount />
+          <CheckCircle2 aria-hidden className="size-5" />
+          Ta demande de certification a bien été transmise à l&apos;équipe.
         </div>
       ) : null}
       {sp.error === "missing" ? (

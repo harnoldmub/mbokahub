@@ -4,7 +4,7 @@ import { Star } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { PRICE_BOOST_EUR, formatEuro } from "@/lib/marketing-data";
+import { formatEuro, PRICE_BOOST_EUR } from "@/lib/marketing-data";
 
 type BoostButtonProps = {
   targetType: "TRAJET" | "PRO_PROFILE";
@@ -12,6 +12,7 @@ type BoostButtonProps = {
   alreadyBoosted?: boolean;
   size?: "sm" | "default";
   variant?: "default" | "outline";
+  paymentsEnabled?: boolean;
 };
 
 export function BoostButton({
@@ -20,6 +21,7 @@ export function BoostButton({
   alreadyBoosted,
   size = "sm",
   variant = "outline",
+  paymentsEnabled = false,
 }: BoostButtonProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,14 +44,22 @@ export function BoostButton({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ targetType, targetId }),
       });
-      const data = (await res.json()) as { url?: string; error?: string };
-      if (!res.ok || !data.url) {
-        throw new Error(data.error ?? "Erreur paiement");
+      const data = (await res.json()) as {
+        redirect?: string;
+        url?: string;
+        error?: string;
+      };
+      if (!res.ok) {
+        throw new Error(data.error ?? "Activation impossible");
       }
-      if (!/^https:\/\/(checkout|billing)\.stripe\.com\//.test(data.url)) {
-        throw new Error("URL de paiement invalide");
+      const target = data.redirect ?? data.url;
+      const isInternal = !!target && /^\/(?!\/)/.test(target);
+      const isStripe =
+        !!target && /^https:\/\/(checkout|billing)\.stripe\.com\//.test(target);
+      if (!target || (!isInternal && !isStripe)) {
+        throw new Error("URL de redirection invalide");
       }
-      window.location.href = data.url;
+      window.location.href = target;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur");
       setLoading(false);
@@ -65,7 +75,11 @@ export function BoostButton({
         variant={variant}
       >
         <Star aria-hidden className="size-4" />
-        {loading ? "Redirection..." : `Booster ${formatEuro(PRICE_BOOST_EUR)}`}
+        {loading
+          ? "Activation..."
+          : paymentsEnabled
+            ? `Mettre en vedette · ${formatEuro(PRICE_BOOST_EUR)}`
+            : "Mettre en vedette gratuitement"}
       </Button>
       {error ? <p className="text-xs text-destructive">{error}</p> : null}
     </div>

@@ -92,7 +92,7 @@ function buildMessages(data: FomoData): Message[] {
     out.push({
       key: "fallback",
       emoji: "•",
-      text: "Prestataires gratuits · réservations directes · boosts optionnels",
+      text: "Événements vérifiés · trajets · services · afters",
       accent: "blood",
     });
   }

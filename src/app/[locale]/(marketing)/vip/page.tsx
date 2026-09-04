@@ -76,10 +76,10 @@ export default async function VipPage() {
             </div>
 
             <p className="mt-6 max-w-2xl text-lg text-paper-dim">
-              Tu fais partie des premiers qui ont cru à Nevent avant le
-              concert, quand l&apos;accès était encore payant. Aujourd&apos;hui
-              la plateforme est 100% gratuite pour tous les fans — mais ton
-              badge ⭐ Famille Fondatrice reste, à vie.
+              Tu fais partie des premiers qui ont cru à Nevent avant le concert,
+              quand l&apos;accès était encore payant. Aujourd&apos;hui la
+              plateforme est 100% gratuite pour tous les fans — mais ton badge
+              ⭐ Famille Fondatrice reste, à vie.
             </p>
 
             <p className="mt-4 max-w-2xl text-paper-dim text-sm">
@@ -115,8 +115,7 @@ export default async function VipPage() {
             100% gratuit pour la famille
           </Badge>
           <h1 className="mt-6 font-display text-5xl text-foreground leading-[1.05] md:text-7xl">
-            NEVENT EST{" "}
-            <span className="text-emerald-300">GRATUIT</span> POUR{" "}
+            NEVENT EST <span className="text-emerald-300">GRATUIT</span> POUR{" "}
             <span className="text-primary">TOUS LES FANS</span>.
           </h1>
           <p className="mt-6 max-w-xl text-muted-foreground text-lg leading-8">
@@ -149,10 +148,9 @@ export default async function VipPage() {
           </CardHeader>
           <CardContent className="grid gap-5">
             <p className="text-paper-dim text-sm">
-              Si tu as déjà payé un pass VIP avant la bascule (6,99 € ou
-              9,99 €), ton badge ⭐ Famille Fondatrice reste à vie sur ton
-              profil. Pas besoin de rien faire — connecte-toi, il est déjà
-              là.
+              Si tu as déjà payé un pass VIP avant la bascule (6,99 € ou 9,99
+              €), ton badge ⭐ Famille Fondatrice reste à vie sur ton profil.
+              Pas besoin de rien faire — connecte-toi, il est déjà là.
             </p>
             <ul className="grid gap-3">
               <li className="flex items-start gap-3 text-paper">
@@ -235,9 +233,9 @@ export default async function VipPage() {
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             number="02"
-            description="On ne fait jamais payer un fan pour voir. On fait payer ceux qui veulent de la visibilité."
-            eyebrow="Le nouveau modèle"
-            title="Qui paye Nevent ?"
+            description="Pendant la phase de lancement, aucun utilisateur ne paie Nevent. Toute évolution sera annoncée clairement à l'avance."
+            eyebrow="Phase de lancement"
+            title="Gratuit pour tout le monde"
           />
 
           <div className="mt-12 grid gap-4 sm:grid-cols-2">
@@ -246,12 +244,11 @@ export default async function VipPage() {
                 Prestataires
               </p>
               <p className="mt-2 font-display text-2xl uppercase text-paper">
-                Boost & visibilité
+                Visibilité gratuite
               </p>
               <p className="mt-3 text-paper-dim text-sm">
-                Fiche de base gratuite. Les prestataires qui veulent être en
-                tête de liste payent un Boost (à partir de 5 €), un badge
-                Vérifié (10 €) ou un Pack visibilité complet (49 €).
+                Fiche, badge et mise en avant sont accessibles sans paiement
+                pendant la phase de lancement.
               </p>
             </div>
             <div className="rounded-3xl border border-white/10 bg-coal/40 p-6">
@@ -259,12 +256,11 @@ export default async function VipPage() {
                 Entreprises
               </p>
               <p className="mt-2 font-display text-2xl uppercase text-paper">
-                Sponsoring
+                Partenariats
               </p>
               <p className="mt-3 text-paper-dim text-sm">
-                Marques, restaurants, clubs, agences — placements
-                sponsorisés et fiches mises en avant pour toucher la
-                diaspora.
+                Marques, restaurants, clubs et agences peuvent proposer une
+                collaboration sans achat intégré sur la plateforme.
               </p>
             </div>
           </div>

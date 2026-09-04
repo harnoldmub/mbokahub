@@ -1,6 +1,7 @@
 export type TrajetDemo = {
   id: string;
   villeDepart: string;
+  villeArrivee?: string;
   paysDepart: string;
   dateLabel: string;
   heureDepart: string;

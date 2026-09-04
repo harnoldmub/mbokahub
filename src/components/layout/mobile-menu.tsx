@@ -59,6 +59,7 @@ export function MobileMenu({ market, lang }: MobileMenuProps) {
   const dashboardLabel = lang === "fr" ? "Tableau de bord" : "Dashboard";
   const navItems = [
     { href: "/", label: copy.quickNav.home },
+    { href: "/evenements", label: "Événements" },
     { href: "/prestataires", label: "Prestataires" },
     { href: "/trajets", label: copy.quickNav.trajets },
     { href: "/afters", label: copy.quickNav.afters },
@@ -73,7 +74,7 @@ export function MobileMenu({ market, lang }: MobileMenuProps) {
       <SheetTrigger asChild>
         <Button
           aria-label={copy.openMenu}
-          className="md:hidden"
+          className="lg:hidden"
           size="icon"
           variant="ghost"
         >
@@ -141,10 +142,7 @@ export function MobileMenu({ market, lang }: MobileMenuProps) {
                 size="lg"
                 variant="outline"
               >
-                <Link
-                  href="/dashboard"
-                  onClick={() => setOpen(false)}
-                >
+                <Link href="/dashboard" onClick={() => setOpen(false)}>
                   <LayoutDashboard className="size-4" />
                   {dashboardLabel}
                 </Link>

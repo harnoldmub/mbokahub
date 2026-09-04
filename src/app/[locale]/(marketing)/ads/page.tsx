@@ -9,28 +9,28 @@ const FORMATS = [
     name: "Top recherche",
     placement: "Prestataires — première rangée sponsorisée",
     impressions: "Selon ville + catégorie",
-    price: "à partir de 49€ / semaine",
-    badge: "PREMIUM",
+    price: "gratuit au lancement",
+    badge: "GRATUIT",
   },
   {
     name: "Boost prestataire",
     placement: "Annuaire — remontée locale et badge sponsorisé",
     impressions: "Ciblage métier",
-    price: "à partir de 8,99€",
+    price: "gratuit au lancement",
     badge: "POPULAIRE",
   },
   {
     name: "Bannière locale",
     placement: "Ville, catégorie ou page service",
     impressions: "Ciblage géographique",
-    price: "sur devis",
+    price: "gratuit au lancement",
     badge: null,
   },
   {
     name: "Campagne partenaire",
     placement: "Newsletter, social, push événement",
     impressions: "Pack multi-canal",
-    price: "sur devis",
+    price: "gratuit au lancement",
     badge: null,
   },
 ];
@@ -39,7 +39,7 @@ const STATS = [
   { value: "0€", label: "Accès client et fiche pro" },
   { value: "20+", label: "Catégories de services" },
   { value: "Local", label: "Ciblage par ville et métier" },
-  { value: "Boost", label: "Monétisation principale" },
+  { value: "0€", label: "Mises en avant au lancement" },
 ];
 
 export default function AdsPage() {
@@ -54,9 +54,9 @@ export default function AdsPage() {
       <div className="relative z-10 mx-auto max-w-7xl px-6 py-32 space-y-20">
         <SectionHeading
           number="02"
-          eyebrow="Espaces publicitaires"
-          title="Achète de la visibilité utile."
-          description="Les clients et prestataires utilisent Nevent gratuitement. Les revenus viennent des boosts, placements sponsorisés et campagnes partenaires."
+          eyebrow="Visibilité de lancement"
+          title="Développe ta visibilité gratuitement."
+          description="Clients, prestataires et partenaires accèdent gratuitement aux outils Nevent pendant la phase de lancement."
         />
 
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -142,15 +142,15 @@ export default function AdsPage() {
 
         <div className="rounded-3xl border border-blood/30 bg-blood/5 p-10 text-center sm:p-16">
           <h2 className="font-display text-3xl uppercase text-paper sm:text-4xl">
-            Lance ta visibilité sans bloquer l'accès gratuit.
+            Lance ta visibilité sans carte bancaire.
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-paper-dim">
-            Les emplacements sont limités par ville et catégorie pour garder la
-            plateforme lisible.
+            Les emplacements restent modérés par ville et catégorie pour garder
+            la plateforme lisible.
           </p>
           <Button asChild size="lg" className="mt-8 shadow-glow-blood">
             <Link href="/contact">
-              Demander un devis <ArrowRight className="ml-2 size-5" />
+              Demander une mise en avant <ArrowRight className="ml-2 size-5" />
             </Link>
           </Button>
         </div>
