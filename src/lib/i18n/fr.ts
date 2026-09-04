@@ -198,6 +198,34 @@ export const fr = {
     notesHelp: "Détails utiles : départ d'une gare précise, bagages, etc.",
     notesPlaceholder: "Je peux récupérer en gare de Bruxelles-Midi...",
   },
+  howItWorks: {
+    launchPhase: "Phase de lancement",
+    freeForEveryone: "Gratuit pour tout le monde",
+    everythingOpen: "Tout est ouvert",
+    freeForFans: "Ce qui est gratuit pour les fans",
+    allFans: "TOUS LES FANS",
+    dashboard: "Mon tableau de bord",
+    seeProviders: "Voir les prestataires",
+    seeAfters: "Voir les afters",
+    thanks: "Sans toi on n'aurait pas tenu jusqu'ici. Merci.",
+    founderBadge: "Badge Famille Fondatrice visible sur ton profil",
+    founderRecognition: "Reconnaissance dans la communauté",
+    founderGratitude: "Notre gratitude éternelle pour avoir lancé le projet",
+    items: {
+      providersTitle: "Tous les prestataires",
+      providersBody:
+        "Coiffeurs, maquilleurs, photographes, chauffeurs, sécurité… Le profil complet et la messagerie de chaque prestataire validé, sans paywall.",
+      ridesTitle: "Tous les covoiturages",
+      ridesBody:
+        "Toutes les annonces de la diaspora, les contacts des conducteurs, les villes de départ. Gratuit, comme ça doit l'être.",
+      aftersTitle: "Toutes les soirées",
+      aftersBody:
+        "Les afters validés par l'équipe : lieu, line-up, billetterie. Plus de paywall.",
+      infoTitle: "Toute l'info",
+      infoBody:
+        "Événements, guide pratique, communauté, mini-jeu. La maison Nevent est ouverte.",
+    },
+  },
   prestations: {
     number: "02",
     eyebrow: "Prestations",

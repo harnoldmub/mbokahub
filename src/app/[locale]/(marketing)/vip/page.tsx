@@ -17,8 +17,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { isFoundingFamilyMember } from "@/lib/auth-helpers";
+import { languageOf, nls } from "@/lib/nls";
 import { createPageMetadata } from "@/lib/seo";
-
 export async function generateMetadata({
   params,
 }: {
@@ -35,29 +35,19 @@ export async function generateMetadata({
 }
 
 const FREE_FOR_FANS = [
-  {
-    icon: Users,
-    title: "Tous les prestataires",
-    body: "Coiffeurs, maquilleurs, photographes, chauffeurs, sécurité… Le profil complet et la messagerie de chaque prestataire validé, sans paywall.",
-  },
-  {
-    icon: Car,
-    title: "Tous les covoiturages",
-    body: "Toutes les annonces de la diaspora, les contacts des conducteurs, les villes de départ. Gratuit, comme ça doit l'être.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Toutes les soirées",
-    body: "Les afters validés par le Hub : lieu, line-up, billetterie. Plus de paywall.",
-  },
-  {
-    icon: MessagesSquare,
-    title: "Toute l'info",
-    body: "Événements, guide pratique, communauté, mini-jeu. La maison Nevent est ouverte.",
-  },
-];
+  { icon: Users, key: "providers" },
+  { icon: Car, key: "rides" },
+  { icon: ShieldCheck, key: "afters" },
+  { icon: MessagesSquare, key: "info" },
+] as const;
 
-export default async function VipPage() {
+export default async function VipPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = nls[languageOf(locale)].howItWorks;
   const isFounding = await isFoundingFamilyMember();
 
   if (isFounding) {
@@ -104,10 +94,10 @@ export default async function VipPage() {
 
             <div className="mt-10 flex flex-wrap gap-3">
               <Button asChild className="shadow-[var(--glow-red)]">
-                <Link href="/dashboard">Mon tableau de bord</Link>
+                <Link href="/dashboard">{t.dashboard}</Link>
               </Button>
               <Button asChild variant="outline">
-                <Link href="/prestataires">Voir les prestataires</Link>
+                <Link href="/prestataires">{t.seeProviders}</Link>
               </Button>
               <Button asChild variant="ghost">
                 <Link href="/trajets">Trouver un trajet</Link>
@@ -132,7 +122,7 @@ export default async function VipPage() {
           </Badge>
           <h1 className="mt-6 font-display text-5xl text-foreground leading-[1.05] md:text-7xl">
             NEVENT EST <span className="text-emerald-300">GRATUIT</span> POUR{" "}
-            <span className="text-primary">TOUS LES FANS</span>.
+            <span className="text-primary">{t.allFans}</span>.
           </h1>
           <p className="mt-6 max-w-xl text-muted-foreground text-lg leading-8">
             Plus de pass à acheter. Plus de paywall. Tu vois tous les
@@ -148,7 +138,7 @@ export default async function VipPage() {
               <Link href="/trajets">Trouver un trajet</Link>
             </Button>
             <Button asChild variant="ghost">
-              <Link href="/afters">Voir les afters</Link>
+              <Link href="/afters">{t.seeAfters}</Link>
             </Button>
           </div>
         </div>
@@ -178,27 +168,21 @@ export default async function VipPage() {
                   aria-hidden
                   className="mt-1 size-4 shrink-0 text-amber-300"
                 />
-                <span className="text-sm">
-                  Badge Famille Fondatrice visible sur ton profil
-                </span>
+                <span className="text-sm">{t.founderBadge}</span>
               </li>
               <li className="flex items-start gap-3 text-paper">
                 <Check
                   aria-hidden
                   className="mt-1 size-4 shrink-0 text-amber-300"
                 />
-                <span className="text-sm">
-                  Reconnaissance dans la communauté
-                </span>
+                <span className="text-sm">{t.founderRecognition}</span>
               </li>
               <li className="flex items-start gap-3 text-paper">
                 <Heart
                   aria-hidden
                   className="mt-1 size-4 shrink-0 text-amber-300"
                 />
-                <span className="text-sm">
-                  Notre gratitude éternelle pour avoir lancé le projet
-                </span>
+                <span className="text-sm">{t.founderGratitude}</span>
               </li>
             </ul>
           </CardContent>
@@ -211,8 +195,8 @@ export default async function VipPage() {
           <SectionHeading
             number="01"
             description="Nevent appartient à la famille. Voici ce qui est gratuit, pour tout le monde, dès aujourd'hui."
-            eyebrow="Tout est ouvert"
-            title="Ce qui est gratuit pour les fans"
+            eyebrow="{t.everythingOpen}"
+            title="{t.freeForFans}"
           />
 
           <div className="mt-16 grid gap-6 lg:grid-cols-2">
@@ -220,7 +204,7 @@ export default async function VipPage() {
               const Icon = p.icon;
               return (
                 <article
-                  key={p.title}
+                  key={t.items[`${p.key}Title`]}
                   className="relative overflow-hidden rounded-3xl border border-white/10 bg-coal/60 p-8 transition hover:border-emerald-400/30"
                 >
                   <span className="absolute right-6 top-6 font-mono text-[10px] uppercase tracking-[0.3em] text-paper-mute">
@@ -232,9 +216,11 @@ export default async function VipPage() {
                     </span>
                     <div>
                       <h3 className="font-display text-2xl uppercase text-paper">
-                        {p.title}
+                        {t.items[`${p.key}Title`]}
                       </h3>
-                      <p className="mt-3 text-paper-dim">{p.body}</p>
+                      <p className="mt-3 text-paper-dim">
+                        {t.items[`${p.key}Body`]}
+                      </p>
                       <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.25em] text-emerald-200">
                         <Sparkles className="size-3" />
                         Gratuit
@@ -254,8 +240,8 @@ export default async function VipPage() {
           <SectionHeading
             number="02"
             description="Pendant la phase de lancement, aucun utilisateur ne paie Nevent. Toute évolution sera annoncée clairement à l'avance."
-            eyebrow="Phase de lancement"
-            title="Gratuit pour tout le monde"
+            eyebrow="{t.launchPhase}"
+            title="{t.freeForEveryone}"
           />
 
           <div className="mt-12 grid gap-4 sm:grid-cols-2">

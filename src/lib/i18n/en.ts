@@ -197,6 +197,34 @@ export const en = {
     notesHelp: "Useful details: leaving from a specific station, luggage, etc.",
     notesPlaceholder: "I can pick up at Brussels-Midi station...",
   },
+  howItWorks: {
+    launchPhase: "Launch phase",
+    freeForEveryone: "Free for everyone",
+    everythingOpen: "Everything is open",
+    freeForFans: "What's free for fans",
+    allFans: "ALL FANS",
+    dashboard: "My dashboard",
+    seeProviders: "See providers",
+    seeAfters: "See afterparties",
+    thanks: "We wouldn't have made it this far without you. Thank you.",
+    founderBadge: "Founding Family badge shown on your profile",
+    founderRecognition: "Recognition within the community",
+    founderGratitude: "Our lasting gratitude for getting the project started",
+    items: {
+      providersTitle: "Every provider",
+      providersBody:
+        "Hairdressers, make-up artists, photographers, drivers, security… The full profile and direct messaging for every approved provider, no paywall.",
+      ridesTitle: "Every ride",
+      ridesBody:
+        "Every listing from the diaspora, driver contacts, departure cities. Free, as it should be.",
+      aftersTitle: "Every party",
+      aftersBody:
+        "Afterparties approved by the team: venue, line-up, tickets. No more paywall.",
+      infoTitle: "All the info",
+      infoBody:
+        "Events, practical guide, community, mini-game. The Nevent house is open.",
+    },
+  },
   prestations: {
     number: "02",
     eyebrow: "Services",
