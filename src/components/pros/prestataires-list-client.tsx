@@ -16,6 +16,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import { PhotoLightbox } from "@/components/pros/photo-lightbox";
+import { ProPlaceholderCover } from "@/components/pros/pro-placeholder-cover";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { PRO_CATEGORIES, PRO_CATEGORY_BY_ID } from "@/lib/pro-categories";
 import { formatPriceRange } from "@/lib/pro-display";
@@ -314,14 +315,11 @@ export function PrestatairesListClient({ pros, initialSearch = "" }: Props) {
                         />
                       </button>
                     ) : (
-                      <div className="flex h-full items-center justify-center bg-white/[0.02]">
-                        <div className="flex size-20 items-center justify-center rounded-2xl bg-white/5 text-paper-dim/40 transition-all duration-500 group-hover:scale-110 group-hover:text-paper-dim/60">
-                          {(() => {
-                            const Icon = meta?.icon ?? Sparkles;
-                            return <Icon className="size-10 stroke-[1.5]" />;
-                          })()}
-                        </div>
-                      </div>
+                      <ProPlaceholderCover
+                        displayName={p.displayName}
+                        category={p.category}
+                        className="h-full w-full"
+                      />
                     )}
                     {p.isCertified && (
                       <span className="pointer-events-none absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-vip px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-coal">

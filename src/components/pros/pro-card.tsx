@@ -1,14 +1,7 @@
-import {
-  ArrowRight,
-  AtSign,
-  Flame,
-  ShieldCheck,
-  Sparkles,
-  Star,
-} from "lucide-react";
+import { ArrowRight, AtSign, Flame, ShieldCheck, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
+import { ProPlaceholderCover } from "@/components/pros/pro-placeholder-cover";
 import { ContactLock } from "@/components/shared/contact-lock";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -50,12 +43,11 @@ export function ProCard({ pro, unlocked: _unlocked }: ProCardProps) {
             unoptimized
           />
         ) : (
-          <div className="h-full w-full bg-smoke flex flex-col items-center justify-center gap-2 text-paper-mute group-hover:text-gold transition-colors">
-            <Sparkles className="size-10 opacity-20" />
-            <span className="font-mono text-[8px] uppercase tracking-widest">
-              No showcase photo
-            </span>
-          </div>
+          <ProPlaceholderCover
+            displayName={pro.displayName}
+            category={pro.category}
+            className="h-full w-full"
+          />
         )}
 
         <div className="absolute top-4 left-4 flex flex-wrap gap-2">

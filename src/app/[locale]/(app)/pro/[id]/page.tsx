@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 
 import { AdminProActionsBar } from "@/components/admin/admin-pro-actions-bar";
 import { ProGalleryClient } from "@/components/pros/pro-gallery-client";
+import { ProPlaceholderCover } from "@/components/pros/pro-placeholder-cover";
 import { ProProfileTabs } from "@/components/pros/pro-profile-tabs";
 import { RatingBadge } from "@/components/pros/rating-badge";
 import { Badge } from "@/components/ui/badge";
@@ -211,15 +212,11 @@ export default async function ProDetailsPage({
             />
           </div>
         ) : (
-          <div className="flex h-44 items-center justify-center bg-zinc-950/40">
-            <div className="flex size-20 items-center justify-center rounded-2xl bg-white/5 text-paper-dim/40">
-              {meta?.icon ? (
-                <meta.icon className="size-10 stroke-[1.5]" />
-              ) : (
-                <Sparkles className="size-10 stroke-[1.5]" />
-              )}
-            </div>
-          </div>
+          <ProPlaceholderCover
+            displayName={displayedName}
+            category={pro.category}
+            className="h-44 w-full sm:h-56"
+          />
         )}
 
         <div className="px-5 py-5 sm:px-6">

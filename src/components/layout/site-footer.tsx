@@ -124,14 +124,19 @@ export function SiteFooter() {
         {/* MARQUE + COLONNES */}
         <div className="grid gap-12 py-16 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-4">
+            {/* logo-white.png est un carré 2000×2000 dont le lettrage n'occupe
+                que ~17 % de la hauteur et ~61 % de la largeur (38,5 % de vide
+                au-dessus, 44,5 % en dessous, 19 % à gauche). Les marges
+                négatives recadrent ce vide pour que le mot-symbole s'aligne sur
+                la colonne : 160px × ces ratios. */}
             <Image
               alt="Nevent"
-              className="h-24 w-auto object-contain"
-              height={240}
+              className="-mt-[62px] -mb-[71px] -ml-[30px] h-40 w-auto object-contain"
+              height={320}
               src="/logo-white.png"
-              width={240}
+              width={320}
             />
-            <p className="mt-5 max-w-sm text-sm text-white/60 leading-relaxed">
+            <p className="mt-6 max-w-sm text-sm text-white/60 leading-relaxed">
               La plateforme indépendante qui réunit les événements afro en
               Europe et tous les services autour : trajets, beauté, photo et
               afters.
