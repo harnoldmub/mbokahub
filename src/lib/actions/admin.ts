@@ -492,9 +492,6 @@ export async function deleteAllTestData() {
   // Sequential deletes (no $transaction → no WebSocket session needed).
   // Each deleteMany is independent test-data cleanup; partial failure is
   // acceptable and the operation can be safely retried.
-  await prisma.quizResult.deleteMany({
-    where: { email: { contains: "test", mode: "insensitive" } },
-  });
   await prisma.gameScore.deleteMany({
     where: { pseudo: { contains: "test", mode: "insensitive" } },
   });

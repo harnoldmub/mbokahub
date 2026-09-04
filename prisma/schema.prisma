@@ -28,7 +28,6 @@ model User {
   trajets               Trajet[]
   proProfile            ProProfile?
   unlockedContacts      UnlockedContact[]
-  quizResults           QuizResult[]
   gameScores            GameScore[]
   afterOwnerships       After[]               @relation("AfterOrganizer")
   payments              Payment[]
@@ -383,18 +382,6 @@ model ParisClassic {
   createdAt      DateTime @default(now())
 
   @@index([category, order])
-}
-
-model QuizResult {
-  id        String   @id @default(cuid())
-  userId    String?
-  user      User?    @relation(fields: [userId], references: [id])
-  email     String
-  answers   Json
-  archetype String
-  createdAt DateTime @default(now())
-
-  @@index([email])
 }
 
 model GameScore {
