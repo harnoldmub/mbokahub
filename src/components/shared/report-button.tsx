@@ -1,6 +1,11 @@
 "use client";
 
+import { usePathname } from "next/navigation";
+
 import { useState } from "react";
+
+import { localeFromPathname } from "@/lib/locales";
+import { languageOf, nls } from "@/lib/nls";
 
 type ReportTargetType =
   | "TRAJET"
@@ -10,13 +15,13 @@ type ReportTargetType =
   | "MERCH_PRODUCT";
 
 const REASONS = [
-  { value: "ARNAQUE", label: "Arnaque / fraude" },
-  { value: "FAUX_PROFIL", label: "Faux profil" },
-  { value: "SPAM", label: "Spam" },
-  { value: "CONTENU_INAPPROPRIE", label: "Contenu inapproprié" },
-  { value: "PRIX_ABUSIF", label: "Prix abusif" },
-  { value: "CONTACT_NON_REPONSE", label: "Pas de réponse au contact" },
-  { value: "AUTRE", label: "Autre" },
+  { value: "ARNAQUE", key: "scam" },
+  { value: "FAUX_PROFIL", key: "fakeProfile" },
+  { value: "SPAM", key: "spam" },
+  { value: "CONTENU_INAPPROPRIE", key: "inappropriate" },
+  { value: "PRIX_ABUSIF", key: "abusivePrice" },
+  { value: "CONTACT_NON_REPONSE", key: "noReply" },
+  { value: "AUTRE", key: "other" },
 ] as const;
 
 export function ReportButton({
@@ -30,11 +35,14 @@ export function ReportButton({
   className?: string;
   variant?: "link" | "button";
 }) {
+  const t = nls[languageOf(localeFromPathname(usePathname()))].report;
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState<string>("ARNAQUE");
   const [description, setDescription] = useState("");
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "ok" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "ok" | "error">(
+    "idle",
+  );
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -43,7 +51,13 @@ export function ReportButton({
       const res = await fetch("/api/reports", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ targetType, targetId, reason, description, email }),
+        body: JSON.stringify({
+          targetType,
+          targetId,
+          reason,
+          description,
+          email,
+        }),
       });
       if (!res.ok) throw new Error("Erreur");
       setStatus("ok");
@@ -82,14 +96,14 @@ export function ReportButton({
             className="w-full max-w-md rounded-2xl border border-white/10 bg-neutral-950 p-6"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="font-heading text-foreground text-xl">Signaler ce contenu</h3>
-            <p className="mt-1 text-muted-foreground text-sm">
-              Aide-nous à protéger la communauté Nevent. Votre signalement reste confidentiel.
-            </p>
+            <h3 className="font-heading text-foreground text-xl">{t.title}</h3>
+            <p className="mt-1 text-muted-foreground text-sm">{t.intro}</p>
 
             <form onSubmit={submit} className="mt-5 space-y-4">
               <div>
-                <label className="mb-1 block font-medium text-foreground text-sm">Motif</label>
+                <label className="mb-1 block font-medium text-foreground text-sm">
+                  Motif
+                </label>
                 <select
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
@@ -97,21 +111,23 @@ export function ReportButton({
                   required
                 >
                   {REASONS.map((r) => (
-                    <option key={r.value} value={r.value}>{r.label}</option>
+                    <option key={r.value} value={r.value}>
+                      {t.reasons[r.key]}
+                    </option>
                   ))}
                 </select>
               </div>
 
               <div>
                 <label className="mb-1 block font-medium text-foreground text-sm">
-                  Décrivez le problème
+                  {t.describe}
                 </label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={4}
                   maxLength={1000}
-                  placeholder="Détails (capture d'écran, échanges WhatsApp, etc.)"
+                  placeholder={t.detailsPlaceholder}
                   className="w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
                 />
               </div>
@@ -124,16 +140,20 @@ export function ReportButton({
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="pour qu'on puisse vous recontacter"
+                  placeholder="{t.emailHelp}"
                   className="w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
                 />
               </div>
 
               {status === "error" && (
-                <p className="text-red-400 text-sm">Une erreur s'est produite. Réessayez.</p>
+                <p className="text-red-400 text-sm">
+                  Une erreur s'est produite. Réessayez.
+                </p>
               )}
               {status === "ok" && (
-                <p className="text-green-400 text-sm">Merci, signalement envoyé !</p>
+                <p className="text-green-400 text-sm">
+                  Merci, signalement envoyé !
+                </p>
               )}
 
               <div className="flex justify-end gap-2 pt-2">

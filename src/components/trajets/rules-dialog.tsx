@@ -7,6 +7,7 @@ import {
   Info,
   ShieldCheck,
 } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -18,37 +19,36 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { localeFromPathname } from "@/lib/locales";
+import { languageOf, nls } from "@/lib/nls";
 
 type Props = {
   triggerLabel?: string;
 };
 
-export function RulesDialog({
-  triggerLabel = "Voir les règles de mise en relation",
-}: Props) {
+export function RulesDialog({ triggerLabel }: Props) {
+  const t = nls[languageOf(localeFromPathname(usePathname()))].rides;
   const [open, setOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">{triggerLabel}</Button>
+        <Button variant="outline">{triggerLabel ?? t.rulesTrigger}</Button>
       </DialogTrigger>
-      <DialogContent
-        className="max-w-2xl border border-white/10 bg-coal p-0 sm:max-w-2xl"
-      >
+      <DialogContent className="max-w-2xl border border-white/10 bg-coal p-0 sm:max-w-2xl">
         <div className="border-b border-white/10 bg-gradient-to-b from-blood/15 via-blood/5 to-transparent px-6 pt-6 pb-5 sm:px-8 sm:pt-7">
           <DialogHeader>
             <span className="inline-flex w-fit items-center gap-2 rounded-full border border-blood/40 bg-blood/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.3em] text-blood">
               <ShieldCheck aria-hidden className="size-3" />
-              À lire avant de contacter
+              {t.rulesEyebrow}
             </span>
             <DialogTitle className="mt-3 font-display text-2xl uppercase leading-tight text-paper sm:text-3xl">
-              Règles de mise en relation
+              {t.rulesTitle}
             </DialogTitle>
             <DialogDescription className="text-paper-dim">
-              Nevent est un site indépendant qui met en relation des membres
-              de la diaspora. Nous ne vendons rien, nous ne transportons
-              personne, nous ne gérons pas les paiements entre vous.
+              Nevent est un site indépendant qui met en relation des membres de
+              la diaspora. Nous ne vendons rien, nous ne transportons personne,
+              nous ne gérons pas les paiements entre vous.
             </DialogDescription>
           </DialogHeader>
         </div>
@@ -57,7 +57,7 @@ export function RulesDialog({
           <ol className="space-y-5">
             <Rule
               icon={<Info aria-hidden className="size-4" />}
-              title="1. Vérifie l'identité avant de partir"
+              title="{t.rule1}"
             >
               Demande la pièce d&apos;identité du conducteur ou du passager au
               moment du rendez-vous. Si quelque chose te semble suspect,
@@ -66,17 +66,17 @@ export function RulesDialog({
 
             <Rule
               icon={<HandshakeIcon aria-hidden className="size-4" />}
-              title="2. Le paiement se règle entre vous"
+              title="{t.rule2}"
             >
               Le prix indicatif (carburant + péage divisés) reste un repère.
               Aucun paiement ne passe par Nevent : tu paies directement le
-              conducteur sur place, en liquide ou via l&apos;application qu&apos;il
-              accepte.
+              conducteur sur place, en liquide ou via l&apos;application
+              qu&apos;il accepte.
             </Rule>
 
             <Rule
               icon={<CheckCircle2 aria-hidden className="size-4" />}
-              title="3. Confirme la place dès que c'est ok"
+              title="{t.rule3}"
             >
               Échange en WhatsApp pour confirmer le lieu, l&apos;heure et le
               nombre de places. Préviens au moins 24h à l&apos;avance en cas
@@ -112,8 +112,8 @@ export function RulesDialog({
             <p className="mt-2 text-sm text-paper-dim leading-relaxed">
               Nevent est un service d&apos;intermédiation gratuit. Le site
               n&apos;est pas partie au contrat de transport et n&apos;est pas
-              responsable des trajets effectués, des paiements échangés, ni
-              du comportement des utilisateurs. En contactant un membre, tu
+              responsable des trajets effectués, des paiements échangés, ni du
+              comportement des utilisateurs. En contactant un membre, tu
               acceptes ces règles et nos{" "}
               <a
                 href="/cgu"
@@ -127,9 +127,7 @@ export function RulesDialog({
         </div>
 
         <div className="flex justify-end gap-3 border-t border-white/10 bg-smoke/40 px-6 py-4 sm:px-8">
-          <Button onClick={() => setOpen(false)}>
-            J&apos;ai compris
-          </Button>
+          <Button onClick={() => setOpen(false)}>J&apos;ai compris</Button>
         </div>
       </DialogContent>
     </Dialog>

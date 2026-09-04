@@ -1,6 +1,11 @@
 "use client";
 
+import { usePathname } from "next/navigation";
+
 import { useState } from "react";
+
+import { localeFromPathname } from "@/lib/locales";
+import { languageOf, nls } from "@/lib/nls";
 
 type Props = {
   trajetId: string;
@@ -19,6 +24,7 @@ export function PriceOfferDialog({
   isSignedIn,
   suggestedPrice = null,
 }: Props) {
+  const t = nls[languageOf(localeFromPathname(usePathname()))].rides;
   const hasSuggestion = suggestedPrice !== null && suggestedPrice > 0;
   const initialPrix = hasSuggestion ? String(suggestedPrice) : "";
 
@@ -28,7 +34,9 @@ export function PriceOfferDialog({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "ok" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "ok" | "error">(
+    "idle",
+  );
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   function reset() {
@@ -59,7 +67,7 @@ export function PriceOfferDialog({
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setErrorMsg(data?.error ?? "Erreur, réessaie.");
+        setErrorMsg(data?.error ?? t.offerError);
         setStatus("error");
         return;
       }
@@ -69,7 +77,7 @@ export function PriceOfferDialog({
         reset();
       }, 1800);
     } catch {
-      setErrorMsg("Réseau indisponible, réessaie.");
+      setErrorMsg(t.offerNetworkError);
       setStatus("error");
     }
   }
@@ -99,14 +107,16 @@ export function PriceOfferDialog({
             onClick={(e) => e.stopPropagation()}
           >
             <h3 className="font-heading text-foreground text-xl">
-              {hasSuggestion
-                ? "Suggérer le prix conseillé"
-                : "Proposer un autre prix"}
+              {hasSuggestion ? t.offerSuggest : t.offerOther}
             </h3>
             <p className="mt-1 text-muted-foreground text-sm">
-              Trajet <strong className="text-foreground">{villeDepart} → {villeArrivee}</strong>{" "}
-              · prix actuel <strong className="text-foreground">{prixPublie} €</strong> / place.
-              Le conducteur reçoit ta proposition par email.
+              Trajet{" "}
+              <strong className="text-foreground">
+                {villeDepart} → {villeArrivee}
+              </strong>{" "}
+              · prix actuel{" "}
+              <strong className="text-foreground">{prixPublie} €</strong> /
+              place. Le conducteur reçoit ta proposition par email.
             </p>
 
             {hasSuggestion && (
@@ -116,7 +126,9 @@ export function PriceOfferDialog({
                 </div>
                 <p className="mt-2 text-foreground text-sm leading-relaxed">
                   Pour ce trajet, on estime un prix juste à{" "}
-                  <strong className="text-foreground">~{suggestedPrice} € / place</strong>{" "}
+                  <strong className="text-foreground">
+                    ~{suggestedPrice} € / place
+                  </strong>{" "}
                   (essence + péages divisés par toi + les autres passagers). Le
                   champ ci-dessous est pré-rempli, tu peux ajuster si tu veux.
                 </p>
@@ -126,7 +138,7 @@ export function PriceOfferDialog({
             <form onSubmit={submit} className="mt-5 space-y-4">
               <div>
                 <label className="mb-1 block font-medium text-foreground text-sm">
-                  Ton prix proposé (€ / place) <span className="text-red-400">*</span>
+                  {t.offerPrice} <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="number"
@@ -151,7 +163,7 @@ export function PriceOfferDialog({
                   onChange={(e) => setMessage(e.target.value)}
                   rows={3}
                   maxLength={500}
-                  placeholder="Ex : Je suis flexible sur l'horaire, possible de partir 15min plus tôt ?"
+                  placeholder={t.offerMessagePlaceholder}
                   className="w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
                 />
               </div>
@@ -159,7 +171,7 @@ export function PriceOfferDialog({
               {!isSignedIn && (
                 <div>
                   <label className="mb-1 block font-medium text-foreground text-sm">
-                    Ton prénom (optionnel)
+                    {t.offerFirstName}
                   </label>
                   <input
                     type="text"
@@ -175,14 +187,14 @@ export function PriceOfferDialog({
               {!isSignedIn && (
                 <div>
                   <label className="mb-1 block font-medium text-foreground text-sm">
-                    Ton email
+                    {t.offerEmail}
                   </label>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     maxLength={120}
-                    placeholder="pour qu'il puisse te répondre"
+                    placeholder="{t.offerEmailHelp}"
                     className="w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground"
                   />
                 </div>
@@ -190,7 +202,7 @@ export function PriceOfferDialog({
 
               <div>
                 <label className="mb-1 block font-medium text-foreground text-sm">
-                  Ton WhatsApp (optionnel)
+                  {t.offerWhatsapp}
                 </label>
                 <input
                   type="tel"
@@ -202,9 +214,7 @@ export function PriceOfferDialog({
                 />
               </div>
 
-              {errorMsg && (
-                <p className="text-red-400 text-sm">{errorMsg}</p>
-              )}
+              {errorMsg && <p className="text-red-400 text-sm">{errorMsg}</p>}
               {status === "ok" && (
                 <p className="rounded-md border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-emerald-300 text-sm">
                   ✓ Proposition envoyée au conducteur. Il te recontactera.
@@ -228,10 +238,10 @@ export function PriceOfferDialog({
                   className="rounded-md bg-[#E50914] px-4 py-2 font-medium text-white text-sm transition hover:bg-[#b8070f] disabled:opacity-50"
                 >
                   {status === "loading"
-                    ? "Envoi..."
+                    ? t.offerSending
                     : hasSuggestion
-                      ? "Envoyer la suggestion"
-                      : "Envoyer"}
+                      ? t.offerSendSuggestion
+                      : t.offerSend}
                 </button>
               </div>
             </form>

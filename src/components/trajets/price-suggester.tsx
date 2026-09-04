@@ -1,34 +1,43 @@
 "use client";
 
 import { Calculator, Sparkles } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
-
 import {
   CITIES,
   findCity,
   type PriceSuggestion,
   suggestPrice,
 } from "@/lib/data/cities";
+import { localeFromPathname } from "@/lib/locales";
+import { languageOf, nls } from "@/lib/nls";
 
 export function PriceSuggester() {
+  const t = nls[languageOf(localeFromPathname(usePathname()))].rides;
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("Paris");
   const [seats, setSeats] = useState(3);
 
   const suggestions = useMemo(() => CITIES.map((c) => c.name).sort(), []);
 
-  const result = useMemo<{ ok: PriceSuggestion } | { error: string } | null>(
-    () => {
-      if (!from.trim() || !to.trim()) return null;
-      const a = findCity(from);
-      const b = findCity(to);
-      if (!a) return { error: `Ville inconnue : « ${from} ». Essaie une ville plus connue (ex: Bruxelles, Lille, Lyon).` };
-      if (!b) return { error: `Ville inconnue : « ${to} ». Essaie une ville plus connue (ex: Paris).` };
-      if (a.name === b.name) return { error: "Le départ et l'arrivée doivent être différents." };
-      return { ok: suggestPrice(a, b, seats) };
-    },
-    [from, to, seats],
-  );
+  const result = useMemo<
+    { ok: PriceSuggestion } | { error: string } | null
+  >(() => {
+    if (!from.trim() || !to.trim()) return null;
+    const a = findCity(from);
+    const b = findCity(to);
+    if (!a)
+      return {
+        error: `Ville inconnue : « ${from} ». Essaie une ville plus connue (ex: Bruxelles, Lille, Lyon).`,
+      };
+    if (!b)
+      return {
+        error: `Ville inconnue : « ${to} ». Essaie une ville plus connue (ex: Paris).`,
+      };
+    if (a.name === b.name)
+      return { error: "Le départ et l'arrivée doivent être différents." };
+    return { ok: suggestPrice(a, b, seats) };
+  }, [from, to, seats]);
 
   return (
     <div className="rounded-2xl border border-blood/20 bg-gradient-to-br from-blood/5 to-coal p-6 space-y-5">
@@ -38,10 +47,12 @@ export function PriceSuggester() {
         </div>
         <div>
           <p className="font-display text-sm uppercase text-paper">
-            Calculateur de prix
+            {t.priceTitle}
           </p>
           <p className="text-paper-dim text-xs leading-relaxed font-body mt-1">
-            Pas sûr du prix à fixer ? Indique ton trajet et le nombre de places, on te suggère un tarif juste basé sur la distance, l'essence et les péages.
+            Pas sûr du prix à fixer ? Indique ton trajet et le nombre de places,
+            on te suggère un tarif juste basé sur la distance, l'essence et les
+            péages.
           </p>
         </div>
       </div>
@@ -125,17 +136,26 @@ export function PriceSuggester() {
 
           <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/5">
             <div>
-              <div className="text-[10px] uppercase text-paper-dim">Distance</div>
-              <div className="font-mono text-sm text-paper">{result.ok.roadKm} km</div>
+              <div className="text-[10px] uppercase text-paper-dim">
+                Distance
+              </div>
+              <div className="font-mono text-sm text-paper">
+                {result.ok.roadKm} km
+              </div>
             </div>
             <div>
-              <div className="text-[10px] uppercase text-paper-dim">Coût total estimé</div>
-              <div className="font-mono text-sm text-paper">{result.ok.totalCost}€</div>
+              <div className="text-[10px] uppercase text-paper-dim">
+                Coût total estimé
+              </div>
+              <div className="font-mono text-sm text-paper">
+                {result.ok.totalCost}€
+              </div>
             </div>
           </div>
 
           <p className="text-[10px] text-paper-dim/70 leading-relaxed pt-1">
-            Estimation basée sur ~8,5c/km d'essence + 4c/km de péages, divisée entre toi et tes passagers. Ajuste selon ton véhicule.
+            Estimation basée sur ~8,5c/km d'essence + 4c/km de péages, divisée
+            entre toi et tes passagers. Ajuste selon ton véhicule.
           </p>
         </div>
       )}
