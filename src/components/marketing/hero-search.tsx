@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { localizedHref } from "@/lib/nls";
+import { languageOf, localizedHref, nls } from "@/lib/nls";
 
 type Suggestion = {
   services: string[];
@@ -37,6 +37,7 @@ function highlight(text: string, q: string) {
 }
 
 export function HeroSearch({ locale }: { locale: string }) {
+  const t = nls[languageOf(locale)].search;
   const router = useRouter();
   const [q, setQ] = useState("");
   const [city, setCity] = useState("");
@@ -131,9 +132,11 @@ export function HeroSearch({ locale }: { locale: string }) {
   const showQ =
     openWhich === "q" &&
     q.trim().length >= 3 &&
-    (qSug.services.length + qSug.pros.length + qSug.cities.length > 0);
+    qSug.services.length + qSug.pros.length + qSug.cities.length > 0;
   const showCity =
-    openWhich === "city" && city.trim().length >= 2 && citySug.cities.length > 0;
+    openWhich === "city" &&
+    city.trim().length >= 2 &&
+    citySug.cities.length > 0;
 
   return (
     <form
@@ -144,7 +147,7 @@ export function HeroSearch({ locale }: { locale: string }) {
       {/* Service / pro / category input */}
       <div className="relative">
         <label htmlFor={qInputId} className="sr-only">
-          Que cherchez-vous&nbsp;?
+          {t.heading}
         </label>
         <Search className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-paper-mute" />
         <input
@@ -158,7 +161,7 @@ export function HeroSearch({ locale }: { locale: string }) {
             setOpenWhich("q");
           }}
           onFocus={() => setOpenWhich("q")}
-          placeholder="Coiffeur, maquilleuse, photographe..."
+          placeholder={t.servicePlaceholder}
           className="h-12 w-full rounded-lg border border-transparent bg-smoke py-3 pl-12 pr-4 text-sm text-paper outline-none transition placeholder:text-paper-mute focus:border-blood/50 focus:bg-white"
         />
 
@@ -167,7 +170,7 @@ export function HeroSearch({ locale }: { locale: string }) {
             {qSug.services.length > 0 ? (
               <div className="px-2 pt-2">
                 <p className="px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-paper-mute">
-                  Prestations
+                  {t.groupServices}
                 </p>
                 <ul>
                   {qSug.services.map((s) => (
@@ -192,7 +195,7 @@ export function HeroSearch({ locale }: { locale: string }) {
             {qSug.pros.length > 0 ? (
               <div className="px-2 pt-2">
                 <p className="px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-paper-mute">
-                  Prestataires
+                  {t.groupProviders}
                 </p>
                 <ul>
                   {qSug.pros.map((p) => (
@@ -227,7 +230,7 @@ export function HeroSearch({ locale }: { locale: string }) {
             {qSug.cities.length > 0 ? (
               <div className="px-2 pb-2 pt-2">
                 <p className="px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-paper-mute">
-                  Villes
+                  {t.citiesGroup}
                 </p>
                 <ul>
                   {qSug.cities.map((c) => (
@@ -255,7 +258,7 @@ export function HeroSearch({ locale }: { locale: string }) {
       {/* City input */}
       <div className="relative">
         <label htmlFor={cityInputId} className="sr-only">
-          Ville
+          {t.cityLabel}
         </label>
         <MapPin className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-paper-mute" />
         <input
@@ -269,7 +272,7 @@ export function HeroSearch({ locale }: { locale: string }) {
             setOpenWhich("city");
           }}
           onFocus={() => setOpenWhich("city")}
-          placeholder="Ville ou quartier"
+          placeholder={t.cityPlaceholder}
           className="h-12 w-full rounded-lg border border-transparent bg-smoke py-3 pl-12 pr-4 text-sm text-paper outline-none transition placeholder:text-paper-mute focus:border-blood/50 focus:bg-white"
         />
 
@@ -300,7 +303,7 @@ export function HeroSearch({ locale }: { locale: string }) {
         <input name="lang" type="hidden" value={locale} />
       ) : null}
       <Button className="h-12 rounded-lg px-6" type="submit">
-        Rechercher
+        {t.submit}
       </Button>
     </form>
   );

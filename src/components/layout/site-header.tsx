@@ -45,14 +45,7 @@ export function SiteHeader() {
       cancelled = true;
     };
   }, [isSignedIn]);
-  const dashboardLabel =
-    lang === "en"
-      ? "Dashboard"
-      : lang === "de"
-        ? "Dashboard"
-        : lang === "nl"
-          ? "Dashboard"
-          : "Tableau de bord";
+  const dashboardLabel = copy.auth.dashboard;
   // Arborescence unique : src/lib/navigation.ts. L'en-tête n'affiche que les
   // trois destinations visiteur les plus fréquentes ; le méga-menu déplie le
   // reste. La structure vient du module, les libellés restent traduits quand

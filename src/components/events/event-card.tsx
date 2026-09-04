@@ -5,11 +5,15 @@ import Link from "next/link";
 import type { NeventEvent } from "@/lib/events";
 import { localizedHref } from "@/lib/nls";
 
-const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
-  day: "2-digit",
-  month: "short",
-  timeZone: "Europe/Paris",
-});
+// Le format de date suit la locale de la page : « 24 oct. » en français,
+// « 24 Oct » en anglais.
+function formatDate(date: Date, locale: string): string {
+  return new Intl.DateTimeFormat(locale, {
+    day: "2-digit",
+    month: "short",
+    timeZone: "Europe/Paris",
+  }).format(date);
+}
 
 export function EventCard({
   event,
@@ -23,8 +27,8 @@ export function EventCard({
   const start = new Date(event.startDate);
   const end = event.endDate ? new Date(event.endDate) : null;
   const date = end
-    ? `${dateFormatter.format(start)}–${dateFormatter.format(end)}`
-    : dateFormatter.format(start);
+    ? `${formatDate(start, locale)}–${formatDate(end, locale)}`
+    : formatDate(start, locale);
 
   return (
     <article className="group min-w-0">

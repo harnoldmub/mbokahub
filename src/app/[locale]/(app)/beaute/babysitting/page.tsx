@@ -86,40 +86,6 @@ const COPY: Record<
     cta: "Book by email",
     note: "Reply within 24 h. Deposit required to confirm booking.",
   },
-  de: {
-    back: "Zurück zu den Services",
-    eyebrow: "Babysitting",
-    title: "Kinderbetreuung während des Konzerts",
-    description:
-      "Du gehst aus und brauchst eine zuverlässige Betreuung? Wir vermitteln Babysitter aus der Diaspora, vom Team geprüft.",
-    priceLabel: "Tarif",
-    priceUnit: "/Stunde",
-    benefits: [
-      "Geprüfte Babysitter (Ausweis, Referenzen)",
-      "Verfügbar am Abend des 2. und 3. Mai 2026",
-      "Paris und nähere Vororte (Zonen 1-3)",
-      "Fotos, Vorstellung und Bewertungen vor der Buchung",
-    ],
-    cta: "Per E-Mail buchen",
-    note: "Antwort innerhalb von 24 h. Anzahlung zur Bestätigung der Buchung erforderlich.",
-  },
-  nl: {
-    back: "Terug naar de diensten",
-    eyebrow: "Babysitting",
-    title: "Kinderopvang tijdens het concert",
-    description:
-      "Ga je uit en zoek je een betrouwbare oppas? We brengen je in contact met diaspora-babysitters, gecontroleerd door het team.",
-    priceLabel: "Tarief",
-    priceUnit: "/uur",
-    benefits: [
-      "Gecontroleerde oppassers (ID, referenties)",
-      "Beschikbaar op avonden van 2 en 3 mei 2026",
-      "Parijs en nabije voorsteden (zones 1-3)",
-      "Foto's, intro en reviews vóór boeking",
-    ],
-    cta: "Boeken via e-mail",
-    note: "Antwoord binnen 24 u. Aanbetaling vereist om de boeking te bevestigen.",
-  },
 };
 
 export default async function BabysittingPage({

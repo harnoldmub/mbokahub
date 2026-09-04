@@ -18,9 +18,15 @@
  * suffit à la mettre en ligne.
  */
 
-export type Language = "fr" | "en" | "de" | "nl";
+/**
+ * Langues servies. L'allemand et le néerlandais avaient été annoncés dans le
+ * sélecteur sans jamais être traduits ; ils sont retirés tant qu'aucun
+ * catalogue n'existe pour eux. Les rajouter demande un fichier de plus dans
+ * src/lib/i18n/ et une entrée ici.
+ */
+export type Language = "fr" | "en";
 
-export type Locale = "fr" | "fr-be" | "fr-cd" | "en" | "de" | "nl";
+export type Locale = "fr" | "fr-be" | "fr-cd" | "en";
 
 export type LocaleMeta = {
   language: Language;
@@ -82,26 +88,9 @@ export const LOCALE_META: Record<Locale, LocaleMeta> = {
     country: "GB",
     cityApiCountry: "GB",
     currency: "EUR",
-    catalogueComplete: false,
-  },
-  de: {
-    language: "de",
-    label: "Deutsch",
-    shortLabel: "DE",
-    flag: "🇩🇪",
-    country: "DE",
-    cityApiCountry: "DE",
-    currency: "EUR",
-    catalogueComplete: false,
-  },
-  nl: {
-    language: "nl",
-    label: "Nederlands",
-    shortLabel: "NL",
-    flag: "🇳🇱",
-    country: "NL",
-    cityApiCountry: "NL",
-    currency: "EUR",
+    // La page d'accueil et les surfaces de navigation sont traduites ; le
+    // reste du site ne l'est pas encore. Passer à `true` une fois le catalogue
+    // complet — /en sera alors routable et proposé dans le sélecteur.
     catalogueComplete: false,
   },
 };

@@ -13,14 +13,17 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import type { NeventEvent } from "@/lib/events";
-import { localizedHref } from "@/lib/nls";
+import { languageOf, localizedHref, nls } from "@/lib/nls";
 
-const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-  timeZone: "Europe/Paris",
-});
+// Le format de date suit la locale de la page.
+function formatDate(date: Date, locale: string): string {
+  return new Intl.DateTimeFormat(locale, {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "Europe/Paris",
+  }).format(date);
+}
 
 export function EventHero({
   events,
@@ -29,6 +32,7 @@ export function EventHero({
   events: NeventEvent[];
   locale: string;
 }) {
+  const t = nls[languageOf(locale)].hero;
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
 
@@ -46,8 +50,8 @@ export function EventHero({
   const start = new Date(event.startDate);
   const end = event.endDate ? new Date(event.endDate) : null;
   const dates = end
-    ? `${dateFormatter.format(start)} — ${dateFormatter.format(end)}`
-    : dateFormatter.format(start);
+    ? `${formatDate(start, locale)} — ${formatDate(end, locale)}`
+    : formatDate(start, locale);
 
   function move(delta: number) {
     setActive((current) => (current + delta + events.length) % events.length);
@@ -56,7 +60,7 @@ export function EventHero({
   return (
     <section
       aria-roledescription="carousel"
-      aria-label="Événements à la une"
+      aria-label={t.ariaCarousel}
       className="relative isolate min-h-[680px] overflow-hidden bg-black text-white sm:min-h-[720px] lg:min-h-[760px]"
     >
       {events.map((slide, index) => (
@@ -77,7 +81,7 @@ export function EventHero({
         <div aria-live="polite" className="max-w-4xl">
           <div className="flex flex-wrap items-center gap-3">
             <span className="rounded-full bg-blood px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-white">
-              À la une
+              {t.featured}
             </span>
             <span className="text-xs font-semibold uppercase tracking-[0.18em] text-white/75">
               {event.category} · {event.genres.join(" · ")}
@@ -93,14 +97,14 @@ export function EventHero({
             {dates}
           </p>
           <p className="mt-4 max-w-2xl text-base leading-7 text-white/75 sm:text-lg">
-            Découvre l’événement. Organise toute ton expérience.
+            {t.tagline}
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-black transition hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               href={localizedHref(`/evenements/${event.slug}`, locale)}
             >
-              Voir l’événement
+              {t.seeEvent}
               <ArrowRight aria-hidden className="size-4" />
             </Link>
             <Link
@@ -111,14 +115,14 @@ export function EventHero({
               )}
             >
               <CarFront aria-hidden className="size-4" />
-              Organiser mon trajet
+              {t.planRide}
             </Link>
           </div>
         </div>
 
         <div className="mt-10 flex items-center gap-3">
           <button
-            aria-label="Événement précédent"
+            aria-label={t.ariaPrev}
             className="grid size-12 place-items-center rounded-full border border-white/30 bg-black/30 text-white transition hover:bg-white hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
             onClick={() => move(-1)}
             type="button"
@@ -126,11 +130,7 @@ export function EventHero({
             <ChevronLeft aria-hidden className="size-5" />
           </button>
           <button
-            aria-label={
-              paused
-                ? "Relancer le défilement automatique"
-                : "Mettre le défilement automatique en pause"
-            }
+            aria-label={paused ? t.resumeAutoplay : t.pauseAutoplay}
             className="grid size-12 place-items-center rounded-full border border-white/30 bg-black/30 text-white transition hover:bg-white hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
             onClick={() => setPaused((value) => !value)}
             type="button"
@@ -142,7 +142,7 @@ export function EventHero({
             )}
           </button>
           <button
-            aria-label="Événement suivant"
+            aria-label={t.ariaNext}
             className="grid size-12 place-items-center rounded-full border border-white/30 bg-black/30 text-white transition hover:bg-white hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
             onClick={() => move(1)}
             type="button"

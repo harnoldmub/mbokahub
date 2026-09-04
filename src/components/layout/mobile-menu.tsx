@@ -33,31 +33,12 @@ export function MobileMenu({ market, lang }: MobileMenuProps) {
   const [open, setOpen] = useState(false);
   const copy = nls[lang].common;
   const { isSignedIn, user } = useUser();
-  const signInLabel =
-    lang === "en"
-      ? "Sign in"
-      : lang === "de"
-        ? "Anmelden"
-        : lang === "nl"
-          ? "Inloggen"
-          : "Se connecter";
-  const signUpLabel =
-    lang === "en"
-      ? "Create account"
-      : lang === "de"
-        ? "Konto erstellen"
-        : lang === "nl"
-          ? "Account aanmaken"
-          : "Créer un compte";
-  const signOutLabel =
-    lang === "en"
-      ? "Sign out"
-      : lang === "de"
-        ? "Abmelden"
-        : lang === "nl"
-          ? "Uitloggen"
-          : "Se déconnecter";
-  const dashboardLabel = lang === "fr" ? "Tableau de bord" : "Dashboard";
+  const {
+    signIn: signInLabel,
+    signUp: signUpLabel,
+    signOut: signOutLabel,
+    dashboard: dashboardLabel,
+  } = copy.auth;
   // Même arborescence que le méga-menu, mise à plat : un utilisateur mobile
   // doit atteindre exactement ce qu'atteint un utilisateur desktop.
   const translatedLabels: Record<string, string> = {
