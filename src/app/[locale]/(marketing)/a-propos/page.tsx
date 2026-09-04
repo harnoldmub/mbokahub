@@ -1,14 +1,22 @@
 import type { Metadata } from "next";
-
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { LEGAL_DISCLAIMER } from "@/lib/constants";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "À propos de Nevent — Notre mission diaspora",
-  description:
-    "Nevent est né d'un besoin simple : aider une diaspora mobile à se coordonner autour des grands week-ends culturels. Notre mission, notre équipe.",
-  alternates: { canonical: "/a-propos" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createPageMetadata({
+    title: "À propos — Notre mission pour la diaspora",
+    description:
+      "Nevent aide la diaspora à se coordonner autour des grands événements culturels : découverte, trajets, services et communauté.",
+    path: "/a-propos",
+    locale,
+  });
+}
 
 export default function AboutPage() {
   return (

@@ -127,8 +127,12 @@ export function ProCard({ pro, unlocked: _unlocked }: ProCardProps) {
             </span>
           </div>
           <div className="text-right">
-            <p className="font-body text-xs text-paper">
-              {pro.rating} <span className="text-gold">★</span>
+            <p className="font-body text-xs text-paper flex items-center justify-end gap-1">
+              <span>{pro.rating}</span>
+              <Star
+                className="size-3.5 fill-gold text-gold"
+                aria-hidden="true"
+              />
             </p>
             <p className="font-mono text-[8px] text-paper-mute uppercase">
               {pro.reviewsCount} avis

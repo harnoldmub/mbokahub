@@ -3,6 +3,7 @@ import {
   Clock3,
   ShieldAlert,
   ShieldCheck,
+  Star,
   UserRound,
 } from "lucide-react";
 
@@ -67,7 +68,17 @@ export default async function SettingsPage({
           <div className="rounded-2xl border border-white/10 bg-ink/40 p-4">
             <dt className="text-paper-mute text-sm">Famille Fondatrice</dt>
             <dd className="mt-1 text-paper">
-              {user.isVipActive ? "⭐ Membre à vie" : "—"}
+              {user.isVipActive ? (
+                <span className="inline-flex items-center gap-1.5 text-amber-300">
+                  <Star
+                    className="size-3.5 fill-amber-300"
+                    aria-hidden="true"
+                  />
+                  <span>Membre à vie</span>
+                </span>
+              ) : (
+                "—"
+              )}
             </dd>
           </div>
         </dl>

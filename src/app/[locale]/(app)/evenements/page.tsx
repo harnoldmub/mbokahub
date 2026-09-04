@@ -1,15 +1,30 @@
 import type { Metadata } from "next";
 import { EventsExplorer } from "@/components/events/events-explorer";
 import { getPublicEvents } from "@/lib/events.server";
+import { createPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Tous les événements afro en Europe",
-  description:
-    "Découvre les concerts, festivals et événements afro vérifiés à Paris, Bruxelles, Londres et ailleurs, puis prépare trajets et services avec Nevent.",
-  alternates: { canonical: "/fr/evenements" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createPageMetadata({
+    title: "Tous les événements afro en Europe",
+    description:
+      "Découvre les concerts, festivals et événements afro vérifiés à Paris, Bruxelles, Londres et ailleurs, puis prépare trajets et services avec Nevent.",
+    path: "/evenements",
+    locale,
+    keywords: [
+      "concerts afro 2026",
+      "événements Afrobeats Europe",
+      "concerts Paris Bruxelles Londres",
+      "festivals afro",
+    ],
+  });
+}
 
 export default async function EventsPage({
   params,

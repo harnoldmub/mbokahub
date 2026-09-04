@@ -20,21 +20,31 @@ import { prisma } from "@/lib/db/prisma";
 import { artists } from "@/lib/events";
 import { getPublicEvents } from "@/lib/events.server";
 import { localizedHref, type SearchParams } from "@/lib/nls";
+import { createPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = {
-  title: "Nevent — Découvre l’événement, organise toute ton expérience",
-  description:
-    "Concerts afro vérifiés en Europe, trajets, coiffure, beauté, photographes, services et afters : prépare toute ton expérience événementielle avec Nevent.",
-  alternates: { canonical: "/fr" },
-  openGraph: {
-    title: "Nevent — Plus qu’un événement",
+export async function generateMetadata({
+  params,
+}: HomePageProps): Promise<Metadata> {
+  const { locale } = await params;
+  return createPageMetadata({
+    absoluteTitle: true,
+    title: "Nevent — Découvre l’événement, organise toute ton expérience",
     description:
-      "Découvre les événements afro à ne pas manquer et organise tout ce qui se passe autour.",
-    images: ["/images/events/fally-ipupa-london-2026.webp"],
-    url: "/fr",
-  },
-};
+      "Concerts afro vérifiés en Europe, trajets, coiffure, beauté, photographes, services et afters : prépare toute ton expérience événementielle avec Nevent.",
+    path: "/",
+    locale,
+    image: "/images/events/fally-ipupa-london-2026.webp",
+    imageAlt: "Fally Ipupa à Londres — événement à la une sur Nevent",
+    keywords: [
+      "événements afro Europe",
+      "concerts diaspora africaine",
+      "Afrobeats Europe",
+      "covoiturage concert",
+      "prestataires afro",
+    ],
+  });
+}
 
 type HomePageProps = {
   params: Promise<{ locale: string }>;

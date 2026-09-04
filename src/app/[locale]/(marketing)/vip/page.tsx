@@ -6,8 +6,10 @@ import {
   MessagesSquare,
   ShieldCheck,
   Sparkles,
+  Star,
   Users,
 } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { SectionHeading } from "@/components/marketing/section-heading";
@@ -15,12 +17,22 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { isFoundingFamilyMember } from "@/lib/auth-helpers";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Famille Fondatrice · Nevent",
-  description:
-    "Nevent est désormais 100% gratuit pour les fans. Les premiers à avoir cru au projet (anciens VIP) gardent un badge ⭐ Famille Fondatrice à vie.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createPageMetadata({
+    title: "Famille Fondatrice",
+    description:
+      "Nevent est gratuit pour les fans. Les premiers membres conservent leur badge Famille Fondatrice à vie.",
+    path: "/vip",
+    locale,
+  });
+}
 
 const FREE_FOR_FANS = [
   {
@@ -59,8 +71,12 @@ export default async function VipPage() {
                   <Crown aria-hidden className="size-7" />
                 </span>
                 <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-amber-200">
-                    ⭐ Famille Fondatrice
+                  <p className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.3em] text-amber-200">
+                    <Star
+                      className="size-3 fill-amber-300 text-amber-300"
+                      aria-hidden="true"
+                    />
+                    <span>Famille Fondatrice</span>
                   </p>
                   <h1 className="mt-1 font-display text-4xl uppercase leading-none text-paper sm:text-5xl">
                     Tu es <span className="text-amber-300">fondateur</span>
@@ -79,7 +95,7 @@ export default async function VipPage() {
               Tu fais partie des premiers qui ont cru à Nevent avant le concert,
               quand l&apos;accès était encore payant. Aujourd&apos;hui la
               plateforme est 100% gratuite pour tous les fans — mais ton badge
-              ⭐ Famille Fondatrice reste, à vie.
+              Famille Fondatrice reste, à vie.
             </p>
 
             <p className="mt-4 max-w-2xl text-paper-dim text-sm">
@@ -139,8 +155,12 @@ export default async function VipPage() {
 
         <Card className="rounded-3xl border-amber-400/30 bg-gradient-to-br from-amber-500/10 via-background to-background">
           <CardHeader>
-            <p className="font-mono text-amber-200 text-xs uppercase tracking-[0.3em]">
-              ⭐ Famille Fondatrice
+            <p className="flex items-center gap-1.5 font-mono text-amber-200 text-xs uppercase tracking-[0.3em]">
+              <Star
+                className="size-3 fill-amber-300 text-amber-300"
+                aria-hidden="true"
+              />
+              <span>Famille Fondatrice</span>
             </p>
             <CardTitle className="mt-2 font-display text-foreground">
               <span className="text-3xl">Anciens VIP — badge à vie</span>
@@ -149,8 +169,8 @@ export default async function VipPage() {
           <CardContent className="grid gap-5">
             <p className="text-paper-dim text-sm">
               Si tu as déjà payé un pass VIP avant la bascule (6,99 € ou 9,99
-              €), ton badge ⭐ Famille Fondatrice reste à vie sur ton profil.
-              Pas besoin de rien faire — connecte-toi, il est déjà là.
+              €), ton badge Famille Fondatrice reste à vie sur ton profil. Pas
+              besoin de rien faire — connecte-toi, il est déjà là.
             </p>
             <ul className="grid gap-3">
               <li className="flex items-start gap-3 text-paper">
@@ -159,7 +179,7 @@ export default async function VipPage() {
                   className="mt-1 size-4 shrink-0 text-amber-300"
                 />
                 <span className="text-sm">
-                  Badge ⭐ Famille Fondatrice visible sur ton profil
+                  Badge Famille Fondatrice visible sur ton profil
                 </span>
               </li>
               <li className="flex items-start gap-3 text-paper">

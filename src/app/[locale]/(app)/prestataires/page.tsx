@@ -1,22 +1,42 @@
 import { AlertCircle } from "lucide-react";
+import type { Metadata } from "next";
 import { Suspense } from "react";
 
 import { PrestatairesListClient } from "@/components/pros/prestataires-list-client";
 import { prisma } from "@/lib/db/prisma";
 import type { SearchParams } from "@/lib/nls";
+import { createPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
-export const metadata = {
-  title: "Prestataires · Nevent",
-  description:
-    "Trouvez un prestataire de confiance, consultez ses médias et demandez un rendez-vous gratuitement.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createPageMetadata({
+    title: "Prestataires afro vérifiés",
+    description:
+      "Trouve un prestataire de confiance, consulte ses réalisations et demande gratuitement un rendez-vous sur Nevent.",
+    path: "/prestataires",
+    locale,
+    keywords: [
+      "prestataire afro",
+      "services diaspora",
+      "professionnel afro vérifié",
+      "réservation prestataire",
+    ],
+  });
+}
 
 type PrestatairesSearchParams = SearchParams & {
   q?: string | string[];
 };
 
-type Props = { searchParams?: Promise<PrestatairesSearchParams> };
+type Props = {
+  params: Promise<{ locale: string }>;
+  searchParams?: Promise<PrestatairesSearchParams>;
+};
 
 export default async function PrestatairesPage({ searchParams }: Props) {
   const sp = await searchParams;

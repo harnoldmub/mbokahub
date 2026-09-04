@@ -42,9 +42,10 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
-  webpack(config) {
+  webpack(config, { dev }) {
     config.resolve = config.resolve ?? {};
     config.resolve.symlinks = false;
+    if (!dev) config.devtool = false;
     return config;
   },
 };

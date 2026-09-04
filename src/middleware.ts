@@ -23,6 +23,7 @@ const NO_LOCALE_PREFIXES = [
   "/manifest",
   "/icon",
   "/apple-icon",
+  "/opengraph-image",
   "/logo",
 ];
 

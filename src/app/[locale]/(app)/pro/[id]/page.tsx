@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { ArrowLeft, Pencil, Sparkles } from "lucide-react";
+import { ArrowLeft, Check, MapPin, Pencil, Sparkles } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,18 +14,19 @@ import { Button } from "@/components/ui/button";
 import { isCurrentUserAdmin } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/db/prisma";
 import { PRO_CATEGORY_BY_ID } from "@/lib/pro-categories";
+import { createPageMetadata, getSiteUrl } from "@/lib/seo";
 
 type ProDetailsPageProps = {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string; locale: string }>;
   searchParams: Promise<{ from?: string }>;
 };
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string; locale: string }>;
 }): Promise<Metadata> {
-  const { id } = await params;
+  const { id, locale } = await params;
   const pro = await prisma.proProfile
     .findUnique({
       where: { id },
@@ -39,10 +40,13 @@ export async function generateMetadata({
     })
     .catch(() => null);
   if (!pro) {
-    return {
+    return createPageMetadata({
       title: "Prestataire introuvable",
-      robots: { index: false, follow: false },
-    };
+      description: "Ce profil prestataire n’est pas disponible.",
+      path: `/pro/${id}`,
+      locale,
+      noIndex: true,
+    });
   }
   const cat = PRO_CATEGORY_BY_ID[pro.category]?.label ?? "Prestataire";
   const city = pro.city ? ` à ${pro.city}` : "";
@@ -51,25 +55,25 @@ export async function generateMetadata({
     pro.bio?.slice(0, 160).trim() ||
     `${cat}${city}. Découvrez le profil, les photos et réservez en ligne sur Nevent.`;
   const cover = pro.photos?.[0];
-  return {
+  return createPageMetadata({
     title,
     description,
-    alternates: { canonical: `/pro/${id}` },
-    openGraph: {
-      title,
-      description,
-      type: "profile",
-      url: `/pro/${id}`,
-      images: cover ? [{ url: cover }] : undefined,
-    },
-  };
+    path: `/pro/${id}`,
+    locale,
+    image: cover || undefined,
+    imageAlt: `${pro.displayName}, ${cat}${city}`,
+    type: "profile",
+    keywords: [cat, pro.displayName, pro.city, "prestataire afro"].filter(
+      (value): value is string => Boolean(value),
+    ),
+  });
 }
 
 export default async function ProDetailsPage({
   params,
   searchParams,
 }: ProDetailsPageProps) {
-  const { id } = await params;
+  const { id, locale } = await params;
   const { from } = await searchParams;
   const { userId: clerkId } = await auth();
   const [pro, isAdmin, dbUser] = await Promise.all([
@@ -100,9 +104,32 @@ export default async function ProDetailsPage({
   const cover = pro.photos?.[0];
   const galleryPhotos = (pro.photos ?? []).slice(1);
   const displayedName = pro.displayName;
+  const proJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    name: pro.displayName,
+    description: pro.bio || `${meta?.label ?? "Prestataire"} à ${pro.city}`,
+    url: `${getSiteUrl()}/${locale}/pro/${pro.id}`,
+    image: pro.photos,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: pro.city,
+      addressCountry: pro.country,
+    },
+    ...(pro.reviewsCount > 0
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: pro.rating,
+            reviewCount: pro.reviewsCount,
+          },
+        }
+      : {}),
+  };
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
+      <script type="application/ld+json">{JSON.stringify(proJsonLd)}</script>
       {/* ── Nav ── */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <Button asChild size="sm" variant="ghost">
@@ -184,24 +211,31 @@ export default async function ProDetailsPage({
             />
           </div>
         ) : (
-          <div className="flex h-40 items-center justify-center text-6xl opacity-30">
-            {meta?.icon ?? "✨"}
+          <div className="flex h-44 items-center justify-center bg-zinc-950/40">
+            <div className="flex size-20 items-center justify-center rounded-2xl bg-white/5 text-paper-dim/40">
+              {meta?.icon ? (
+                <meta.icon className="size-10 stroke-[1.5]" />
+              ) : (
+                <Sparkles className="size-10 stroke-[1.5]" />
+              )}
+            </div>
           </div>
         )}
 
         <div className="px-5 py-5 sm:px-6">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="outline">
-              {meta?.icon} {meta?.label ?? pro.category}
+            <Badge variant="outline" className="gap-1.5">
+              {meta?.icon && <meta.icon className="size-3.5 text-blood" />}
+              {meta?.label ?? pro.category}
             </Badge>
             {pro.isCertified && (
-              <Badge className="border-blood/40 bg-blood/10 text-blood">
+              <Badge className="border-blood/40 bg-blood/10 text-blood gap-1">
                 <Sparkles className="h-3 w-3" /> Certifié
               </Badge>
             )}
             {pro.isVerified && (
-              <Badge className="border-emerald-400/30 bg-emerald-500/10 text-emerald-700">
-                ✔ Vérifié
+              <Badge className="border-emerald-400/30 bg-emerald-500/10 text-emerald-400 gap-1">
+                <Check className="h-3 w-3 stroke-[2.5]" /> Vérifié
               </Badge>
             )}
           </div>
@@ -211,7 +245,7 @@ export default async function ProDetailsPage({
           </h1>
 
           <p className="mt-1.5 flex items-center gap-1.5 text-sm text-paper-dim">
-            <span className="text-base">📍</span>
+            <MapPin className="size-3.5 text-blood/80 shrink-0" />
             {pro.city}, {pro.country}
           </p>
 

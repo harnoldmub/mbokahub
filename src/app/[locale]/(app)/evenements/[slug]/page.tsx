@@ -19,6 +19,7 @@ import { EventCard } from "@/components/events/event-card";
 import { prisma } from "@/lib/db/prisma";
 import { getPublicEvent, getPublicEvents } from "@/lib/events.server";
 import { localizedHref } from "@/lib/nls";
+import { createPageMetadata, getSiteUrl } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -44,25 +45,29 @@ export async function generateMetadata({
   const { slug, locale } = await params;
   const city = citySlugs[slug];
   if (city)
-    return {
+    return createPageMetadata({
       title: `Événements afro à ${city}`,
       description: `Découvre les événements afro vérifiés à ${city} et organise trajets, beauté, photo et sorties avec Nevent.`,
-      alternates: { canonical: `/${locale}/evenements/${slug}` },
-    };
+      path: `/evenements/${slug}`,
+      locale,
+    });
   const event = await getPublicEvent(slug);
   if (!event) return {};
   const year = new Date(event.startDate).getFullYear();
-  return {
+  return createPageMetadata({
     title: `${event.artist} à ${event.city} ${year} — ${event.venue}`,
     description: event.description,
-    alternates: { canonical: `/${locale}/evenements/${event.slug}` },
-    openGraph: {
-      title: `${event.artist} à ${event.city} — ${event.venue}`,
-      description: event.description,
-      images: [{ url: event.image, alt: event.imageAlt }],
-      type: "website",
-    },
-  };
+    path: `/evenements/${event.slug}`,
+    locale,
+    image: event.image,
+    imageAlt: event.imageAlt,
+    keywords: [
+      `${event.artist} ${event.city} ${year}`,
+      `${event.artist} ${event.venue}`,
+      ...event.genres,
+      "billetterie concert afro",
+    ],
+  });
 }
 
 export default async function EventOrCityPage({
@@ -130,12 +135,13 @@ export default async function EventOrCityPage({
     "@context": "https://schema.org",
     "@type": "MusicEvent",
     name: event.title,
+    url: `${getSiteUrl()}/${locale}/evenements/${event.slug}`,
     description: event.description,
     startDate: event.startDate,
     ...(event.endDate ? { endDate: event.endDate } : {}),
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-    image: [event.image],
+    image: [new URL(event.image, getSiteUrl()).toString()],
     location: {
       "@type": "Place",
       name: event.venue,

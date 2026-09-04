@@ -1,24 +1,37 @@
-import type { Metadata } from "next";
 import { Baby, Check, ChevronLeft, Mail } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
-
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { Button } from "@/components/ui/button";
 import {
   getLocaleFromSearchParams,
-  localizedHref,
   type Locale,
+  localizedHref,
   type SearchParams,
 } from "@/lib/nls";
+import { createPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-static";
 
-export const metadata: Metadata = {
-  title: "Babysitting de la diaspora — Garde d'enfants événements",
-  description:
-    "Service de babysitting ponctuel pour les soirées, mariages et concerts de la diaspora. Profils vérifiés, contact direct.",
-  alternates: { canonical: "/beaute/babysitting" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createPageMetadata({
+    title: "Babysitting pour concerts et événements",
+    description:
+      "Trouve une solution de garde d’enfants pour tes soirées, mariages et concerts. Profils vérifiés et contact direct.",
+    path: "/beaute/babysitting",
+    locale,
+    keywords: [
+      "babysitting concert",
+      "garde enfants soirée",
+      "babysitter événement",
+    ],
+  });
+}
 
 type BabysittingPageProps = {
   params: Promise<{ locale: string }>;

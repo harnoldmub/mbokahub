@@ -1,22 +1,31 @@
+import type { Prisma } from "@prisma/client";
 import { ArrowRight, ShieldCheck, Users } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
-
-import { type Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db/prisma";
-import {
-  getLocaleFromSearchParams,
-  nls,
-  type SearchParams,
-} from "@/lib/nls";
+import { getLocaleFromSearchParams, nls, type SearchParams } from "@/lib/nls";
+import { createPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
-export const metadata = {
-  title: "Communautés WhatsApp · Nevent",
-  description:
-    "Rejoins la communauté Nevent de ta région : entraide, infos concert, bons plans, covoiturage.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createPageMetadata({
+    title: "Communautés WhatsApp par région",
+    description:
+      "Rejoins la communauté Nevent de ta région : entraide, événements, bons plans et covoiturage.",
+    path: "/communaute",
+    locale,
+  });
+}
 
-type Props = { params: Promise<{ locale: string }>; searchParams?: Promise<SearchParams> };
+type Props = {
+  params: Promise<{ locale: string }>;
+  searchParams?: Promise<SearchParams>;
+};
 
 export default async function CommunautePage({ params, searchParams }: Props) {
   void (await params);

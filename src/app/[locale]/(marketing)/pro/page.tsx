@@ -2,20 +2,33 @@ import { auth } from "@clerk/nextjs/server";
 import { ArrowRight, Check, ShieldCheck, UserPlus } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { prisma } from "@/lib/db/prisma";
 import { proOffer, proProofPoints } from "@/lib/marketing-data";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Devenir prestataire — Inscription gratuite",
-  description:
-    "Créez votre fiche pro Nevent en 5 minutes. Visibilité, messagerie, réservation et mise en avant gratuites.",
-  alternates: { canonical: "/pro" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createPageMetadata({
+    title: "Devenir prestataire — Inscription gratuite",
+    description:
+      "Crée ton profil professionnel en quelques minutes : visibilité, messagerie et demandes de réservation gratuites.",
+    path: "/pro",
+    locale,
+    keywords: [
+      "devenir prestataire Nevent",
+      "référencer activité afro",
+      "annuaire professionnel diaspora",
+    ],
+  });
+}
 
 export default async function ProPage() {
   const { userId } = await auth();

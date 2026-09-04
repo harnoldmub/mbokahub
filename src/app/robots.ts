@@ -1,13 +1,17 @@
 import type { MetadataRoute } from "next";
-
-const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://nevent.co";
+import { getSiteUrl } from "@/lib/seo";
 
 export default function robots(): MetadataRoute.Robots {
+  const appUrl = getSiteUrl();
   return {
-    rules: {
-      allow: "/",
-      userAgent: "*",
-    },
+    rules: [
+      {
+        allow: "/",
+        disallow: ["/admin/", "/dashboard/", "/api/", "/checkout/"],
+        userAgent: "*",
+      },
+    ],
+    host: appUrl,
     sitemap: `${appUrl}/sitemap.xml`,
   };
 }

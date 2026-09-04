@@ -1,7 +1,6 @@
-import type { Metadata } from "next";
 import { ArrowRight, Gamepad2, Trophy, Users, Zap } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
-
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/db/prisma";
 import {
@@ -10,6 +9,7 @@ import {
   nls,
   type SearchParams,
 } from "@/lib/nls";
+import { createPageMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
 type GamePageProps = {
@@ -19,12 +19,20 @@ type GamePageProps = {
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Le Jeu Nevent — défis & classement de la diaspora",
-  description:
-    "Joue, gagne des points, grimpe au classement de la diaspora. Mini-jeux, défis quotidiens et récompenses exclusives.",
-  alternates: { canonical: "/jeu" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createPageMetadata({
+    title: "Sape Run — Défis et classement",
+    description:
+      "Joue à Sape Run, gagne des points et grimpe dans le classement de la communauté Nevent.",
+    path: "/jeu",
+    locale,
+  });
+}
 
 const RANK_STYLES = [
   { icon: Trophy, color: "text-gold" },
@@ -53,7 +61,10 @@ function formatUpdatedAt(d: Date, locale: string): string {
   }
 }
 
-export default async function GamePage({ params, searchParams }: GamePageProps) {
+export default async function GamePage({
+  params,
+  searchParams,
+}: GamePageProps) {
   const { locale } = await params;
   const lang = getLocaleFromSearchParams(await searchParams);
   const copy = nls[lang].game;

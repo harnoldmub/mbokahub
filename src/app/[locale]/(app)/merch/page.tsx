@@ -1,20 +1,34 @@
-import type { Metadata } from "next";
 import { ExternalLink, ShoppingBag } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
-
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/db/prisma";
+import { createPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Merch officiel & créateurs de la diaspora",
-  description:
-    "T-shirts, accessoires et créations exclusives autour de la culture afro et du concert Fally Ipupa Stade de France 2026.",
-  alternates: { canonical: "/merch" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createPageMetadata({
+    title: "Mode, merch et créateurs afro",
+    description:
+      "Découvre vêtements, accessoires et créations autour de la culture afro auprès de vendeurs et créateurs de la diaspora.",
+    path: "/merch",
+    locale,
+    keywords: [
+      "merch afro",
+      "mode africaine",
+      "créateurs diaspora",
+      "accessoires afro",
+    ],
+  });
+}
 
 function formatPrice(amount: number): string {
   if (Number.isInteger(amount)) return `${amount} EUR`;

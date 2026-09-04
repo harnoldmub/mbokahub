@@ -7,7 +7,7 @@ import { markConversationReadAction } from "@/lib/actions/messages";
 import { getDashboardUser } from "@/lib/dashboard";
 import { prisma } from "@/lib/db/prisma";
 
-export const metadata = { title: "Conversation — Mboka Hub" };
+export const metadata = { title: "Conversation" };
 
 export default async function ConversationPage({
   params,

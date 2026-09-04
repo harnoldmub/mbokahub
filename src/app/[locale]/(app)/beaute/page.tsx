@@ -1,7 +1,6 @@
-import type { Metadata } from "next";
 import { ArrowRight, Baby, Camera, Scissors, Sparkles } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
-
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/db/prisma";
@@ -11,16 +10,31 @@ import {
   nls,
   type SearchParams,
 } from "@/lib/nls";
+import { createPageMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Beauté afro — Coiffeurs, maquilleurs, photographes",
-  description:
-    "Annuaire de prestataires beauté afro : coiffeurs, maquilleurs, photographes et babysitters vérifiés. Réservation directe en ligne.",
-  alternates: { canonical: "/beaute" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createPageMetadata({
+    title: "Beauté afro — Coiffeurs, maquilleurs et photographes",
+    description:
+      "Trouve des prestataires beauté afro : coiffure, maquillage, photo et babysitting. Profils vérifiés et réservation directe.",
+    path: "/beaute",
+    locale,
+    keywords: [
+      "beauté afro",
+      "coiffeur afro",
+      "maquilleuse peau noire",
+      "photographe afro",
+    ],
+  });
+}
 
 type PrestationsPageProps = {
   params: Promise<{ locale: string }>;

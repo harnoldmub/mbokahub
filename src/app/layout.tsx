@@ -10,48 +10,29 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { AppProviders } from "@/components/providers/app-providers";
 import { CookieConsent } from "@/components/shared/cookie-consent";
 import { FomoTicker } from "@/components/shared/fomo-ticker";
+import { getSiteUrl, SITE_DESCRIPTION, SITE_NAME } from "@/lib/seo";
 import { fontBody, fontDisplay, fontMono, fontSerif } from "./fonts";
 
 import "./globals.css";
 
 const fontVariables = `${fontDisplay.variable} ${fontSerif.variable} ${fontBody.variable} ${fontMono.variable}`;
-const replitDomain = process.env.REPLIT_DOMAINS?.split(",")[0]?.trim();
-const envAppUrl = process.env.NEXT_PUBLIC_APP_URL;
-const isLocalUrl = envAppUrl
-  ? /(^https?:\/\/)?(localhost|0\.0\.0\.0|127\.0\.0\.1)(:\d+)?\/?$/.test(
-      envAppUrl,
-    )
-  : true;
-const appUrl =
-  envAppUrl && !isLocalUrl
-    ? envAppUrl
-    : replitDomain
-      ? `https://${replitDomain}`
-      : "https://nevent.co";
+const appUrl = getSiteUrl();
 const GA_ID = "G-YS8CL4ZE62";
 
 const ORG_JSONLD = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "Nevent",
-  alternateName: "Mboka Hub",
+  name: SITE_NAME,
   url: appUrl,
-  logo: `${appUrl}/logo.png`,
-  sameAs: [],
-  contactPoint: [
-    {
-      "@type": "ContactPoint",
-      contactType: "customer support",
-      email: "contact@mbokahub.com",
-      availableLanguage: ["French", "English"],
-    },
-  ],
+  logo: `${appUrl}/icon.svg`,
+  image: `${appUrl}/opengraph-image`,
 };
 
 const WEBSITE_JSONLD = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "Nevent",
+  name: SITE_NAME,
+  description: SITE_DESCRIPTION,
   url: appUrl,
   potentialAction: {
     "@type": "SearchAction",
@@ -61,57 +42,54 @@ const WEBSITE_JSONLD = {
 };
 
 export const metadata: Metadata = {
-  applicationName: "Nevent",
+  metadataBase: new URL(appUrl),
+  applicationName: SITE_NAME,
   title: {
-    default: "Nevent | Événements afro, trajets et services",
+    default: "Nevent — Événements afro, trajets et services",
     template: "%s | Nevent",
   },
-  description:
-    "Découvre les événements afro en Europe et organise toute ton expérience : trajets, beauté, photo, services et afters.",
+  description: SITE_DESCRIPTION,
+  manifest: "/manifest.webmanifest",
   icons: {
-    apple: [{ url: "/apple-icon.svg", type: "image/svg+xml" }],
-    icon: [{ url: "/logo.png", type: "image/png" }],
-    shortcut: ["/logo.png"],
+    icon: [{ url: "/icon.svg", type: "image/svg+xml", sizes: "any" }],
+    shortcut: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    apple: [
+      { url: "/apple-icon.svg", type: "image/svg+xml", sizes: "180x180" },
+    ],
   },
   keywords: [
-    "concert diaspora Paris 2026",
-    "prestataires diaspora",
-    "réservation prestataire",
-    "annuaire prestataires",
-    "plateforme services",
-    "boost prestataire",
-    "publicité locale",
-    "maquilleuse afro Paris",
-    "coiffeur afro Paris",
-    "photographe afro Paris",
-    "services diaspora",
+    "événements afro Europe",
+    "concerts afro Paris",
+    "concerts afro Bruxelles",
+    "concerts afro Londres",
+    "Afrobeats",
+    "Amapiano",
+    "rumba congolaise",
+    "covoiturage concert",
+    "prestataires afro",
+    "afters afro",
   ],
-  metadataBase: new URL(appUrl),
-  alternates: {
-    canonical: "/",
-    languages: {
-      fr: "/?lang=fr",
-      en: "/?lang=en",
-      de: "/?lang=de",
-      nl: "/?lang=nl",
-    },
-  },
+  category: "events",
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  referrer: "origin-when-cross-origin",
+  formatDetection: { address: false, email: false, telephone: false },
   openGraph: {
-    description:
-      "Annuaire gratuit, réservation directe et visibilité sponsorisée pour les prestataires.",
+    description: SITE_DESCRIPTION,
     images: [
       {
-        alt: "Logo Nevent",
-        height: 512,
-        url: "/logo.png",
-        width: 512,
+        alt: "Nevent — événements afro, trajets et services",
+        height: 630,
+        url: "/opengraph-image",
+        width: 1200,
       },
     ],
     locale: "fr_FR",
-    siteName: "Nevent",
-    title: "Nevent | Services, prestataires et réservations",
+    alternateLocale: ["fr_BE", "fr_CD"],
+    siteName: SITE_NAME,
+    title: "Nevent — Découvre l’événement, organise toute ton expérience",
     type: "website",
-    url: "/",
+    url: "/fr",
   },
   robots: {
     follow: true,
@@ -125,11 +103,10 @@ export const metadata: Metadata = {
     index: true,
   },
   twitter: {
-    card: "summary",
-    description:
-      "Trouve un prestataire, réserve un créneau et booste ta visibilité locale.",
-    images: ["/logo.png"],
-    title: "Nevent",
+    card: "summary_large_image",
+    description: SITE_DESCRIPTION,
+    images: ["/opengraph-image"],
+    title: "Nevent — Événements afro, trajets et services",
   },
 };
 

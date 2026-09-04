@@ -2,7 +2,8 @@ import { CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 
 export const metadata = {
-  title: "Activation confirmée · Nevent",
+  title: "Activation confirmée",
+  robots: { index: false, follow: false },
 };
 
 type Search = Promise<{ type?: string; session_id?: string }>;

@@ -1,19 +1,33 @@
-import type { Metadata } from "next";
 import { ChevronLeft } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
-
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { PrestatairesListClient } from "@/components/pros/prestataires-list-client";
 import { prisma } from "@/lib/db/prisma";
+import { createPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Photographes & vidéastes afro — Évènements & shootings",
-  description:
-    "Photographes et vidéastes professionnels pour mariages, anniversaires, concerts et shootings. Annuaire diaspora 100% gratuit.",
-  alternates: { canonical: "/beaute/photographes" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createPageMetadata({
+    title: "Photographes et vidéastes afro",
+    description:
+      "Photographes et vidéastes pour concerts, mariages, anniversaires et shootings. Profils diaspora vérifiés et contact gratuit.",
+    path: "/beaute/photographes",
+    locale,
+    keywords: [
+      "photographe afro",
+      "vidéaste afro",
+      "photographe concert",
+      "shooting photo",
+    ],
+  });
+}
 
 const CATEGORIES = ["PHOTOGRAPHE", "VIDEASTE"] as const;
 

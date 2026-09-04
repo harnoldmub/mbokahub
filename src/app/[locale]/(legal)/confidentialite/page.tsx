@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Politique de confidentialité",
   description: "Données personnelles, emails, cookies et droits RGPD.",
+  alternates: { canonical: "/fr/confidentialite" },
 };
 
 const sections = [

@@ -1,6 +1,15 @@
 "use client";
 
-import { CalendarCheck, ChevronLeft, ChevronRight, Clock, Loader2, X } from "lucide-react";
+import {
+  Calendar,
+  CalendarCheck,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  Loader2,
+  X,
+} from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export type ProService = {
@@ -45,9 +54,43 @@ function addDays(iso: string, n: number): string {
 }
 
 const FR_DAYS_SHORT = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
-const FR_MONTHS = ["jan.", "fév.", "mar.", "avr.", "mai", "juin", "juil.", "août", "sep.", "oct.", "nov.", "déc."];
-const FR_DAYS_LONG = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
-const FR_MONTHS_LONG = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+const FR_MONTHS = [
+  "jan.",
+  "fév.",
+  "mar.",
+  "avr.",
+  "mai",
+  "juin",
+  "juil.",
+  "août",
+  "sep.",
+  "oct.",
+  "nov.",
+  "déc.",
+];
+const FR_DAYS_LONG = [
+  "Dimanche",
+  "Lundi",
+  "Mardi",
+  "Mercredi",
+  "Jeudi",
+  "Vendredi",
+  "Samedi",
+];
+const FR_MONTHS_LONG = [
+  "janvier",
+  "février",
+  "mars",
+  "avril",
+  "mai",
+  "juin",
+  "juillet",
+  "août",
+  "septembre",
+  "octobre",
+  "novembre",
+  "décembre",
+];
 
 function parseDayLabel(iso: string) {
   const d = new Date(iso + "T00:00:00Z");
@@ -84,17 +127,22 @@ export function BookingModal({
   const initialService = initialServiceId
     ? (services.find((s) => s.id === initialServiceId) ?? null)
     : services.length === 1
-    ? services[0]
-    : null;
+      ? services[0]
+      : null;
 
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<"service" | "slot" | "details">("service");
-  const [selectedService, setSelectedService] = useState<ProService | null>(initialService);
+  const [selectedService, setSelectedService] = useState<ProService | null>(
+    initialService,
+  );
   const [weekStart, setWeekStart] = useState(todayIso);
   const [days, setDays] = useState<DaySlots[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasMoreSlots, setHasMoreSlots] = useState(false);
-  const [selectedSlot, setSelectedSlot] = useState<{ date: string; time: string } | null>(null);
+  const [selectedSlot, setSelectedSlot] = useState<{
+    date: string;
+    time: string;
+  } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -102,24 +150,27 @@ export function BookingModal({
 
   const totalSlots = days.reduce((acc, d) => acc + d.slots.length, 0);
 
-  const fetchSlots = useCallback(async (start: string, svc: ProService | null) => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams({
-        startDate: start,
-        days: "7",
-        ...(svc ? { serviceId: svc.id } : {}),
-      });
-      const res = await fetch(`/api/pros/${proProfileId}/slots?${params}`);
-      const data = await res.json();
-      const fetched: DaySlots[] = data.days ?? [];
-      setDays(fetched);
-      const total = fetched.reduce((a, d) => a + d.slots.length, 0);
-      setHasMoreSlots(total === 0);
-    } finally {
-      setLoading(false);
-    }
-  }, [proProfileId]);
+  const fetchSlots = useCallback(
+    async (start: string, svc: ProService | null) => {
+      setLoading(true);
+      try {
+        const params = new URLSearchParams({
+          startDate: start,
+          days: "7",
+          ...(svc ? { serviceId: svc.id } : {}),
+        });
+        const res = await fetch(`/api/pros/${proProfileId}/slots?${params}`);
+        const data = await res.json();
+        const fetched: DaySlots[] = data.days ?? [];
+        setDays(fetched);
+        const total = fetched.reduce((a, d) => a + d.slots.length, 0);
+        setHasMoreSlots(total === 0);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [proProfileId],
+  );
 
   useEffect(() => {
     if (step === "slot") {
@@ -218,14 +269,15 @@ export function BookingModal({
           onClick={(e) => e.target === overlayRef.current && setOpen(false)}
         >
           <div className="relative w-full max-w-2xl rounded-t-3xl sm:rounded-3xl bg-white shadow-2xl max-h-[92vh] flex flex-col">
-
             {/* ── Header ── */}
             <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-ash shrink-0">
               <div className="flex items-center gap-3">
                 {stepIndex > 0 && !submitted && services.length > 0 && (
                   <button
                     type="button"
-                    onClick={() => setStep(step === "details" ? "slot" : "service")}
+                    onClick={() =>
+                      setStep(step === "details" ? "slot" : "service")
+                    }
                     className="rounded-full p-1 hover:bg-smoke transition-colors"
                     aria-label="Retour"
                   >
@@ -267,18 +319,22 @@ export function BookingModal({
                       stepIndex === i
                         ? "border-blood text-blood"
                         : stepIndex > i
-                        ? "border-transparent text-success"
-                        : "border-transparent text-paper-mute"
+                          ? "border-transparent text-success"
+                          : "border-transparent text-paper-mute"
                     }`}
                   >
-                    {stepIndex > i ? "✓ " : ""}{label}
+                    <span className="inline-flex items-center justify-center gap-1">
+                      {stepIndex > i && (
+                        <Check className="size-3 text-emerald-500" />
+                      )}
+                      <span>{label}</span>
+                    </span>
                   </div>
                 ))}
               </div>
             )}
 
             <div className="overflow-y-auto flex-1 p-5">
-
               {/* ── STEP 1: Service ── */}
               {step === "service" && (
                 <div className="grid gap-2">
@@ -293,15 +349,21 @@ export function BookingModal({
                       className="group flex items-center justify-between rounded-2xl border border-ash bg-smoke px-5 py-4 text-left hover:border-blood/40 hover:bg-blood/5 transition-colors"
                     >
                       <div className="min-w-0">
-                        <p className="font-medium text-paper truncate">{svc.name}</p>
+                        <p className="font-medium text-paper truncate">
+                          {svc.name}
+                        </p>
                         {svc.description && (
-                          <p className="mt-0.5 text-xs text-paper-dim truncate">{svc.description}</p>
+                          <p className="mt-0.5 text-xs text-paper-dim truncate">
+                            {svc.description}
+                          </p>
                         )}
                         <p className="mt-1 flex items-center gap-1.5 text-xs text-paper-dim">
                           <Clock className="size-3 shrink-0" />
                           {formatDuration(svc.durationMinutes)}
                           {svc.price ? (
-                            <span className="ml-1 font-medium text-paper">{svc.price.toFixed(0)} €</span>
+                            <span className="ml-1 font-medium text-paper">
+                              {svc.price.toFixed(0)} €
+                            </span>
                           ) : null}
                         </p>
                       </div>
@@ -329,7 +391,9 @@ export function BookingModal({
                         {selectedService.name}
                         <span className="ml-2 font-normal text-paper-dim">
                           {formatDuration(selectedService.durationMinutes)}
-                          {selectedService.price ? ` · ${selectedService.price.toFixed(0)} €` : ""}
+                          {selectedService.price
+                            ? ` · ${selectedService.price.toFixed(0)} €`
+                            : ""}
                         </span>
                       </p>
                       {services.length > 1 && (
@@ -369,17 +433,22 @@ export function BookingModal({
                   {loading ? (
                     <div className="flex flex-col items-center justify-center py-16 gap-3">
                       <Loader2 className="size-6 animate-spin text-blood" />
-                      <p className="text-xs text-paper-mute">Chargement des créneaux…</p>
+                      <p className="text-xs text-paper-mute">
+                        Chargement des créneaux…
+                      </p>
                     </div>
                   ) : totalSlots === 0 ? (
                     <div className="flex flex-col items-center py-12 gap-4 text-center">
-                      <div className="flex size-14 items-center justify-center rounded-full bg-ash/60 text-2xl">
-                        📅
+                      <div className="flex size-14 items-center justify-center rounded-full bg-white/5 text-paper-dim">
+                        <Calendar className="size-6 text-paper-dim" />
                       </div>
                       <div>
-                        <p className="font-medium text-paper">Aucun créneau cette semaine</p>
+                        <p className="font-medium text-paper">
+                          Aucun créneau cette semaine
+                        </p>
                         <p className="mt-1 text-sm text-paper-dim">
-                          Le prestataire n&apos;a pas de disponibilité sur cette période.
+                          Le prestataire n&apos;a pas de disponibilité sur cette
+                          période.
                         </p>
                       </div>
                       <button
@@ -387,32 +456,47 @@ export function BookingModal({
                         onClick={() => setWeekStart((w) => addDays(w, 7))}
                         className="inline-flex items-center gap-1.5 rounded-full bg-blood px-5 py-2 text-sm font-medium text-white hover:bg-blood-deep transition-colors"
                       >
-                        Voir la semaine suivante <ChevronRight className="size-4" />
+                        Voir la semaine suivante{" "}
+                        <ChevronRight className="size-4" />
                       </button>
                     </div>
                   ) : (
                     <div className="grid grid-cols-7 gap-1">
                       {days.map((day) => {
-                        const { day: dayName, date, month } = parseDayLabel(day.date);
+                        const {
+                          day: dayName,
+                          date,
+                          month,
+                        } = parseDayLabel(day.date);
                         return (
-                          <div key={day.date} className="flex flex-col items-center gap-1">
+                          <div
+                            key={day.date}
+                            className="flex flex-col items-center gap-1"
+                          >
                             <p className="text-[10px] font-semibold uppercase tracking-wide text-paper-mute">
                               {dayName}
                             </p>
                             <p className="text-xs font-medium text-paper mb-1">
                               {date}
-                              <span className="hidden sm:inline text-paper-mute"> {month}</span>
+                              <span className="hidden sm:inline text-paper-mute">
+                                {" "}
+                                {month}
+                              </span>
                             </p>
                             {day.slots.length === 0 ? (
                               <div className="h-8 w-full flex items-center justify-center">
-                                <span className="text-[10px] text-paper-mute">—</span>
+                                <span className="text-[10px] text-paper-mute">
+                                  —
+                                </span>
                               </div>
                             ) : (
                               day.slots.map((time) => (
                                 <button
                                   key={time}
                                   type="button"
-                                  onClick={() => handleSlotSelect(day.date, time)}
+                                  onClick={() =>
+                                    handleSlotSelect(day.date, time)
+                                  }
                                   className="w-full rounded-lg border border-ash bg-smoke py-1.5 text-[11px] font-mono text-paper hover:border-blood hover:bg-blood hover:text-white transition-colors"
                                 >
                                   {time}
@@ -427,7 +511,8 @@ export function BookingModal({
 
                   {!loading && totalSlots > 0 && hasMoreSlots && (
                     <p className="mt-4 text-center text-xs text-paper-mute">
-                      D&apos;autres créneaux sont disponibles la semaine suivante.
+                      D&apos;autres créneaux sont disponibles la semaine
+                      suivante.
                     </p>
                   )}
                 </div>
@@ -445,15 +530,21 @@ export function BookingModal({
                         </div>
                         <div>
                           <p className="font-medium text-paper">
-                            {formatDateLong(selectedSlot.date)} à {selectedSlot.time}
+                            {formatDateLong(selectedSlot.date)} à{" "}
+                            {selectedSlot.time}
                           </p>
                           {selectedService ? (
                             <p className="mt-0.5 text-sm text-paper-dim">
-                              {selectedService.name} · {formatDuration(selectedService.durationMinutes)}
-                              {selectedService.price ? ` · ${selectedService.price.toFixed(0)} €` : ""}
+                              {selectedService.name} ·{" "}
+                              {formatDuration(selectedService.durationMinutes)}
+                              {selectedService.price
+                                ? ` · ${selectedService.price.toFixed(0)} €`
+                                : ""}
                             </p>
                           ) : (
-                            <p className="mt-0.5 text-sm text-paper-dim">Sans préférence de prestation</p>
+                            <p className="mt-0.5 text-sm text-paper-dim">
+                              Sans préférence de prestation
+                            </p>
                           )}
                         </div>
                       </div>
@@ -461,7 +552,9 @@ export function BookingModal({
                   ) : (
                     <>
                       <p className="text-sm text-paper-dim">
-                        Indique la date et l&apos;heure souhaitées. Le prestataire reviendra vers toi avec un devis personnalisé.
+                        Indique la date et l&apos;heure souhaitées. Le
+                        prestataire reviendra vers toi avec un devis
+                        personnalisé.
                       </p>
                       <div className="grid grid-cols-2 gap-2.5">
                         <label className="flex flex-col gap-1">
@@ -525,7 +618,10 @@ export function BookingModal({
                   </div>
 
                   <p className="rounded-xl border border-warning/30 bg-warning/10 px-3 py-2 text-xs text-paper-dim">
-                    <strong className="text-warning">Acompte :</strong> Le prestataire peut demander un acompte ne dépassant pas 20 €. Le paiement se règle directement avec lui hors plateforme (PayPal, Paylib, virement…).
+                    <strong className="text-warning">Acompte :</strong> Le
+                    prestataire peut demander un acompte ne dépassant pas 20 €.
+                    Le paiement se règle directement avec lui hors plateforme
+                    (PayPal, Paylib, virement…).
                   </p>
 
                   {formError && (
@@ -553,18 +649,25 @@ export function BookingModal({
               {/* ── Success ── */}
               {submitted && (
                 <div className="flex flex-col items-center gap-4 py-8 text-center">
-                  <div className="flex size-16 items-center justify-center rounded-full bg-success/15 text-4xl">
-                    ✓
+                  <div className="flex size-16 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-400">
+                    <Check className="size-8 stroke-[2.5]" />
                   </div>
                   <div>
-                    <p className="font-display text-2xl uppercase text-paper">Demande envoyée !</p>
+                    <p className="font-display text-2xl uppercase text-paper">
+                      Demande envoyée !
+                    </p>
                     <p className="mt-2 max-w-xs text-sm text-paper-dim">
-                      {proName} recevra ta demande et pourra la confirmer depuis son espace Planning.
+                      {proName} recevra ta demande et pourra la confirmer depuis
+                      son espace Planning.
                     </p>
                   </div>
                   {selectedSlot && (
-                    <div className="rounded-xl border border-success/30 bg-success/10 px-5 py-3 text-sm text-paper">
-                      📅 {formatDateLong(selectedSlot.date)} à {selectedSlot.time}
+                    <div className="flex items-center gap-2 rounded-xl border border-success/30 bg-success/10 px-5 py-3 text-sm text-paper">
+                      <Calendar className="size-4 text-emerald-400 shrink-0" />
+                      <span>
+                        {formatDateLong(selectedSlot.date)} à{" "}
+                        {selectedSlot.time}
+                      </span>
                     </div>
                   )}
                   <button

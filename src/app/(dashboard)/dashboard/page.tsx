@@ -19,20 +19,25 @@ import { prisma } from "@/lib/db/prisma";
 export default async function DashboardPage() {
   const user = await getDashboardUser();
 
-  const [contactsCount, trajetsCount, completedPayments, proProfile, servicesCount] =
-    await Promise.all([
-      prisma.unlockedContact.count({ where: { userId: user.id } }),
-      prisma.trajet.count({ where: { userId: user.id } }),
-      prisma.payment.findMany({
-        orderBy: { createdAt: "desc" },
-        take: 3,
-        where: { status: "COMPLETED", userId: user.id },
-      }),
-      prisma.proProfile.findUnique({ where: { userId: user.id } }),
-      prisma.service.count({
-        where: { proProfile: { userId: user.id } },
-      }),
-    ]);
+  const [
+    contactsCount,
+    trajetsCount,
+    completedPayments,
+    proProfile,
+    servicesCount,
+  ] = await Promise.all([
+    prisma.unlockedContact.count({ where: { userId: user.id } }),
+    prisma.trajet.count({ where: { userId: user.id } }),
+    prisma.payment.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 3,
+      where: { status: "COMPLETED", userId: user.id },
+    }),
+    prisma.proProfile.findUnique({ where: { userId: user.id } }),
+    prisma.service.count({
+      where: { proProfile: { userId: user.id } },
+    }),
+  ]);
 
   const showProBookingOnboarding =
     Boolean(proProfile) && !user.onboardingProBookingDoneAt;
@@ -122,7 +127,7 @@ export default async function DashboardPage() {
           }
           icon={Star}
           label="Famille Fondatrice"
-          value={user.isVipActive ? "⭐ Membre" : "—"}
+          value={user.isVipActive ? "Membre" : "—"}
         />
         <StatCard
           description="Contacts trajets ou pros"

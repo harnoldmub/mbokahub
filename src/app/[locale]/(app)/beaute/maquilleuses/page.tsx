@@ -1,19 +1,33 @@
-import type { Metadata } from "next";
 import { ChevronLeft } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
-
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { PrestatairesListClient } from "@/components/pros/prestataires-list-client";
 import { prisma } from "@/lib/db/prisma";
+import { createPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Maquilleuses afro pro — Réservation en ligne",
-  description:
-    "Maquilleuses, esthéticiennes, prothésistes ongles et techniciennes cils spécialisées peaux noires et métissées. Réservation directe sur Nevent.",
-  alternates: { canonical: "/beaute/maquilleuses" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createPageMetadata({
+    title: "Maquilleuses afro — Réservation en ligne",
+    description:
+      "Maquilleuses et esthéticiennes spécialisées peaux noires et métissées. Consulte les profils vérifiés et réserve directement.",
+    path: "/beaute/maquilleuses",
+    locale,
+    keywords: [
+      "maquilleuse afro",
+      "maquillage peau noire",
+      "makeup artist afro",
+      "maquillage événement",
+    ],
+  });
+}
 
 const CATEGORIES = [
   "MAQUILLEUSE",

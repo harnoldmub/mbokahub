@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Mentions légales",
   description: "Informations légales de Nevent.",
+  alternates: { canonical: "/fr/mentions-legales" },
 };
 
 export default function LegalNoticePage() {

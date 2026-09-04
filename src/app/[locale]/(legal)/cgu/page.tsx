@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Conditions générales d'utilisation",
-  description: "Règles d'utilisation de la marketplace Nevent.",
+  description:
+    "Règles d’utilisation de la plateforme Nevent, des comptes, annonces, réservations et espaces communautaires.",
+  alternates: { canonical: "/fr/cgu" },
 };
 
 const rules = [

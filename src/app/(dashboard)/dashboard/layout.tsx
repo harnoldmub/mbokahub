@@ -1,5 +1,6 @@
 import { UserButton } from "@clerk/nextjs";
-import { Bell, ShieldCheck } from "lucide-react";
+import { Bell, ShieldCheck, Star } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { AdminAsProBannerSticky } from "@/components/admin/admin-as-pro-banner-sticky";
@@ -9,6 +10,11 @@ import { isAdminEmail } from "@/lib/admin";
 import { getDashboardUser } from "@/lib/dashboard";
 import { prisma } from "@/lib/db/prisma";
 
+export const metadata: Metadata = {
+  title: "Mon espace",
+  robots: { index: false, follow: false, noarchive: true },
+};
+
 export default async function DashboardLayout({
   children,
 }: Readonly<{
@@ -16,6 +22,10 @@ export default async function DashboardLayout({
 }>) {
   const user = await getDashboardUser();
   const isAdmin = user.role === "ADMIN" || (await isAdminEmail(user.email));
+  const proProfile = await prisma.proProfile.findUnique({
+    where: { userId: user.id },
+    select: { id: true },
+  });
 
   let unreadMessages = 0;
   try {
@@ -24,29 +34,30 @@ export default async function DashboardLayout({
         where: { clientId: user.id },
         _sum: { clientUnread: true },
       }),
-      prisma.conversation.aggregate({
-        where: { proId: user.id },
-        _sum: { proUnread: true },
-      }),
+      proProfile
+        ? prisma.conversation.aggregate({
+            where: { proId: proProfile.id },
+            _sum: { proUnread: true },
+          })
+        : Promise.resolve({ _sum: { proUnread: 0 } }),
     ]);
     unreadMessages =
       (unreadAgg._sum.clientUnread ?? 0) + (unreadAggPro._sum.proUnread ?? 0);
-  } catch (err) {
-    // Conversation table may not yet exist in this environment
-    // (messaging feature pending migration). Fall back to 0.
-    if (process.env.NODE_ENV !== "production") {
-      console.warn("[dashboard] conversation aggregate skipped:", err instanceof Error ? err.message : err);
-    }
+  } catch {
+    unreadMessages = 0;
   }
 
   return (
-    <div className="mx-auto grid max-w-7xl gap-8 px-6 py-10 lg:grid-cols-[280px_1fr] lg:px-8">
-      <aside className="lg:sticky lg:top-28 lg:self-start">
-        <div className="rounded-3xl border border-white/10 bg-coal p-5">
-          <div className="flex items-center justify-between gap-4">
+    <div className="min-h-screen bg-coal">
+      <Suspense fallback={null}>
+        <AdminAsProBannerSticky isAdmin={isAdmin} />
+      </Suspense>
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="rounded-3xl border border-white/10 bg-smoke/40 p-6 sm:p-8">
+          <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="font-heading text-xl text-paper">
-                {user.name ?? "Mon compte"}
+              <p className="font-heading text-2xl text-paper">
+                Bonjour, {user.name}
               </p>
               <p className="mt-1 text-paper-dim text-sm">{user.email}</p>
             </div>
@@ -54,8 +65,15 @@ export default async function DashboardLayout({
           </div>
 
           <div className="mt-5 flex flex-wrap gap-2">
-            <Badge className={user.isVipActive ? "bg-gold text-ink" : ""}>
-              {user.isVipActive ? "⭐ Famille Fondatrice" : "Fan"}
+            <Badge className={user.isVipActive ? "bg-gold text-ink gap-1" : ""}>
+              {user.isVipActive ? (
+                <>
+                  <Star className="size-3 fill-current" aria-hidden="true" />
+                  <span>Famille Fondatrice</span>
+                </>
+              ) : (
+                "Fan"
+              )}
             </Badge>
             {user.role !== "FAN" || isAdmin ? (
               <Badge
@@ -103,7 +121,7 @@ export default async function DashboardLayout({
             </p>
           </div>
         )}
-      </aside>
+      </div>
 
       <section>
         <Suspense fallback={null}>

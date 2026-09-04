@@ -1,7 +1,6 @@
-import type { Metadata } from "next";
 import { ArrowRight, BrainCircuit, Share2, Sparkles } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
-
 import { Button } from "@/components/ui/button";
 import {
   getLocaleFromSearchParams,
@@ -9,20 +8,37 @@ import {
   nls,
   type SearchParams,
 } from "@/lib/nls";
+import { createPageMetadata } from "@/lib/seo";
 
 type QuizPageProps = {
   params: Promise<{ locale: string }>;
   searchParams?: Promise<SearchParams>;
 };
 
-export const metadata: Metadata = {
-  title: "Quiz Fally Ipupa — Connais-tu vraiment l'artiste ?",
-  description:
-    "Teste tes connaissances sur Fally Ipupa avec le quiz Nevent : carrière, hits, dates clés. Partage ton score à ta communauté.",
-  alternates: { canonical: "/quiz" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createPageMetadata({
+    title: "Quiz Fally Ipupa — Connais-tu vraiment l’artiste ?",
+    description:
+      "Teste tes connaissances sur Fally Ipupa : carrière, hits et dates clés, puis partage ton score à ta communauté.",
+    path: "/quiz",
+    locale,
+    keywords: [
+      "quiz Fally Ipupa",
+      "Fally Ipupa chansons",
+      "quiz rumba congolaise",
+    ],
+  });
+}
 
-export default async function QuizPage({ params, searchParams }: QuizPageProps) {
+export default async function QuizPage({
+  params,
+  searchParams,
+}: QuizPageProps) {
   const { locale } = await params;
   const lang = getLocaleFromSearchParams(await searchParams);
   const copy = nls[lang].quiz;

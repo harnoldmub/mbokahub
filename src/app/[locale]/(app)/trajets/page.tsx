@@ -1,21 +1,35 @@
 import { Plus } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-
 import { VipMemberBanner } from "@/components/marketing/vip-member-banner";
 import { TrajetsListClient } from "@/components/trajets/trajets-list-client";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/db/prisma";
 import type { TrajetDemo } from "@/lib/demo-data";
+import { createPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Trajets & covoiturage de la diaspora",
-  description:
-    "Covoiturages et trajets partagés par la diaspora vers Paris, Bruxelles, Londres et toutes les grandes villes. Publication gratuite, contact direct.",
-  alternates: { canonical: "/trajets" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createPageMetadata({
+    title: "Covoiturage et trajets vers les événements",
+    description:
+      "Trouve ou publie un trajet partagé vers un concert à Paris, Bruxelles, Londres et ailleurs. Service gratuit et contact direct.",
+    path: "/trajets",
+    locale,
+    keywords: [
+      "covoiturage concert",
+      "trajet événement",
+      "covoiturage diaspora",
+      "transport concert",
+    ],
+  });
+}
 
 const FR_DAYS = ["Dim.", "Lun.", "Mar.", "Mer.", "Jeu.", "Ven.", "Sam."];
 const FR_MONTHS = [

@@ -1,19 +1,28 @@
-import type { Metadata } from "next";
 import { ChevronLeft } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
-
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { PrestatairesListClient } from "@/components/pros/prestataires-list-client";
 import { prisma } from "@/lib/db/prisma";
+import { createPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Coiffeurs & barbiers afro — Annuaire vérifié",
-  description:
-    "Coiffeurs et barbiers spécialisés cheveux afro et métissés : tresses, locks, fade, défrisage. Profils vérifiés et réservation gratuite.",
-  alternates: { canonical: "/beaute/coiffeurs" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createPageMetadata({
+    title: "Coiffeurs et barbiers afro — Profils vérifiés",
+    description:
+      "Coiffeurs et barbiers spécialisés cheveux afro et métissés : tresses, locks, lace wigs et coupes. Réservation gratuite.",
+    path: "/beaute/coiffeurs",
+    locale,
+    keywords: ["coiffeur afro", "barbier afro", "tresses", "locks", "lace wig"],
+  });
+}
 
 const CATEGORIES = ["COIFFEUR", "BARBIER"] as const;
 

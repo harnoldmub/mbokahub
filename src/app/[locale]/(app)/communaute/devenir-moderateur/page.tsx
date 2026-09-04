@@ -1,12 +1,23 @@
 import { ShieldCheck } from "lucide-react";
+import type { Metadata } from "next";
 
 import { applyAsModeratorAction } from "@/lib/actions/public";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Devenir modérateur · Nevent",
-  description:
-    "Postule pour devenir modérateur de la communauté WhatsApp Nevent de ta région.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createPageMetadata({
+    title: "Devenir modérateur de la communauté",
+    description:
+      "Postule pour devenir modérateur de la communauté WhatsApp Nevent de ta région.",
+    path: "/communaute/devenir-moderateur",
+    locale,
+  });
+}
 
 const RULES = [
   "Maintenir une ambiance respectueuse et bienveillante.",
@@ -39,8 +50,8 @@ export default async function DevenirModerateurPage({
         </h1>
         <p className="mt-6 max-w-2xl text-lg text-paper-dim">
           Tu connais ton quartier, ta ville, ta diaspora ? Deviens
-          modérateur·rice de la communauté WhatsApp Nevent de ta région et
-          aide à faire vivre l'esprit Stade de France 2026.
+          modérateur·rice de la communauté WhatsApp Nevent de ta région et aide
+          à faire vivre l'esprit Stade de France 2026.
         </p>
 
         {/* Rules */}
@@ -65,8 +76,8 @@ export default async function DevenirModerateurPage({
           <div className="mt-8 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-5 text-emerald-200">
             <p className="font-display uppercase">Candidature envoyée 🙌</p>
             <p className="mt-1 text-sm text-emerald-100/80">
-              L'équipe Nevent revient vers toi sous 48h. Tu peux compléter
-              ton dossier en revenant ici.
+              L'équipe Nevent revient vers toi sous 48h. Tu peux compléter ton
+              dossier en revenant ici.
             </p>
           </div>
         )}

@@ -1,19 +1,33 @@
-import type { Metadata } from "next";
 import { Plus } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
-
 import { AftersListClient } from "@/components/afters/afters-list-client";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/db/prisma";
+import { createPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Afters & soirées de la diaspora",
-  description:
-    "Tous les afters validés par le Hub : lieux, line-ups, billetterie. Soirées afro, congolaises et caribéennes à Paris, Bruxelles, Londres.",
-  alternates: { canonical: "/afters" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createPageMetadata({
+    title: "Afters et soirées afro en Europe",
+    description:
+      "Découvre les afters validés par Nevent : lieux, programmation et billetterie officielle à Paris, Bruxelles, Londres et ailleurs.",
+    path: "/afters",
+    locale,
+    keywords: [
+      "afters afro",
+      "soirées afro Paris",
+      "soirées Bruxelles",
+      "soirées Londres",
+    ],
+  });
+}
 
 const FR_DAYS = [
   "Dimanche",
@@ -61,11 +75,7 @@ export default async function AftersPage() {
         isActive: true,
         date: { gte: today },
       },
-      orderBy: [
-        { isBoosted: "desc" },
-        { date: "asc" },
-        { createdAt: "desc" },
-      ],
+      orderBy: [{ isBoosted: "desc" }, { date: "asc" }, { createdAt: "desc" }],
       take: 200,
     })
     .catch((err) => {

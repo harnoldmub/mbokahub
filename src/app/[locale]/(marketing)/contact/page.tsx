@@ -1,25 +1,36 @@
-import type { Metadata } from "next";
 import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
-
+import type { Metadata } from "next";
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { getLocaleFromSearchParams, nls, type SearchParams } from "@/lib/nls";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Contact — Nous écrire",
-  description:
-    "Une question, un partenariat, un signalement ? Contactez l'équipe Nevent par email ou via le formulaire dédié.",
-  alternates: { canonical: "/contact" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createPageMetadata({
+    title: "Contact — Écrire à l’équipe",
+    description:
+      "Une question, un partenariat ou un signalement ? Contacte l’équipe Nevent.",
+    path: "/contact",
+    locale,
+  });
+}
 
 type ContactPageProps = {
   params: Promise<{ locale: string }>;
   searchParams?: Promise<SearchParams>;
 };
 
-export default async function ContactPage({ params, searchParams }: ContactPageProps) {
+export default async function ContactPage({
+  params,
+  searchParams,
+}: ContactPageProps) {
   void (await params);
   const lang = getLocaleFromSearchParams(await searchParams);
   const copy = nls[lang].contact;

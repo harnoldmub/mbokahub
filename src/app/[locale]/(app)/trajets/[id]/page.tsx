@@ -1,20 +1,21 @@
+import { auth } from "@clerk/nextjs/server";
 import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
 import { ContactProButton } from "@/components/pros/contact-pro-button";
 import { ReportButton } from "@/components/shared/report-button";
 import { PriceOfferDialog } from "@/components/trajets/price-offer-dialog";
 import { RulesDialog } from "@/components/trajets/rules-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { auth } from "@clerk/nextjs/server";
 import { isCurrentUserAdmin } from "@/lib/auth-helpers";
 import { findCity, suggestPrice } from "@/lib/data/cities";
 import { prisma } from "@/lib/db/prisma";
+import { createPageMetadata } from "@/lib/seo";
 
 type TrajetDetailsPageProps = {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string; locale: string }>;
 };
 
 const FR_DAYS = ["Dim.", "Lun.", "Mar.", "Mer.", "Jeu.", "Ven.", "Sam."];
@@ -39,6 +40,51 @@ function formatDateLabel(date: Date): string {
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata({
+  params,
+}: TrajetDetailsPageProps): Promise<Metadata> {
+  const { id, locale } = await params;
+  const trajet = await prisma.trajet
+    .findUnique({
+      where: { id },
+      select: {
+        villeDepart: true,
+        villeArrivee: true,
+        date: true,
+        placesDispo: true,
+        isApproved: true,
+        isActive: true,
+      },
+    })
+    .catch(() => null);
+  if (!trajet || !trajet.isApproved || !trajet.isActive) {
+    return createPageMetadata({
+      title: "Trajet indisponible",
+      description: "Ce trajet partagé n’est plus disponible.",
+      path: `/trajets/${id}`,
+      locale,
+      noIndex: true,
+    });
+  }
+  const date = new Intl.DateTimeFormat("fr-FR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(trajet.date);
+  return createPageMetadata({
+    title: `${trajet.villeDepart} → ${trajet.villeArrivee} — ${date}`,
+    description: `Trajet partagé de ${trajet.villeDepart} à ${trajet.villeArrivee} le ${date}. ${trajet.placesDispo} place(s) disponible(s), contact direct sur Nevent.`,
+    path: `/trajets/${id}`,
+    locale,
+    keywords: [
+      `covoiturage ${trajet.villeDepart} ${trajet.villeArrivee}`,
+      `trajet concert ${trajet.villeArrivee}`,
+      "covoiturage diaspora",
+    ],
+  });
+}
+
 export default async function TrajetDetailsPage({
   params,
 }: TrajetDetailsPageProps) {
@@ -56,10 +102,12 @@ export default async function TrajetDetailsPage({
   ]);
   const isOwner =
     !!clerkId &&
-    !!(await prisma.user.findUnique({
-      where: { clerkId },
-      select: { id: true },
-    }).then((u) => u && u.id === trajet.userId));
+    !!(await prisma.user
+      .findUnique({
+        where: { clerkId },
+        select: { id: true },
+      })
+      .then((u) => u && u.id === trajet.userId));
 
   if (!trajet.isApproved || !trajet.isActive) {
     if (!isAdmin && !isOwner) {
@@ -72,7 +120,9 @@ export default async function TrajetDetailsPage({
   const fromCity = findCity(trajet.villeDepart);
   const toCity = findCity(trajet.villeArrivee);
   const suggestion =
-    fromCity && toCity ? suggestPrice(fromCity, toCity, trajet.placesTotal) : null;
+    fromCity && toCity
+      ? suggestPrice(fromCity, toCity, trajet.placesTotal)
+      : null;
   const suggestedPrice =
     suggestion && trajet.prix > suggestion.perPlaceFair
       ? suggestion.perPlaceFair
@@ -143,7 +193,11 @@ export default async function TrajetDetailsPage({
           <RulesDialog />
         </div>
         <div className="mt-6 flex justify-end">
-          <ReportButton targetType="TRAJET" targetId={trajet.id} variant="button" />
+          <ReportButton
+            targetType="TRAJET"
+            targetId={trajet.id}
+            variant="button"
+          />
         </div>
       </section>
     </main>

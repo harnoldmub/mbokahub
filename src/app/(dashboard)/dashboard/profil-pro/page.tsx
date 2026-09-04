@@ -82,8 +82,9 @@ export default async function ProfilProPage({
           immédiatement sur ta fiche publique.
         </p>
         <div className="mt-4 flex flex-wrap items-center gap-2">
-          <Badge variant="outline">
-            {meta?.icon} {meta?.label ?? pro.category}
+          <Badge variant="outline" className="gap-1.5">
+            {meta?.icon && <meta.icon className="size-3.5 text-blood" />}
+            {meta?.label ?? pro.category}
           </Badge>
           <Badge variant={pro.isVerified ? "default" : "outline"}>
             {pro.isVerified ? "Vérifié" : "En attente de vérification"}

@@ -9,6 +9,7 @@ import {
   Search,
   ShieldCheck,
   Sparkles,
+  Star,
   X,
 } from "lucide-react";
 import Image from "next/image";
@@ -204,7 +205,7 @@ export function PrestatairesListClient({ pros, initialSearch = "" }: Props) {
             searchPlaceholder="Rechercher une catégorie…"
             options={PRO_CATEGORIES.map((c) => ({
               value: c.id,
-              label: `${c.icon}  ${c.label}`,
+              label: c.label,
             }))}
             className="min-w-[180px] flex-1 basis-[200px]"
             buttonClassName="h-10 py-0 rounded-xl"
@@ -313,8 +314,13 @@ export function PrestatairesListClient({ pros, initialSearch = "" }: Props) {
                         />
                       </button>
                     ) : (
-                      <div className="flex h-full items-center justify-center text-6xl opacity-40">
-                        {meta?.icon ?? "✨"}
+                      <div className="flex h-full items-center justify-center bg-white/[0.02]">
+                        <div className="flex size-20 items-center justify-center rounded-2xl bg-white/5 text-paper-dim/40 transition-all duration-500 group-hover:scale-110 group-hover:text-paper-dim/60">
+                          {(() => {
+                            const Icon = meta?.icon ?? Sparkles;
+                            return <Icon className="size-10 stroke-[1.5]" />;
+                          })()}
+                        </div>
                       </div>
                     )}
                     {p.isCertified && (
@@ -329,8 +335,8 @@ export function PrestatairesListClient({ pros, initialSearch = "" }: Props) {
                     )}
                   </div>
                   <div className="flex flex-1 flex-col gap-3 p-5">
-                    <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-blood">
-                      <span>{meta?.icon}</span>
+                    <div className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-blood">
+                      {meta?.icon && <meta.icon className="size-3.5" />}
                       <span>{meta?.shortLabel}</span>
                     </div>
                     <h3 className="font-display text-2xl text-paper">
@@ -355,7 +361,11 @@ export function PrestatairesListClient({ pros, initialSearch = "" }: Props) {
                       </span>
                       {p.rating > 0 && (
                         <span className="flex items-center gap-1 font-mono text-xs text-vip">
-                          ★ {p.rating.toFixed(1)}
+                          <Star
+                            className="size-3.5 fill-vip text-vip"
+                            aria-hidden="true"
+                          />
+                          <span>{p.rating.toFixed(1)}</span>
                           <span className="text-paper-mute">
                             ({p.reviewsCount})
                           </span>

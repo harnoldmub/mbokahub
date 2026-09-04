@@ -4,18 +4,18 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     background_color: "#F6F3EC",
     description:
-      "Plateforme gratuite de mise en relation entre clients et prestataires.",
+      "Événements afro, trajets, beauté, photo, services et afters en Europe.",
     display: "standalone",
     icons: [
       {
-        sizes: "512x512",
-        src: "/logo.png",
-        type: "image/png",
+        sizes: "any",
+        src: "/icon.svg",
+        type: "image/svg+xml",
       },
     ],
     name: "Nevent",
     short_name: "Nevent",
-    start_url: "/",
-    theme_color: "#12715B",
+    start_url: "/fr",
+    theme_color: "#090909",
   };
 }

@@ -81,7 +81,9 @@ export function ProProfileTabs({
     return () => window.removeEventListener("pro:open-tab", onOpenTab);
   }, []);
 
-  const availMap = Object.fromEntries(availability.map((a) => [a.dayOfWeek, a]));
+  const availMap = Object.fromEntries(
+    availability.map((a) => [a.dayOfWeek, a]),
+  );
   const todayDow = new Date().getDay();
 
   return (
@@ -210,13 +212,15 @@ export function ProProfileTabs({
                 <p className="text-3xl font-bold text-paper leading-none">
                   {rating.toFixed(1)}
                 </p>
-                <p className="mt-1 text-sm text-paper-dim">{reviewsCount} avis</p>
+                <p className="mt-1 text-sm text-paper-dim">
+                  {reviewsCount} avis
+                </p>
               </div>
             </div>
           )}
           <div className="flex flex-col items-center gap-3 py-8 text-center">
-            <div className="flex size-12 items-center justify-center rounded-full bg-ash/40 text-2xl">
-              ⭐
+            <div className="flex size-12 items-center justify-center rounded-full bg-amber-400/10 text-amber-400">
+              <Star className="size-5 fill-amber-400/20 text-amber-400" />
             </div>
             <p className="text-sm text-paper-dim">
               Aucun avis pour l&apos;instant.
@@ -267,48 +271,49 @@ export function ProProfileTabs({
               <p className="text-sm text-paper-dim leading-relaxed">
                 Ce prestataire gère ses disponibilités au cas par cas.{" "}
                 <span className="text-paper-mute">
-                  Envoie une demande ou un message pour convenir d&apos;un créneau.
+                  Envoie une demande ou un message pour convenir d&apos;un
+                  créneau.
                 </span>
               </p>
             ) : (
-            <table className="w-full text-sm">
-              <tbody>
-                {ORDERED_DAYS.map((dow) => {
-                  const avail = availMap[dow];
-                  if (!avail) return null;
-                  const isToday = dow === todayDow;
-                  const timeRange = avail.isActive
-                    ? `${avail.startTime} – ${avail.endTime}`
-                    : null;
+              <table className="w-full text-sm">
+                <tbody>
+                  {ORDERED_DAYS.map((dow) => {
+                    const avail = availMap[dow];
+                    if (!avail) return null;
+                    const isToday = dow === todayDow;
+                    const timeRange = avail.isActive
+                      ? `${avail.startTime} – ${avail.endTime}`
+                      : null;
 
-                  return (
-                    <tr
-                      key={dow}
-                      className={
-                        isToday
-                          ? "font-semibold text-paper"
-                          : "text-paper-dim"
-                      }
-                    >
-                      <td className="w-32 py-1.5">{FR_DAYS[dow]}</td>
-                      <td className="py-1.5">
-                        {timeRange ? (
-                          <span
-                            className={
-                              isToday ? "text-blood" : "text-paper-dim"
-                            }
-                          >
-                            {timeRange}
-                          </span>
-                        ) : (
-                          <span className="text-paper-mute">Fermé</span>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                    return (
+                      <tr
+                        key={dow}
+                        className={
+                          isToday
+                            ? "font-semibold text-paper"
+                            : "text-paper-dim"
+                        }
+                      >
+                        <td className="w-32 py-1.5">{FR_DAYS[dow]}</td>
+                        <td className="py-1.5">
+                          {timeRange ? (
+                            <span
+                              className={
+                                isToday ? "text-blood" : "text-paper-dim"
+                              }
+                            >
+                              {timeRange}
+                            </span>
+                          ) : (
+                            <span className="text-paper-mute">Fermé</span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             )}
           </div>
 

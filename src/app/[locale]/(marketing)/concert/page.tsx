@@ -1,5 +1,3 @@
-import Image from "next/image";
-import Link from "next/link";
 import {
   AlertTriangle,
   ArrowRight,
@@ -13,11 +11,14 @@ import {
   Train,
   Users,
 } from "lucide-react";
-
-import { SectionHeading } from "@/components/marketing/section-heading";
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 import { Countdown } from "@/components/marketing/countdown";
+import { SectionHeading } from "@/components/marketing/section-heading";
 import { Button } from "@/components/ui/button";
 import { EVENT_CONTEXT } from "@/lib/constants";
+import { createPageMetadata } from "@/lib/seo";
 
 function YoutubeIcon({ className }: { className?: string }) {
   return (
@@ -101,15 +102,30 @@ const TRANSPORT = [
   },
   {
     line: "Voiture",
-    detail: "Parkings limités · privilégie les trajets partagés (voir /trajets)",
+    detail:
+      "Parkings limités · privilégie les trajets partagés (voir /trajets)",
   },
 ];
 
-export const metadata = {
-  title: "Concert Fally Ipupa — Stade de France 2 & 3 mai 2026 | Nevent",
-  description:
-    "Toutes les infos pratiques du concert Fally Ipupa au Stade de France les 2 et 3 mai 2026 : billetterie officielle, horaires, transports, FAQ.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createPageMetadata({
+    title: "Concert Fally Ipupa — Stade de France 2026",
+    description:
+      "Retrouve les informations pratiques autour du concert de Fally Ipupa au Stade de France : accès, transports et billetterie officielle.",
+    path: "/concert",
+    locale,
+    keywords: [
+      "Fally Ipupa Stade de France",
+      "concert Fally Ipupa 2026",
+      "transport Stade de France",
+    ],
+  });
+}
 
 export default function ConcertPage() {
   return (
@@ -139,8 +155,8 @@ export default function ConcertPage() {
                   </p>
                   <p className="mt-1 text-xs text-paper-dim leading-relaxed">
                     Nevent n'est pas affilié à Fally Ipupa, à Gérard Drouot
-                    Productions ou au Stade de France. Vérifie toujours les infos
-                    officielles avant tout achat.
+                    Productions ou au Stade de France. Vérifie toujours les
+                    infos officielles avant tout achat.
                   </p>
                 </div>
               </div>
@@ -210,9 +226,9 @@ export default function ConcertPage() {
 
         <div className="rounded-2xl border border-yellow-500/30 bg-yellow-500/5 p-5">
           <p className="text-sm text-yellow-200">
-            ⚠️ N'achète <strong>jamais</strong> ton billet sur les réseaux sociaux ou en
-            main propre à un inconnu. Les arnaques se multiplient — passe uniquement
-            par les sites officiels ci-dessous.
+            ⚠️ N'achète <strong>jamais</strong> ton billet sur les réseaux
+            sociaux ou en main propre à un inconnu. Les arnaques se multiplient
+            — passe uniquement par les sites officiels ci-dessous.
           </p>
         </div>
 
@@ -278,8 +294,8 @@ export default function ConcertPage() {
                 Pas de voiture ? Voyage en covoit'
               </h3>
               <p className="mt-2 max-w-lg text-paper-dim">
-                Plus de 200 trajets depuis Bruxelles, Lille, Lyon et toute l'Europe.
-                Diaspora qui se serre les coudes.
+                Plus de 200 trajets depuis Bruxelles, Lille, Lyon et toute
+                l'Europe. Diaspora qui se serre les coudes.
               </p>
             </div>
             <Button asChild size="lg" className="shadow-glow-blood">
@@ -315,7 +331,9 @@ export default function ConcertPage() {
               key={s.l}
               className="rounded-2xl border border-white/5 bg-smoke/30 p-6 text-center"
             >
-              <p className="font-display text-3xl text-gold lg:text-4xl">{s.v}</p>
+              <p className="font-display text-3xl text-gold lg:text-4xl">
+                {s.v}
+              </p>
               <p className="mt-2 text-[10px] uppercase tracking-widest text-paper-mute">
                 {s.l}
               </p>
@@ -335,8 +353,9 @@ export default function ConcertPage() {
               Écoute Fally en attendant
             </h2>
             <p className="mt-2 max-w-2xl text-paper-dim">
-              Chauffe l'ambiance avec la playlist officielle Spotify et abonne-toi à
-              sa chaîne YouTube pour ne rien rater des derniers clips.
+              Chauffe l'ambiance avec la playlist officielle Spotify et
+              abonne-toi à sa chaîne YouTube pour ne rien rater des derniers
+              clips.
             </p>
           </div>
         </div>
@@ -392,8 +411,8 @@ export default function ConcertPage() {
             Prépare ton week-end avec Nevent
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-paper-dim">
-            Trajets, beauté, photographes, afters : tout ce qu'il faut pour vivre les
-            2 & 3 mai à fond.
+            Trajets, beauté, photographes, afters : tout ce qu'il faut pour
+            vivre les 2 & 3 mai à fond.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button asChild size="lg" className="shadow-glow-blood">

@@ -2,10 +2,10 @@ import type { MetadataRoute } from "next";
 
 import { prisma } from "@/lib/db/prisma";
 import { getPublicEvents } from "@/lib/events.server";
-import { PRO_CATEGORIES } from "@/lib/pro-categories";
+import { MARKETS } from "@/lib/markets";
+import { getSiteUrl } from "@/lib/seo";
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://nevent.co";
-const LOCALES = ["fr", "en", "de", "nl"] as const;
+const appUrl = getSiteUrl();
 
 type Priority =
   | 0.3
@@ -37,10 +37,10 @@ type StaticRoute = {
 
 const STATIC_ROUTES: StaticRoute[] = [
   { path: "/", priority: 1, changeFrequency: "daily" },
-  { path: "/fr/evenements", priority: 0.95, changeFrequency: "daily" },
-  { path: "/fr/evenements/londres", priority: 0.8, changeFrequency: "daily" },
-  { path: "/fr/evenements/bruxelles", priority: 0.8, changeFrequency: "daily" },
-  { path: "/fr/evenements/paris", priority: 0.7, changeFrequency: "daily" },
+  { path: "/evenements", priority: 0.95, changeFrequency: "daily" },
+  { path: "/evenements/londres", priority: 0.8, changeFrequency: "daily" },
+  { path: "/evenements/bruxelles", priority: 0.8, changeFrequency: "daily" },
+  { path: "/evenements/paris", priority: 0.7, changeFrequency: "daily" },
 
   // Core verticals
   { path: "/trajets", priority: 0.95, changeFrequency: "daily" },
@@ -73,37 +73,38 @@ function buildAlternates(
   path: string,
 ): MetadataRoute.Sitemap[number]["alternates"] {
   return {
-    languages: Object.fromEntries(
-      LOCALES.map((l) => [l, `${appUrl}${path}?lang=${l}`]),
-    ),
+    languages: Object.fromEntries([
+      ...MARKETS.map((market) => [
+        market,
+        `${appUrl}/${market}${path === "/" ? "" : path}`,
+      ]),
+      ["x-default", `${appUrl}/fr${path === "/" ? "" : path}`],
+    ]),
   };
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
-  const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((r) => ({
-    url: `${appUrl}${r.path}`,
-    lastModified: now,
-    changeFrequency: r.changeFrequency,
-    priority: r.priority,
-    alternates: buildAlternates(r.path),
-  }));
+  const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.flatMap((r) =>
+    MARKETS.map((market) => ({
+      url: `${appUrl}/${market}${r.path === "/" ? "" : r.path}`,
+      lastModified: now,
+      changeFrequency: r.changeFrequency,
+      priority: r.priority,
+      alternates: buildAlternates(r.path),
+    })),
+  );
 
-  // One landing per pro category — strong long-tail SEO
-  const categoryEntries: MetadataRoute.Sitemap = PRO_CATEGORIES.map((c) => ({
-    url: `${appUrl}/beaute?category=${c.id}`,
-    lastModified: now,
-    changeFrequency: "weekly",
-    priority: 0.7,
-  }));
-  const eventEntries: MetadataRoute.Sitemap = (await getPublicEvents()).map(
-    (event) => ({
-      url: `${appUrl}/fr/evenements/${event.slug}`,
-      lastModified: new Date(),
-      changeFrequency: "daily" as const,
-      priority: 0.85 as Priority,
-    }),
+  const eventEntries: MetadataRoute.Sitemap = (await getPublicEvents()).flatMap(
+    (event) =>
+      MARKETS.map((market) => ({
+        url: `${appUrl}/${market}/evenements/${event.slug}`,
+        lastModified: now,
+        changeFrequency: "daily" as const,
+        priority: 0.85 as Priority,
+        alternates: buildAlternates(`/evenements/${event.slug}`),
+      })),
   );
 
   // Dynamic content — fail open if DB is unreachable so the sitemap still builds
@@ -131,33 +132,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ]);
 
     dynamicEntries = [
-      ...pros.map((p) => ({
-        url: `${appUrl}/pro/${p.id}`,
-        lastModified: p.updatedAt,
-        changeFrequency: "weekly" as const,
-        priority: 0.6 as Priority,
-      })),
-      ...trajets.map((t) => ({
-        url: `${appUrl}/trajets/${t.id}`,
-        lastModified: t.updatedAt,
-        changeFrequency: "daily" as const,
-        priority: 0.55 as Priority,
-      })),
-      ...afters.map((a) => ({
-        url: `${appUrl}/afters/${a.slug}`,
-        lastModified: a.createdAt,
-        changeFrequency: "weekly" as const,
-        priority: 0.6 as Priority,
-      })),
+      ...pros.flatMap((p) =>
+        MARKETS.map((market) => ({
+          url: `${appUrl}/${market}/pro/${p.id}`,
+          lastModified: p.updatedAt,
+          changeFrequency: "weekly" as const,
+          priority: 0.6 as Priority,
+          alternates: buildAlternates(`/pro/${p.id}`),
+        })),
+      ),
+      ...trajets.flatMap((t) =>
+        MARKETS.map((market) => ({
+          url: `${appUrl}/${market}/trajets/${t.id}`,
+          lastModified: t.updatedAt,
+          changeFrequency: "daily" as const,
+          priority: 0.55 as Priority,
+          alternates: buildAlternates(`/trajets/${t.id}`),
+        })),
+      ),
+      ...afters.flatMap((a) =>
+        MARKETS.map((market) => ({
+          url: `${appUrl}/${market}/afters/${a.slug}`,
+          lastModified: a.createdAt,
+          changeFrequency: "weekly" as const,
+          priority: 0.6 as Priority,
+          alternates: buildAlternates(`/afters/${a.slug}`),
+        })),
+      ),
     ];
   } catch (err) {
     console.error("[sitemap] failed to fetch dynamic content", err);
   }
 
-  return [
-    ...staticEntries,
-    ...eventEntries,
-    ...categoryEntries,
-    ...dynamicEntries,
-  ];
+  return [...staticEntries, ...eventEntries, ...dynamicEntries];
 }

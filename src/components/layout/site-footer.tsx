@@ -1,14 +1,27 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import { ShieldCheck } from "lucide-react";
+import { ArrowUp, Mail, ShieldCheck } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { NewsletterForm } from "@/components/shared/newsletter-form";
-import { DEFAULT_MARKET, MARKETS, type Market } from "@/lib/markets";
+import {
+  DEFAULT_MARKET,
+  MARKET_META,
+  MARKETS,
+  type Market,
+} from "@/lib/markets";
 import { getLocale, localizedHref, nls } from "@/lib/nls";
 
+const CONTACT_EMAIL = "contact@mbokahub.com";
+
+/** Le footer garde une surface sombre quel que soit le thème : il sert d'ancre
+ *  visuelle sous des pages majoritairement claires. Les couleurs sont donc
+ *  écrites en valeurs explicites plutôt qu'avec les tokens ink/paper, qui
+ *  basculent avec next-themes. Idem pour les bordures : globals.css redéfinit
+ *  `border-white/10` en gris clair, on utilise donc `border-white/[0.12]`. */
 export function SiteFooter() {
   const pathname = usePathname();
   const seg = pathname.split("/")[1];
@@ -35,180 +48,216 @@ export function SiteFooter() {
       cancelled = true;
     };
   }, [isSignedIn]);
-  const legalLinks = [
-    { href: "/cgu", label: copy.links.terms },
-    { href: "/cgv", label: copy.links.sales },
-    { href: "/confidentialite", label: copy.links.privacy },
-    { href: "/mentions-legales", label: copy.links.legalNotice },
-    { href: "/disclaimer", label: copy.links.disclaimer },
+
+  const columns = [
+    {
+      title: copy.navigation,
+      links: [
+        { href: "/evenements", label: "Événements" },
+        { href: "/trajets", label: copy.links.rides },
+        { href: "/afters", label: copy.links.afters },
+        { href: "/prestataires", label: copy.links.services },
+        { href: "/beaute/photographes", label: copy.links.photographers },
+      ],
+    },
+    {
+      title: copy.professionals,
+      links: [
+        { href: "/pro", label: copy.links.proSpace },
+        { href: "/partenariat", label: copy.links.partnerships },
+        { href: "/ads", label: copy.links.ads },
+      ],
+    },
+    {
+      title: "Nevent",
+      links: [
+        { href: "/equipe", label: copy.links.team },
+        { href: "/contact", label: copy.links.contact },
+        { href: "/faq", label: copy.links.faq },
+      ],
+    },
+    {
+      title: copy.legal,
+      links: [
+        { href: "/cgu", label: copy.links.terms },
+        { href: "/cgv", label: copy.links.sales },
+        { href: "/confidentialite", label: copy.links.privacy },
+        { href: "/mentions-legales", label: copy.links.legalNotice },
+        { href: "/disclaimer", label: copy.links.disclaimer },
+      ],
+    },
   ] as const;
 
+  const linkClass =
+    "inline-block text-sm text-white/60 transition-colors hover:text-white focus-visible:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5252]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0c0f] rounded-sm";
+
   return (
-    <footer className="bg-ink border-t border-white/5 pt-20 pb-10">
+    <footer className="mt-24 bg-[#0b0c0f] text-white">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        {/* EDITORIAL PHRASE */}
-        <div className="mb-20">
-          <h2 className="font-display text-5xl sm:text-7xl lg:text-8xl text-paper uppercase leading-[0.9] text-tight">
+        {/* BANDEAU ÉDITORIAL + CTA */}
+        <div className="flex flex-col gap-8 border-white/[0.12] border-b py-16 lg:flex-row lg:items-end lg:justify-between lg:py-20">
+          <h2 className="max-w-2xl font-display text-4xl uppercase leading-[0.95] text-tight sm:text-5xl lg:text-6xl">
             Découvre l’événement.
             <br />
             Organise{" "}
-            <span className="text-blood font-serif italic font-black">
+            <span className="font-serif font-black text-[#ff5252] italic">
               toute
             </span>{" "}
             ton expérience.
           </h2>
-        </div>
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
-          <div className="space-y-6">
-            <h3 className="font-display text-sm uppercase tracking-[0.2em] text-blood">
-              {copy.navigation}
-            </h3>
-            <nav className="flex flex-col gap-3">
-              <Link
-                href={localizedHref("/evenements", market)}
-                className="text-paper-dim hover:text-paper transition-colors"
-              >
-                Événements
-              </Link>
-              <Link
-                href={localizedHref("/trajets", market)}
-                className="text-paper-dim hover:text-paper transition-colors"
-              >
-                {copy.links.rides}
-              </Link>
-              <Link
-                href={localizedHref("/afters", market)}
-                className="text-paper-dim hover:text-paper transition-colors"
-              >
-                {copy.links.afters}
-              </Link>
-              <Link
-                href={localizedHref("/prestataires", market)}
-                className="text-paper-dim hover:text-paper transition-colors"
-              >
-                {copy.links.services}
-              </Link>
-              <Link
-                href={localizedHref("/beaute/photographes", market)}
-                className="text-paper-dim hover:text-paper transition-colors"
-              >
-                {copy.links.photographers}
-              </Link>
-            </nav>
-          </div>
-
-          <div className="space-y-6">
-            <h3 className="font-display text-sm uppercase tracking-[0.2em] text-blood">
-              {copy.professionals}
-            </h3>
-            <nav className="flex flex-col gap-3">
-              <Link
-                href={localizedHref("/pro", market)}
-                className="text-paper-dim hover:text-paper transition-colors"
-              >
-                {copy.links.proSpace}
-              </Link>
-              <Link
-                href={localizedHref("/partenariat", market)}
-                className="text-paper-dim hover:text-paper transition-colors"
-              >
-                {copy.links.partnerships}
-              </Link>
-              <Link
-                href={localizedHref("/ads", market)}
-                className="text-paper-dim hover:text-paper transition-colors"
-              >
-                {copy.links.ads}
-              </Link>
-            </nav>
-          </div>
-
-          <div className="space-y-6">
-            <h3 className="font-display text-sm uppercase tracking-[0.2em] text-blood">
-              Nevent
-            </h3>
-            <nav className="flex flex-col gap-3">
-              <Link
-                href={localizedHref("/equipe", market)}
-                className="text-paper-dim hover:text-paper transition-colors"
-              >
-                {copy.links.team}
-              </Link>
-              <Link
-                href={localizedHref("/contact", market)}
-                className="text-paper-dim hover:text-paper transition-colors"
-              >
-                {copy.links.contact}
-              </Link>
-              <Link
-                href={localizedHref("/faq", market)}
-                className="text-paper-dim hover:text-paper transition-colors"
-              >
-                {copy.links.faq}
-              </Link>
-            </nav>
-          </div>
-
-          <div className="space-y-6">
-            <h3 className="font-display text-sm uppercase tracking-[0.2em] text-blood">
-              {copy.legal}
-            </h3>
-            <nav className="flex flex-col gap-3">
-              {legalLinks.map((link) => (
-                <Link
-                  className="text-paper-dim hover:text-paper transition-colors"
-                  href={localizedHref(link.href, market)}
-                  key={link.href}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
+          <div className="flex flex-wrap gap-3">
+            <Link
+              className="inline-flex items-center rounded-full bg-[#e31818] px-6 py-3 font-medium text-sm text-white transition-colors hover:bg-[#ff2d2d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5252]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0c0f]"
+              href={localizedHref("/pro/inscrire", market)}
+            >
+              Devenir prestataire
+            </Link>
+            <Link
+              className="inline-flex items-center rounded-full border border-white/25 px-6 py-3 font-medium text-sm text-white transition-colors hover:border-white hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0c0f]"
+              href={localizedHref("/trajets/publier", market)}
+            >
+              Publier un trajet
+            </Link>
           </div>
         </div>
 
-        <div className="mb-12 rounded-2xl border border-blood/30 bg-blood/5 p-6 sm:p-8">
-          <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-blood">
-            Newsletter
+        {/* MARQUE + COLONNES */}
+        <div className="grid gap-12 py-16 lg:grid-cols-12 lg:gap-8">
+          <div className="lg:col-span-4">
+            <Image
+              alt="Nevent"
+              className="h-24 w-auto object-contain"
+              height={240}
+              src="/logo-white.png"
+              width={240}
+            />
+            <p className="mt-5 max-w-sm text-sm text-white/60 leading-relaxed">
+              La plateforme indépendante qui réunit les événements afro en
+              Europe et tous les services autour : trajets, beauté, photo et
+              afters.
+            </p>
+            <a
+              className="mt-6 inline-flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-white focus-visible:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5252]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0c0f] rounded-sm"
+              href={`mailto:${CONTACT_EMAIL}`}
+            >
+              <Mail aria-hidden className="size-4" />
+              {CONTACT_EMAIL}
+            </a>
+
+            <div className="mt-8">
+              <p className="font-mono text-[10px] text-white/40 uppercase tracking-[0.25em]">
+                Marchés
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {MARKETS.map((code) => {
+                  const meta = MARKET_META[code];
+                  const isCurrent = code === market;
+                  return (
+                    <Link
+                      aria-current={isCurrent ? "true" : undefined}
+                      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.15em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0c0f] ${
+                        isCurrent
+                          ? "border-white/60 bg-white/[0.08] text-white"
+                          : "border-white/[0.18] text-white/55 hover:border-white/45 hover:text-white"
+                      }`}
+                      href={`/${code}`}
+                      key={code}
+                    >
+                      <span aria-hidden>{meta.flag}</span>
+                      {meta.label}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-10 sm:grid-cols-4 lg:col-span-8">
+            {columns.map((column) => (
+              <div key={column.title}>
+                <h3 className="font-mono text-[10px] text-white/40 uppercase tracking-[0.25em]">
+                  {column.title}
+                </h3>
+                <nav aria-label={column.title} className="mt-5">
+                  <ul className="space-y-3">
+                    {column.links.map((link) => (
+                      <li key={link.href}>
+                        <Link
+                          className={linkClass}
+                          href={localizedHref(link.href, market)}
+                        >
+                          {link.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* NEWSLETTER */}
+        <div className="rounded-3xl border border-white/[0.12] bg-white/[0.03] p-6 sm:p-8 lg:p-10">
+          <div className="grid gap-8 lg:grid-cols-12 lg:items-center">
+            <div className="lg:col-span-5">
+              <p className="font-mono text-[10px] text-[#ff5252] uppercase tracking-[0.3em]">
+                Newsletter
+              </p>
+              <h3 className="mt-3 font-display text-2xl uppercase leading-tight sm:text-3xl">
+                Reçois les nouveaux services et opportunités
+              </h3>
+              <p className="mt-3 text-sm text-white/60 leading-relaxed">
+                Nouveaux prestataires, boosts, offres partenaires : un email
+                court, jamais de spam.
+              </p>
+            </div>
+            <div className="lg:col-span-7">
+              <NewsletterForm source="footer" tone="dark" />
+            </div>
+          </div>
+        </div>
+
+        {/* MODÈLE ÉCONOMIQUE */}
+        <p className="mt-8 text-white/40 text-xs leading-relaxed">
+          <span className="text-white/60">Modèle ouvert —</span> Nevent est
+          gratuit pour les clients et les prestataires. Les options payantes
+          concernent uniquement la visibilité sponsorisée, les boosts, les
+          placements et les campagnes partenaires.
+        </p>
+
+        {/* BARRE BASSE */}
+        <div className="mt-10 flex flex-col gap-4 border-white/[0.12] border-t py-8 sm:flex-row sm:items-center sm:justify-between">
+          <p className="font-mono text-[10px] text-white/40 uppercase tracking-[0.15em]">
+            © 2026 Nevent — {copy.rights}
           </p>
-          <h3 className="mt-2 font-display text-2xl text-paper sm:text-3xl">
-            Reçois les nouveaux services et opportunités
-          </h3>
-          <p className="mt-2 text-paper-dim text-sm">
-            Nouveaux prestataires, boosts, offres partenaires : un email court,
-            jamais de spam.
-          </p>
-          <div className="mt-5 max-w-xl">
-            <NewsletterForm source="footer" />
-          </div>
-        </div>
-
-        <div className="border-t border-white/5 pt-10 space-y-6">
-          <div className="rounded-2xl border border-white/5 bg-smoke/20 px-6 py-5">
-            <p className="mb-1 font-mono text-[9px] uppercase tracking-[0.3em] text-blood">
-              Modèle ouvert
-            </p>
-            <p className="font-mono text-[10px] text-paper-mute leading-relaxed">
-              Nevent est gratuit pour les clients et les prestataires. Les
-              options payantes concernent uniquement la visibilité sponsorisée,
-              les boosts, les placements et les campagnes partenaires.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="font-mono text-[10px] text-paper-mute uppercase">
-              © 2026 NEVENT — {copy.rights}
-            </p>
+          <div className="flex flex-wrap items-center gap-3">
             {isAdmin ? (
               <Link
-                className="inline-flex items-center gap-1.5 rounded-full border border-emerald-600 bg-emerald-600 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-white transition hover:bg-emerald-700 hover:border-emerald-700"
+                className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/50 bg-emerald-500/10 px-3 py-1.5 font-mono text-[10px] text-emerald-300 uppercase tracking-[0.2em] transition-colors hover:bg-emerald-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0c0f]"
                 href="/admin"
               >
                 <ShieldCheck aria-hidden className="size-3" />
                 Admin · Backoffice
               </Link>
             ) : null}
+            <button
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.18] px-3 py-1.5 font-mono text-[10px] text-white/55 uppercase tracking-[0.2em] transition-colors hover:border-white/45 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0c0f]"
+              onClick={() =>
+                window.scrollTo({
+                  top: 0,
+                  behavior: window.matchMedia(
+                    "(prefers-reduced-motion: reduce)",
+                  ).matches
+                    ? "auto"
+                    : "smooth",
+                })
+              }
+              type="button"
+            >
+              <ArrowUp aria-hidden className="size-3" />
+              Haut de page
+            </button>
           </div>
         </div>
       </div>

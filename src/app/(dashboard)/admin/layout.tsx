@@ -1,9 +1,22 @@
+import { BarChart3, type LucideIcon, ShieldAlert } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin";
 
-const NAV = [
+export const metadata: Metadata = {
+  title: "Administration",
+  robots: { index: false, follow: false, noarchive: true },
+};
+
+type NavItem = {
+  href: string;
+  label: string;
+  icon?: LucideIcon;
+};
+
+const NAV: NavItem[] = [
   { href: "/admin", label: "Dashboard" },
-  { href: "/admin/stats", label: "📊 Statistiques" },
+  { href: "/admin/stats", label: "Statistiques", icon: BarChart3 },
   { href: "/admin/evenements", label: "Événements" },
   { href: "/admin/users", label: "Utilisateurs" },
   { href: "/admin/verifications", label: "Vérifications" },
@@ -14,7 +27,7 @@ const NAV = [
   { href: "/admin/paris", label: "Paris pratique" },
   { href: "/admin/communautes", label: "Communautés" },
   { href: "/admin/moderateurs", label: "Modérateurs" },
-  { href: "/admin/signalements", label: "🚨 Signalements" },
+  { href: "/admin/signalements", label: "Signalements", icon: ShieldAlert },
   { href: "/admin/promo-codes", label: "Codes promo" },
   { href: "/admin/newsletter", label: "Newsletter" },
   { href: "/admin/payments", label: "Paiements" },
@@ -46,15 +59,19 @@ export default async function AdminLayout({
         </header>
 
         <nav className="mb-8 flex flex-wrap gap-2">
-          {NAV.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-foreground text-sm transition hover:border-red-500/40 hover:bg-red-500/10"
-            >
-              {item.label}
-            </Link>
-          ))}
+          {NAV.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-foreground text-sm transition hover:border-red-500/40 hover:bg-red-500/10"
+              >
+                {Icon && <Icon className="size-3.5" />}
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
         </nav>
 
         <main>{children}</main>

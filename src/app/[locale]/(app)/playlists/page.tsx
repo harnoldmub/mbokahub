@@ -1,8 +1,10 @@
-import Link from "next/link";
 import { ArrowRight, ExternalLink, Music } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
 
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { Button } from "@/components/ui/button";
+import { createPageMetadata } from "@/lib/seo";
 
 type Track = {
   title: string;
@@ -37,7 +39,8 @@ const PLAYLISTS: Playlist[] = [
         year: "2017",
         vibe: "Le hit afro-pop qui ouvre les concerts depuis 2017",
         spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Eloko%20Oyo",
-        youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Eloko+Oyo",
+        youtube:
+          "https://www.youtube.com/results?search_query=Fally+Ipupa+Eloko+Oyo",
         genius: "https://genius.com/Fally-ipupa-eloko-oyo-lyrics",
       },
       {
@@ -46,7 +49,8 @@ const PLAYLISTS: Playlist[] = [
         year: "2018",
         vibe: "Refrain mantra, gimmick instantanément reconnaissable",
         spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Original",
-        youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Original",
+        youtube:
+          "https://www.youtube.com/results?search_query=Fally+Ipupa+Original",
         genius: "https://genius.com/Fally-ipupa-original-lyrics",
       },
       {
@@ -55,7 +59,8 @@ const PLAYLISTS: Playlist[] = [
         year: "2022",
         vibe: "Hymne CAN 2024 — chant d'union diaspora",
         spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Mayday",
-        youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Mayday",
+        youtube:
+          "https://www.youtube.com/results?search_query=Fally+Ipupa+Mayday",
         genius: "https://genius.com/Fally-ipupa-mayday-lyrics",
       },
       {
@@ -64,7 +69,8 @@ const PLAYLISTS: Playlist[] = [
         year: "2018",
         vibe: "Refrain en boucle dans toute la diaspora francophone",
         spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Bloque",
-        youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Bloque",
+        youtube:
+          "https://www.youtube.com/results?search_query=Fally+Ipupa+Bloque",
         genius: "https://genius.com/Fally-ipupa-bloque-lyrics",
       },
     ],
@@ -82,7 +88,8 @@ const PLAYLISTS: Playlist[] = [
         year: "2009",
         vibe: "L'hymne panafricain de la fin des années 2000",
         spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Sexy%20Dance",
-        youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Sexy+Dance",
+        youtube:
+          "https://www.youtube.com/results?search_query=Fally+Ipupa+Sexy+Dance",
         genius: "https://genius.com/Fally-ipupa-sexy-dance-annotated",
       },
       {
@@ -91,7 +98,8 @@ const PLAYLISTS: Playlist[] = [
         year: "2013",
         vibe: "Sebene final qui dévaste tous les sound-systems",
         spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Associe",
-        youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Associe",
+        youtube:
+          "https://www.youtube.com/results?search_query=Fally+Ipupa+Associe",
         genius: "https://genius.com/Fally-ipupa-associe-lyrics",
       },
       {
@@ -100,7 +108,8 @@ const PLAYLISTS: Playlist[] = [
         year: "2009",
         vibe: "Pour les vrais — ambiance veillée Bandal",
         spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Service",
-        youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Service",
+        youtube:
+          "https://www.youtube.com/results?search_query=Fally+Ipupa+Service",
         genius: "https://genius.com/Fally-ipupa-service-lyrics",
       },
     ],
@@ -118,8 +127,10 @@ const PLAYLISTS: Playlist[] = [
         year: "2013",
         vibe: "Le pont rumba/R&B international",
         spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Sweet%20Life",
-        youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Sweet+Life",
-        genius: "https://genius.com/Fally-ipupa-sweet-life-la-vie-est-belle-lyrics",
+        youtube:
+          "https://www.youtube.com/results?search_query=Fally+Ipupa+Sweet+Life",
+        genius:
+          "https://genius.com/Fally-ipupa-sweet-life-la-vie-est-belle-lyrics",
       },
       {
         title: "Bad Boy",
@@ -127,7 +138,8 @@ const PLAYLISTS: Playlist[] = [
         year: "2018",
         vibe: "Crossover afro-pop francophone",
         spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Bad%20Boy",
-        youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Bad+Boy",
+        youtube:
+          "https://www.youtube.com/results?search_query=Fally+Ipupa+Bad+Boy",
         genius: "https://genius.com/Fally-ipupa-bad-boy-lyrics",
       },
       {
@@ -136,21 +148,38 @@ const PLAYLISTS: Playlist[] = [
         year: "2022",
         vibe: "Vibe afro moderne, signature Tokooos era",
         spotify: "https://open.spotify.com/search/Fally%20Ipupa%20Likolo",
-        youtube: "https://www.youtube.com/results?search_query=Fally+Ipupa+Likolo",
+        youtube:
+          "https://www.youtube.com/results?search_query=Fally+Ipupa+Likolo",
         genius: "https://genius.com/Fally-ipupa-likolo-lyrics",
       },
     ],
   },
 ];
 
-const SPOTIFY_PLAYLIST = "https://open.spotify.com/playlist/1gYERmVgRIly3kef2tvTIi";
-const YOUTUBE_CHANNEL = "https://www.youtube.com/channel/UCBFYkrVI8OfHm9PzbAGFqlA";
+const SPOTIFY_PLAYLIST =
+  "https://open.spotify.com/playlist/1gYERmVgRIly3kef2tvTIi";
+const YOUTUBE_CHANNEL =
+  "https://www.youtube.com/channel/UCBFYkrVI8OfHm9PzbAGFqlA";
 
-export const metadata = {
-  title: "Playlists Fally Ipupa — Les meilleurs sons & paroles | Nevent",
-  description:
-    "3 playlists curated des hits de Fally Ipupa, avec liens directs vers Spotify, YouTube et Genius pour les paroles complètes.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createPageMetadata({
+    title: "Playlists Fally Ipupa — Meilleurs titres et paroles",
+    description:
+      "Trois sélections des titres de Fally Ipupa avec des liens vers Spotify, YouTube et Genius.",
+    path: "/playlists",
+    locale,
+    keywords: [
+      "playlist Fally Ipupa",
+      "meilleurs sons Fally Ipupa",
+      "paroles Fally Ipupa",
+    ],
+  });
+}
 
 export default function PlaylistsPage() {
   return (
@@ -171,7 +200,11 @@ export default function PlaylistsPage() {
 
         <div className="flex flex-wrap gap-4">
           <Button asChild variant="outline" size="lg">
-            <a href={SPOTIFY_PLAYLIST} target="_blank" rel="noopener noreferrer">
+            <a
+              href={SPOTIFY_PLAYLIST}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Playlist Spotify de Fally <ExternalLink className="ml-2 size-4" />
             </a>
           </Button>
@@ -183,8 +216,8 @@ export default function PlaylistsPage() {
         </div>
 
         <div className="rounded-2xl border border-yellow-500/30 bg-yellow-500/5 p-5 text-sm text-yellow-200">
-          ⚠️ Nevent n'héberge ni les chansons ni les paroles. On te renvoie vers Spotify,
-          YouTube et Genius — les sources officielles.
+          ⚠️ Nevent n'héberge ni les chansons ni les paroles. On te renvoie vers
+          Spotify, YouTube et Genius — les sources officielles.
         </div>
       </section>
 
@@ -194,7 +227,9 @@ export default function PlaylistsPage() {
           id={playlist.slug}
           className="relative z-10 mx-auto max-w-7xl px-6 pb-16"
         >
-          <div className={`rounded-3xl border border-white/10 bg-gradient-to-br ${playlist.color} via-coal to-coal p-8 sm:p-12 space-y-8`}>
+          <div
+            className={`rounded-3xl border border-white/10 bg-gradient-to-br ${playlist.color} via-coal to-coal p-8 sm:p-12 space-y-8`}
+          >
             <div className="flex items-start justify-between gap-6">
               <div>
                 <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-blood">
@@ -275,8 +310,8 @@ export default function PlaylistsPage() {
             Prêt pour le 2 mai ?
           </h2>
           <p className="mx-auto mt-3 max-w-md text-paper-dim">
-            Maintenant que tu connais le répertoire — bookmark le quiz pour tester ton
-            niveau et trouve un trajet.
+            Maintenant que tu connais le répertoire — bookmark le quiz pour
+            tester ton niveau et trouve un trajet.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button asChild size="lg" className="shadow-glow-blood">

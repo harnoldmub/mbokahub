@@ -1,4 +1,5 @@
 import { ArrowLeft, ExternalLink, ImageOff } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -6,9 +7,10 @@ import { ReportButton } from "@/components/shared/report-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/db/prisma";
+import { createPageMetadata } from "@/lib/seo";
 
 type AfterDetailsPageProps = {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; locale: string }>;
 };
 
 const FR_DAYS = [
@@ -45,6 +47,45 @@ function formatAfterDate(date: Date): string {
 }
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: AfterDetailsPageProps): Promise<Metadata> {
+  const { slug, locale } = await params;
+  const after = await prisma.after
+    .findFirst({
+      where: { slug, isApproved: true, isActive: true },
+      select: {
+        name: true,
+        description: true,
+        city: true,
+        venue: true,
+        flyerUrl: true,
+      },
+    })
+    .catch(() => null);
+  if (!after) {
+    return createPageMetadata({
+      title: "Soirée introuvable",
+      description: "Cette soirée n’est pas disponible.",
+      path: `/afters/${slug}`,
+      locale,
+      noIndex: true,
+    });
+  }
+  const description =
+    after.description?.slice(0, 160).trim() ||
+    `Toutes les informations sur ${after.name} à ${after.city}, ${after.venue}.`;
+  return createPageMetadata({
+    title: `${after.name} à ${after.city} — ${after.venue}`,
+    description,
+    path: `/afters/${slug}`,
+    locale,
+    image: after.flyerUrl || undefined,
+    imageAlt: `Flyer de ${after.name} à ${after.city}`,
+    keywords: [after.name, `after ${after.city}`, "soirée afro", after.venue],
+  });
+}
 
 export default async function AfterDetailsPage({
   params,
@@ -92,7 +133,10 @@ export default async function AfterDetailsPage({
               Vérifié
             </Badge>
           ) : null}
-          <Badge variant="outline" className="border-white/30 bg-coal/70 backdrop-blur">
+          <Badge
+            variant="outline"
+            className="border-white/30 bg-coal/70 backdrop-blur"
+          >
             {after.city}
           </Badge>
         </div>
@@ -134,8 +178,8 @@ export default async function AfterDetailsPage({
         <p className="mt-6 text-muted-foreground leading-8">
           Cette fiche référence une soirée externe. Les conditions
           d&apos;entrée, prix définitifs et remboursements sont gérés par
-          l&apos;organisateur ou la billetterie externe. Nevent n&apos;est
-          pas partie au contrat.
+          l&apos;organisateur ou la billetterie externe. Nevent n&apos;est pas
+          partie au contrat.
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <Button asChild className="shadow-[var(--glow-red)]">
@@ -145,7 +189,11 @@ export default async function AfterDetailsPage({
           </Button>
         </div>
         <div className="mt-6 flex justify-end">
-          <ReportButton targetType="AFTER" targetId={after.id} variant="button" />
+          <ReportButton
+            targetType="AFTER"
+            targetId={after.id}
+            variant="button"
+          />
         </div>
       </section>
     </main>

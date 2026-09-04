@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import {
   AlertTriangle,
   BedDouble,
@@ -11,19 +10,34 @@ import {
   Train,
   UtensilsCrossed,
 } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
-
 import { Badge } from "@/components/ui/badge";
 import { parisClassics } from "@/lib/demo-data";
+import { createPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-static";
 
-export const metadata: Metadata = {
-  title: "Classiques de Paris — Hôtels, restos & transports",
-  description:
-    "Le guide pratique de Paris pour la diaspora : hôtels, restaurants, transports, lieux iconiques. Bonnes adresses et conseils.",
-  alternates: { canonical: "/classiques-paris" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createPageMetadata({
+    title: "Paris pratique — Hôtels, restaurants et transports",
+    description:
+      "Le guide pratique de Paris pour la diaspora : hôtels, restaurants, transports et lieux iconiques autour de ton événement.",
+    path: "/classiques-paris",
+    locale,
+    keywords: [
+      "Paris pratique concert",
+      "hôtel Paris concert",
+      "restaurant afro Paris",
+      "transport événement Paris",
+    ],
+  });
+}
 
 const CATEGORY_META: Record<
   string,
@@ -90,8 +104,9 @@ export default function ParisClassicsPage() {
           Paris <span className="font-serif italic text-blood">pratique</span>
         </h1>
         <p className="mt-4 max-w-xl font-body text-lg leading-relaxed text-paper-dim">
-          Toutes les infos utiles pour la communauté Nevent : arriver, manger, dormir et rentrer
-          sereinement pour le concert de <span className="text-paper">Fally au Stade de France.</span>
+          Toutes les infos utiles pour la communauté Nevent : arriver, manger,
+          dormir et rentrer sereinement pour le concert de{" "}
+          <span className="text-paper">Fally au Stade de France.</span>
         </p>
       </div>
 
@@ -99,7 +114,9 @@ export default function ParisClassicsPage() {
       <div className="mb-6 mt-6 flex items-start gap-3 rounded-2xl border border-white/10 bg-smoke/30 px-5 py-4">
         <Info className="mt-0.5 size-4 shrink-0 text-paper-mute" />
         <p className="font-mono text-[9px] uppercase leading-relaxed tracking-wider text-paper-mute">
-          Informations non contractuelles · Données indicatives compilées de sources publiques · Prix et horaires susceptibles d&apos;évoluer · Vérifier sur les sites officiels avant de vous déplacer.
+          Informations non contractuelles · Données indicatives compilées de
+          sources publiques · Prix et horaires susceptibles d&apos;évoluer ·
+          Vérifier sur les sites officiels avant de vous déplacer.
         </p>
       </div>
 

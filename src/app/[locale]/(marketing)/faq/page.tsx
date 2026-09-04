@@ -1,16 +1,24 @@
 import { ArrowRight, HelpCircle } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { Button } from "@/components/ui/button";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "FAQ Nevent — Toutes les réponses",
-  description:
-    "Réservation, trajets, prestataires, paiement, modération : retrouvez toutes les réponses aux questions fréquentes sur Nevent.",
-  alternates: { canonical: "/faq" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return createPageMetadata({
+    title: "Questions fréquentes",
+    description:
+      "Événements, trajets, prestataires, réservation et modération : toutes les réponses sur le fonctionnement de Nevent.",
+    path: "/faq",
+    locale,
+  });
+}
 
 const FAQ_SECTIONS = [
   {
@@ -21,7 +29,7 @@ const FAQ_SECTIONS = [
         a: "Trouve un trajet sur la page /trajets, clique sur l'annonce, puis contacte le conducteur via la messagerie sécurisée de la plateforme. Le paiement se fait entre vous, en main propre ou par virement.",
       },
       {
-        q: "Mboka Hub prend-il une commission ?",
+        q: "Nevent prend-il une commission ?",
         a: "Non. La plateforme est gratuite pour les passagers et les conducteurs. On se finance uniquement via la pub et les partenariats marques.",
       },
       {
@@ -47,7 +55,7 @@ const FAQ_SECTIONS = [
       },
       {
         q: "Comment recevoir des paiements ?",
-        a: "Mboka Hub ne gère pas les paiements pros. Les clients te contactent via la messagerie intégrée et règlent selon tes conditions habituelles.",
+        a: "Nevent ne gère pas les paiements pros. Les clients te contactent via la messagerie intégrée et règlent selon tes conditions habituelles.",
       },
     ],
   },
@@ -76,20 +84,32 @@ const FAQ_SECTIONS = [
         a: "Le 28 mai 2026. Ouverture des portes à 18h, début du concert à 20h.",
       },
       {
-        q: "Mboka Hub vend-il des billets ?",
-        a: "Non. Mboka Hub est une plateforme communautaire indépendante. Les billets s'achètent uniquement chez les revendeurs officiels.",
+        q: "Nevent vend-il des billets ?",
+        a: "Non. Nevent est une plateforme communautaire indépendante. Les billets s'achètent uniquement chez les revendeurs officiels.",
       },
       {
         q: "Êtes-vous affiliés à Fally Ipupa ?",
-        a: "Non. Mboka Hub est un site indépendant non-officiel, créé par et pour la diaspora congolaise.",
+        a: "Non. Nevent est un site indépendant non officiel, créé par et pour les diasporas africaines.",
       },
     ],
   },
 ];
 
 export default function FaqPage() {
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: FAQ_SECTIONS.flatMap((section) =>
+      section.items.map((item) => ({
+        "@type": "Question",
+        name: item.q,
+        acceptedAnswer: { "@type": "Answer", text: item.a },
+      })),
+    ),
+  };
   return (
     <main className="relative min-h-screen bg-ink">
+      <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <span className="absolute right-[-5vw] top-[15vh] font-display text-[28vw] text-blood opacity-[0.03] select-none leading-none uppercase">
           FAQ

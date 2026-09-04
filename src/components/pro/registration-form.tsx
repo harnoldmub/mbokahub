@@ -72,33 +72,43 @@ export function ProRegistrationForm({ defaultCategory }: Props = {}) {
           ))}
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          {visibleCategories.map((cat) => (
-            <button
-              key={cat.id}
-              type="button"
-              onClick={() => setSelectedCategory(cat.id)}
-              className={cn(
-                "group relative flex flex-col items-center justify-center gap-2 p-5 rounded-2xl border transition-all duration-500 text-center",
-                selectedCategory === cat.id
-                  ? "bg-blood/10 border-blood shadow-glow-blood scale-105"
-                  : "bg-coal/50 border-white/5 hover:border-paper/20",
-              )}
-            >
-              <span className="text-3xl transition-transform duration-500 group-hover:scale-110">
-                {cat.icon}
-              </span>
-              <span
+          {visibleCategories.map((cat) => {
+            const Icon = cat.icon;
+            return (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => setSelectedCategory(cat.id)}
                 className={cn(
-                  "font-display text-[11px] uppercase tracking-widest leading-tight",
+                  "group relative flex flex-col items-center justify-center gap-2 p-5 rounded-2xl border transition-all duration-500 text-center",
                   selectedCategory === cat.id
-                    ? "text-paper"
-                    : "text-paper-mute",
+                    ? "bg-blood/10 border-blood shadow-glow-blood scale-105"
+                    : "bg-coal/50 border-white/5 hover:border-paper/20",
                 )}
               >
-                {cat.shortLabel}
-              </span>
-            </button>
-          ))}
+                <span
+                  className={cn(
+                    "flex size-12 items-center justify-center rounded-xl transition-all duration-500 group-hover:scale-110",
+                    selectedCategory === cat.id
+                      ? "bg-blood/20 text-blood"
+                      : "bg-white/5 text-paper-dim group-hover:text-paper",
+                  )}
+                >
+                  <Icon className="size-6 stroke-[1.75]" />
+                </span>
+                <span
+                  className={cn(
+                    "font-display text-[11px] uppercase tracking-widest leading-tight",
+                    selectedCategory === cat.id
+                      ? "text-paper"
+                      : "text-paper-mute",
+                  )}
+                >
+                  {cat.shortLabel}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
 

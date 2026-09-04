@@ -4,7 +4,7 @@ import Link from "next/link";
 import { getDashboardUser } from "@/lib/dashboard";
 import { prisma } from "@/lib/db/prisma";
 
-export const metadata = { title: "Messages — Mboka Hub" };
+export const metadata = { title: "Messages" };
 
 export default async function MessagesPage() {
   const me = await getDashboardUser();
@@ -26,7 +26,10 @@ export default async function MessagesPage() {
   if (conversations.length === 0) {
     return (
       <div className="rounded-3xl border border-white/10 bg-coal p-8 text-center">
-        <MessageSquare aria-hidden className="mx-auto mb-4 size-10 text-paper-mute" />
+        <MessageSquare
+          aria-hidden
+          className="mx-auto mb-4 size-10 text-paper-mute"
+        />
         <p className="font-heading text-xl text-paper">Aucun message</p>
         <p className="mt-2 text-sm text-paper-dim">
           Vos échanges avec les prestataires apparaîtront ici.
@@ -41,7 +44,8 @@ export default async function MessagesPage() {
       <ul className="space-y-2">
         {conversations.map((conv) => {
           const other = conv.clientId === me.id ? conv.pro : conv.client;
-          const unread = conv.clientId === me.id ? conv.clientUnread : conv.proUnread;
+          const unread =
+            conv.clientId === me.id ? conv.clientUnread : conv.proUnread;
           const last = conv.messages[0];
 
           return (
