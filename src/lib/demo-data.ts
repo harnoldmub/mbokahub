@@ -55,149 +55,6 @@ export type ParisClassicDemo = {
   price?: string;
 };
 
-export const demoTrajets: TrajetDemo[] = [
-  {
-    id: "bruxelles-van-01",
-    villeDepart: "Bruxelles",
-    paysDepart: "Belgique",
-    dateLabel: "Samedi 2 mai",
-    heureDepart: "08:30",
-    placesDispo: 5,
-    placesTotal: 8,
-    prix: 39,
-    vehicule: "Van 9 places",
-    note: "Départ Bruxelles, trajet direct jusqu'au Stade de France.",
-    whatsappMasked: "+32 4•• •• •• ••",
-    isBoosted: true,
-  },
-  {
-    id: "londres-bus-01",
-    villeDepart: "Londres",
-    paysDepart: "Royaume-Uni",
-    dateLabel: "Vendredi 1 mai",
-    heureDepart: "22:00",
-    placesDispo: 14,
-    placesTotal: 30,
-    prix: 79,
-    vehicule: "Bus privé",
-    note: "Traversée de nuit, retour prévu dimanche après-midi.",
-    whatsappMasked: "+44 7••• ••••••",
-  },
-  {
-    id: "lyon-car-01",
-    villeDepart: "Lyon",
-    paysDepart: "France",
-    dateLabel: "Samedi 2 mai",
-    heureDepart: "06:15",
-    placesDispo: 2,
-    placesTotal: 4,
-    prix: 35,
-    vehicule: "SUV",
-    note: "Deux arrêts possibles sur l'A6, bagages cabine uniquement.",
-    whatsappMasked: "+33 6•• •• •• ••",
-  },
-  {
-    id: "lille-van-01",
-    villeDepart: "Lille",
-    paysDepart: "France",
-    dateLabel: "Dimanche 3 mai",
-    heureDepart: "09:00",
-    placesDispo: 6,
-    placesTotal: 8,
-    prix: 25,
-    vehicule: "Mercedes Vito",
-    note: "Direct Stade de France pour le deuxième soir. Ambiance assurée !",
-    whatsappMasked: "+33 7•• •• •• ••",
-    isBoosted: true,
-  },
-];
-
-export const demoPros: ProDemo[] = [
-  {
-    id: "studio-liputa",
-    category: "MAQUILLEUSE",
-    displayName: "Studio Liputa",
-    city: "Saint-Denis",
-    country: "France",
-    specialities: ["glow peau noire", "look soirée", "shoot express"],
-    priceRange: "45-90 EUR",
-    rating: 4.8,
-    reviewsCount: 31,
-    whatsappMasked: "+33 7•• •• •• ••",
-    isPremium: true,
-  },
-  {
-    id: "barber-matonge-paris",
-    category: "BARBIER",
-    displayName: "Barber Matonge Paris",
-    city: "Chateau-Rouge",
-    country: "France",
-    specialities: ["degrade", "barbe", "line-up"],
-    priceRange: "20-45 EUR",
-    rating: 4.6,
-    reviewsCount: 18,
-    whatsappMasked: "+33 6•• •• •• ••",
-  },
-  {
-    id: "tresses-ndaku",
-    category: "COIFFEUR",
-    displayName: "Tresses Ndaku",
-    city: "Strasbourg-Saint-Denis",
-    country: "France",
-    specialities: ["tresses", "lace", "retouches"],
-    priceRange: "35-120 EUR",
-    rating: 4.7,
-    reviewsCount: 24,
-    whatsappMasked: "+33 7•• •• •• ••",
-    isPremium: true,
-  },
-  {
-    id: "nevent-vision",
-    category: "PHOTOGRAPHE",
-    displayName: "Nevent Vision",
-    city: "Paris",
-    country: "France",
-    specialities: ["portrait", "event", "retouche"],
-    priceRange: "80-150 EUR",
-    rating: 4.9,
-    reviewsCount: 12,
-    whatsappMasked: "+33 6•• •• •• ••",
-    isPremium: true,
-  },
-];
-
-export const demoAfters: AfterDemo[] = [
-  {
-    slug: "nuit-afro-saint-denis",
-    name: "Nuit afro Saint-Denis",
-    dateLabel: "Samedi 2 mai, 23:30",
-    venue: "Secret Palace (Proche Stade)",
-    city: "Saint-Denis",
-    priceFrom: 25,
-    ticketUrl: "https://www.eventbrite.com/",
-    isBoosted: true,
-  },
-  {
-    slug: "rumba-club-paris",
-    name: "Rumba Club Paris",
-    dateLabel: "Vendredi 1 mai, 22:00",
-    venue: "Paris Est",
-    city: "Paris",
-    priceFrom: 15,
-    ticketUrl: "https://shotgun.live/",
-  },
-  {
-    slug: "cloture-stade-denis",
-    name: "Clôture Royale",
-    dateLabel: "Dimanche 3 mai, 23:30",
-    venue: "Secret Location Saint-Denis",
-    city: "Saint-Denis",
-    priceFrom: 25,
-    ticketUrl: "https://www.eventbrite.com/",
-    isBoosted: true,
-  },
-];
-
 export const parisClassics: ParisClassicDemo[] = [
   // ── TRANSPORTS ────────────────────────────────────────────────────────────
   {
@@ -314,7 +171,7 @@ export const parisClassics: ParisClassicDemo[] = [
   // ── HÔTELS ────────────────────────────────────────────────────────────────
   {
     id: "hotels-la-plaine",
-    category: "Hôtels proches stade",
+    category: "Où dormir",
     name: "La Plaine Saint-Denis — Ibis, B&B, Campanile",
     description:
       "La zone La Plaine Saint-Denis concentre plusieurs hôtels budget à 5-10 min à pied ou en T1 du stade. Les nuits du 2 et 3 mai sont en rupture très tôt — réserver immédiatement.",
@@ -326,7 +183,7 @@ export const parisClassics: ParisClassicDemo[] = [
   },
   {
     id: "hotels-porte-chapelle",
-    category: "Hôtels proches stade",
+    category: "Où dormir",
     name: "Porte de la Chapelle — Ibis, Mercure",
     description:
       "Secteur bien connecté via le Métro 12 et le T1 vers Saint-Denis. Hôtels de chaîne fiables avec bonne connexion transport. Légèrement moins cher que les hôtels collés au stade.",
@@ -336,7 +193,7 @@ export const parisClassics: ParisClassicDemo[] = [
   },
   {
     id: "hotels-gare-du-nord",
-    category: "Hôtels proches stade",
+    category: "Où dormir",
     name: "Gare du Nord / Paris 10e",
     description:
       "Nombreux hôtels avec connexion directe RER B ou D vers le stade (10 min). Idéal si vous arrivez de l'Eurostar, du Thalys ou d'un TGV province. Quartier animé et bien desservi.",
@@ -346,7 +203,7 @@ export const parisClassics: ParisClassicDemo[] = [
   },
   {
     id: "hotels-saint-denis-centre",
-    category: "Hôtels proches stade",
+    category: "Où dormir",
     name: "Centre-ville Saint-Denis",
     description:
       "Hôtels indépendants proches de la Basilique. Accès stade en 10-15 min à pied. Proches des restos africains de Saint-Denis — bonne option pour s'immerger dans l'ambiance locale.",
@@ -356,18 +213,6 @@ export const parisClassics: ParisClassicDemo[] = [
   },
 
   // ── PARKINGS ────────────────────────────────────────────────────────────
-  {
-    id: "parking-stade-officiel",
-    category: "Parkings",
-    name: "Parkings officiels Stade de France",
-    description:
-      "Plusieurs parkings réservables en ligne sur stadefrance.com. Capacité très limitée — à réserver dès maintenant. Accès restreint 3h avant le concert, plan de circulation modifié.",
-    address: "Abords du Stade de France, Saint-Denis",
-    tags: ["officiel", "réservation", "limité"],
-    highlight: true,
-    link: "https://www.stadefrance.com",
-    tip: "Arriver minimum 2h avant le début pour éviter les embouteillages sur l'A1 et le boulevard Anatole France.",
-  },
   {
     id: "parking-park-and-ride",
     category: "Parkings",
@@ -381,42 +226,11 @@ export const parisClassics: ParisClassicDemo[] = [
   {
     id: "parking-dimanche-gratuit",
     category: "Parkings",
-    name: "Zones bleues gratuites — Dimanche 3 mai",
+    name: "Zones bleues gratuites — Dimanche et jours fériés",
     description:
-      "Dans Paris intra-muros, le stationnement en zone bleue est gratuit le dimanche et jours fériés. Le 3 mai (dimanche) : stationnement gratuit dans Paris. Vérifier les panneaux selon l'arrondissement.",
+      "Dans Paris intra-muros, le stationnement en zone bleue est gratuit le dimanche et les jours fériés. Vérifier les panneaux selon l'arrondissement.",
     address: "Paris intra-muros (vérifier panneaux locaux)",
     tags: ["gratuit", "dimanche", "zone bleue"],
-  },
-
-  // ── INFOS STADE ──────────────────────────────────────────────────────────
-  {
-    id: "stade-acces-consignes",
-    category: "Infos stade",
-    name: "Stade de France — Règles d'accès",
-    description:
-      "Capacité 80 000 places. Portiques de sécurité obligatoires : arriver 1h30 à 2h avant. Interdits : bouteilles en verre, canettes, valises > cabin size, drones, appareils photo avec objectif amovible. Consigne bagages disponible à l'extérieur contre paiement.",
-    address: "Rue Francis de Pressensé, Saint-Denis (93)",
-    tags: ["sécurité", "accès", "essentiel"],
-    highlight: true,
-    tip: "L'entrée indiquée sur votre billet est obligatoire — inutile d'essayer une autre porte.",
-  },
-  {
-    id: "stade-trajet-recommande",
-    category: "Infos stade",
-    name: "Trajets recommandés vers le stade",
-    description:
-      "Depuis Paris centre : RER B ou D direct. Depuis Bruxelles/Londres : Eurostar → Gare du Nord → RER B (10 min). Depuis province : TGV → Gare du Nord ou Gare de Lyon → RER. Depuis aéroports CDG/Orly : RER B direct ou correspondance.",
-    address: "Stade de France, Saint-Denis",
-    tags: ["plan", "trajet", "international"],
-  },
-  {
-    id: "stade-checklist",
-    category: "Infos stade",
-    name: "Checklist pour le concert",
-    description:
-      "Billet téléchargé en mode offline (réseau saturé dans le stade). Pièce d'identité. Carte bancaire sans contact (paiements inside uniquement). Coupe-vent léger (mai peut être frais le soir à Saint-Denis). Chargeur portable. Oreilles protégées si vous avez des enfants.",
-    address: "Stade de France",
-    tags: ["checklist", "conseils", "à prévoir"],
   },
 
   // ── NUMÉROS UTILES & URGENCES ─────────────────────────────────────────────

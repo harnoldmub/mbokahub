@@ -6,9 +6,9 @@ export const dynamic = "force-static";
 const SECTIONS = [
   {
     title: "1. Objet et champ d'application",
-    content: `Nevent est une plateforme communautaire indépendante destinée aux fans du concert de Fally Ipupa au Stade de France (2 et 3 mai 2026). Elle met en relation des particuliers et des prestataires pour faciliter l'organisation du séjour concert (covoiturage, prestations beauté, afters, bons plans).
+    content: `Nevent est une plateforme communautaire indépendante dédiée aux événements afro en Europe. Elle met en relation des particuliers et des prestataires pour faciliter l'organisation d'une sortie ou d'un déplacement (covoiturage, prestations beauté, afters, bons plans).
 
-Nevent n'est ni organisateur du concert, ni revendeur officiel de billets, ni affilié à Fally Ipupa, F'Victeam ou au Stade de France.`,
+Nevent n'est ni organisateur des événements référencés, ni revendeur officiel de billets, ni affilié aux artistes, à leurs ayants droit, aux organisateurs, aux salles ou aux billetteries.`,
   },
   {
     title: "2. Services proposés",
@@ -35,7 +35,7 @@ Les annonces de trajet et de prestation relèvent de la responsabilité exclusiv
     title: "5. Propriété intellectuelle",
     content: `Le contenu éditorial de Nevent (textes, design, code) est protégé par le droit d'auteur. Les photos utilisées sont issues de Wikimedia Commons sous licences CC BY-SA 4.0 et CC BY-SA 2.0 — les crédits photographiques sont disponibles en pied de page et sur la page Disclaimer.
 
-Le nom, l'image et la musique de Fally Ipupa appartiennent à leurs ayants droit respectifs. Leur mention sur ce site relève d'un usage éditorial informatif.`,
+Le nom, l'image et l'œuvre des artistes référencés appartiennent à leurs ayants droit respectifs. Leur mention sur ce site relève d'un usage éditorial informatif.`,
   },
   {
     title: "6. Données personnelles",
@@ -80,8 +80,9 @@ export default function CgvPage() {
           Site indépendant · Non officiel
         </p>
         <p className="font-body text-sm text-paper-dim leading-relaxed">
-          Nevent n&apos;est pas affilié à Fally Ipupa, F&apos;Victeam, au Stade de France
-          ou à tout organisateur officiel. Ce site est créé par des fans pour les fans.
+          Nevent n&apos;est affilié à aucun artiste, ayant droit, organisateur,
+          salle ni billetterie des événements référencés. Ce site est créé par
+          des fans pour les fans.
         </p>
       </div>
 
@@ -93,7 +94,10 @@ export default function CgvPage() {
             </h2>
             <div className="space-y-3">
               {section.content.split("\n\n").map((para, i) => (
-                <p key={i} className="font-body text-sm leading-relaxed text-paper-dim whitespace-pre-line">
+                <p
+                  key={i}
+                  className="font-body text-sm leading-relaxed text-paper-dim whitespace-pre-line"
+                >
                   {para}
                 </p>
               ))}
@@ -105,7 +109,10 @@ export default function CgvPage() {
       <div className="mt-16 border-t border-white/5 pt-8">
         <p className="font-mono text-[9px] uppercase tracking-widest text-paper-mute">
           Contact légal :{" "}
-          <Link href="/contact" className="text-blood hover:underline underline-offset-4">
+          <Link
+            href="/contact"
+            className="text-blood hover:underline underline-offset-4"
+          >
             via le formulaire de contact
           </Link>
         </p>

@@ -13,13 +13,14 @@ import {
 import { useSearchParams } from "next/navigation";
 
 import { PhotoUploader } from "@/components/admin/photo-uploader";
-import { createAfterAction } from "@/lib/actions/public";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
+import { createAfterAction } from "@/lib/actions/public";
 
 const ERROR_LABELS: Record<string, string> = {
-  missing: "Tous les champs obligatoires (nom, description, date, lieu, ville, billetterie) doivent être remplis.",
+  missing:
+    "Tous les champs obligatoires (nom, description, date, lieu, ville, billetterie) doivent être remplis.",
   ticketurl: "Le lien billetterie doit commencer par http:// ou https://",
   date: "La date n'est pas valide.",
 };
@@ -40,7 +41,9 @@ export function AfterRegistrationForm() {
           <div className="flex items-start gap-3">
             <Check className="mt-0.5 size-5 shrink-0 text-emerald-300" />
             <div className="space-y-1">
-              <p className="font-heading text-paper">After envoyé pour modération</p>
+              <p className="font-heading text-paper">
+                After envoyé pour modération
+              </p>
               <p className="text-sm text-paper-dim">
                 Merci ! Notre équipe valide ton after dans les heures qui
                 viennent. Une fois approuvé, il apparaîtra dans la liste
@@ -60,10 +63,7 @@ export function AfterRegistrationForm() {
         </div>
       )}
 
-      <form
-        action={createAfterAction}
-        className="relative space-y-12"
-      >
+      <form action={createAfterAction} className="relative space-y-12">
         {/* SECTION 1: IDENTITY */}
         <section className="space-y-8">
           <div className="flex items-center gap-4">
@@ -235,7 +235,7 @@ export function AfterRegistrationForm() {
             multiple={false}
             maxFiles={1}
             label=""
-            helpText="Cette image sera visible publiquement par les VIP."
+            helpText="Cette image sera visible publiquement sur la fiche de l'after."
           />
         </section>
 

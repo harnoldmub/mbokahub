@@ -77,19 +77,19 @@ const FAQ_SECTIONS = [
     ],
   },
   {
-    title: "À propos du concert",
+    title: "À propos des événements",
     items: [
       {
-        q: "Quand a lieu le concert de Fally au Stade de France ?",
-        a: "Le 28 mai 2026. Ouverture des portes à 18h, début du concert à 20h.",
+        q: "Où trouver les dates et les horaires d'un événement ?",
+        a: "Sur la fiche de l'événement dans Nevent, qui renvoie vers la billetterie officielle. Les horaires d'ouverture des portes sont fixés par la salle : vérifie-les sur son site avant de te déplacer.",
       },
       {
         q: "Nevent vend-il des billets ?",
         a: "Non. Nevent est une plateforme communautaire indépendante. Les billets s'achètent uniquement chez les revendeurs officiels.",
       },
       {
-        q: "Êtes-vous affiliés à Fally Ipupa ?",
-        a: "Non. Nevent est un site indépendant non officiel, créé par et pour les diasporas africaines.",
+        q: "Êtes-vous affiliés aux artistes ou aux organisateurs ?",
+        a: "Non. Nevent est un site indépendant, non affilié aux artistes, à leurs ayants droit, aux organisateurs, aux salles ni aux billetteries des événements référencés.",
       },
     ],
   },

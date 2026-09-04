@@ -27,9 +27,13 @@ export default async function AdminEventsPage() {
         <AdminInput
           label="Titre *"
           name="title"
-          placeholder="Fally Ipupa à Londres"
+          placeholder="Nom de l'événement, ville"
         />
-        <AdminInput label="Artiste *" name="artist" placeholder="Fally Ipupa" />
+        <AdminInput
+          label="Artiste *"
+          name="artist"
+          placeholder="Nom de l'artiste"
+        />
         <AdminInput
           label="Slug"
           name="slug"

@@ -319,6 +319,7 @@ export function PrestatairesListClient({ pros, initialSearch = "" }: Props) {
                         displayName={p.displayName}
                         category={p.category}
                         className="h-full w-full"
+                        showCategoryLabel={false}
                       />
                     )}
                     {p.isCertified && (

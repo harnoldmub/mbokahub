@@ -69,7 +69,9 @@ export function SiteHeader() {
       ],
     },
     {
-      title: "Services",
+      // Renommée : la section et le déclencheur du méga-menu s'appelaient tous
+      // deux « Services ».
+      title: "Par catégorie",
       links: [
         { href: "/beaute/maquilleuses", label: m.links.maquilleuses },
         { href: "/beaute/coiffeurs", label: m.links.coiffeurs },
@@ -85,7 +87,7 @@ export function SiteHeader() {
       ],
     },
     {
-      title: "Espace pro",
+      title: "Espace prestataire",
       links: [
         { href: "/pro", label: "Comprendre l'offre pro" },
         { href: "/pro/inscrire", label: m.links.becomePro },
@@ -142,7 +144,7 @@ export function SiteHeader() {
                   : localizedHref("/pro/inscrire", market)
               }
             >
-              {isSignedIn ? dashboardLabel : "Devenir pro"}
+              {isSignedIn ? dashboardLabel : "Devenir prestataire"}
             </Link>
           </Button>
           {isSignedIn ? (

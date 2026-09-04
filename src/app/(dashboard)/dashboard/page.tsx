@@ -162,10 +162,12 @@ export default async function DashboardPage() {
               <Link href="/trajets/publier">Publier un trajet</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/beaute/maquilleuses">Voir les pros beauté</Link>
+              <Link href="/beaute/maquilleuses">
+                Voir les prestataires beauté
+              </Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/pro/inscrire">Inscrire mon service</Link>
+              <Link href="/pro/inscrire">Devenir prestataire</Link>
             </Button>
             <Button asChild variant="outline">
               <Link href="/dashboard/planning">Gérer mon planning</Link>

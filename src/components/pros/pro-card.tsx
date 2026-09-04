@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { ProDemo } from "@/lib/demo-data";
 
+import { proCategoryLabel } from "@/lib/pro-display";
+
 type ProCardData = ProDemo & {
   photos?: string[];
   instagramHandle?: string | null;
@@ -47,6 +49,7 @@ export function ProCard({ pro, unlocked: _unlocked }: ProCardProps) {
             displayName={pro.displayName}
             category={pro.category}
             className="h-full w-full"
+            showCategoryLabel={false}
           />
         )}
 
@@ -86,7 +89,7 @@ export function ProCard({ pro, unlocked: _unlocked }: ProCardProps) {
             variant="outline"
             className="border-blood/40 text-blood font-mono text-[8px] uppercase tracking-widest px-2 py-0"
           >
-            {pro.category.toLowerCase()}
+            {proCategoryLabel(pro.category)}
           </Badge>
           <CardTitle className="font-display text-2xl uppercase text-paper tracking-tight">
             {pro.displayName}

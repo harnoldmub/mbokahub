@@ -125,7 +125,7 @@ export function ProRegistrationForm({ defaultCategory }: Props = {}) {
         <div className="grid sm:grid-cols-2 gap-8">
           <FormField
             label="Nom professionnel"
-            helperText="Le nom qui apparaîtra sur l'affiche"
+            helperText="Le nom qui apparaîtra sur ta fiche publique"
           >
             <Input
               name="displayName"
@@ -136,7 +136,7 @@ export function ProRegistrationForm({ defaultCategory }: Props = {}) {
           </FormField>
           <FormField
             label="Ville / Secteur"
-            helperText="Où exerces-tu ce week-end là ?"
+            helperText="La ville où tu exerces habituellement"
           >
             <CityInput
               name="city"
@@ -238,7 +238,7 @@ export function ProRegistrationForm({ defaultCategory }: Props = {}) {
             className="w-full h-16 text-lg shadow-glow-blood group disabled:opacity-50"
             size="lg"
           >
-            Inscrire mon service{" "}
+            Envoyer ma fiche{" "}
             <ArrowRight className="ml-2 size-5 transition-transform group-hover:translate-x-2" />
           </Button>
         </div>

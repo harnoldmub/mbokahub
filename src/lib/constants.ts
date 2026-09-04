@@ -6,7 +6,7 @@ export const EVENT_CONTEXT = {
 } as const;
 
 export const LEGAL_DISCLAIMER =
-  "Nevent est une plateforme communautaire indépendante. Non affiliée à Fally Ipupa, F'Victeam ou aux organisateurs officiels du concert. Les informations publiées sont fournies à titre indicatif et ne constituent pas un engagement contractuel. Consultez les sources officielles pour toute décision.";
+  "Nevent est une plateforme communautaire indépendante. Non affiliée aux artistes, à leurs ayants droit, aux organisateurs, aux salles ni aux billetteries des événements référencés. Les informations publiées sont fournies à titre indicatif et ne constituent pas un engagement contractuel. Consultez les sources officielles pour toute décision.";
 
 export const PHOTO_CREDITS = [
   {

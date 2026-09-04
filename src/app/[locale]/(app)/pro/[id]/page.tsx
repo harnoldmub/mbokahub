@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { isCurrentUserAdmin } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/db/prisma";
 import { PRO_CATEGORY_BY_ID } from "@/lib/pro-categories";
+import { redactContactsInBio } from "@/lib/pro-display";
 import { createPageMetadata, getSiteUrl } from "@/lib/seo";
 
 type ProDetailsPageProps = {
@@ -53,7 +54,7 @@ export async function generateMetadata({
   const city = pro.city ? ` à ${pro.city}` : "";
   const title = `${pro.displayName} — ${cat}${city}`;
   const description =
-    pro.bio?.slice(0, 160).trim() ||
+    redactContactsInBio(pro.bio)?.slice(0, 160).trim() ||
     `${cat}${city}. Découvrez le profil, les photos et réservez en ligne sur Nevent.`;
   const cover = pro.photos?.[0];
   return createPageMetadata({
@@ -101,6 +102,8 @@ export default async function ProDetailsPage({
   }
 
   const isOwner = dbUser !== null && dbUser.id === pro.userId;
+  // Fiches antérieures à la règle « pas de coordonnées dans la présentation ».
+  const publicBio = redactContactsInBio(pro.bio);
   const meta = PRO_CATEGORY_BY_ID[pro.category];
   const cover = pro.photos?.[0];
   const galleryPhotos = (pro.photos ?? []).slice(1);
@@ -109,7 +112,9 @@ export default async function ProDetailsPage({
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
     name: pro.displayName,
-    description: pro.bio || `${meta?.label ?? "Prestataire"} à ${pro.city}`,
+    description:
+      redactContactsInBio(pro.bio) ||
+      `${meta?.label ?? "Prestataire"} à ${pro.city}`,
     url: `${getSiteUrl()}/${locale}/pro/${pro.id}`,
     image: pro.photos,
     address: {
@@ -175,7 +180,7 @@ export default async function ProDetailsPage({
                 city: pro.city,
                 country: pro.country,
                 whatsapp: pro.whatsapp,
-                bio: pro.bio,
+                bio: publicBio,
                 priceRange: pro.priceRange,
                 instagramHandle: pro.instagramHandle,
                 tiktokHandle: pro.tiktokHandle,
@@ -267,7 +272,7 @@ export default async function ProDetailsPage({
           proProfileId={pro.id}
           proName={pro.displayName}
           proUserId={pro.userId}
-          bio={pro.bio}
+          bio={publicBio}
           instagramHandle={pro.instagramHandle}
           city={pro.city}
           country={pro.country}

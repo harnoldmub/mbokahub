@@ -2,6 +2,18 @@ import type { ProCategory } from "@prisma/client";
 
 import { PRO_CATEGORY_BY_ID } from "@/lib/pro-categories";
 
+/** Libellé lisible d'une catégorie (« Prothésiste ongulaire »), à utiliser
+ *  partout où la catégorie est montrée à un humain. Sans lui, l'écran affiche
+ *  la valeur brute de l'enum Prisma (« prothesiste_ongles »). */
+export function proCategoryLabel(category: ProCategory): string {
+  const meta = PRO_CATEGORY_BY_ID[category];
+  if (meta) return meta.label;
+  return category
+    .toLocaleLowerCase("fr")
+    .replaceAll("_", " ")
+    .replace(/^./, (c) => c.toLocaleUpperCase("fr"));
+}
+
 export function maskedProLabel(
   category: ProCategory,
   city: string | null | undefined,
@@ -49,11 +61,55 @@ export function formatPriceRange(value: string | null | undefined): string {
  * Sanitize a price field on write — keeps storage compact.
  * Trims, normalizes pure numbers to "X€", returns null when blank.
  */
-export function normalizePriceRangeInput(value: string | null | undefined): string | null {
+export function normalizePriceRangeInput(
+  value: string | null | undefined,
+): string | null {
   const raw = (value ?? "").trim();
   if (!raw) return null;
   if (/^\d+(?:[.,]\d+)?$/.test(raw)) return `${raw}€`;
   return raw;
+}
+
+/**
+ * Retire les coordonnées d'une présentation avant affichage public.
+ *
+ * `detectContactInBio` bloque déjà les coordonnées à l'écriture (création et
+ * modification de fiche), mais les fiches créées avant cette règle les
+ * affichent toujours — la plateforme annonce alors une règle qu'elle
+ * n'applique pas. On neutralise les jetons de contact (email, lien, numéro,
+ * @handle) sans toucher au reste du texte, qui garde sa valeur.
+ */
+export function redactContactsInBio(
+  text: string | null | undefined,
+): string | null {
+  const raw = (text ?? "").toString();
+  if (!raw.trim()) return null;
+  const MARK = "[contact retiré]";
+  return (
+    raw
+      // emails
+      .replace(
+        /[a-z0-9._%+-]+\s*(?:@|\(at\)|\[at\])\s*[a-z0-9.-]+\.[a-z]{2,}/gi,
+        MARK,
+      )
+      // liens
+      .replace(/\bhttps?:\/\/\S+/gi, MARK)
+      .replace(
+        /\b(?:wa\.me|chat\.whatsapp\.com|t\.me|m\.me|linktr\.ee|bit\.ly|tinyurl\.com|cal\.com|calendly\.com|fb\.com|facebook\.com|instagram\.com|tiktok\.com|snapchat\.com)\S*/gi,
+        MARK,
+      )
+      // numéros : au moins 8 chiffres, espaces et séparateurs tolérés
+      .replace(/(?:\+?\d[\s.\-()]*){8,}/g, MARK)
+      // @handles
+      .replace(/(^|[^a-z0-9_])@[a-z0-9._]{3,}/gi, `$1${MARK}`)
+      // un même passage peut produire plusieurs marqueurs de suite
+      .replace(/(?:\[contact retiré\][\s,;:.\u2022-]*){2,}/g, `${MARK} `)
+      // le marqueur ne doit se coller ni au mot suivant ni au précédent
+      .replace(/(\[contact retiré\])(?=\S)/g, "$1 ")
+      .replace(/(\S)(?=\[contact retiré\])/g, "$1 ")
+      .replace(/[ \t]{2,}/g, " ")
+      .trim()
+  );
 }
 
 /**
@@ -63,23 +119,31 @@ export function normalizePriceRangeInput(value: string | null | undefined): stri
  *
  * Returns the matched reason key, or null if the text is clean.
  */
-export function detectContactInBio(text: string | null | undefined): string | null {
+export function detectContactInBio(
+  text: string | null | undefined,
+): string | null {
   const raw = (text ?? "").toString();
   if (!raw.trim()) return null;
 
   // Normalize "homoglyphs" / spaced-out chars: remove zero-width + collapse spaces around digits
-  const normalized = raw
-    .replace(/[\u200B-\u200D\uFEFF]/g, "")
-    .toLowerCase();
+  const normalized = raw.replace(/[\u200B-\u200D\uFEFF]/g, "").toLowerCase();
 
   // Email
-  if (/[a-z0-9._%+-]+\s*(?:@|\(at\)|\[at\])\s*[a-z0-9.-]+\.[a-z]{2,}/i.test(normalized)) {
+  if (
+    /[a-z0-9._%+-]+\s*(?:@|\(at\)|\[at\])\s*[a-z0-9.-]+\.[a-z]{2,}/i.test(
+      normalized,
+    )
+  ) {
     return "email";
   }
 
   // URLs (any http/https link, or common bare domains)
   if (/\bhttps?:\/\/\S+/i.test(normalized)) return "url";
-  if (/\b(?:wa\.me|chat\.whatsapp\.com|t\.me|m\.me|linktr\.ee|bit\.ly|tinyurl\.com|cal\.com|calendly\.com|fb\.com|facebook\.com|instagram\.com|tiktok\.com|snapchat\.com)\b/i.test(normalized)) {
+  if (
+    /\b(?:wa\.me|chat\.whatsapp\.com|t\.me|m\.me|linktr\.ee|bit\.ly|tinyurl\.com|cal\.com|calendly\.com|fb\.com|facebook\.com|instagram\.com|tiktok\.com|snapchat\.com)\b/i.test(
+      normalized,
+    )
+  ) {
     return "url";
   }
 
@@ -93,7 +157,11 @@ export function detectContactInBio(text: string | null | undefined): string | nu
 
   // Social handles & platform mentions
   if (/(?:^|[^a-z0-9_])@[a-z0-9._]{3,}/i.test(raw)) return "social";
-  if (/\b(?:whatsapp|whats\s?app|wsp|insta(?:gram)?|snap(?:chat)?|tiktok|telegram|messenger|signal)\b/i.test(normalized)) {
+  if (
+    /\b(?:whatsapp|whats\s?app|wsp|insta(?:gram)?|snap(?:chat)?|tiktok|telegram|messenger|signal)\b/i.test(
+      normalized,
+    )
+  ) {
     return "social";
   }
 

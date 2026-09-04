@@ -5,8 +5,8 @@ import { Suspense } from "react";
 import { PrestatairesListClient } from "@/components/pros/prestataires-list-client";
 import { prisma } from "@/lib/db/prisma";
 import type { SearchParams } from "@/lib/nls";
+import { redactContactsInBio } from "@/lib/pro-display";
 import { createPageMetadata } from "@/lib/seo";
-
 export const dynamic = "force-dynamic";
 export async function generateMetadata({
   params,
@@ -75,7 +75,13 @@ export default async function PrestatairesPage({ searchParams }: Props) {
       },
       take: 200,
     })
-    .then((pros) => ({ pros, unavailable: false }))
+    // Les fiches créées avant la règle « pas de coordonnées dans la
+    // présentation » en contiennent encore : on les neutralise côté serveur,
+    // pour qu'elles n'atteignent même pas le navigateur.
+    .then((pros) => ({
+      pros: pros.map((pro) => ({ ...pro, bio: redactContactsInBio(pro.bio) })),
+      unavailable: false,
+    }))
     .catch((error) => {
       console.error("[prestataires] database unavailable", error);
       return { pros: [], unavailable: true };

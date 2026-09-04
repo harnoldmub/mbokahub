@@ -4,12 +4,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ContactProButton } from "@/components/pros/contact-pro-button";
+import { ArchivedNotice } from "@/components/shared/archived-notice";
 import { ReportButton } from "@/components/shared/report-button";
 import { PriceOfferDialog } from "@/components/trajets/price-offer-dialog";
 import { RulesDialog } from "@/components/trajets/rules-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { isCurrentUserAdmin } from "@/lib/auth-helpers";
+import { isPast } from "@/lib/content-lifecycle";
 import { findCity, suggestPrice } from "@/lib/data/cities";
 import { prisma } from "@/lib/db/prisma";
 import { createPageMetadata } from "@/lib/seo";
@@ -77,6 +79,8 @@ export async function generateMetadata({
     description: `Trajet partagé de ${trajet.villeDepart} à ${trajet.villeArrivee} le ${date}. ${trajet.placesDispo} place(s) disponible(s), contact direct sur Nevent.`,
     path: `/trajets/${id}`,
     locale,
+    // Un départ passé n'a plus à être proposé dans les résultats de recherche.
+    noIndex: isPast(trajet.date),
     keywords: [
       `covoiturage ${trajet.villeDepart} ${trajet.villeArrivee}`,
       `trajet concert ${trajet.villeArrivee}`,
@@ -116,6 +120,7 @@ export default async function TrajetDetailsPage({
   }
 
   const dateLabel = formatDateLabel(trajet.date);
+  const isArchived = isPast(trajet.date);
 
   const fromCity = findCity(trajet.villeDepart);
   const toCity = findCity(trajet.villeArrivee);
@@ -135,6 +140,16 @@ export default async function TrajetDetailsPage({
           <ArrowLeft aria-hidden /> Retour aux trajets
         </Link>
       </Button>
+      {isArchived ? (
+        <div className="mt-6">
+          <ArchivedNotice
+            date={trajet.date}
+            href="/trajets"
+            linkLabel="Voir les trajets à venir"
+            subject="Ce trajet"
+          />
+        </div>
+      ) : null}
       <section className="mt-8 border border-white/10 bg-card p-6">
         <div className="flex flex-wrap gap-2">
           {trajet.isBoosted ? <Badge>Vedette</Badge> : null}
@@ -168,19 +183,27 @@ export default async function TrajetDetailsPage({
           <div className="border border-white/10 bg-background/70 p-4">
             <dt className="text-muted-foreground text-sm">Contact</dt>
             <dd className="mt-3">
-              <ContactProButton
-                proUserId={trajet.userId}
-                isSignedIn={!!clerkId}
-                label="Écrire au conducteur"
-              />
-              <p className="mt-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                Messagerie sécurisée · gratuit
-              </p>
+              {isArchived ? (
+                <p className="text-muted-foreground text-sm">
+                  Contact fermé — le départ a eu lieu.
+                </p>
+              ) : (
+                <>
+                  <ContactProButton
+                    proUserId={trajet.userId}
+                    isSignedIn={!!clerkId}
+                    label="Écrire au conducteur"
+                  />
+                  <p className="mt-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                    Messagerie sécurisée · gratuit
+                  </p>
+                </>
+              )}
             </dd>
           </div>
         </dl>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-          {!isOwner && (
+          {!isOwner && !isArchived && (
             <PriceOfferDialog
               trajetId={trajet.id}
               prixPublie={trajet.prix}

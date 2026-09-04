@@ -19,8 +19,8 @@ import { EventCard } from "@/components/events/event-card";
 import { prisma } from "@/lib/db/prisma";
 import { getPublicEvent, getPublicEvents } from "@/lib/events.server";
 import { localizedHref } from "@/lib/nls";
+import { proCategoryLabel } from "@/lib/pro-display";
 import { createPageMetadata, getSiteUrl } from "@/lib/seo";
-
 export const dynamic = "force-dynamic";
 
 const citySlugs: Record<string, string> = {
@@ -256,7 +256,7 @@ export default async function EventOrCityPage({
                 >
                   <strong>{pro.displayName}</strong>
                   <p className="mt-1 text-sm text-paper-dim">
-                    {pro.category.toLowerCase()} · {pro.city}
+                    {proCategoryLabel(pro.category)} · {pro.city}
                   </p>
                 </Link>
               ))}

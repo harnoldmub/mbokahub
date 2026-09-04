@@ -2,10 +2,11 @@ import { ArrowLeft, ExternalLink, ImageOff } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
+import { ArchivedNotice } from "@/components/shared/archived-notice";
 import { ReportButton } from "@/components/shared/report-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { isPast } from "@/lib/content-lifecycle";
 import { prisma } from "@/lib/db/prisma";
 import { createPageMetadata } from "@/lib/seo";
 
@@ -61,6 +62,7 @@ export async function generateMetadata({
         city: true,
         venue: true,
         flyerUrl: true,
+        date: true,
       },
     })
     .catch(() => null);
@@ -83,6 +85,8 @@ export async function generateMetadata({
     locale,
     image: after.flyerUrl || undefined,
     imageAlt: `Flyer de ${after.name} à ${after.city}`,
+    // Une soirée passée n'a plus à être proposée dans les résultats de recherche.
+    noIndex: isPast(after.date),
     keywords: [after.name, `after ${after.city}`, "soirée afro", after.venue],
   });
 }
@@ -101,6 +105,8 @@ export default async function AfterDetailsPage({
     notFound();
   }
 
+  const isArchived = isPast(after.date);
+
   return (
     <main className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
       <Button asChild size="sm" variant="ghost">
@@ -108,6 +114,17 @@ export default async function AfterDetailsPage({
           <ArrowLeft aria-hidden /> Retour aux afters
         </Link>
       </Button>
+
+      {isArchived ? (
+        <div className="mt-6">
+          <ArchivedNotice
+            date={after.date}
+            href="/afters"
+            linkLabel="Voir les afters à venir"
+            subject="Cet after"
+          />
+        </div>
+      ) : null}
 
       {/* Hero flyer */}
       <div className="relative mt-6 aspect-[16/9] w-full overflow-hidden rounded-3xl border border-white/10 bg-smoke/40 sm:aspect-[21/9]">
@@ -182,11 +199,21 @@ export default async function AfterDetailsPage({
           partie au contrat.
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Button asChild className="shadow-[var(--glow-red)]">
-            <a href={after.ticketUrl} rel="noreferrer noopener" target="_blank">
-              Ouvrir la billetterie externe <ExternalLink aria-hidden />
-            </a>
-          </Button>
+          {isArchived ? (
+            <p className="text-muted-foreground text-sm">
+              La billetterie de cette soirée n&apos;est plus pertinente.
+            </p>
+          ) : (
+            <Button asChild className="shadow-[var(--glow-red)]">
+              <a
+                href={after.ticketUrl}
+                rel="noreferrer noopener"
+                target="_blank"
+              >
+                Ouvrir la billetterie externe <ExternalLink aria-hidden />
+              </a>
+            </Button>
+          )}
         </div>
         <div className="mt-6 flex justify-end">
           <ReportButton

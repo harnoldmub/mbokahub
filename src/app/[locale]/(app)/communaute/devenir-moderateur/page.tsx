@@ -51,7 +51,7 @@ export default async function DevenirModerateurPage({
         <p className="mt-6 max-w-2xl text-lg text-paper-dim">
           Tu connais ton quartier, ta ville, ta diaspora ? Deviens
           modérateur·rice de la communauté WhatsApp Nevent de ta région et aide
-          à faire vivre l'esprit Stade de France 2026.
+          à faire vivre l'esprit de la communauté.
         </p>
 
         {/* Rules */}

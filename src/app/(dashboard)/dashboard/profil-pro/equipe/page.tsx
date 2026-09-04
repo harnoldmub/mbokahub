@@ -28,9 +28,11 @@ export default async function EquipePage({
   if (!pro) {
     return (
       <div className="grid gap-6">
-        <p className="text-paper-dim">Crée d&apos;abord ta fiche pro.</p>
+        <p className="text-paper-dim">
+          Crée d&apos;abord ta fiche prestataire.
+        </p>
         <Button asChild>
-          <Link href="/pro/inscrire">Inscrire mon service</Link>
+          <Link href="/pro/inscrire">Devenir prestataire</Link>
         </Button>
       </div>
     );
@@ -38,7 +40,6 @@ export default async function EquipePage({
 
   return (
     <div className="grid gap-6">
-
       <div>
         <p className="font-mono text-blood text-xs uppercase tracking-[0.3em]">
           Profil pro

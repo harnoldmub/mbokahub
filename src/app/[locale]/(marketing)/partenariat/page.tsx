@@ -1,5 +1,11 @@
+import {
+  ArrowRight,
+  Handshake,
+  Megaphone,
+  Sparkles,
+  Users,
+} from "lucide-react";
 import Link from "next/link";
-import { ArrowRight, Handshake, Megaphone, Sparkles, Users } from "lucide-react";
 
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { Button } from "@/components/ui/button";
@@ -9,7 +15,7 @@ const PARTNERSHIPS = [
     icon: Megaphone,
     title: "Marques & sponsors",
     description:
-      "Activation produit auprès de la diaspora. Du rhum à la cosmétique afro, on connecte ta marque à 9 000 fans en route pour le Stade de France.",
+      "Activation produit auprès de la diaspora. Du rhum à la cosmétique afro, on connecte ta marque à une audience qui prépare ses sorties, ville par ville.",
     contact: "contact@mbokahub.com",
   },
   {
@@ -42,7 +48,7 @@ export default function PartenariatPage() {
           number="01"
           eyebrow="Partenariats"
           title="Travaille avec *Nevent*."
-          description="Une audience engagée, congolaise et diasporique, prête à vibrer pour Fally. Tes campagnes, nos canaux."
+          description="Une audience engagée, africaine et diasporique, qui prépare ses soirées et ses déplacements. Tes campagnes, nos canaux."
         />
 
         <div className="grid gap-6 lg:grid-cols-3">
@@ -54,8 +60,12 @@ export default function PartenariatPage() {
               <div className="mb-6 flex size-12 items-center justify-center rounded-xl bg-blood/10 text-blood">
                 <p.icon className="size-6" />
               </div>
-              <h3 className="font-display text-xl uppercase text-paper">{p.title}</h3>
-              <p className="mt-3 text-sm text-paper-dim leading-relaxed">{p.description}</p>
+              <h3 className="font-display text-xl uppercase text-paper">
+                {p.title}
+              </h3>
+              <p className="mt-3 text-sm text-paper-dim leading-relaxed">
+                {p.description}
+              </p>
               <a
                 href={`mailto:${p.contact}`}
                 className="mt-6 inline-block font-mono text-[10px] uppercase tracking-widest text-gold hover:text-paper"
@@ -76,8 +86,8 @@ export default function PartenariatPage() {
                 Construisons quelque chose ensemble.
               </h2>
               <p className="max-w-2xl text-paper-dim">
-                Décris-nous ton projet en quelques lignes. On revient vers toi sous 48h
-                avec un plan d'activation sur-mesure.
+                Décris-nous ton projet en quelques lignes. On revient vers toi
+                sous 48h avec un plan d'activation sur-mesure.
               </p>
               <Button asChild size="lg" className="shadow-glow-blood">
                 <Link href="/contact">

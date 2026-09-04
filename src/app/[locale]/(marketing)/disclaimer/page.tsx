@@ -34,15 +34,19 @@ export default function DisclaimerPage() {
           Site indépendant · Non officiel
         </h2>
         <p className="font-body text-base leading-relaxed text-paper-dim">
-          Nevent est une plateforme communautaire créée par des fans, pour les fans.
-          Ce site <strong className="text-paper">n&apos;est affilié d&apos;aucune façon</strong> à :
+          Nevent est une plateforme communautaire créée par des fans, pour les
+          fans. Ce site{" "}
+          <strong className="text-paper">
+            n&apos;est affilié d&apos;aucune façon
+          </strong>{" "}
+          à :
         </p>
         <ul className="space-y-2 font-body text-sm text-paper-dim">
           {[
-            "Fally Ipupa (artiste)",
-            "F'Victeam (management / label)",
-            "Les promoteurs et organisateurs officiels du concert",
-            "Le Stade de France ou ses gestionnaires",
+            "Les artistes dont les événements sont référencés",
+            "Leurs managements, labels et ayants droit",
+            "Les promoteurs et organisateurs des événements",
+            "Les salles, stades et leurs gestionnaires",
             "Toute billetterie officielle",
           ].map((item) => (
             <li key={item} className="flex items-center gap-3">
@@ -52,9 +56,9 @@ export default function DisclaimerPage() {
           ))}
         </ul>
         <p className="font-body text-sm text-paper-dim leading-relaxed">
-          Toute mention du nom, de l&apos;image ou de l&apos;œuvre de Fally Ipupa sur ce site
-          relève d&apos;un usage éditorial et informatif, sans intention commerciale liée
-          à l&apos;artiste ou à ses ayants droit.
+          Toute mention du nom, de l&apos;image ou de l&apos;œuvre d&apos;un
+          artiste sur ce site relève d&apos;un usage éditorial et informatif,
+          sans intention commerciale liée à cet artiste ou à ses ayants droit.
         </p>
       </div>
 
@@ -64,32 +68,18 @@ export default function DisclaimerPage() {
           Informations non contractuelles
         </h2>
         <p className="font-body text-sm leading-relaxed text-paper-dim">
-          Les informations pratiques publiées sur Nevent (prix de transport, horaires,
-          règles d&apos;accès au stade, adresses) sont compilées de sources publiques et
-          fournies à titre strictement indicatif. Elles peuvent être inexactes ou évoluer
-          sans préavis. Nevent décline toute responsabilité pour toute décision prise
-          sur la base de ces informations.
+          Les informations pratiques publiées sur Nevent (prix de transport,
+          horaires, règles d&apos;accès aux salles, adresses) sont compilées de
+          sources publiques et fournies à titre strictement indicatif. Elles
+          peuvent être inexactes ou évoluer sans préavis. Nevent décline toute
+          responsabilité pour toute décision prise sur la base de ces
+          informations.
         </p>
         <p className="mt-4 font-mono text-[10px] uppercase tracking-wider text-blood">
-          Consultez toujours les sources officielles avant de vous déplacer.
+          Consultez toujours le site officiel de la salle et de la billetterie
+          de l&apos;événement, ainsi que l&apos;opérateur de transport local,
+          avant de vous déplacer.
         </p>
-        <div className="mt-4 flex flex-wrap gap-3">
-          {[
-            { label: "Stade de France officiel", href: "https://www.stadefrance.com" },
-            { label: "RATP — Transports", href: "https://www.ratp.fr" },
-          ].map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-smoke/30 px-4 py-2 font-mono text-[9px] uppercase tracking-wider text-paper-mute hover:border-blood/30 hover:text-paper transition-all"
-            >
-              {link.label}
-              <ExternalLink className="size-3" />
-            </a>
-          ))}
-        </div>
       </div>
 
       {/* Photo credits */}
@@ -107,8 +97,8 @@ export default function DisclaimerPage() {
           >
             Wikimedia Commons
           </a>{" "}
-          et sont publiées sous licences libres. Conformément aux termes de ces licences,
-          voici les attributions complètes :
+          et sont publiées sous licences libres. Conformément aux termes de ces
+          licences, voici les attributions complètes :
         </p>
         <div className="space-y-4">
           {PHOTO_CREDITS.map((credit) => (
@@ -141,8 +131,9 @@ export default function DisclaimerPage() {
           ))}
         </div>
         <p className="mt-6 font-mono text-[9px] uppercase tracking-[0.2em] text-paper-mute">
-          CC BY-SA 4.0 — Creative Commons Attribution-ShareAlike 4.0 International ·
-          CC BY-SA 2.0 — Creative Commons Attribution-ShareAlike 2.0 Generic
+          CC BY-SA 4.0 — Creative Commons Attribution-ShareAlike 4.0
+          International · CC BY-SA 2.0 — Creative Commons Attribution-ShareAlike
+          2.0 Generic
         </p>
       </div>
     </main>

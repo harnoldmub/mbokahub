@@ -53,7 +53,7 @@ const CATEGORY_META: Record<
     color: "text-amber-400",
     accent: "border-amber-500/30 bg-amber-500/5",
   },
-  "Hôtels proches stade": {
+  "Où dormir": {
     icon: BedDouble,
     color: "text-blood",
     accent: "border-blood/30 bg-blood/5",
@@ -63,11 +63,6 @@ const CATEGORY_META: Record<
     color: "text-emerald-400",
     accent: "border-emerald-500/30 bg-emerald-500/5",
   },
-  "Infos stade": {
-    icon: Info,
-    color: "text-blood",
-    accent: "border-blood/30 bg-blood/5",
-  },
   "Numéros utiles": {
     icon: Phone,
     color: "text-rose-400",
@@ -76,10 +71,9 @@ const CATEGORY_META: Record<
 };
 
 const CATEGORY_ORDER = [
-  "Infos stade",
   "Transports",
   "Restos & marchés africains",
-  "Hôtels proches stade",
+  "Où dormir",
   "Parkings",
   "Numéros utiles",
 ];
@@ -104,9 +98,11 @@ export default function ParisClassicsPage() {
           Paris <span className="font-serif italic text-blood">pratique</span>
         </h1>
         <p className="mt-4 max-w-xl font-body text-lg leading-relaxed text-paper-dim">
-          Toutes les infos utiles pour la communauté Nevent : arriver, manger,
-          dormir et rentrer sereinement pour le concert de{" "}
-          <span className="text-paper">Fally au Stade de France.</span>
+          Toutes les infos utiles pour la communauté Nevent quand tu viens à
+          Paris pour un événement :{" "}
+          <span className="text-paper">
+            arriver, manger, dormir et rentrer sereinement.
+          </span>
         </p>
       </div>
 
@@ -125,10 +121,10 @@ export default function ParisClassicsPage() {
         <AlertTriangle className="size-6 shrink-0 text-blood" />
         <div className="flex flex-wrap gap-x-8 gap-y-2">
           {[
-            "Arriver 2h avant les portiques",
-            "RER B ou D recommandé",
-            "Hôtels à réserver maintenant",
-            "Pas de bouteilles en verre",
+            "Vérifier les règles d'accès de la salle",
+            "Privilégier RER et métro",
+            "Réserver l'hôtel tôt les soirs d'événement",
+            "Prévoir le retour de nuit",
           ].map((tip) => (
             <span
               className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-paper-dim"

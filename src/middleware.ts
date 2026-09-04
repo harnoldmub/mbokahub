@@ -62,11 +62,16 @@ export function middleware(request: NextRequest, event: NextFetchEvent) {
     return NextResponse.redirect(url);
   }
 
-  // Les pages publiques n'ont pas besoin d'initialiser Clerk côté middleware.
-  // Cela évite un aller-retour d'authentification sur les pages éditoriales et
-  // conserve la protection stricte des espaces dashboard/admin.
-  if (isProtectedRoute(request)) return clerkHandler(request, event);
-  return NextResponse.next();
+  // Clerk doit s'initialiser sur TOUTES les routes, y compris publiques :
+  // plusieurs pages publiques appellent `auth()` pour savoir si le visiteur est
+  // connecté, propriétaire de la fiche ou administrateur (fiche prestataire,
+  // fiche trajet, /pro, /vip). Sans ce passage, Clerk lève « auth() was called
+  // but Clerk can't detect usage of clerkMiddleware() » et la page tombe sur sa
+  // frontière d'erreur — uniquement pour les visiteurs porteurs d'une session,
+  // ce qui rend la panne invisible aux requêtes anonymes.
+  // La protection stricte de /dashboard et /admin reste assurée par
+  // `clerkHandler`, qui n'exige une session que sur ces routes.
+  return clerkHandler(request, event);
 }
 
 export const config = {

@@ -64,7 +64,7 @@ export function MobileMenu({ market, lang }: MobileMenuProps) {
     { href: "/trajets", label: copy.quickNav.trajets },
     { href: "/afters", label: copy.quickNav.afters },
     { href: "/beaute", label: copy.quickNav.beaute },
-    { href: "/pro", label: "Espace pro" },
+    { href: "/pro", label: "Espace prestataire" },
     { href: "/ads", label: "Boost & pub" },
     { href: "/contact", label: copy.nav.contact },
   ] as const;

@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { ArrowRight, AtSign, Mail, MessageCircle } from "lucide-react";
+import Link from "next/link";
 
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { Button } from "@/components/ui/button";
@@ -43,7 +43,7 @@ const VALUES = [
   },
   {
     title: "Indépendance",
-    text: "Site non-affilié à Fally Ipupa ou ses producteurs. Plateforme communautaire, libre, sans agenda caché.",
+    text: "Site non affilié aux artistes, aux organisateurs ni aux salles des événements référencés. Plateforme communautaire, libre, sans agenda caché.",
   },
 ];
 
@@ -75,11 +75,15 @@ export default function EquipePage() {
               >
                 {member.initials}
               </div>
-              <h3 className="mt-6 font-display text-xl uppercase text-paper">{member.name}</h3>
+              <h3 className="mt-6 font-display text-xl uppercase text-paper">
+                {member.name}
+              </h3>
               <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-gold">
                 {member.role}
               </p>
-              <p className="mt-4 text-sm text-paper-dim leading-relaxed">{member.bio}</p>
+              <p className="mt-4 text-sm text-paper-dim leading-relaxed">
+                {member.bio}
+              </p>
             </div>
           ))}
         </div>
@@ -94,8 +98,12 @@ export default function EquipePage() {
           <div className="mt-10 grid gap-6 sm:grid-cols-2">
             {VALUES.map((v) => (
               <div key={v.title} className="border-l-2 border-blood/40 pl-5">
-                <h4 className="font-display text-sm uppercase text-paper">{v.title}</h4>
-                <p className="mt-2 text-sm text-paper-dim leading-relaxed">{v.text}</p>
+                <h4 className="font-display text-sm uppercase text-paper">
+                  {v.title}
+                </h4>
+                <p className="mt-2 text-sm text-paper-dim leading-relaxed">
+                  {v.text}
+                </p>
               </div>
             ))}
           </div>

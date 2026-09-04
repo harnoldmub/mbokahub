@@ -83,7 +83,7 @@ export default async function PlanningPage({
           </p>
         </div>
         <Button asChild className="w-fit">
-          <Link href="/pro/inscrire">Créer ma fiche pro</Link>
+          <Link href="/pro/inscrire">Devenir prestataire</Link>
         </Button>
       </div>
     );
@@ -199,7 +199,8 @@ export default async function PlanningPage({
                 </Button>
               </form>
             ) : null}
-            {booking.status !== "CANCELLED" && booking.status !== "COMPLETED" ? (
+            {booking.status !== "CANCELLED" &&
+            booking.status !== "COMPLETED" ? (
               <form action={updateProBookingStatusAction}>
                 {ctx.actingAsProId ? (
                   <input
@@ -284,10 +285,7 @@ export default async function PlanningPage({
           </Button>
           <Button asChild variant="outline" size="sm">
             <Link
-              href={withAs(
-                "/dashboard/profil-pro/horaires",
-                ctx.actingAsProId,
-              )}
+              href={withAs("/dashboard/profil-pro/horaires", ctx.actingAsProId)}
             >
               Horaires & congés
             </Link>

@@ -57,7 +57,7 @@ const COPY: Record<
     eyebrow: "Babysitting",
     title: "Garde d'enfants pendant le concert",
     description:
-      "Tu vas au Stade de France et tu cherches quelqu'un de fiable pour garder tes enfants ? On met en relation avec des babysitters de la diaspora, vérifiés par l'équipe.",
+      "Tu sors et tu cherches quelqu'un de fiable pour garder tes enfants ? On met en relation avec des babysitters de la diaspora, vérifiés par l'équipe.",
     priceLabel: "Tarif",
     priceUnit: "/heure",
     benefits: [
@@ -74,7 +74,7 @@ const COPY: Record<
     eyebrow: "Babysitting",
     title: "Childcare during the concert",
     description:
-      "Going to Stade de France and need a trusted sitter for the kids? We connect you with diaspora babysitters vetted by the team.",
+      "Going out and need a trusted sitter for the kids? We connect you with diaspora babysitters vetted by the team.",
     priceLabel: "Rate",
     priceUnit: "/hour",
     benefits: [
@@ -91,7 +91,7 @@ const COPY: Record<
     eyebrow: "Babysitting",
     title: "Kinderbetreuung während des Konzerts",
     description:
-      "Du gehst zum Stade de France und brauchst eine zuverlässige Betreuung? Wir vermitteln Babysitter aus der Diaspora, vom Team geprüft.",
+      "Du gehst aus und brauchst eine zuverlässige Betreuung? Wir vermitteln Babysitter aus der Diaspora, vom Team geprüft.",
     priceLabel: "Tarif",
     priceUnit: "/Stunde",
     benefits: [
@@ -108,7 +108,7 @@ const COPY: Record<
     eyebrow: "Babysitting",
     title: "Kinderopvang tijdens het concert",
     description:
-      "Ga je naar Stade de France en zoek je een betrouwbare oppas? We brengen je in contact met diaspora-babysitters, gecontroleerd door het team.",
+      "Ga je uit en zoek je een betrouwbare oppas? We brengen je in contact met diaspora-babysitters, gecontroleerd door het team.",
     priceLabel: "Tarief",
     priceUnit: "/uur",
     benefits: [
@@ -200,7 +200,7 @@ export default async function BabysittingPage({
               className="h-14 w-full text-base bg-blood hover:bg-blood/90 group"
               size="lg"
             >
-              <a href="mailto:contact@mbokahub.com?subject=Babysitting%20-%20Fally%20Ipupa%20Stade%20de%20France">
+              <a href="mailto:contact@mbokahub.com?subject=Babysitting%20-%20Demande%20via%20Nevent">
                 <Mail className="mr-2 size-4" />
                 {c.cta}
               </a>

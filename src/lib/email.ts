@@ -66,7 +66,7 @@ function emailLayout(title: string, body: string) {
   <body style="margin:0;padding:24px;background:#0a0a0a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#e5e5e5;">
     <div style="max-width:560px;margin:0 auto;background:#141414;border:1px solid rgba(255,255,255,0.08);border-radius:24px;padding:40px;">
       <div style="font-family:'Courier New',monospace;font-size:11px;letter-spacing:0.3em;color:#E50914;margin-bottom:24px;text-transform:uppercase;">
-        Nevent · Stade de France
+        Nevent
       </div>
       ${body}
       <hr style="border:none;border-top:1px solid rgba(255,255,255,0.08);margin:32px 0;" />
@@ -96,7 +96,7 @@ export async function sendProValidatedEmail(args: {
       Salut <strong style="color:#fff;">${escapeHtml(args.displayName)}</strong>,
     </p>
     <p style="font-size:16px;line-height:1.6;color:#d4d4d4;margin:0 0 24px;">
-      Bonne nouvelle : ton profil <strong style="color:#fff;">${escapeHtml(args.category)}</strong> vient d'être validé par notre équipe. Tu es désormais visible dans l'annuaire des prestataires Nevent pour le week-end Fally Ipupa au Stade de France (2 & 3 mai 2026).
+      Bonne nouvelle : ton profil <strong style="color:#fff;">${escapeHtml(args.category)}</strong> vient d'être validé par notre équipe. Tu es désormais visible dans l'annuaire des prestataires Nevent.
     </p>
     <div style="text-align:center;margin:32px 0;">
       <a href="${profileUrl}" style="display:inline-block;background:#E50914;color:#fff;padding:14px 28px;border-radius:999px;text-decoration:none;font-weight:600;font-size:14px;">
@@ -148,7 +148,7 @@ export async function sendTrajetPriceSuggestionEmail(args: {
       ${greeting},
     </p>
     <p style="font-size:16px;line-height:1.6;color:#d4d4d4;margin:0 0 24px;">
-      Merci d'avoir publié ton trajet <strong style="color:#fff;">${escapeHtml(args.villeDepart)} → ${escapeHtml(args.villeArrivee)}</strong> pour le week-end Fally Ipupa au Stade de France.
+      Merci d'avoir publié ton trajet <strong style="color:#fff;">${escapeHtml(args.villeDepart)} → ${escapeHtml(args.villeArrivee)}</strong> sur Nevent.
     </p>
     <div style="background:#1a1a1a;border:1px solid rgba(229,9,20,0.25);border-radius:16px;padding:20px;margin:0 0 24px;">
       <div style="font-family:'Courier New',monospace;font-size:11px;letter-spacing:0.2em;color:#E50914;margin:0 0 12px;text-transform:uppercase;">

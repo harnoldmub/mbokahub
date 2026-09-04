@@ -20,8 +20,8 @@ import { prisma } from "@/lib/db/prisma";
 import { artists } from "@/lib/events";
 import { getPublicEvents } from "@/lib/events.server";
 import { localizedHref, type SearchParams } from "@/lib/nls";
+import { proCategoryLabel } from "@/lib/pro-display";
 import { createPageMetadata } from "@/lib/seo";
-
 export const dynamic = "force-dynamic";
 export async function generateMetadata({
   params,
@@ -34,8 +34,7 @@ export async function generateMetadata({
       "Concerts afro vérifiés en Europe, trajets, coiffure, beauté, photographes, services et afters : prépare toute ton expérience événementielle avec Nevent.",
     path: "/",
     locale,
-    image: "/images/events/fally-ipupa-london-2026.webp",
-    imageAlt: "Fally Ipupa à Londres — événement à la une sur Nevent",
+    imageAlt: "Nevent — événements afro et services en Europe",
     keywords: [
       "événements afro Europe",
       "concerts diaspora africaine",
@@ -102,23 +101,46 @@ export default async function HomePage({ params }: HomePageProps) {
       .catch(() => []),
   ]);
   const events = allEvents;
-  const londonHero = allEvents.find(
-    (event) => event.slug === "fally-ipupa-london-2026",
+  // La une est pilotée par la donnée (`featured` + date à venir) et non par des
+  // slugs codés en dur : sans cela, la home se vide silencieusement dès que
+  // l'événement mis en avant est passé.
+  const now = Date.now();
+  const upcoming = allEvents.filter(
+    (event) => new Date(event.endDate ?? event.startDate).getTime() >= now,
   );
-  const brusselsHero = allEvents.find(
-    (event) => event.slug === "fally-ipupa-bruxelles-11-decembre-2026",
-  );
-  const heroEvents = [
-    londonHero,
-    brusselsHero
-      ? { ...brusselsHero, endDate: "2026-12-12T20:00:00+01:00" }
-      : undefined,
-  ].filter((event): event is NonNullable<typeof event> => Boolean(event));
+  const featured = upcoming.filter((event) => event.featured);
+  const heroEvents = (featured.length > 0 ? featured : upcoming).slice(0, 2);
+  // Un artiste n'apparaît qu'une fois dans « À la une » : sans cette règle, un
+  // artiste jouant trois dates occupe tout le carrousel et la home donne
+  // l'impression d'une plateforme mono-artiste.
+  // « Artistes à suivre » est dérivée du catalogue d'événements, et non d'une
+  // liste tenue à la main : celle-ci avait déjà divergé (Tayc était programmé
+  // sans y figurer), et sept de ses neuf entrées annonçaient « pas de date ».
+  // La fiche éditoriale `artists` ne sert plus qu'à enrichir genre et pays.
+  const artistsWithDates = upcoming.reduce<
+    { name: string; genre: string; country: string }[]
+  >((acc, event) => {
+    if (acc.some((a) => a.name === event.artist)) return acc;
+    const curated = artists.find((a) => a.name === event.artist);
+    acc.push({
+      name: event.artist,
+      genre: curated?.genre ?? event.genres.join(" · "),
+      country: curated?.country ?? event.country,
+    });
+    return acc;
+  }, []);
+  const seenArtists = new Set<string>();
   const spotlightEvents = [
-    londonHero,
-    brusselsHero,
-    allEvents.find((event) => event.slug === "omah-lay-bruxelles-2026"),
-  ].filter((event): event is NonNullable<typeof event> => Boolean(event));
+    ...featured,
+    ...upcoming.filter((event) => !event.featured),
+  ]
+    .filter((event) => {
+      const key = event.artist.toLocaleLowerCase("fr");
+      if (seenArtists.has(key)) return false;
+      seenArtists.add(key);
+      return true;
+    })
+    .slice(0, 3);
   return (
     <main className="force-light min-h-screen overflow-hidden bg-white text-paper">
       <EventHero events={heroEvents} locale={locale} />
@@ -259,7 +281,7 @@ export default async function HomePage({ params }: HomePageProps) {
                   <div className="p-5">
                     <h3 className="text-xl font-semibold">{pro.displayName}</h3>
                     <p className="mt-1 text-sm text-paper-dim">
-                      {pro.category.toLowerCase()} · {pro.city}
+                      {proCategoryLabel(pro.category)} · {pro.city}
                     </p>
                   </div>
                 </Link>
@@ -281,7 +303,11 @@ export default async function HomePage({ params }: HomePageProps) {
             <div>
               <SectionIntro
                 eyebrow="Trajets vers les événements"
-                title="Tu vas au concert ? Pars avec la communauté."
+                title={
+                  rides.length
+                    ? "Tu y vas ? Pars avec la communauté."
+                    : "Sois le premier à proposer un départ."
+                }
                 href={localizedHref("/trajets", locale)}
               />
               {rides.length ? (
@@ -318,7 +344,11 @@ export default async function HomePage({ params }: HomePageProps) {
             <div>
               <SectionIntro
                 eyebrow="Afters & sorties"
-                title="Et après ? Continue la soirée."
+                title={
+                  afters.length
+                    ? "Et après ? Continue la soirée."
+                    : "Fais connaître ta soirée."
+                }
                 href={localizedHref("/afters", locale)}
               />
               {afters.length ? (
@@ -348,36 +378,31 @@ export default async function HomePage({ params }: HomePageProps) {
         </div>
       </section>
 
-      <section className="border-y border-black/10 bg-[#f4f4f1] py-16 sm:py-24">
-        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
-          <SectionIntro
-            eyebrow="Artistes à suivre"
-            title="Les artistes qui font vibrer la scène afro."
-          />
-          <div className="mt-10 flex snap-x gap-3 overflow-x-auto pb-4">
-            {artists.map((artist, index) => {
-              const hasEvent = events.some(
-                (event) => event.artist === artist.name,
-              );
-              return (
-                <article
-                  className="flex min-h-64 w-64 shrink-0 snap-start flex-col justify-between rounded-2xl bg-black p-6 text-white"
-                  key={artist.name}
-                >
-                  <span className="font-mono text-xs text-white/45">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <div>
-                    <h3 className="text-3xl font-semibold">{artist.name}</h3>
-                    <p className="mt-2 text-sm text-white/60">
-                      {artist.genre} · {artist.country}
-                    </p>
-                    <p className="mt-5 text-xs text-white/50">
-                      {hasEvent
-                        ? "Dates disponibles"
-                        : "Pas de date disponible actuellement."}
-                    </p>
-                    {hasEvent ? (
+      {artistsWithDates.length > 0 ? (
+        <section className="border-y border-black/10 bg-[#f4f4f1] py-16 sm:py-24">
+          <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+            <SectionIntro
+              eyebrow="Artistes à suivre"
+              title="Les artistes qui font vibrer la scène afro."
+            />
+            <div className="mt-10 flex snap-x gap-3 overflow-x-auto pb-4">
+              {artistsWithDates.map((artist, index) => {
+                return (
+                  <article
+                    className="flex min-h-64 w-64 shrink-0 snap-start flex-col justify-between rounded-2xl bg-black p-6 text-white"
+                    key={artist.name}
+                  >
+                    <span className="font-mono text-xs text-white/45">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <div>
+                      <h3 className="text-3xl font-semibold">{artist.name}</h3>
+                      <p className="mt-2 text-sm text-white/60">
+                        {artist.genre} · {artist.country}
+                      </p>
+                      <p className="mt-5 text-xs text-white/50">
+                        Dates disponibles
+                      </p>
                       <Link
                         className="mt-4 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-white"
                         href={localizedHref(
@@ -387,14 +412,14 @@ export default async function HomePage({ params }: HomePageProps) {
                       >
                         Voir les événements <ArrowRight className="size-4" />
                       </Link>
-                    ) : null}
-                  </div>
-                </article>
-              );
-            })}
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       <section className="bg-blood py-16 text-white sm:py-20">
         <div className="mx-auto flex max-w-7xl flex-col justify-between gap-8 px-5 sm:px-6 lg:flex-row lg:items-end lg:px-8">
@@ -416,7 +441,7 @@ export default async function HomePage({ params }: HomePageProps) {
             size="lg"
           >
             <Link href={localizedHref("/pro/inscrire", locale)}>
-              Référencer mon activité <Plus className="ml-2 size-4" />
+              Devenir prestataire <Plus className="ml-2 size-4" />
             </Link>
           </Button>
         </div>

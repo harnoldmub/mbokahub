@@ -51,7 +51,7 @@ export default async function ProfilProPage({
         </div>
         <div>
           <Button asChild>
-            <Link href="/pro/inscrire">Inscrire mon service</Link>
+            <Link href="/pro/inscrire">Devenir prestataire</Link>
           </Button>
         </div>
       </div>
@@ -186,7 +186,7 @@ export default async function ProfilProPage({
           </FormField>
           <FormField
             label="Ville / Secteur"
-            helperText="Où tu exerces ce week-end là"
+            helperText="La ville où tu exerces habituellement"
           >
             <CityInput
               name="city"

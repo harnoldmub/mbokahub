@@ -64,7 +64,7 @@ export const nls = {
       nav: {
         home: "Accueil",
         concert: "Concert",
-        services: "Prestations",
+        services: "Prestataires",
         community: "Communauté",
         playlists: "Playlists",
         quiz: "Quiz",
@@ -77,7 +77,7 @@ export const nls = {
           annuaire: "Annuaire",
           beaute: "Beauté",
           shopping: "Shopping & sorties",
-          devenirPro: "Espace pro",
+          devenirPro: "Espace prestataire",
         },
         links: {
           all: "Tous les prestataires",
@@ -88,7 +88,7 @@ export const nls = {
           babysitting: "Babysitting",
           merch: "Merch & vendeurs",
           afters: "Afters & soirées",
-          becomePro: "Référencer mon activité",
+          becomePro: "Devenir prestataire",
         },
       },
       quickNav: {
@@ -108,105 +108,6 @@ export const nls = {
       menu: "Navigation",
       openMenu: "Ouvrir le menu",
       seeMore: "Voir plus",
-    },
-    home: {
-      heroTitle: "Nevent",
-      heroSubtitle:
-        "Prépare le week-end du concert de Fally Ipupa au Stade de France : trajets, prestataires, afters, merch, jeu et bons plans vérifiés.",
-      primaryCta: "Préparer mon week-end",
-      proCta: "Je suis pro",
-      prestationsLabel: "Prestations",
-      modulesTitleLine1: "Tout est au",
-      modulesTitleLine2: "même endroit.",
-      modulesDescription:
-        "Services utiles pour vivre le week-end Fally Ipupa sans stress : trajets, beauté, photo, soirées, guide Paris et plus.",
-      proEyebrow: "Section pros",
-      proTitleLine1: "Tu proposes",
-      proTitleLine2: "un service ?",
-      proDescription:
-        "Maquillage, coiffure, photo, transport ou logistique : réserve ta place et sois visible auprès des fans de Fally Ipupa.",
-      proButton: "Devenir partenaire",
-      quickLinks: "Accès rapide",
-      stats: {
-        audience: "spectateurs cumulés",
-        city: "ans de carrière",
-        dates: "albums studio",
-      },
-      modules: [
-        {
-          title: "Trajets",
-          eyebrow: "Covoiturage",
-          description: "Du porte-à-porte diaspora vers le Stade de France.",
-          features: [
-            "Départs Bruxelles, Londres, Lyon...",
-            "Places dispo en temps réel",
-            "WhatsApp masqué avant déblocage",
-            "Plan B avec RER B/D, métro 12/13/14",
-          ],
-          cta: "Voir les trajets",
-        },
-        {
-          title: "Prestataires",
-          eyebrow: "Beauté & services",
-          description:
-            "Maquilleuses, coiffeurs, barbers et photographes de la diaspora.",
-          features: [
-            "Maquilleuses spé peau noire",
-            "Coiffeurs, tresseurs et barbers",
-            "Photographes pour shootings et événements",
-            "Tarifs affichés, profils vérifiés",
-          ],
-          cta: "Trouver un prestataire",
-        },
-        {
-          title: "Afters",
-          eyebrow: "Soirées post-concert",
-          description: "Les meilleures soirées des nuits du 2 et 3 mai.",
-          features: [
-            "Soirées validées par l'équipe",
-            "Lien billetterie externe direct",
-            "Prix d'entrée et infos lieu",
-            "Alertes nouvelles soirées",
-          ],
-          cta: "Voir les afters",
-        },
-        {
-          title: "Paris pratique",
-          eyebrow: "Guide complet",
-          description: "Tout ce qu'il faut savoir pour Paris sans stress.",
-          features: [
-            "RER B La Plaine et RER D Saint-Denis",
-            "Métro 12, 13, 14 et tram T1/T8",
-            "Parkings officiels à réserver dès 29 EUR",
-            "Sacs limités à 15 L, pas de valises",
-          ],
-          cta: "Voir le guide",
-        },
-        {
-          title: "Merch",
-          eyebrow: "Mode & accessoires",
-          description: "Vendeurs mode, pagne et accessoires de la diaspora.",
-          features: [
-            "Sapologie et lifestyle Congo",
-            "Mode africaine contemporaine",
-            "Vendeurs vérifiés par l'équipe",
-            "Lien boutique ou contact direct",
-          ],
-          cta: "Découvrir le merch",
-        },
-        {
-          title: "Photographes",
-          eyebrow: "Souvenirs",
-          description: "Immortalise les meilleurs moments du week-end.",
-          features: [
-            "Photographes pro diaspora",
-            "Shooting express avant/après",
-            "Formules événementielles",
-            "Portfolio visible sur le profil",
-          ],
-          cta: "Voir les photographes",
-        },
-      ],
     },
     prestations: {
       number: "02",
@@ -270,7 +171,8 @@ export const nls = {
       beFirst: "Lancer la première partie",
       back: "Retour au jeu",
       eyebrow: "Nevent × Stade de France 2026",
-      tagline: "Le Sapeur doit traverser Paris jusqu'au Stade de France — aide-le !",
+      tagline:
+        "Le Sapeur doit traverser Paris jusqu'au Stade de France — aide-le !",
       idleTagline:
         "Aide le Sapeur à traverser Paris jusqu'au Stade de France. Ramasse chapeaux, diamants et micros !",
       idleEyebrow: "Nevent Game",
@@ -335,9 +237,9 @@ export const nls = {
       links: {
         rides: "Trajets",
         afters: "Afters",
-        services: "Prestations",
+        services: "Prestataires",
         photographers: "Photographes",
-        proSpace: "Espace pro",
+        proSpace: "Espace prestataire",
         partnerships: "Partenariats",
         ads: "Publicité",
         team: "L'équipe",
@@ -349,44 +251,6 @@ export const nls = {
         legalNotice: "Mentions légales",
         disclaimer: "Disclaimer",
       },
-    },
-    appHome: {
-      hero: {
-        eyebrow: "Stade de France · 02 & 03 mai 2026",
-        title: "Nevent",
-        subtitle: "Tout pour vivre le week-end Fally Ipupa sans stress.",
-        primaryCta: "Préparer mon week-end",
-        proCta: "Je suis prestataire",
-        countdown: "Compte à rebours",
-      },
-      tilesEyebrow: "Tout est là",
-      tilesTitle: "Ton week-end. En un coup d'œil.",
-      tilesDescription:
-        "Trajets, prestataires, afters, communauté — comme une app dans ta poche.",
-      tiles: {
-        trajets: { label: "Trajets", hint: "Covoiturage" },
-        prestataires: { label: "Prestataires", hint: "Annuaire vérifié" },
-        communaute: { label: "Communauté", hint: "WhatsApp régional" },
-        afters: { label: "Afters", hint: "Soirées concert" },
-        concert: { label: "Concert", hint: "Stade de France" },
-        paris: { label: "Paris", hint: "Guide pratique" },
-        playlists: { label: "Playlists", hint: "Mood Fally" },
-        jeu: { label: "Sape Run", hint: "Mini-jeu" },
-      },
-      proSection: {
-        eyebrow: "Section pros",
-        title: "Tu proposes un service ?",
-        subtitle:
-          "Maquillage, coiffure, photo, transport, sécurité, traiteur… sois visible auprès des fans qui préparent leur week-end.",
-        cta: "Devenir partenaire",
-      },
-    },
-    prestatairesPage: {
-      eyebrow: "Annuaire vérifié · Nevent",
-      title: "Prestataires",
-      subtitle:
-        "Tous les pros disponibles pour ton week-end Fally Ipupa au Stade de France. Profils vérifiés, contacts WhatsApp, paiement direct.",
-      loading: "Chargement…",
     },
     communityPage: {
       eyebrow: "Communauté",
@@ -407,7 +271,7 @@ export const nls = {
       nav: {
         home: "Home",
         concert: "Concert",
-        services: "Services",
+        services: "Providers",
         community: "Community",
         playlists: "Playlists",
         quiz: "Quiz",
@@ -451,105 +315,6 @@ export const nls = {
       menu: "Navigation",
       openMenu: "Ouvrir le menu",
       seeMore: "Voir plus",
-    },
-    home: {
-      heroTitle: "Nevent",
-      heroSubtitle:
-        "Plan the Fally Ipupa concert weekend at Stade de France: rides, providers, afterparties, merch, game and verified tips.",
-      primaryCta: "See rides",
-      proCta: "I am a pro",
-      prestationsLabel: "Services",
-      modulesTitleLine1: "Everything in",
-      modulesTitleLine2: "one place.",
-      modulesDescription:
-        "Useful services to enjoy the Fally Ipupa weekend with less stress: rides, beauty, photos, parties, Paris guide and more.",
-      proEyebrow: "For pros",
-      proTitleLine1: "Do you offer",
-      proTitleLine2: "a service?",
-      proDescription:
-        "Makeup, hair, photo, transport or logistics: get listed and be visible to Fally Ipupa fans.",
-      proButton: "Become a partner",
-      quickLinks: "Quick access",
-      stats: {
-        audience: "total spectators",
-        city: "years of career",
-        dates: "studio albums",
-      },
-      modules: [
-        {
-          title: "Rides",
-          eyebrow: "Carpooling",
-          description: "Diaspora door-to-door rides to Stade de France.",
-          features: [
-            "Departures from Brussels, London, Lyon...",
-            "Seats shown in real time",
-            "WhatsApp hidden before unlock",
-            "Backup with RER B/D, metro 12/13/14",
-          ],
-          cta: "See rides",
-        },
-        {
-          title: "Providers",
-          eyebrow: "Beauty & services",
-          description:
-            "Makeup artists, hairdressers, barbers and photographers from the diaspora.",
-          features: [
-            "Makeup for black and mixed skin",
-            "Hairdressers, braiders and barbers",
-            "Photographers for shoots and events",
-            "Visible prices, verified profiles",
-          ],
-          cta: "Find a provider",
-        },
-        {
-          title: "Afters",
-          eyebrow: "Post-concert parties",
-          description: "The best parties on the nights of May 2 and 3.",
-          features: [
-            "Events checked by the team",
-            "Direct external ticket link",
-            "Entry price and venue info",
-            "Alerts for new parties",
-          ],
-          cta: "See afters",
-        },
-        {
-          title: "Paris guide",
-          eyebrow: "Full guide",
-          description: "Everything you need for Paris with less stress.",
-          features: [
-            "RER B La Plaine and RER D Saint-Denis",
-            "Metro 12, 13, 14 and tram T1/T8",
-            "Official parking to book from EUR 29",
-            "Bags limited to 15 L, no suitcases",
-          ],
-          cta: "Open the guide",
-        },
-        {
-          title: "Merch",
-          eyebrow: "Fashion & accessories",
-          description: "Diaspora fashion, wax fabric and accessories vendors.",
-          features: [
-            "Sape and Congo lifestyle",
-            "Contemporary African fashion",
-            "Vendors checked by the team",
-            "Shop link or direct contact",
-          ],
-          cta: "Discover merch",
-        },
-        {
-          title: "Photographers",
-          eyebrow: "Memories",
-          description: "Capture the best moments of the weekend.",
-          features: [
-            "Diaspora pro photographers",
-            "Quick shoots before/after",
-            "Event packages",
-            "Portfolio visible on profile",
-          ],
-          cta: "See photographers",
-        },
-      ],
     },
     prestations: {
       number: "02",
@@ -611,7 +376,8 @@ export const nls = {
       beFirst: "Start the first run",
       back: "Back to game",
       eyebrow: "Nevent × Stade de France 2026",
-      tagline: "The Sapeur must cross Paris all the way to Stade de France — help him!",
+      tagline:
+        "The Sapeur must cross Paris all the way to Stade de France — help him!",
       idleTagline:
         "Help the Sapeur cross Paris to reach Stade de France. Grab hats, diamonds and microphones!",
       idleEyebrow: "Nevent Game",
@@ -676,9 +442,9 @@ export const nls = {
       links: {
         rides: "Rides",
         afters: "Afters",
-        services: "Services",
+        services: "Providers",
         photographers: "Photographers",
-        proSpace: "Pro area",
+        proSpace: "Provider area",
         partnerships: "Partnerships",
         ads: "Advertising",
         team: "Team",
@@ -690,44 +456,6 @@ export const nls = {
         legalNotice: "Legal notice",
         disclaimer: "Disclaimer",
       },
-    },
-    appHome: {
-      hero: {
-        eyebrow: "Stade de France · 02 & 03 May 2026",
-        title: "Nevent",
-        subtitle: "Everything to enjoy the Fally Ipupa weekend stress-free.",
-        primaryCta: "Plan my weekend",
-        proCta: "I'm a service provider",
-        countdown: "Countdown",
-      },
-      tilesEyebrow: "All in one place",
-      tilesTitle: "Your weekend. At a glance.",
-      tilesDescription:
-        "Rides, providers, afterparties, community — like an app in your pocket.",
-      tiles: {
-        trajets: { label: "Rides", hint: "Carpool" },
-        prestataires: { label: "Providers", hint: "Verified directory" },
-        communaute: { label: "Community", hint: "Regional WhatsApp" },
-        afters: { label: "Afterparties", hint: "Post-concert nights" },
-        concert: { label: "Concert", hint: "Stade de France" },
-        paris: { label: "Paris", hint: "Practical guide" },
-        playlists: { label: "Playlists", hint: "Fally mood" },
-        jeu: { label: "Sape Run", hint: "Mini-game" },
-      },
-      proSection: {
-        eyebrow: "For pros",
-        title: "Got a service to offer?",
-        subtitle:
-          "Makeup, hair, photo, transport, security, catering… get seen by fans preparing for the weekend.",
-        cta: "Become a partner",
-      },
-    },
-    prestatairesPage: {
-      eyebrow: "Verified directory · Nevent",
-      title: "Providers",
-      subtitle:
-        "All the pros available for your Fally Ipupa weekend at Stade de France. Verified profiles, WhatsApp contact, direct payment.",
-      loading: "Loading…",
     },
     communityPage: {
       eyebrow: "Community",
@@ -748,7 +476,7 @@ export const nls = {
       nav: {
         home: "Start",
         concert: "Konzert",
-        services: "Services",
+        services: "Anbieter",
         community: "Community",
         playlists: "Playlists",
         quiz: "Quiz",
@@ -792,105 +520,6 @@ export const nls = {
       menu: "Navigation",
       openMenu: "Menü öffnen",
       seeMore: "Mehr sehen",
-    },
-    home: {
-      heroTitle: "Nevent",
-      heroSubtitle:
-        "Plane das Konzertwochenende von Fally Ipupa im Stade de France: Fahrten, Dienstleister, Afters, Merch, Spiel und geprüfte Tipps.",
-      primaryCta: "Fahrten ansehen",
-      proCta: "Ich bin Profi",
-      prestationsLabel: "Services",
-      modulesTitleLine1: "Alles an",
-      modulesTitleLine2: "einem Ort.",
-      modulesDescription:
-        "Nützliche Services für das Fally-Ipupa-Wochenende mit weniger Stress: Fahrten, Beauty, Fotos, Partys, Paris-Guide und mehr.",
-      proEyebrow: "Für Profis",
-      proTitleLine1: "Bietest du",
-      proTitleLine2: "einen Service an?",
-      proDescription:
-        "Make-up, Haare, Foto, Transport oder Logistik: werde sichtbar für Fans von Fally Ipupa.",
-      proButton: "Partner werden",
-      quickLinks: "Schnellzugriff",
-      stats: {
-        audience: "Zuschauer insgesamt",
-        city: "Karrierejahre",
-        dates: "Studioalben",
-      },
-      modules: [
-        {
-          title: "Fahrten",
-          eyebrow: "Mitfahren",
-          description: "Diaspora-Fahrten bis zum Stade de France.",
-          features: [
-            "Abfahrten aus Brüssel, London, Lyon...",
-            "Freie Plätze in Echtzeit",
-            "WhatsApp bis zur Freischaltung verborgen",
-            "Backup mit RER B/D, Metro 12/13/14",
-          ],
-          cta: "Fahrten ansehen",
-        },
-        {
-          title: "Dienstleister",
-          eyebrow: "Beauty & Services",
-          description:
-            "Make-up-Artists, Friseure, Barbiere und Fotografen aus der Diaspora.",
-          features: [
-            "Make-up für schwarze und gemischte Haut",
-            "Friseure, Flechter und Barbiere",
-            "Fotografen für Shootings und Events",
-            "Preise sichtbar, Profile geprüft",
-          ],
-          cta: "Dienstleister finden",
-        },
-        {
-          title: "Afters",
-          eyebrow: "Partys nach dem Konzert",
-          description: "Die besten Partys in den Nächten vom 2. und 3. Mai.",
-          features: [
-            "Events vom Team geprüft",
-            "Direkter externer Ticketlink",
-            "Eintrittspreis und Location-Infos",
-            "Hinweise auf neue Partys",
-          ],
-          cta: "Afters ansehen",
-        },
-        {
-          title: "Paris Guide",
-          eyebrow: "Kompletter Guide",
-          description: "Alles für Paris mit weniger Stress.",
-          features: [
-            "RER B La Plaine und RER D Saint-Denis",
-            "Metro 12, 13, 14 und Tram T1/T8",
-            "Offizielle Parkplätze ab 29 EUR reservieren",
-            "Taschen max. 15 L, keine Koffer",
-          ],
-          cta: "Guide öffnen",
-        },
-        {
-          title: "Merch",
-          eyebrow: "Mode & Accessoires",
-          description: "Diaspora-Mode, Pagne und Accessoires.",
-          features: [
-            "Sape und Congo-Lifestyle",
-            "Moderne afrikanische Mode",
-            "Vom Team geprüfte Verkäufer",
-            "Shop-Link oder direkter Kontakt",
-          ],
-          cta: "Merch entdecken",
-        },
-        {
-          title: "Fotografen",
-          eyebrow: "Erinnerungen",
-          description: "Halte die besten Momente des Wochenendes fest.",
-          features: [
-            "Professionelle Diaspora-Fotografen",
-            "Schnelle Shootings davor/danach",
-            "Event-Pakete",
-            "Portfolio im Profil sichtbar",
-          ],
-          cta: "Fotografen ansehen",
-        },
-      ],
     },
     prestations: {
       number: "02",
@@ -953,7 +582,8 @@ export const nls = {
       beFirst: "Erste Runde starten",
       back: "Zurück zum Spiel",
       eyebrow: "Nevent × Stade de France 2026",
-      tagline: "Der Sapeur muss durch Paris bis zum Stade de France — hilf ihm!",
+      tagline:
+        "Der Sapeur muss durch Paris bis zum Stade de France — hilf ihm!",
       idleTagline:
         "Hilf dem Sapeur, durch Paris bis zum Stade de France zu kommen. Sammle Hüte, Diamanten und Mikros!",
       idleEyebrow: "Nevent Game",
@@ -1018,7 +648,7 @@ export const nls = {
       links: {
         rides: "Fahrten",
         afters: "Afters",
-        services: "Services",
+        services: "Anbieter",
         photographers: "Fotografen",
         proSpace: "Pro-Bereich",
         partnerships: "Partnerschaften",
@@ -1032,44 +662,6 @@ export const nls = {
         legalNotice: "Impressum",
         disclaimer: "Disclaimer",
       },
-    },
-    appHome: {
-      hero: {
-        eyebrow: "Stade de France · 02. & 03. Mai 2026",
-        title: "Nevent",
-        subtitle: "Alles für ein entspanntes Fally-Ipupa-Wochenende.",
-        primaryCta: "Wochenende planen",
-        proCta: "Ich bin Anbieter",
-        countdown: "Countdown",
-      },
-      tilesEyebrow: "Alles auf einen Blick",
-      tilesTitle: "Dein Wochenende. Auf einen Blick.",
-      tilesDescription:
-        "Fahrten, Anbieter, Afterpartys, Community — wie eine App in der Tasche.",
-      tiles: {
-        trajets: { label: "Fahrten", hint: "Mitfahren" },
-        prestataires: { label: "Anbieter", hint: "Geprüftes Verzeichnis" },
-        communaute: { label: "Community", hint: "WhatsApp regional" },
-        afters: { label: "Afterpartys", hint: "Nach dem Konzert" },
-        concert: { label: "Konzert", hint: "Stade de France" },
-        paris: { label: "Paris", hint: "Praxisführer" },
-        playlists: { label: "Playlists", hint: "Fally Mood" },
-        jeu: { label: "Sape Run", hint: "Minispiel" },
-      },
-      proSection: {
-        eyebrow: "Für Anbieter",
-        title: "Du bietest einen Service an?",
-        subtitle:
-          "Make-up, Haare, Foto, Transport, Security, Catering… sei sichtbar für die Fans, die ihr Wochenende planen.",
-        cta: "Partner werden",
-      },
-    },
-    prestatairesPage: {
-      eyebrow: "Geprüftes Verzeichnis · Nevent",
-      title: "Anbieter",
-      subtitle:
-        "Alle Profis für dein Fally-Ipupa-Wochenende im Stade de France. Geprüfte Profile, WhatsApp-Kontakt, direkte Zahlung.",
-      loading: "Lädt…",
     },
     communityPage: {
       eyebrow: "Community",
@@ -1134,105 +726,6 @@ export const nls = {
       menu: "Navigatie",
       openMenu: "Menu openen",
       seeMore: "Meer zien",
-    },
-    home: {
-      heroTitle: "Nevent",
-      heroSubtitle:
-        "Plan het concertweekend van Fally Ipupa in het Stade de France: ritten, dienstverleners, afters, merch, game en geverifieerde tips.",
-      primaryCta: "Bekijk ritten",
-      proCta: "Ik ben pro",
-      prestationsLabel: "Diensten",
-      modulesTitleLine1: "Alles op",
-      modulesTitleLine2: "één plek.",
-      modulesDescription:
-        "Handige diensten voor het Fally Ipupa-weekend met minder stress: ritten, beauty, foto's, feesten, Parijs-gids en meer.",
-      proEyebrow: "Voor pros",
-      proTitleLine1: "Bied jij",
-      proTitleLine2: "een dienst aan?",
-      proDescription:
-        "Make-up, haar, foto, vervoer of logistiek: word zichtbaar voor fans van Fally Ipupa.",
-      proButton: "Partner worden",
-      quickLinks: "Snelle toegang",
-      stats: {
-        audience: "totaal toeschouwers",
-        city: "jaar carrière",
-        dates: "studioalbums",
-      },
-      modules: [
-        {
-          title: "Ritten",
-          eyebrow: "Carpool",
-          description: "Diaspora-ritten naar het Stade de France.",
-          features: [
-            "Vertrek uit Brussel, Londen, Lyon...",
-            "Vrije plaatsen in realtime",
-            "WhatsApp verborgen tot ontgrendeling",
-            "Backup met RER B/D, metro 12/13/14",
-          ],
-          cta: "Bekijk ritten",
-        },
-        {
-          title: "Dienstverleners",
-          eyebrow: "Beauty & services",
-          description:
-            "Make-up artists, kappers, barbiers en fotografen uit de diaspora.",
-          features: [
-            "Make-up voor zwarte en gemengde huid",
-            "Kappers, vlechtspecialisten en barbiers",
-            "Fotografen voor shoots en events",
-            "Prijzen zichtbaar, profielen gecheckt",
-          ],
-          cta: "Vind een dienstverlener",
-        },
-        {
-          title: "Afters",
-          eyebrow: "Feesten na het concert",
-          description: "De beste feesten in de nachten van 2 en 3 mei.",
-          features: [
-            "Events gecheckt door het team",
-            "Directe externe ticketlink",
-            "Entreeprijs en locatie-info",
-            "Alerts voor nieuwe feesten",
-          ],
-          cta: "Bekijk afters",
-        },
-        {
-          title: "Parijs gids",
-          eyebrow: "Complete gids",
-          description: "Alles voor Parijs met minder stress.",
-          features: [
-            "RER B La Plaine en RER D Saint-Denis",
-            "Metro 12, 13, 14 en tram T1/T8",
-            "Officiële parking reserveren vanaf EUR 29",
-            "Tassen max. 15 L, geen koffers",
-          ],
-          cta: "Open de gids",
-        },
-        {
-          title: "Merch",
-          eyebrow: "Mode & accessoires",
-          description: "Diaspora-mode, pagne en accessoires.",
-          features: [
-            "Sape en Congo-lifestyle",
-            "Moderne Afrikaanse mode",
-            "Verkopers gecheckt door het team",
-            "Shoplink of direct contact",
-          ],
-          cta: "Ontdek merch",
-        },
-        {
-          title: "Fotografen",
-          eyebrow: "Herinneringen",
-          description: "Leg de beste momenten van het weekend vast.",
-          features: [
-            "Professionele diaspora-fotografen",
-            "Snelle shoots voor/na",
-            "Eventpakketten",
-            "Portfolio zichtbaar op profiel",
-          ],
-          cta: "Bekijk fotografen",
-        },
-      ],
     },
     prestations: {
       number: "02",
@@ -1374,44 +867,6 @@ export const nls = {
         legalNotice: "Juridische kennisgeving",
         disclaimer: "Disclaimer",
       },
-    },
-    appHome: {
-      hero: {
-        eyebrow: "Stade de France · 02 & 03 mei 2026",
-        title: "Nevent",
-        subtitle: "Alles voor een zorgeloos Fally Ipupa-weekend.",
-        primaryCta: "Mijn weekend plannen",
-        proCta: "Ik ben dienstverlener",
-        countdown: "Countdown",
-      },
-      tilesEyebrow: "Alles op één plek",
-      tilesTitle: "Jouw weekend. In één oogopslag.",
-      tilesDescription:
-        "Ritten, dienstverleners, afterparty's, community — als een app in je zak.",
-      tiles: {
-        trajets: { label: "Ritten", hint: "Carpoolen" },
-        prestataires: { label: "Dienstverleners", hint: "Geverifieerde gids" },
-        communaute: { label: "Community", hint: "Regionale WhatsApp" },
-        afters: { label: "Afterparty's", hint: "Na het concert" },
-        concert: { label: "Concert", hint: "Stade de France" },
-        paris: { label: "Parijs", hint: "Praktische gids" },
-        playlists: { label: "Playlists", hint: "Fally mood" },
-        jeu: { label: "Sape Run", hint: "Mini-game" },
-      },
-      proSection: {
-        eyebrow: "Voor pro's",
-        title: "Bied jij een dienst aan?",
-        subtitle:
-          "Make-up, kapsel, foto, vervoer, security, catering… word zichtbaar voor fans die hun weekend voorbereiden.",
-        cta: "Partner worden",
-      },
-    },
-    prestatairesPage: {
-      eyebrow: "Geverifieerde gids · Nevent",
-      title: "Dienstverleners",
-      subtitle:
-        "Alle pro's voor je Fally Ipupa-weekend in het Stade de France. Geverifieerde profielen, WhatsApp-contact, directe betaling.",
-      loading: "Laden…",
     },
     communityPage: {
       eyebrow: "Community",

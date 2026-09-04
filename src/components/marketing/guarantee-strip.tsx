@@ -18,7 +18,7 @@ const PILLARS = [
   {
     icon: Sparkles,
     title: "Contact direct",
-    desc: "WhatsApp du prestataire débloqué pour les VIP, sans intermédiaire.",
+    desc: "WhatsApp du prestataire accessible à tous, sans intermédiaire.",
   },
 ] as const;
 
@@ -62,9 +62,7 @@ export function GuaranteeStrip({ variant = "full" }: GuaranteeStripProps) {
               <h3 className="mt-3 font-display text-sm text-paper uppercase tracking-wide">
                 {title}
               </h3>
-              <p className="mt-1.5 text-paper-mute text-xs leading-5">
-                {desc}
-              </p>
+              <p className="mt-1.5 text-paper-mute text-xs leading-5">{desc}</p>
             </div>
           ))}
         </div>

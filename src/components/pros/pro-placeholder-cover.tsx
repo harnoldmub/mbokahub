@@ -49,6 +49,9 @@ type Props = {
   displayName: string;
   category: ProCategory;
   className?: string;
+  /** Masque le libellé de catégorie dessiné dans la vignette quand la carte
+   *  qui l'entoure affiche déjà cette catégorie juste en dessous. */
+  showCategoryLabel?: boolean;
 };
 
 /**
@@ -64,6 +67,7 @@ export function ProPlaceholderCover({
   displayName,
   category,
   className,
+  showCategoryLabel = true,
 }: Props) {
   const meta = PRO_CATEGORY_BY_ID[category];
   const group = meta?.group ?? "AUTRE";
@@ -162,20 +166,22 @@ export function ProPlaceholderCover({
           fillOpacity="0.7"
         />
 
-        <text
-          x="200"
-          y="228"
-          textAnchor="middle"
-          dominantBaseline="middle"
-          fontSize="10"
-          fontWeight="500"
-          fontFamily="'JetBrains Mono', 'Courier New', monospace"
-          letterSpacing="3"
-          fill={palette.textColor}
-          fillOpacity="0.4"
-        >
-          {label.toUpperCase()}
-        </text>
+        {showCategoryLabel ? (
+          <text
+            x="200"
+            y="228"
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fontSize="10"
+            fontWeight="500"
+            fontFamily="'JetBrains Mono', 'Courier New', monospace"
+            letterSpacing="3"
+            fill={palette.textColor}
+            fillOpacity="0.4"
+          >
+            {label.toUpperCase()}
+          </text>
+        ) : null}
 
         {/* Corners */}
         <path
