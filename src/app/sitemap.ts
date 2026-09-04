@@ -56,7 +56,6 @@ const STATIC_ROUTES: StaticRoute[] = [
   { path: "/pro", priority: 0.9, changeFrequency: "weekly" },
 
   // Engagement
-  { path: "/quiz", priority: 0.65, changeFrequency: "monthly" },
   { path: "/jeu", priority: 0.65, changeFrequency: "monthly" },
 
   // Brand

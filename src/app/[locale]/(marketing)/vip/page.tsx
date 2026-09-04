@@ -53,7 +53,7 @@ const FREE_FOR_FANS = [
   {
     icon: MessagesSquare,
     title: "Toute l'info",
-    body: "Concert, classiques de Paris, playlists, communauté. La maison Nevent est ouverte.",
+    body: "Événements, guide pratique, communauté, mini-jeu. La maison Nevent est ouverte.",
   },
 ];
 

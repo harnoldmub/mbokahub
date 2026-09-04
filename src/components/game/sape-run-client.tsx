@@ -125,13 +125,19 @@ function drawSapeur(
   ctx.save();
   ctx.translate(x + w * 0.35, y + h * 0.7);
   ctx.rotate((legSwing * Math.PI) / 180);
-  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, h * 0.3); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(0, h * 0.3);
+  ctx.stroke();
   ctx.restore();
   // Right leg
   ctx.save();
   ctx.translate(x + w * 0.65, y + h * 0.7);
   ctx.rotate((-legSwing * Math.PI) / 180);
-  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, h * 0.3); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(0, h * 0.3);
+  ctx.stroke();
   ctx.restore();
   ctx.restore();
 
@@ -143,7 +149,7 @@ function drawSapeur(
   ctx.fillStyle = suitGrad;
   drawRoundRect(ctx, x + w * 0.2, y + h * 0.32, w * 0.6, h * 0.4, 6);
   ctx.fill();
-  
+
   // Jewelry (Gold chains)
   ctx.strokeStyle = "#fbbf24";
   ctx.lineWidth = 2;
@@ -159,13 +165,19 @@ function drawSapeur(
   ctx.save();
   ctx.translate(x + w * 0.2, y + h * 0.4);
   ctx.rotate((armSwing * Math.PI) / 180);
-  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-8, h * 0.28); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(-8, h * 0.28);
+  ctx.stroke();
   ctx.restore();
   // Right arm
   ctx.save();
   ctx.translate(x + w * 0.8, y + h * 0.4);
   ctx.rotate((-armSwing * Math.PI) / 180);
-  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(8, h * 0.28); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(8, h * 0.28);
+  ctx.stroke();
   ctx.restore();
 
   // Head
@@ -174,7 +186,7 @@ function drawSapeur(
   ctx.arc(x + w / 2, y + h * 0.2, w * 0.22, 0, Math.PI * 2);
   ctx.fill();
 
-  // Sunglasses (The Fally look)
+  // Lunettes de soleil (le look sapeur)
   ctx.fillStyle = "#000";
   ctx.fillRect(x + w * 0.35, y + h * 0.16, w * 0.3, h * 0.08); // Sunglasses bar
   ctx.beginPath();
@@ -189,7 +201,11 @@ function drawSapeur(
   ctx.fill();
 }
 
-function drawObstacle(ctx: CanvasRenderingContext2D, obs: Obstacle, tick: number) {
+function drawObstacle(
+  ctx: CanvasRenderingContext2D,
+  obs: Obstacle,
+  tick: number,
+) {
   ctx.save();
 
   if (obs.type === "suitcase") {
@@ -208,14 +224,21 @@ function drawObstacle(ctx: CanvasRenderingContext2D, obs: Obstacle, tick: number
     // The "Combattant" Character
     const bounce = Math.sin(tick * 0.2) * 5;
     const signOsc = Math.sin(tick * 0.1) * 0.1;
-    
+
     // Legs
     ctx.fillStyle = "#000";
     ctx.fillRect(obs.x + 10, obs.y + obs.h - 15, 8, 15);
     ctx.fillRect(obs.x + obs.w - 18, obs.y + obs.h - 15, 8, 15);
     // Body (Black hoodie)
     ctx.fillStyle = "#111";
-    drawRoundRect(ctx, obs.x + 5, obs.y + 20 + bounce, obs.w - 10, obs.h - 35, 10);
+    drawRoundRect(
+      ctx,
+      obs.x + 5,
+      obs.y + 20 + bounce,
+      obs.w - 10,
+      obs.h - 35,
+      10,
+    );
     ctx.fill();
     // Head
     ctx.fillStyle = "#3d1f00";
@@ -225,8 +248,14 @@ function drawObstacle(ctx: CanvasRenderingContext2D, obs: Obstacle, tick: number
     // Angry eyes
     ctx.strokeStyle = "#E50914";
     ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(obs.x + obs.w/2 - 6, obs.y + 12 + bounce); ctx.lineTo(obs.x + obs.w/2 - 2, obs.y + 15 + bounce); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(obs.x + obs.w/2 + 6, obs.y + 12 + bounce); ctx.lineTo(obs.x + obs.w/2 + 2, obs.y + 15 + bounce); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(obs.x + obs.w / 2 - 6, obs.y + 12 + bounce);
+    ctx.lineTo(obs.x + obs.w / 2 - 2, obs.y + 15 + bounce);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(obs.x + obs.w / 2 + 6, obs.y + 12 + bounce);
+    ctx.lineTo(obs.x + obs.w / 2 + 2, obs.y + 15 + bounce);
+    ctx.stroke();
 
     // Protest Sign
     ctx.save();
@@ -435,7 +464,7 @@ const DEFAULT_COPY: SapeRunCopy = {
   idleEyebrow: "Nevent Game",
   idleTitle: "Sape Run",
   idleTagline:
-    "Aide le Sapeur à traverser Paris jusqu'au Stade de France. Ramasse chapeaux, diamants et micros !",
+    "Aide le Sapeur à traverser la ville jusqu'à la salle de concert. Ramasse chapeaux, diamants et micros !",
   start: "Commencer",
   controlsHint: "Espace / Clic / Tap pour sauter",
   gameOver: "Game Over",
@@ -447,7 +476,7 @@ const DEFAULT_COPY: SapeRunCopy = {
   jumpHint: "Sauter (Espace / Clic)",
   recordLabel: "Record",
   speed: "VITESSE",
-  goal: "STADE DE FRANCE",
+  goal: "LA SALLE",
   namePrompt: "Ton prénom (pour le classement)",
   namePlaceholder: "Ton prénom",
   nameRequired: "Entre ton prénom pour démarrer",
@@ -466,7 +495,11 @@ function sanitizePseudo(input: string): string {
 }
 
 // ── Main Component ─────────────────────────────────────────────────────────────
-export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = {}) {
+export function SapeRunClient({
+  copy = DEFAULT_COPY,
+}: {
+  copy?: SapeRunCopy;
+} = {}) {
   const c = copy;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const stateRef = useRef<GameState>("idle");
@@ -727,7 +760,7 @@ export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = 
       ctx.fill();
       ctx.restore();
 
-      // ── Stade de France (parallax layer 0 — the GOAL) ───────────────────────
+      // ── La salle de concert (parallax layer 0 — the GOAL) ───────────────────
       ctx.save();
       const stadiumCycleW = W * 1.8;
       const stX =
@@ -782,7 +815,7 @@ export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = 
         ctx.fill();
       }
 
-      // Marquee banner: FALLY 2026
+      // Bandeau lumineux de la salle
       const bannerY = stY - 38;
       ctx.fillStyle = "#E50914";
       drawRoundRect(ctx, stX - 70, bannerY - 12, 140, 22, 4);
@@ -790,7 +823,7 @@ export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = 
       ctx.fillStyle = "#fff";
       ctx.font = "bold 11px monospace";
       ctx.textAlign = "center";
-      ctx.fillText("FALLY 2026", stX, bannerY + 3);
+      ctx.fillText("LIVE 2026", stX, bannerY + 3);
 
       // Stadium label
       ctx.fillStyle = "rgba(255,255,255,0.85)";
@@ -816,7 +849,13 @@ export function SapeRunClient({ copy = DEFAULT_COPY }: { copy?: SapeRunCopy } = 
         ctx.fillRect(cx, GROUND - bodyH + bob, 4, bodyH);
         // Head
         ctx.beginPath();
-        ctx.arc(cx + 2, GROUND - bodyH - headH / 2 + bob, headH / 2.5, 0, Math.PI * 2);
+        ctx.arc(
+          cx + 2,
+          GROUND - bodyH - headH / 2 + bob,
+          headH / 2.5,
+          0,
+          Math.PI * 2,
+        );
         ctx.fill();
         // Random raised arms (like at a concert)
         if (seed > 0.7) {

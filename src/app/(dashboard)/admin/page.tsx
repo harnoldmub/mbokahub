@@ -16,7 +16,6 @@ async function getStats() {
     paymentsCompleted,
     promoCodes,
     promoCodesActive,
-    quizResults,
     gameScores,
   ] = await Promise.all([
     prisma.user.count(),
@@ -30,7 +29,6 @@ async function getStats() {
     prisma.payment.count({ where: { status: "COMPLETED" } }),
     prisma.promoCode.count(),
     prisma.promoCode.count({ where: { isActive: true } }),
-    prisma.quizResult.count(),
     prisma.gameScore.count(),
   ]);
 
@@ -46,7 +44,6 @@ async function getStats() {
     paymentsCompleted,
     promoCodes,
     promoCodesActive,
-    quizResults,
     gameScores,
   };
 }
@@ -97,11 +94,7 @@ export default async function AdminDashboardPage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          label="Utilisateurs"
-          value={s.users}
-          href="/admin/users"
-        />
+        <StatCard label="Utilisateurs" value={s.users} href="/admin/users" />
         <StatCard
           label="Profils pros"
           value={s.pros}
@@ -115,10 +108,7 @@ export default async function AdminDashboardPage() {
           hint={`${s.trajetsActive} actifs`}
           href="/admin/trajets"
         />
-        <StatCard
-          label="Afters"
-          value={s.afters}
-        />
+        <StatCard label="Afters" value={s.afters} />
         <StatCard
           label="Codes promo"
           value={s.promoCodes}
@@ -136,11 +126,13 @@ export default async function AdminDashboardPage() {
           hint={`${s.paymentsCompleted} confirmés`}
           href="/admin/payments"
         />
-        <StatCard label="Quiz · Jeux" value={`${s.quizResults} · ${s.gameScores}`} />
+        <StatCard label="Parties jouées" value={s.gameScores} />
       </div>
 
       <section className="rounded-2xl border border-white/10 bg-white/5 p-6">
-        <h3 className="font-heading text-foreground text-xl">Actions rapides</h3>
+        <h3 className="font-heading text-foreground text-xl">
+          Actions rapides
+        </h3>
         <div className="mt-4 flex flex-wrap gap-3">
           <Link
             href="/admin/promo-codes"

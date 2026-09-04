@@ -17,7 +17,7 @@ Nevent n'est ni organisateur des événements référencés, ni revendeur offici
 — La mise en avant de prestataires de beauté (maquilleuses, coiffeurs, photographes).
 — Un répertoire d'afters et événements annexes au concert.
 — Des informations pratiques compilées de sources publiques.
-— Des activités communautaires (quiz, jeu).
+— Des activités communautaires (mini-jeu).
 
 Nevent agit en qualité d'intermédiaire de mise en relation. Les transactions éventuelles se concluent directement entre les utilisateurs.`,
   },

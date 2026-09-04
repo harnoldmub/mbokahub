@@ -63,11 +63,8 @@ export const nls = {
     common: {
       nav: {
         home: "Accueil",
-        concert: "Concert",
         services: "Prestataires",
         community: "Communauté",
-        playlists: "Playlists",
-        quiz: "Quiz",
         game: "Jeux",
         contact: "Contact",
       },
@@ -99,9 +96,7 @@ export const nls = {
         merch: "Merch",
         beaute: "Beauté",
         paris: "Paris pratique",
-        quiz: "Quiz",
         game: "Sape Run",
-        playlists: "Playlists",
         community: "Communauté",
       },
       vipCta: "Devenir prestataire",
@@ -142,26 +137,12 @@ export const nls = {
         },
       ],
     },
-    quiz: {
-      titleLine1: "Quiz Fally",
-      titleLine2: "et stade",
-      description:
-        "Réponds à 10 questions inspirées du concert de Fally Ipupa : dates, accès Stade de France, règles pratiques et culture diaspora.",
-      rewardLabel: "Infos vérifiées",
-      rewardText:
-        "Deux dates officielles, première date complète, seconde date ajoutée.",
-      communityLabel: "Pratique stade",
-      communityText:
-        "Accès RER B/D, métro 12/13/14, parkings sur réservation et restrictions sacs.",
-      cta: "Lancer le quiz",
-      duration: "Temps estimé : 2 minutes",
-    },
     game: {
       version: "Sape Run — v1.0",
       titleLine1: "Sape",
       titleLine2: "Run.",
       description:
-        "Incarne l'Aigle et fonce vers le Stade de France ! Évite les Combattants et les obstacles, récupère les Micros d'Or et prouve que tu es le plus grand Warrior.",
+        "Incarne l'Aigle et fonce vers la salle de concert ! Évite les obstacles, récupère les Micros d'Or et prouve que tu es le plus grand Warrior.",
       play: "Jouer maintenant",
       leaderboard: "Classement",
       weeklyLeaderboard: "Leaderboard hebdo",
@@ -170,11 +151,11 @@ export const nls = {
       emptyLeaderboard: "Aucun score cette semaine — sois le premier !",
       beFirst: "Lancer la première partie",
       back: "Retour au jeu",
-      eyebrow: "Nevent × Stade de France 2026",
+      eyebrow: "Nevent × Sape Run",
       tagline:
-        "Le Sapeur doit traverser Paris jusqu'au Stade de France — aide-le !",
+        "Le Sapeur doit traverser la ville jusqu'à la salle de concert — aide-le !",
       idleTagline:
-        "Aide le Sapeur à traverser Paris jusqu'au Stade de France. Ramasse chapeaux, diamants et micros !",
+        "Aide le Sapeur à traverser la ville jusqu'à la salle de concert. Ramasse chapeaux, diamants et micros !",
       idleEyebrow: "Nevent Game",
       start: "Commencer",
       controlsHint: "Espace / Clic / Tap pour sauter",
@@ -187,27 +168,11 @@ export const nls = {
       jumpHint: "Sauter (Espace / Clic)",
       recordLabel: "Record",
       speed: "VITESSE",
-      goal: "STADE DE FRANCE",
+      goal: "LA SALLE",
       namePrompt: "Ton prénom (pour le classement)",
       namePlaceholder: "Ton prénom",
       nameRequired: "Entre ton prénom pour démarrer",
       playerLabel: "Joueur",
-    },
-    quizGame: {
-      eyebrow: "Pendant que tu attends le concert",
-      title: "Joue. Teste tes connaissances. Hype-toi.",
-      gameBadge: "Mini-jeu",
-      gameMeta: "2 min · gratuit",
-      gameTitle: "Sape Run",
-      gameDescription:
-        "Cours dans les rues de Paris jusqu'au Stade de France, esquive les obstacles, ramasse les sapes les plus drippées. Bat ton record et grimpe au classement.",
-      gameCta: "Lancer le jeu",
-      quizBadge: "Quiz",
-      quizMeta: "10 questions · 3 min",
-      quizTitle: "Quel fan de Fally ?",
-      quizDescription:
-        "De Droit Chemin à Tokooos II, prouve que tu connais ton classique. Score, badge et code promo à la clé.",
-      quizCta: "Démarrer le quiz",
     },
     contact: {
       eyebrow: "Contact",
@@ -270,11 +235,8 @@ export const nls = {
     common: {
       nav: {
         home: "Home",
-        concert: "Concert",
         services: "Providers",
         community: "Community",
-        playlists: "Playlists",
-        quiz: "Quiz",
         game: "Games",
         contact: "Contact",
       },
@@ -306,9 +268,7 @@ export const nls = {
         merch: "Merch",
         beaute: "Beauty",
         paris: "Paris guide",
-        quiz: "Quiz",
         game: "Sape Run",
-        playlists: "Playlists",
         community: "Community",
       },
       vipCta: "Become a pro",
@@ -348,25 +308,12 @@ export const nls = {
         },
       ],
     },
-    quiz: {
-      titleLine1: "Fally quiz",
-      titleLine2: "and stadium",
-      description:
-        "Answer 10 questions inspired by the Fally Ipupa concert: dates, Stade de France access, venue rules and diaspora culture.",
-      rewardLabel: "Verified info",
-      rewardText: "Two official dates, first date sold out, second date added.",
-      communityLabel: "Stadium practicals",
-      communityText:
-        "RER B/D, metro 12/13/14, reserved parking and bag restrictions.",
-      cta: "Start the quiz",
-      duration: "Estimated time: 2 minutes",
-    },
     game: {
       version: "Sape Run — v1.0",
       titleLine1: "Sape",
       titleLine2: "Run.",
       description:
-        "Jump, collect style bonuses and avoid obstacles to reach Stade de France at your best.",
+        "Jump, collect style bonuses and avoid obstacles to reach the venue at your best.",
       play: "Play now",
       leaderboard: "Leaderboard",
       weeklyLeaderboard: "Weekly leaderboard",
@@ -375,11 +322,11 @@ export const nls = {
       emptyLeaderboard: "No scores this week — be the first!",
       beFirst: "Start the first run",
       back: "Back to game",
-      eyebrow: "Nevent × Stade de France 2026",
+      eyebrow: "Nevent × Sape Run",
       tagline:
-        "The Sapeur must cross Paris all the way to Stade de France — help him!",
+        "The Sapeur must cross the city all the way to the venue — help him!",
       idleTagline:
-        "Help the Sapeur cross Paris to reach Stade de France. Grab hats, diamonds and microphones!",
+        "Help the Sapeur cross the city to reach the venue. Grab hats, diamonds and microphones!",
       idleEyebrow: "Nevent Game",
       start: "Start",
       controlsHint: "Space / Click / Tap to jump",
@@ -392,27 +339,11 @@ export const nls = {
       jumpHint: "Jump (Space / Click)",
       recordLabel: "Best",
       speed: "SPEED",
-      goal: "STADE DE FRANCE",
+      goal: "LA SALLE",
       namePrompt: "Your first name (for the leaderboard)",
       namePlaceholder: "Your first name",
       nameRequired: "Enter your first name to start",
       playerLabel: "Player",
-    },
-    quizGame: {
-      eyebrow: "While you wait for the concert",
-      title: "Play. Test your skills. Hype yourself.",
-      gameBadge: "Mini-game",
-      gameMeta: "2 min · free",
-      gameTitle: "Sape Run",
-      gameDescription:
-        "Run through Paris all the way to Stade de France, dodge obstacles, grab the drippiest sapes. Beat your record and climb the leaderboard.",
-      gameCta: "Launch the game",
-      quizBadge: "Quiz",
-      quizMeta: "10 questions · 3 min",
-      quizTitle: "How big a Fally fan are you?",
-      quizDescription:
-        "From Droit Chemin to Tokooos II, prove you know the classics. Score, badge and promo code up for grabs.",
-      quizCta: "Start the quiz",
     },
     contact: {
       eyebrow: "Contact",
@@ -475,11 +406,8 @@ export const nls = {
     common: {
       nav: {
         home: "Start",
-        concert: "Konzert",
         services: "Anbieter",
         community: "Community",
-        playlists: "Playlists",
-        quiz: "Quiz",
         game: "Spiele",
         contact: "Kontakt",
       },
@@ -511,9 +439,7 @@ export const nls = {
         merch: "Merch",
         beaute: "Beauty",
         paris: "Paris-Guide",
-        quiz: "Quiz",
         game: "Sape Run",
-        playlists: "Playlists",
         community: "Community",
       },
       vipCta: "Anbieter werden",
@@ -553,26 +479,12 @@ export const nls = {
         },
       ],
     },
-    quiz: {
-      titleLine1: "Fally-Quiz",
-      titleLine2: "und Stadion",
-      description:
-        "Beantworte 10 Fragen zum Konzert von Fally Ipupa: Termine, Zugang zum Stade de France, Stadionregeln und Diaspora-Kultur.",
-      rewardLabel: "Verifizierte Infos",
-      rewardText:
-        "Zwei offizielle Termine, erster Termin ausverkauft, zweiter Termin hinzugefügt.",
-      communityLabel: "Stadion praktisch",
-      communityText:
-        "RER B/D, Metro 12/13/14, reservierte Parkplätze und Taschenregeln.",
-      cta: "Quiz starten",
-      duration: "Dauer: ca. 2 Minuten",
-    },
     game: {
       version: "Sape Run — v1.0",
       titleLine1: "Sape",
       titleLine2: "Run.",
       description:
-        "Springe, sammle Style-Boni und weiche Hindernissen aus, um top gestylt zum Stade de France zu kommen.",
+        "Springe, sammle Style-Boni und weiche Hindernissen aus, um top gestylt zur Konzerthalle zu kommen.",
       play: "Jetzt spielen",
       leaderboard: "Rangliste",
       weeklyLeaderboard: "Wochenrangliste",
@@ -581,11 +493,11 @@ export const nls = {
       emptyLeaderboard: "Diese Woche noch keine Scores — sei der Erste!",
       beFirst: "Erste Runde starten",
       back: "Zurück zum Spiel",
-      eyebrow: "Nevent × Stade de France 2026",
+      eyebrow: "Nevent × Sape Run",
       tagline:
-        "Der Sapeur muss durch Paris bis zum Stade de France — hilf ihm!",
+        "Der Sapeur muss durch die Stadt bis zur Konzerthalle — hilf ihm!",
       idleTagline:
-        "Hilf dem Sapeur, durch Paris bis zum Stade de France zu kommen. Sammle Hüte, Diamanten und Mikros!",
+        "Hilf dem Sapeur, durch die Stadt bis zur Konzerthalle zu kommen. Sammle Hüte, Diamanten und Mikros!",
       idleEyebrow: "Nevent Game",
       start: "Start",
       controlsHint: "Leertaste / Klick / Tap zum Springen",
@@ -598,27 +510,11 @@ export const nls = {
       jumpHint: "Springen (Leertaste / Klick)",
       recordLabel: "Rekord",
       speed: "TEMPO",
-      goal: "STADE DE FRANCE",
+      goal: "LA SALLE",
       namePrompt: "Dein Vorname (für die Bestenliste)",
       namePlaceholder: "Dein Vorname",
       nameRequired: "Gib deinen Vornamen ein, um zu starten",
       playerLabel: "Spieler",
-    },
-    quizGame: {
-      eyebrow: "Während du auf das Konzert wartest",
-      title: "Spiel. Teste dein Wissen. Heiz dich auf.",
-      gameBadge: "Mini-Spiel",
-      gameMeta: "2 Min · gratis",
-      gameTitle: "Sape Run",
-      gameDescription:
-        "Lauf durch Paris bis zum Stade de France, weiche Hindernissen aus und sammle die stylischsten Sapes. Schlag deinen Rekord und steig in der Rangliste auf.",
-      gameCta: "Spiel starten",
-      quizBadge: "Quiz",
-      quizMeta: "10 Fragen · 3 Min",
-      quizTitle: "Wie groß ist dein Fally-Fan-Faktor?",
-      quizDescription:
-        "Von Droit Chemin bis Tokooos II — beweise, dass du die Klassiker kennst. Score, Badge und Promo-Code warten.",
-      quizCta: "Quiz starten",
     },
     contact: {
       eyebrow: "Kontakt",
@@ -681,11 +577,8 @@ export const nls = {
     common: {
       nav: {
         home: "Home",
-        concert: "Concert",
         services: "Diensten",
         community: "Community",
-        playlists: "Playlists",
-        quiz: "Quiz",
         game: "Games",
         contact: "Contact",
       },
@@ -717,9 +610,7 @@ export const nls = {
         merch: "Merch",
         beaute: "Beauty",
         paris: "Parijs-gids",
-        quiz: "Quiz",
         game: "Sape Run",
-        playlists: "Playlists",
         community: "Community",
       },
       vipCta: "Aanbieder worden",
@@ -759,26 +650,12 @@ export const nls = {
         },
       ],
     },
-    quiz: {
-      titleLine1: "Fally quiz",
-      titleLine2: "en stadion",
-      description:
-        "Beantwoord 10 vragen geïnspireerd door het concert van Fally Ipupa: data, toegang tot Stade de France, stadionregels en diaspora-cultuur.",
-      rewardLabel: "Geverifieerde info",
-      rewardText:
-        "Twee officiële data, eerste datum uitverkocht, tweede datum toegevoegd.",
-      communityLabel: "Stadion praktisch",
-      communityText:
-        "RER B/D, metro 12/13/14, gereserveerde parking en tasregels.",
-      cta: "Start de quiz",
-      duration: "Geschatte tijd: 2 minuten",
-    },
     game: {
       version: "Sape Run — v1.0",
       titleLine1: "Sape",
       titleLine2: "Run.",
       description:
-        "Spring, verzamel style-bonussen en ontwijk obstakels om top gestyled het Stade de France te bereiken.",
+        "Spring, verzamel style-bonussen en ontwijk obstakels om top gestyled de concertzaal te bereiken.",
       play: "Nu spelen",
       leaderboard: "Klassement",
       weeklyLeaderboard: "Weekklassement",
@@ -787,10 +664,10 @@ export const nls = {
       emptyLeaderboard: "Nog geen scores deze week — wees de eerste!",
       beFirst: "Start de eerste run",
       back: "Terug naar het spel",
-      eyebrow: "Nevent × Stade de France 2026",
-      tagline: "De Sapeur moet door Parijs naar Stade de France — help hem!",
+      eyebrow: "Nevent × Sape Run",
+      tagline: "De Sapeur moet door de stad naar de concertzaal — help hem!",
       idleTagline:
-        "Help de Sapeur dwars door Parijs tot Stade de France. Pak hoeden, diamanten en microfoons!",
+        "Help de Sapeur dwars door de stad tot de concertzaal. Pak hoeden, diamanten en microfoons!",
       idleEyebrow: "Nevent Game",
       start: "Start",
       controlsHint: "Spatie / Klik / Tap om te springen",
@@ -803,27 +680,11 @@ export const nls = {
       jumpHint: "Springen (Spatie / Klik)",
       recordLabel: "Record",
       speed: "SNELHEID",
-      goal: "STADE DE FRANCE",
+      goal: "LA SALLE",
       namePrompt: "Je voornaam (voor het klassement)",
       namePlaceholder: "Je voornaam",
       nameRequired: "Vul je voornaam in om te starten",
       playerLabel: "Speler",
-    },
-    quizGame: {
-      eyebrow: "Terwijl je wacht op het concert",
-      title: "Speel. Test je kennis. Hype jezelf.",
-      gameBadge: "Mini-game",
-      gameMeta: "2 min · gratis",
-      gameTitle: "Sape Run",
-      gameDescription:
-        "Ren door Parijs tot aan Stade de France, ontwijk obstakels en pak de chicste sapes. Verbreek je record en klim in het klassement.",
-      gameCta: "Start het spel",
-      quizBadge: "Quiz",
-      quizMeta: "10 vragen · 3 min",
-      quizTitle: "Hoe groot is jouw Fally-fan-factor?",
-      quizDescription:
-        "Van Droit Chemin tot Tokooos II, bewijs dat je de klassiekers kent. Score, badge en promocode te winnen.",
-      quizCta: "Start de quiz",
     },
     contact: {
       eyebrow: "Contact",
