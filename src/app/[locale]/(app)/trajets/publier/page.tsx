@@ -10,16 +10,21 @@ import { Input } from "@/components/ui/input";
 import { NumberStepper } from "@/components/ui/number-stepper";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { createTrajetAction } from "@/lib/actions/public";
+import { languageOf, nls } from "@/lib/nls";
 
 export default async function PublishTrajetPage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ locale: string }>;
   searchParams?: Promise<{
     error?: string;
     destination?: string;
     date?: string;
   }>;
 }) {
+  const { locale } = await params;
+  const t = nls[languageOf(locale)].publishRide;
   const sp = await searchParams;
   const error = sp?.error;
 
@@ -36,7 +41,7 @@ export default async function PublishTrajetPage({
           <SectionHeading
             number="01"
             eyebrow="Publication"
-            title="Partage un trajet vers *le concert*."
+            title={t.title}
             description="Aide la diaspora à se regrouper. Moins de frais, plus de sécurité, un voyage mémorable."
           />
 
@@ -50,16 +55,14 @@ export default async function PublishTrajetPage({
                   Validation manuelle
                 </p>
                 <p className="text-paper-dim text-xs leading-relaxed font-body">
-                  Ton annonce sera vérifiée par Nevent. Les passagers voient ta
-                  voiture, ton modèle et ton prix avant de te contacter via
-                  WhatsApp.
+                  {t.verifiedNote}
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-4 px-6 py-4 border border-gold/10 bg-gold/5 rounded-2xl">
               <span className="font-mono text-[10px] text-gold uppercase tracking-tighter">
-                Accès VIP Uniquement pour les contacts
+                {t.contactNote}
               </span>
             </div>
 
@@ -74,15 +77,13 @@ export default async function PublishTrajetPage({
               </div>
               <div className="space-y-1.5">
                 <p className="font-display text-sm uppercase text-paper">
-                  Tu es chauffeur VTC ?
+                  {t.vtcTitle}
                 </p>
                 <p className="text-paper-dim text-xs leading-relaxed font-body">
-                  Inscris-toi comme prestataire pro pour proposer tes courses
-                  (transferts aéroport, transport privé concert + after) à toute
-                  la diaspora.
+                  {t.vtcBody}
                 </p>
                 <p className="text-gold text-xs font-mono uppercase tracking-wider mt-2 inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-                  S'inscrire comme VTC <ArrowRight className="size-3" />
+                  {t.vtcCta} <ArrowRight className="size-3" />
                 </p>
               </div>
             </Link>
@@ -98,7 +99,7 @@ export default async function PublishTrajetPage({
           >
             {error === "missing" && (
               <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-3 text-red-300 text-sm">
-                Merci de remplir tous les champs obligatoires.
+                {t.missingFields}
               </div>
             )}
 
@@ -113,8 +114,8 @@ export default async function PublishTrajetPage({
 
                 <div className="grid sm:grid-cols-2 gap-6">
                   <FormField
-                    label="Ville de départ"
-                    helperText="D'où pars-tu ?"
+                    label={t.departureCity}
+                    helperText={t.departureCityHelp}
                   >
                     <CityInput
                       name="villeDepart"
@@ -123,7 +124,7 @@ export default async function PublishTrajetPage({
                       placeholder="Bruxelles, Mons, Liège…"
                     />
                   </FormField>
-                  <FormField label="Pays" helperText="Pays de départ">
+                  <FormField label="Pays" helperText={t.departureCountry}>
                     <Input
                       name="paysDepart"
                       defaultValue="Belgique"
@@ -131,10 +132,7 @@ export default async function PublishTrajetPage({
                       className="h-12 bg-smoke border-none"
                     />
                   </FormField>
-                  <FormField
-                    label="Ville d’arrivée"
-                    helperText="Destination de l’événement"
-                  >
+                  <FormField label="Ville d’arrivée" helperText={t.destination}>
                     <Input
                       name="villeArrivee"
                       defaultValue={sp?.destination ?? "Paris"}
@@ -142,7 +140,7 @@ export default async function PublishTrajetPage({
                       className="h-12 bg-smoke border-none"
                     />
                   </FormField>
-                  <FormField label="Date" helperText="Jour du trajet">
+                  <FormField label="Date" helperText={t.day}>
                     <Input
                       name="date"
                       defaultValue={sp?.date}
@@ -151,10 +149,7 @@ export default async function PublishTrajetPage({
                       className="h-12 bg-smoke border-none text-paper-dim"
                     />
                   </FormField>
-                  <FormField
-                    label="Heure de départ"
-                    helperText="Précise l'heure"
-                  >
+                  <FormField label={t.time} helperText="Précise l'heure">
                     <Input
                       name="heureDepart"
                       type="time"
@@ -175,7 +170,7 @@ export default async function PublishTrajetPage({
 
                 <div className="grid sm:grid-cols-2 gap-6">
                   <FormField
-                    label="Modèle de voiture"
+                    label={t.carModel}
                     helperText="Ex: Audi A3, Peugeot 3008"
                   >
                     <Input
@@ -184,10 +179,7 @@ export default async function PublishTrajetPage({
                       className="h-12 bg-smoke border-none"
                     />
                   </FormField>
-                  <FormField
-                    label="Couleur"
-                    helperText="Pour te repérer plus facilement"
-                  >
+                  <FormField label="Couleur" helperText={t.carModelHelp}>
                     <Input
                       name="vehiculeColor"
                       placeholder="Noir, Blanc, Gris..."
@@ -202,7 +194,7 @@ export default async function PublishTrajetPage({
                   <span className="size-8 rounded-lg bg-smoke flex items-center justify-center text-blood text-sm">
                     03
                   </span>
-                  Détails du voyage
+                  {t.sectionTrip}
                 </h3>
 
                 <div className="grid sm:grid-cols-3 gap-6">
@@ -227,23 +219,17 @@ export default async function PublishTrajetPage({
                       className="h-12 bg-smoke border-none"
                     />
                   </FormField>
-                  <FormField
-                    label="WhatsApp"
-                    helperText="Choisis ton indicatif pays puis tape ton numéro"
-                  >
+                  <FormField label="WhatsApp" helperText={t.phoneHelp}>
                     <PhoneInput name="whatsapp" required />
                   </FormField>
                 </div>
 
-                <FormField
-                  label="Note (optionnel)"
-                  helperText="Détails utiles : départ d'une gare précise, bagages, etc."
-                >
+                <FormField label="Note (optionnel)" helperText={t.notesHelp}>
                   <textarea
                     name="note"
                     rows={3}
                     className="w-full rounded-md bg-smoke px-4 py-3 text-paper text-sm placeholder:text-paper-dim focus:outline-none"
-                    placeholder="Je peux récupérer en gare de Bruxelles-Midi..."
+                    placeholder={t.notesPlaceholder}
                   />
                 </FormField>
               </div>
