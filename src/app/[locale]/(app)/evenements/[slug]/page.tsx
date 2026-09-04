@@ -18,7 +18,7 @@ import { notFound } from "next/navigation";
 import { EventCard } from "@/components/events/event-card";
 import { prisma } from "@/lib/db/prisma";
 import { getPublicEvent, getPublicEvents } from "@/lib/events.server";
-import { localizedHref } from "@/lib/nls";
+import { languageOf, localizedHref, nls } from "@/lib/nls";
 import { proCategoryLabel } from "@/lib/pro-display";
 import { createPageMetadata, getSiteUrl } from "@/lib/seo";
 export const dynamic = "force-dynamic";
@@ -29,13 +29,13 @@ const citySlugs: Record<string, string> = {
   paris: "Paris",
 };
 const services = [
-  { label: "Coiffure", href: "/beaute/coiffeurs", icon: Scissors },
-  { label: "Barbier", href: "/prestataires?q=barbier", icon: UserRound },
-  { label: "Maquillage", href: "/beaute/maquilleuses", icon: Sparkles },
-  { label: "Manucure", href: "/prestataires?q=ongles", icon: Store },
-  { label: "Photographe", href: "/beaute/photographes", icon: Camera },
-  { label: "Transport", href: "/trajets", icon: CarFront },
-];
+  { key: "hair", href: "/beaute/coiffeurs", icon: Scissors },
+  { key: "barber", href: "/prestataires?q=barbier", icon: UserRound },
+  { key: "makeup", href: "/beaute/maquilleuses", icon: Sparkles },
+  { key: "nails", href: "/prestataires?q=ongles", icon: Store },
+  { key: "photo", href: "/beaute/photographes", icon: Camera },
+  { key: "transport", href: "/trajets", icon: CarFront },
+] as const;
 
 export async function generateMetadata({
   params,
@@ -85,6 +85,9 @@ export default async function EventOrCityPage({
   const dayEnd = new Date(event.endDate ?? event.startDate);
   dayEnd.setUTCDate(dayEnd.getUTCDate() + 1);
   dayEnd.setUTCHours(23, 59, 59, 999);
+  const lang = languageOf(locale);
+  const t = nls[lang].eventDetail;
+  const serviceLabels = nls[lang].search.services;
   const [pros, rides, afters] = await Promise.all([
     prisma.proProfile
       .findMany({
@@ -226,23 +229,23 @@ export default async function EventOrCityPage({
 
       <section className="py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
-          <Eyebrow>Prépare ton événement</Eyebrow>
+          <Eyebrow>{t.prepareEyebrow}</Eyebrow>
           <h2 className="mt-3 max-w-4xl text-4xl font-semibold tracking-[-0.035em] sm:text-6xl">
-            Tout ce qu’il te faut avant le concert.
+            {t.prepareTitle}
           </h2>
           <p className="mt-5 max-w-2xl text-paper-dim">{event.description}</p>
           <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-            {services.map(({ label, href, icon: Icon }) => (
+            {services.map(({ key, href, icon: Icon }) => (
               <Link
                 className="flex min-h-40 flex-col justify-between rounded-2xl border border-black/10 bg-[#f4f4f1] p-5 transition hover:-translate-y-1 hover:border-blood/50"
                 href={localizedHref(
                   `${href}${href.includes("?") ? "&" : "?"}city=${encodeURIComponent(event.city)}`,
                   locale,
                 )}
-                key={label}
+                key={key}
               >
                 <Icon className="size-6 text-blood" />
-                <span className="font-semibold">{label}</span>
+                <span className="font-semibold">{serviceLabels[key]}</span>
               </Link>
             ))}
           </div>
@@ -263,7 +266,7 @@ export default async function EventOrCityPage({
             </div>
           ) : (
             <p className="mt-8 rounded-2xl border border-black/10 p-5 text-paper-dim">
-              Aucun prestataire vérifié dans cette ville pour le moment.{" "}
+              {t.prosEmpty}{" "}
               <Link
                 className="font-semibold text-paper underline"
                 href={localizedHref(
@@ -271,7 +274,7 @@ export default async function EventOrCityPage({
                   locale,
                 )}
               >
-                Explorer tous les prestataires
+                {t.prosEmptyCta}
               </Link>
             </p>
           )}
@@ -282,11 +285,11 @@ export default async function EventOrCityPage({
         <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
           <Eyebrow>Trajets</Eyebrow>
           <h2 className="mt-3 text-4xl font-semibold tracking-[-0.035em] sm:text-6xl">
-            Tu vas au concert ?
+            {t.ridesTitle}
           </h2>
           <p className="mt-4 max-w-2xl text-white/60">
-            Destination {event.city}, autour du{" "}
-            {new Intl.DateTimeFormat("fr-FR", { dateStyle: "long" }).format(
+            {t.ridesDestination} {event.city}, {t.ridesAround}{" "}
+            {new Intl.DateTimeFormat(locale, { dateStyle: "long" }).format(
               new Date(event.startDate),
             )}
             .
@@ -303,14 +306,14 @@ export default async function EventOrCityPage({
                     {ride.villeDepart} → {ride.villeArrivee}
                   </p>
                   <p className="mt-2 text-sm text-white/60">
-                    {ride.placesDispo} places · {ride.prix} €
+                    {ride.placesDispo} {t.ridesSeats} · {ride.prix} €
                   </p>
                 </Link>
               ))}
             </div>
           ) : (
             <p className="mt-8 rounded-2xl border border-white/15 p-6 text-white/65">
-              Aucun trajet disponible pour cet événement pour le moment.
+              {t.ridesEmpty}
             </p>
           )}
           <div className="mt-8 flex flex-wrap gap-3">
@@ -321,7 +324,7 @@ export default async function EventOrCityPage({
                 locale,
               )}
             >
-              Voir les trajets
+              {t.ridesSeeAll}
             </Link>
             <Link
               className="inline-flex min-h-12 items-center rounded-full border border-white/30 px-6 text-sm font-bold"
@@ -330,7 +333,7 @@ export default async function EventOrCityPage({
                 locale,
               )}
             >
-              Proposer un trajet
+              {t.ridesPublish}
             </Link>
           </div>
         </div>
@@ -340,7 +343,7 @@ export default async function EventOrCityPage({
         <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
           <Eyebrow>Et après ?</Eyebrow>
           <h2 className="mt-3 text-4xl font-semibold tracking-[-0.035em] sm:text-6xl">
-            Afters & soirées autour de l’événement.
+            {t.aftersTitle}
           </h2>
           {afters.length ? (
             <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -359,7 +362,7 @@ export default async function EventOrCityPage({
             </div>
           ) : (
             <p className="mt-8 rounded-2xl border border-black/10 bg-[#f4f4f1] p-6 text-paper-dim">
-              Aucun after référencé pour le moment.
+              {t.aftersEmpty}
             </p>
           )}
           <Link
@@ -372,14 +375,14 @@ export default async function EventOrCityPage({
             Ajouter un after <ArrowRight className="size-4" />
           </Link>
           <p className="mt-10 text-xs text-paper-mute">
-            Informations et visuel vérifiés auprès de la salle.{" "}
+            {t.sourceNote}{" "}
             <a
               className="underline hover:text-paper"
               href={event.sourceUrl}
               rel="noopener noreferrer"
               target="_blank"
             >
-              Consulter la source officielle
+              {t.sourceCta}
             </a>
             .
           </p>
@@ -390,6 +393,7 @@ export default async function EventOrCityPage({
 }
 
 async function CityLanding({ city, locale }: { city: string; locale: string }) {
+  const t = nls[languageOf(locale)].eventDetail;
   const cityEvents = (await getPublicEvents()).filter(
     (event) =>
       event.city.toLocaleLowerCase("fr") === city.toLocaleLowerCase("fr"),
@@ -400,12 +404,9 @@ async function CityLanding({ city, locale }: { city: string; locale: string }) {
         <div className="mx-auto max-w-7xl">
           <Eyebrow>Guide local</Eyebrow>
           <h1 className="mt-3 font-display text-[clamp(4rem,11vw,9rem)] uppercase leading-[.85]">
-            Événements à {city}
+            {t.cityTitle} {city}
           </h1>
-          <p className="mt-6 max-w-2xl text-white/65">
-            Une sélection vérifiée, sans dates inventées. Prépare ensuite ton
-            trajet et tes services au même endroit.
-          </p>
+          <p className="mt-6 max-w-2xl text-white/65">{t.cityBody}</p>
         </div>
       </header>
       <section className="mx-auto max-w-7xl px-5 py-16 sm:px-6 lg:px-8">
@@ -417,13 +418,8 @@ async function CityLanding({ city, locale }: { city: string; locale: string }) {
           </div>
         ) : (
           <div className="rounded-2xl border border-black/10 bg-[#f4f4f1] p-8">
-            <h2 className="text-2xl font-semibold">
-              Aucune date disponible actuellement.
-            </h2>
-            <p className="mt-2 text-paper-dim">
-              Nous n’affichons que les événements confirmés par une source
-              officielle.
-            </p>
+            <h2 className="text-2xl font-semibold">{t.cityEmpty}</h2>
+            <p className="mt-2 text-paper-dim">{t.cityEmptyNote}</p>
           </div>
         )}
       </section>

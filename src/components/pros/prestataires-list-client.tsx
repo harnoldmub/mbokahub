@@ -14,10 +14,13 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useMemo, useRef, useState } from "react";
 import { PhotoLightbox } from "@/components/pros/photo-lightbox";
 import { ProPlaceholderCover } from "@/components/pros/pro-placeholder-cover";
 import { MultiSelect } from "@/components/ui/multi-select";
+import { localeFromPathname } from "@/lib/locales";
+import { languageOf, nls } from "@/lib/nls";
 import { PRO_CATEGORIES, PRO_CATEGORY_BY_ID } from "@/lib/pro-categories";
 import { formatPriceRange } from "@/lib/pro-display";
 import { cn } from "@/lib/utils";
@@ -55,6 +58,7 @@ type Props = {
 const PAGE_SIZE = 12;
 
 export function PrestatairesListClient({ pros, initialSearch = "" }: Props) {
+  const t = nls[languageOf(localeFromPathname(usePathname()))].providersList;
   const [search, setSearch] = useState(initialSearch);
   const [activeCategories, setActiveCategories] = useState<ProCategory[]>([]);
   const [activeCities, setActiveCities] = useState<string[]>([]);
@@ -186,7 +190,7 @@ export function PrestatairesListClient({ pros, initialSearch = "" }: Props) {
                   setSearch("");
                   setPage(1);
                 }}
-                aria-label="Effacer la recherche"
+                aria-label={t.clearSearch}
                 className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-paper-mute hover:bg-white/10 hover:text-paper"
               >
                 <X className="size-4" />
@@ -200,7 +204,7 @@ export function PrestatairesListClient({ pros, initialSearch = "" }: Props) {
               setActiveCategories(v as ProCategory[]);
               setPage(1);
             }}
-            placeholder="Toutes les catégories"
+            placeholder={t.allCategories}
             itemNounSingular="catégorie"
             itemNounPlural="catégories"
             searchPlaceholder="Rechercher une catégorie…"
@@ -219,7 +223,7 @@ export function PrestatairesListClient({ pros, initialSearch = "" }: Props) {
                 setActiveCities(v);
                 setPage(1);
               }}
-              placeholder="Toutes les villes"
+              placeholder={t.allCities}
               itemNounSingular="ville"
               itemNounPlural="villes"
               searchPlaceholder="Rechercher une ville…"
@@ -268,7 +272,7 @@ export function PrestatairesListClient({ pros, initialSearch = "" }: Props) {
       {filtered.length === 0 ? (
         <div className="mt-12 rounded-3xl border border-white/10 bg-coal/40 p-12 text-center">
           <p className="font-display text-2xl uppercase text-paper">
-            Aucun prestataire ne correspond
+            {t.noMatchTitle}
           </p>
           <p className="mt-3 text-paper-dim">
             Essaie d'élargir tes filtres ou d'en retirer quelques-uns.
@@ -278,7 +282,7 @@ export function PrestatairesListClient({ pros, initialSearch = "" }: Props) {
             onClick={reset}
             className="mt-6 rounded-full border border-blood/40 bg-blood/10 px-6 py-3 font-mono text-xs uppercase tracking-widest text-blood hover:bg-blood/20"
           >
-            Réinitialiser les filtres
+            {t.reset}
           </button>
         </div>
       ) : (
@@ -376,7 +380,7 @@ export function PrestatairesListClient({ pros, initialSearch = "" }: Props) {
                       href={`/pro/${p.id}`}
                       className="mt-2 flex items-center justify-center gap-2 rounded-xl border border-blood/40 bg-blood/10 px-4 py-2.5 font-mono text-[10px] uppercase tracking-widest text-blood transition hover:bg-blood/20"
                     >
-                      Voir la fiche
+                      {t.seeProfile}
                       <ArrowRight className="size-3.5" />
                     </Link>
                   </div>
@@ -387,7 +391,7 @@ export function PrestatairesListClient({ pros, initialSearch = "" }: Props) {
 
           {totalPages > 1 && (
             <nav
-              aria-label="Pagination des prestataires"
+              aria-label={t.pagination}
               className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-white/5 pt-6"
             >
               <p className="font-mono text-[10px] uppercase tracking-widest text-paper-mute">

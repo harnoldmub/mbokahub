@@ -2,12 +2,15 @@
 
 import { ArrowRight, Plus, Search, Star, X } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
 
 import { TrajetCard } from "@/components/trajets/trajet-card";
 import { Input } from "@/components/ui/input";
 import { SearchableSelect } from "@/components/ui/searchable-select";
 import type { TrajetDemo } from "@/lib/demo-data";
+import { localeFromPathname } from "@/lib/locales";
+import { languageOf, nls } from "@/lib/nls";
 import { cn } from "@/lib/utils";
 
 type TrajetWithDate = TrajetDemo & { dateIso?: string };
@@ -25,6 +28,7 @@ export function TrajetsListClient({
   initialDate,
   initialDestination,
 }: Props) {
+  const t = nls[languageOf(localeFromPathname(usePathname()))].ridesList;
   const villes = useMemo(
     () => Array.from(new Set(trajets.map((t) => t.villeDepart))).sort(),
     [trajets],
@@ -94,20 +98,20 @@ export function TrajetsListClient({
             Bientôt disponible
           </span>
           <h2 className="font-display text-4xl uppercase text-paper leading-tight sm:text-5xl">
-            Sois le premier <br />
-            <span className="font-serif italic text-blood">à publier</span>
+            {t.emptyTitle} <br />
+            <span className="font-serif italic text-blood">
+              {t.emptyTitleAccent}
+            </span>
           </h2>
           <p className="font-body text-paper-dim leading-relaxed">
-            Aucun trajet pour le moment. Lance le mouvement et propose une place
-            vers ton prochain événement — d&apos;autres membres de la communauté
-            pourront te rejoindre.
+            {t.emptyBody}
           </p>
           <Link
             href="/trajets/publier"
             className="inline-flex items-center gap-2 rounded-2xl bg-blood px-7 py-4 font-mono text-xs uppercase tracking-[0.2em] text-white shadow-glow-blood transition-transform hover:-translate-y-0.5"
           >
             <Plus className="size-4" />
-            Publier mon trajet
+            {t.emptyCta}
             <ArrowRight className="size-4" />
           </Link>
         </div>
@@ -116,12 +120,12 @@ export function TrajetsListClient({
   }
 
   const villeOptions = [
-    { value: "all", label: "Toutes les villes", sticky: true },
+    { value: "all", label: t.allCities, sticky: true },
     ...villes.map((v) => ({ value: v, label: v })),
   ];
 
   const dateSelectOptions = [
-    { value: "all", label: "Toutes les dates", sticky: true },
+    { value: "all", label: t.allDates, sticky: true },
     ...datesOptions,
   ];
 
@@ -140,7 +144,7 @@ export function TrajetsListClient({
         {search && (
           <button
             type="button"
-            aria-label="Effacer la recherche"
+            aria-label={t.clearSearch}
             onClick={() => setSearch("")}
             className="absolute right-4 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-paper-mute hover:bg-white/5 hover:text-paper transition-colors"
           >
@@ -153,23 +157,23 @@ export function TrajetsListClient({
       <div className="rounded-3xl border border-white/10 bg-gradient-to-b from-coal/80 to-coal/40 p-5 sm:p-6">
         <div className="grid gap-5 lg:grid-cols-[1fr_1fr_auto] lg:items-end">
           <SearchableSelect
-            label="Ville de départ"
+            label={t.departureCity}
             value={activeVille}
             onChange={setActiveVille}
             options={villeOptions}
-            placeholder="Toutes les villes"
+            placeholder={t.allCities}
             searchPlaceholder="Rechercher une ville…"
-            emptyLabel="Aucune ville"
+            emptyLabel={t.noCity}
           />
 
           <SearchableSelect
-            label="Date du trajet"
+            label={t.rideDate}
             value={activeDate}
             onChange={setActiveDate}
             options={dateSelectOptions}
-            placeholder="Toutes les dates"
+            placeholder={t.allDates}
             searchPlaceholder="Rechercher une date…"
-            emptyLabel="Aucune date"
+            emptyLabel={t.noDate}
             noSort
           />
 
@@ -210,7 +214,7 @@ export function TrajetsListClient({
             className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-coal/50 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-paper-dim hover:border-blood/40 hover:text-blood transition-colors"
           >
             <X className="size-3" />
-            Réinitialiser
+            {t.reset}
           </button>
         )}
       </div>
@@ -220,10 +224,10 @@ export function TrajetsListClient({
         <div className="relative overflow-hidden flex flex-col items-center justify-center rounded-[2.5rem] border border-white/5 bg-coal/30 py-24 text-center">
           <Search className="size-12 text-paper-mute opacity-20 mb-6" />
           <p className="font-display text-3xl uppercase text-paper tracking-tight">
-            Aucun trajet ne correspond
+            {t.noMatchTitle}
           </p>
           <p className="mt-3 max-w-sm font-body text-paper-dim leading-relaxed">
-            Essaie une autre ville ou élargis tes filtres.
+            {t.noMatchBody}
           </p>
           <button
             type="button"
