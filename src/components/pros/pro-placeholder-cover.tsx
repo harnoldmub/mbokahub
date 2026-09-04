@@ -1,67 +1,52 @@
 "use client";
 
 import type { ProCategory } from "@prisma/client";
+import Image from "next/image";
 
 import { PRO_CATEGORY_BY_ID } from "@/lib/pro-categories";
 
 /**
- * Palette de dégradés flat par groupe de catégorie.
+ * Image statique par groupe de catégorie, générée par l'IA pour correspondre
+ * à la palette du site (fond sombre éditorial, accent rouge #e31818).
  */
-const GROUP_PALETTE: Record<
-  string,
-  { bg1: string; bg2: string; accent: string; textColor: string }
-> = {
-  BEAUTE: {
-    bg1: "#1a0a0f",
-    bg2: "#2d1018",
-    accent: "#e31818",
-    textColor: "#f5f5f7",
-  },
-  EVENT: {
-    bg1: "#0a0f1a",
-    bg2: "#10182d",
-    accent: "#e31818",
-    textColor: "#f5f5f7",
-  },
-  LOGISTIQUE: {
-    bg1: "#0d0d0d",
-    bg2: "#1a1a1a",
-    accent: "#e31818",
-    textColor: "#f5f5f7",
-  },
-  FAMILLE: {
-    bg1: "#0a1209",
-    bg2: "#121f10",
-    accent: "#e31818",
-    textColor: "#f5f5f7",
-  },
-  AUTRE: {
-    bg1: "#0f0a1a",
-    bg2: "#1a1028",
-    accent: "#e31818",
-    textColor: "#f5f5f7",
-  },
+const GROUP_IMAGE: Record<string, string> = {
+  BEAUTE: "/placeholder-beaute.jpg",
+  EVENT: "/placeholder-event.jpg",
+  LOGISTIQUE: "/placeholder-logistique.jpg",
+  FAMILLE: "/placeholder-famille.jpg",
+  AUTRE: "/placeholder-autre.jpg",
 };
 
-const DEFAULT_PALETTE = GROUP_PALETTE.AUTRE;
+const DEFAULT_IMAGE = "/placeholder-autre.jpg";
+
+/**
+ * Couleur de l'overlay teinté par groupe (pour que les initiales
+ * restent lisibles quel que soit le fond).
+ */
+const GROUP_OVERLAY: Record<string, string> = {
+  BEAUTE: "rgba(26,10,15,0.55)",
+  EVENT: "rgba(10,15,26,0.55)",
+  LOGISTIQUE: "rgba(13,13,13,0.55)",
+  FAMILLE: "rgba(10,18,9,0.55)",
+  AUTRE: "rgba(15,10,26,0.55)",
+};
 
 type Props = {
+  /** Nom affiché du prestataire — pour les initiales en surimpression */
   displayName: string;
+  /** Catégorie Prisma — pour choisir le fond et la palette */
   category: ProCategory;
+  /** Classe CSS appliquée au conteneur */
   className?: string;
-  /** Masque le libellé de catégorie dessiné dans la vignette quand la carte
-   *  qui l'entoure affiche déjà cette catégorie juste en dessous. */
+  /** Masque le libellé de catégorie si la carte l'affiche déjà ailleurs */
   showCategoryLabel?: boolean;
 };
 
 /**
- * Placeholder cover flat pour les prestataires sans photo.
+ * Placeholder cover pour les prestataires sans photo.
  *
- * Génère un SVG inline avec :
- * - Un fond en dégradé cohérent avec la palette du site
- * - Les initiales du prestataire en grand
- * - Le label de catégorie en bas
- * - Un motif géométrique discret pour la texture
+ * Utilise une image statique par groupe de catégorie (générée avec la même
+ * palette visuelle que le site) avec les initiales du prestataire en overlay.
  */
 export function ProPlaceholderCover({
   displayName,
@@ -71,7 +56,8 @@ export function ProPlaceholderCover({
 }: Props) {
   const meta = PRO_CATEGORY_BY_ID[category];
   const group = meta?.group ?? "AUTRE";
-  const palette = GROUP_PALETTE[group] ?? DEFAULT_PALETTE;
+  const imageSrc = GROUP_IMAGE[group] ?? DEFAULT_IMAGE;
+  const overlayColor = GROUP_OVERLAY[group] ?? GROUP_OVERLAY.AUTRE;
   const label = meta?.shortLabel ?? meta?.label ?? category;
 
   const initials = displayName
@@ -80,141 +66,147 @@ export function ProPlaceholderCover({
     .map((w) => w[0]?.toUpperCase() ?? "")
     .join("");
 
-  const safeName = `${category}-${initials}`.replace(/[^a-zA-Z0-9-]/g, "");
-  const gradId = `pg-${safeName}`;
-  const patternId = `pp-${safeName}`;
-
   return (
     <div
-      className={className}
       aria-hidden="true"
+      className={className}
       style={{ position: "relative", overflow: "hidden" }}
     >
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 400 300"
-        xmlns="http://www.w3.org/2000/svg"
-        style={{ width: "100%", height: "100%", display: "block" }}
-        preserveAspectRatio="xMidYMid slice"
+      {/* Image de fond par catégorie */}
+      <Image
+        alt=""
+        className="object-cover"
+        draggable={false}
+        fill
+        priority={false}
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        src={imageSrc}
+        unoptimized
+      />
+
+      {/* Overlay teinté pour lisibilité des initiales */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: overlayColor,
+        }}
+      />
+
+      {/* Initiales + libellé en surimpression */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 8,
+          pointerEvents: "none",
+          userSelect: "none",
+        }}
       >
-        <defs>
-          <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor={palette.bg1} />
-            <stop offset="100%" stopColor={palette.bg2} />
-          </linearGradient>
-          <pattern
-            id={patternId}
-            x="0"
-            y="0"
-            width="40"
-            height="40"
-            patternUnits="userSpaceOnUse"
-          >
-            <path
-              d="M 0 40 L 40 0 M -10 10 L 10 -10 M 30 50 L 50 30"
-              stroke={palette.accent}
-              strokeWidth="0.4"
-              strokeOpacity="0.12"
-              fill="none"
-            />
-          </pattern>
-        </defs>
-
-        <rect width="400" height="300" fill={`url(#${gradId})`} />
-        <rect width="400" height="300" fill={`url(#${patternId})`} />
-
-        <circle
-          cx="200"
-          cy="140"
-          r="72"
-          fill={palette.accent}
-          fillOpacity="0.06"
-        />
-        <circle
-          cx="200"
-          cy="140"
-          r="52"
-          fill={palette.accent}
-          fillOpacity="0.08"
-          stroke={palette.accent}
-          strokeWidth="0.8"
-          strokeOpacity="0.2"
+        {/* Cercle décoratif */}
+        <div
+          style={{
+            position: "absolute",
+            width: 104,
+            height: 104,
+            borderRadius: "50%",
+            background: "rgba(227,24,24,0.08)",
+            border: "1px solid rgba(227,24,24,0.18)",
+          }}
         />
 
-        <text
-          x="200"
-          y="152"
-          textAnchor="middle"
-          dominantBaseline="middle"
-          fontSize="52"
-          fontWeight="700"
-          fontFamily="'Anton', 'Impact', sans-serif"
-          letterSpacing="4"
-          fill={palette.textColor}
-          fillOpacity="0.9"
+        {/* Initiales */}
+        <span
+          style={{
+            fontFamily: "'Anton', 'Impact', sans-serif",
+            fontSize: "clamp(2rem, 6vw, 3.25rem)",
+            fontWeight: 700,
+            letterSpacing: "0.05em",
+            color: "rgba(245,245,247,0.92)",
+            lineHeight: 1,
+            zIndex: 1,
+          }}
         >
           {initials}
-        </text>
+        </span>
 
-        <rect
-          x="160"
-          y="208"
-          width="80"
-          height="2"
-          rx="1"
-          fill={palette.accent}
-          fillOpacity="0.7"
+        {/* Séparateur rouge */}
+        <div
+          style={{
+            width: 40,
+            height: 2,
+            borderRadius: 1,
+            background: "rgba(227,24,24,0.8)",
+            zIndex: 1,
+          }}
         />
 
-        {showCategoryLabel ? (
-          <text
-            x="200"
-            y="228"
-            textAnchor="middle"
-            dominantBaseline="middle"
-            fontSize="10"
-            fontWeight="500"
-            fontFamily="'JetBrains Mono', 'Courier New', monospace"
-            letterSpacing="3"
-            fill={palette.textColor}
-            fillOpacity="0.4"
+        {/* Label catégorie */}
+        {showCategoryLabel && (
+          <span
+            style={{
+              fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+              fontSize: 9,
+              fontWeight: 500,
+              letterSpacing: "0.25em",
+              color: "rgba(245,245,247,0.45)",
+              textTransform: "uppercase",
+              zIndex: 1,
+            }}
           >
-            {label.toUpperCase()}
-          </text>
-        ) : null}
+            {label}
+          </span>
+        )}
+      </div>
 
-        {/* Corners */}
+      {/* Coins décoratifs (SVG léger) */}
+      <svg
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          pointerEvents: "none",
+        }}
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+      >
         <path
-          d="M 20 20 L 20 36 M 20 20 L 36 20"
-          stroke={palette.accent}
+          d="M 5 5 L 5 14 M 5 5 L 14 5"
+          stroke="rgba(227,24,24,0.5)"
           strokeWidth="1.5"
-          strokeOpacity="0.3"
           strokeLinecap="round"
           fill="none"
+          vectorEffect="non-scaling-stroke"
         />
         <path
-          d="M 380 20 L 380 36 M 380 20 L 364 20"
-          stroke={palette.accent}
+          d="M 95 5 L 95 14 M 95 5 L 86 5"
+          stroke="rgba(227,24,24,0.5)"
           strokeWidth="1.5"
-          strokeOpacity="0.3"
           strokeLinecap="round"
           fill="none"
+          vectorEffect="non-scaling-stroke"
         />
         <path
-          d="M 20 280 L 20 264 M 20 280 L 36 280"
-          stroke={palette.accent}
+          d="M 5 95 L 5 86 M 5 95 L 14 95"
+          stroke="rgba(227,24,24,0.5)"
           strokeWidth="1.5"
-          strokeOpacity="0.3"
           strokeLinecap="round"
           fill="none"
+          vectorEffect="non-scaling-stroke"
         />
         <path
-          d="M 380 280 L 380 264 M 380 280 L 364 280"
-          stroke={palette.accent}
+          d="M 95 95 L 95 86 M 95 95 L 86 95"
+          stroke="rgba(227,24,24,0.5)"
           strokeWidth="1.5"
-          strokeOpacity="0.3"
           strokeLinecap="round"
           fill="none"
+          vectorEffect="non-scaling-stroke"
         />
       </svg>
     </div>

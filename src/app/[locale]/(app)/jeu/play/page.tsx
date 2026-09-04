@@ -2,12 +2,7 @@ import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 
 import { SapeRunClient } from "@/components/game/sape-run-client";
-import {
-  getLocaleFromSearchParams,
-  localizedHref,
-  nls,
-  type SearchParams,
-} from "@/lib/nls";
+import { languageOf, localizedHref, nls, type SearchParams } from "@/lib/nls";
 
 export const dynamic = "force-dynamic";
 
@@ -16,9 +11,12 @@ type JeuPlayPageProps = {
   searchParams?: Promise<SearchParams>;
 };
 
-export default async function JeuPlayPage({ params, searchParams }: JeuPlayPageProps) {
+export default async function JeuPlayPage({
+  params,
+  searchParams,
+}: JeuPlayPageProps) {
   const { locale } = await params;
-  const lang = getLocaleFromSearchParams(await searchParams);
+  const lang = languageOf(locale);
   const copy = nls[lang].game;
 
   return (

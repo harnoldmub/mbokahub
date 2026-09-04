@@ -3,7 +3,7 @@
 import { UserButton, useUser } from "@clerk/nextjs";
 import { Star, UserRound } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { BrandLogo } from "@/components/layout/brand-logo";
@@ -12,15 +12,16 @@ import { MegaMenu } from "@/components/layout/mega-menu";
 import { MobileMenu } from "@/components/layout/mobile-menu";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { Button } from "@/components/ui/button";
-import { DEFAULT_MARKET, MARKETS, type Market } from "@/lib/markets";
+import { DEFAULT_LOCALE, isLocale } from "@/lib/locales";
 import { HEADER_PRIMARY, MEGA_MENU_GROUPS } from "@/lib/navigation";
-import { getLocale, localizedHref, nls } from "@/lib/nls";
+import { languageOf, localizedHref, nls } from "@/lib/nls";
 
 export function SiteHeader() {
   const pathname = usePathname();
   const seg = pathname.split("/")[1];
-  const market: string = MARKETS.includes(seg as Market) ? seg : DEFAULT_MARKET;
-  const lang = getLocale(useSearchParams().get("lang"));
+  const market: string = isLocale(seg) ? seg : DEFAULT_LOCALE;
+  // La langue se déduit de la locale portée par l'URL, plus d'un paramètre.
+  const lang = languageOf(market);
   const copy = nls[lang].common;
   const { isSignedIn } = useUser();
   // Anciens VIP → badge ⭐ Famille Fondatrice à vie. La route /api/me/vip

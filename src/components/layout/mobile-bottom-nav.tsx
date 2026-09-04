@@ -12,7 +12,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { DEFAULT_MARKET, MARKETS, type Market } from "@/lib/markets";
+import { DEFAULT_LOCALE, isLocale } from "@/lib/locales";
 import { localizedHref } from "@/lib/nls";
 import { cn } from "@/lib/utils";
 
@@ -30,9 +30,9 @@ export function MobileBottomNav() {
   const [unread, setUnread] = useState(0);
 
   const seg = pathname.split("/")[1];
-  const market: string = MARKETS.includes(seg as Market) ? seg : DEFAULT_MARKET;
+  const market: string = isLocale(seg) ? seg : DEFAULT_LOCALE;
   // Path without locale prefix for active matching.
-  const cleanPath = MARKETS.includes(seg as Market)
+  const cleanPath = isLocale(seg)
     ? pathname.replace(`/${seg}`, "") || "/"
     : pathname;
 

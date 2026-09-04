@@ -4,8 +4,8 @@ import Link from "next/link";
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { Button } from "@/components/ui/button";
 import {
-  getLocaleFromSearchParams,
-  type Locale,
+  type Language,
+  languageOf,
   localizedHref,
   type SearchParams,
 } from "@/lib/nls";
@@ -39,7 +39,7 @@ type BabysittingPageProps = {
 };
 
 const COPY: Record<
-  Locale,
+  Language,
   {
     back: string;
     eyebrow: string;
@@ -127,7 +127,7 @@ export default async function BabysittingPage({
   searchParams,
 }: BabysittingPageProps) {
   const { locale } = await params;
-  const lang = getLocaleFromSearchParams(await searchParams);
+  const lang = languageOf(locale);
   const c = COPY[lang];
 
   return (

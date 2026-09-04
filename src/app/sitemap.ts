@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { prisma } from "@/lib/db/prisma";
 import { getPublicEvents } from "@/lib/events.server";
-import { MARKETS } from "@/lib/markets";
+import { LOCALES } from "@/lib/locales";
 import { getSiteUrl } from "@/lib/seo";
 
 const appUrl = getSiteUrl();
@@ -85,7 +85,7 @@ function buildAlternates(
 ): MetadataRoute.Sitemap[number]["alternates"] {
   return {
     languages: Object.fromEntries([
-      ...MARKETS.map((market) => [
+      ...LOCALES.map((market) => [
         market,
         `${appUrl}/${market}${path === "/" ? "" : path}`,
       ]),
@@ -98,7 +98,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.flatMap((r) =>
-    MARKETS.map((market) => ({
+    LOCALES.map((market) => ({
       url: `${appUrl}/${market}${r.path === "/" ? "" : r.path}`,
       lastModified: now,
       changeFrequency: r.changeFrequency,
@@ -109,7 +109,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const eventEntries: MetadataRoute.Sitemap = (await getPublicEvents()).flatMap(
     (event) =>
-      MARKETS.map((market) => ({
+      LOCALES.map((market) => ({
         url: `${appUrl}/${market}/evenements/${event.slug}`,
         lastModified: now,
         changeFrequency: "daily" as const,
@@ -150,7 +150,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     dynamicEntries = [
       ...pros.flatMap((p) =>
-        MARKETS.map((market) => ({
+        LOCALES.map((market) => ({
           url: `${appUrl}/${market}/pro/${p.id}`,
           lastModified: p.updatedAt,
           changeFrequency: "weekly" as const,
@@ -159,7 +159,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         })),
       ),
       ...trajets.flatMap((t) =>
-        MARKETS.map((market) => ({
+        LOCALES.map((market) => ({
           url: `${appUrl}/${market}/trajets/${t.id}`,
           lastModified: t.updatedAt,
           changeFrequency: "daily" as const,
@@ -168,7 +168,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         })),
       ),
       ...afters.flatMap((a) =>
-        MARKETS.map((market) => ({
+        LOCALES.map((market) => ({
           url: `${appUrl}/${market}/afters/${a.slug}`,
           lastModified: a.createdAt,
           changeFrequency: "weekly" as const,

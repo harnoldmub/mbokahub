@@ -5,7 +5,14 @@ import {
   NextResponse,
 } from "next/server";
 
-import { DEFAULT_MARKET, MARKETS } from "@/lib/markets";
+import {
+  ALL_LOCALES,
+  DEFAULT_LOCALE,
+  isLocale,
+  LEGACY_LOCALE_REDIRECTS,
+  LOCALES,
+  localeForLanguage,
+} from "@/lib/locales";
 
 const isProtectedRoute = createRouteMatcher(["/dashboard(.*)", "/admin(.*)"]);
 
@@ -28,8 +35,10 @@ const NO_LOCALE_PREFIXES = [
 ];
 
 function needsLocalePrefix(pathname: string): boolean {
-  for (const m of MARKETS) {
-    if (pathname === `/${m}` || pathname.startsWith(`/${m}/`)) return false;
+  for (const locale of LOCALES) {
+    if (pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)) {
+      return false;
+    }
   }
   for (const prefix of NO_LOCALE_PREFIXES) {
     if (pathname === prefix || pathname.startsWith(`${prefix}/`)) return false;
@@ -54,11 +63,48 @@ const clerkHandler = clerkMiddleware(async (auth, req) => {
 
 export function middleware(request: NextRequest, event: NextFetchEvent) {
   const { pathname } = request.nextUrl;
+  const segment = pathname.split("/")[1] ?? "";
 
-  // Redirect unprefixed paths to the default market before Clerk runs
+  // Ancien code marché : /fr-cod → /fr-cd, de façon permanente.
+  const legacy = LEGACY_LOCALE_REDIRECTS[segment];
+  if (legacy) {
+    const url = request.nextUrl.clone();
+    url.pathname = pathname.replace(`/${segment}`, `/${legacy}`);
+    return NextResponse.redirect(url, 308);
+  }
+
+  // La langue vivait dans `?lang=` ; elle vit désormais dans le chemin. On
+  // convertit le paramètre en locale quand cette locale est servie, et on le
+  // laisse tomber sinon — plutôt que de faire semblant de le prendre en compte.
+  const legacyLang = request.nextUrl.searchParams.get("lang");
+  if (legacyLang) {
+    const url = request.nextUrl.clone();
+    url.searchParams.delete("lang");
+    const target = localeForLanguage(
+      legacyLang as Parameters<typeof localeForLanguage>[0],
+    );
+    if (target && isLocale(segment)) {
+      url.pathname = pathname.replace(`/${segment}`, `/${target}`);
+    }
+    return NextResponse.redirect(url, 308);
+  }
+
+  // Locale connue mais pas encore servie (catalogue de traduction incomplet) :
+  // on répond 404 directement, plutôt que de la préfixer par la locale par
+  // défaut et de fabriquer une URL absurde comme /fr/en.
+  if (
+    ALL_LOCALES.includes(segment as (typeof ALL_LOCALES)[number]) &&
+    !isLocale(segment)
+  ) {
+    return NextResponse.rewrite(new URL("/_not-found", request.url), {
+      status: 404,
+    });
+  }
+
+  // Chemins sans préfixe de locale → locale par défaut, avant Clerk.
   if (needsLocalePrefix(pathname)) {
     const url = request.nextUrl.clone();
-    url.pathname = `/${DEFAULT_MARKET}${pathname === "/" ? "" : pathname}`;
+    url.pathname = `/${DEFAULT_LOCALE}${pathname === "/" ? "" : pathname}`;
     return NextResponse.redirect(url);
   }
 

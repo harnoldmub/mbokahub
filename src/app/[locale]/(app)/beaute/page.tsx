@@ -4,12 +4,7 @@ import Link from "next/link";
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/db/prisma";
-import {
-  getLocaleFromSearchParams,
-  localizedHref,
-  nls,
-  type SearchParams,
-} from "@/lib/nls";
+import { languageOf, localizedHref, nls, type SearchParams } from "@/lib/nls";
 import { createPageMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
@@ -78,7 +73,7 @@ export default async function PrestationsPage({
   searchParams,
 }: PrestationsPageProps) {
   const { locale } = await params;
-  const lang = getLocaleFromSearchParams(await searchParams);
+  const lang = languageOf(locale);
   const copy = nls[lang].prestations;
 
   const grouped = await prisma.proProfile

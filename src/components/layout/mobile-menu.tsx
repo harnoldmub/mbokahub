@@ -22,11 +22,11 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { MOBILE_MENU_LINKS } from "@/lib/navigation";
-import { type Locale, localizedHref, nls } from "@/lib/nls";
+import { type Language, localizedHref, nls } from "@/lib/nls";
 
 type MobileMenuProps = {
   market: string;
-  lang: Locale;
+  lang: Language;
 };
 
 export function MobileMenu({ market, lang }: MobileMenuProps) {

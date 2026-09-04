@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { isMarket } from "@/lib/markets";
+import { isLocale, LOCALES } from "@/lib/locales";
 
 export default async function LocaleLayout({
   children,
@@ -10,7 +10,7 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  if (!isMarket(locale)) notFound();
+  if (!isLocale(locale)) notFound();
   return <>{children}</>;
 }
 

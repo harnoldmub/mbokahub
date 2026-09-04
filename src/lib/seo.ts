@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 
-import { DEFAULT_MARKET, isMarket, MARKETS, type Market } from "@/lib/markets";
+import {
+  DEFAULT_LOCALE,
+  isLocale,
+  LOCALE_META,
+  LOCALES,
+  type Locale,
+} from "@/lib/locales";
 
 export const SITE_NAME = "Nevent";
 export const SITE_DESCRIPTION =
@@ -14,7 +20,7 @@ export function getSiteUrl(): string {
   return "https://nevent.co";
 }
 
-function marketPath(market: Market, path: string): string {
+function marketPath(market: Locale, path: string): string {
   const suffix = path === "/" ? "" : path.startsWith("/") ? path : `/${path}`;
   return `/${market}${suffix}`;
 }
@@ -44,11 +50,11 @@ export function createPageMetadata({
   noIndex = false,
   absoluteTitle = false,
 }: PageMetadataOptions): Metadata {
-  const market = isMarket(locale) ? locale : DEFAULT_MARKET;
+  const market = isLocale(locale) ? locale : DEFAULT_LOCALE;
   const canonical = marketPath(market, path);
   const languages = Object.fromEntries([
-    ...MARKETS.map((entry) => [entry, marketPath(entry, path)]),
-    ["x-default", marketPath(DEFAULT_MARKET, path)],
+    ...LOCALES.map((entry) => [entry, marketPath(entry, path)]),
+    ["x-default", marketPath(DEFAULT_LOCALE, path)],
   ]);
 
   return {
@@ -61,7 +67,9 @@ export function createPageMetadata({
       description,
       url: canonical,
       siteName: SITE_NAME,
-      locale: market === "fr-be" ? "fr_BE" : market === "fr-cod" ? "fr_CD" : "fr_FR",
+      // Balise OG : langue_PAYS, dérivée de la table des locales plutôt que
+      // d'une liste de cas particuliers.
+      locale: `${LOCALE_META[market].language}_${LOCALE_META[market].country}`,
       type,
       images: [{ url: image, alt: imageAlt, width: 1200, height: 630 }],
     },

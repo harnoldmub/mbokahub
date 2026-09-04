@@ -1,61 +1,32 @@
-export type Locale = "fr" | "en" | "de" | "nl";
+import {
+  getLanguage,
+  type Language,
+  type Locale,
+  localeHref,
+} from "@/lib/locales";
 
-export const defaultLocale: Locale = "fr";
+/**
+ * Catalogue de textes, indexé par langue.
+ *
+ * La langue n'est plus lue dans `?lang=` : elle se déduit de la locale portée
+ * par l'URL (voir src/lib/locales.ts). Les pages reçoivent donc leur locale
+ * en paramètre de route et la convertissent ici.
+ */
 
-export const locales: Record<
-  Locale,
-  {
-    flag: string;
-    label: string;
-    shortLabel: string;
-  }
-> = {
-  fr: {
-    flag: "🇫🇷",
-    label: "Français",
-    shortLabel: "FR",
-  },
-  en: {
-    flag: "🇬🇧",
-    label: "English",
-    shortLabel: "EN",
-  },
-  de: {
-    flag: "🇩🇪",
-    label: "Deutsch",
-    shortLabel: "DE",
-  },
-  nl: {
-    flag: "🇳🇱",
-    label: "Nederlands",
-    shortLabel: "NL",
-  },
-};
+/** @deprecated Utiliser `Language` : ce type désignait la langue, pas la locale. */
+export type { Language };
 
-export type SearchParams = {
-  lang?: string | string[];
-};
-
-export function isLocale(value: unknown): value is Locale {
-  return typeof value === "string" && Object.hasOwn(locales, value);
+/** Langue déduite d'une locale d'URL (« fr-be » → « fr »). */
+export function languageOf(locale?: string | null): Language {
+  return getLanguage(locale);
 }
 
-export function getLocale(value?: string | string[] | null): Locale {
-  const rawValue = Array.isArray(value) ? value[0] : value;
-  return isLocale(rawValue) ? rawValue : defaultLocale;
-}
+/** @deprecated Le paramètre `?lang=` est redirigé vers le chemin par le middleware. */
+export type SearchParams = Record<string, string | string[] | undefined>;
 
-export function getLocaleFromSearchParams(
-  searchParams?: SearchParams | null,
-): Locale {
-  return getLocale(searchParams?.lang);
-}
-
-/** @deprecated Use marketHref from @/lib/markets instead. */
+/** Préfixe un chemin par la locale courante. */
 export function localizedHref(href: string, locale: Locale | string): string {
-  if (href.startsWith("http")) return href;
-  // If a market code is passed (fr-be, fr-cod, fr) prepend it as path segment
-  return `/${locale}${href}`;
+  return localeHref(href, locale);
 }
 
 export const nls = {
@@ -745,4 +716,4 @@ export const nls = {
   },
 } as const;
 
-export type Dictionary = (typeof nls)[Locale];
+export type Dictionary = (typeof nls)[Language];

@@ -3,12 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/db/prisma";
-import {
-  getLocaleFromSearchParams,
-  localizedHref,
-  nls,
-  type SearchParams,
-} from "@/lib/nls";
+import { languageOf, localizedHref, nls, type SearchParams } from "@/lib/nls";
 import { createPageMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
@@ -66,7 +61,7 @@ export default async function GamePage({
   searchParams,
 }: GamePageProps) {
   const { locale } = await params;
-  const lang = getLocaleFromSearchParams(await searchParams);
+  const lang = languageOf(locale);
   const copy = nls[lang].game;
 
   // Real weekly leaderboard: top 3 unique pseudos in the last 7 days.

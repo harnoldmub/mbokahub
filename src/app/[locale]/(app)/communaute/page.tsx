@@ -3,7 +3,7 @@ import { ArrowRight, ShieldCheck, Users } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { prisma } from "@/lib/db/prisma";
-import { getLocaleFromSearchParams, nls, type SearchParams } from "@/lib/nls";
+import { languageOf, nls, type SearchParams } from "@/lib/nls";
 import { createPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
@@ -28,8 +28,8 @@ type Props = {
 };
 
 export default async function CommunautePage({ params, searchParams }: Props) {
-  void (await params);
-  const lang = getLocaleFromSearchParams(await searchParams);
+  const { locale } = await params;
+  const lang = languageOf(locale);
   const copy = nls[lang].communityPage;
 
   type Community = Prisma.WhatsAppCommunityGetPayload<{

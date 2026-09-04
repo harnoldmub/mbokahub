@@ -4,7 +4,7 @@ import { SectionHeading } from "@/components/marketing/section-heading";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
-import { getLocaleFromSearchParams, nls, type SearchParams } from "@/lib/nls";
+import { languageOf, nls, type SearchParams } from "@/lib/nls";
 import { createPageMetadata } from "@/lib/seo";
 
 export async function generateMetadata({
@@ -31,8 +31,8 @@ export default async function ContactPage({
   params,
   searchParams,
 }: ContactPageProps) {
-  void (await params);
-  const lang = getLocaleFromSearchParams(await searchParams);
+  const { locale } = await params;
+  const lang = languageOf(locale);
   const copy = nls[lang].contact;
 
   return (
